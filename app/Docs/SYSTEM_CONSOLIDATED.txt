@@ -1,0 +1,170 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║               ✅ SISTEMA CSS CONSOLIDADO Y SIMPLIFICADO                     ║
+║                    Todo en UN ÚNICO archivo: index.css                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 QUÉ CAMBIÓ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ANTES (Confuso y duplicado):
+  src/styles/globals.css      ← Tenías colores aquí
+  src/index.css               ← Pero también aquí (duplicados)
+  ❌ El navegador usaba index.css, cambios en globals.css NO se veían
+
+AHORA (Limpio y centralizado):
+  src/index.css               ← ÚNICO archivo CSS
+  ✅ El navegador carga esto, cambios aparecen INMEDIATAMENTE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗑️  ELIMINADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✓ src/styles/globals.css        (eliminado)
+  ✓ src/styles/                   (carpeta vacía, NO necesaria)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ ESTRUCTURA FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+app/
+├── src/
+│   ├── main.tsx
+│   │   └── import "./index.css";  ← Importa el ÚNICO CSS
+│   │
+│   ├── index.css                  ← 📍 ÚNICO ARCHIVO
+│   │   ├── @import fonts
+│   │   ├── @layer properties
+│   │   ├── @layer theme
+│   │   ├── @layer base
+│   │   ├── @layer utilities
+│   │   └── :root { colors }       ← Variables de color
+│   │
+│   ├── App.tsx
+│   ├── components/
+│   └── pages/
+│
+└── styles/                        ← VACÍO (no se necesita)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 CÓMO PERSONALIZAR COLORES AHORA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: Abre el archivo
+  📁 src/index.css
+
+PASO 2: Busca la sección de colores
+  Presiona Ctrl+F y busca: :root {
+  Encontrarás ~2390 (aprox)
+
+PASO 3: Modifica el color
+  
+  ANTES:
+    :root {
+      --primary: #ac1279;        ← Morado
+      --secondary: #10b981;      ← Verde
+      ...
+    }
+
+  DESPUÉS:
+    :root {
+      --primary: #ff0000;        ← Cambiado a Rojo
+      --secondary: #fbbf24;      ← Cambiado a Amarillo
+      ...
+    }
+
+PASO 4: Guarda y recarga
+  Ctrl+S → F5 → ¡LISTO!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ CAMBIO INMEDIATO EN VIVO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Flujo de cambio:
+
+  Editas en index.css
+         ↓
+    CSS carga en navegador
+         ↓
+    Tailwind lee las variables
+         ↓
+    Clases usan las nuevas variables
+         ↓
+    Navegador renderiza
+         ↓
+    ✨ VES EL CAMBIO EN VIVO (sin recompilar)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 VARIABLES DISPONIBLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Busca esta sección en src/index.css (línea ~2390):
+
+:root {
+  --primary: #ac1279          ← Morado (color principal)
+  --secondary: #10b981        ← Verde (secundario)
+  --accent: #f59e0b           ← Naranja (destacado)
+  --background: #ffffff       ← Blanco (fondo)
+  --foreground: #1a1a1a       ← Casi negro (texto)
+  --card: #ffffff             ← Blanco (tarjetas)
+  --muted: #f3f4f6            ← Gris claro (deshabilitado)
+  --destructive: #ef4444      ← Rojo (errores/alerta)
+  --border: #e5e7eb           ← Gris bordes
+  --ring: #ac1279             ← Anillo/foco
+  
+  + más (sidebar, chart, etc)
+}
+
+.dark {                       ← Tema oscuro
+  --primary: #3b82f6          ← Azul claro
+  --secondary: #34d399        ← Verde claro
+  ...
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 PRUEBA YA MISMO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TEST RÁPIDO:
+
+1. npm run dev
+2. Abre src/index.css (Ctrl+F: :root)
+3. Cambia:  --primary: #ac1279;  →  --primary: #FF0000;
+4. Ctrl+S
+5. Recarga navegador (F5)
+6. ✅ TODO el proyecto cambió a ROJO
+
+Resultado en ~1 segundo ⚡
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Lee esta guía para detalles completos:
+  → Docs/COLOR_SYSTEM_CONSOLIDATED.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Verifica que todo esté en orden:
+
+- [x] globals.css eliminado
+- [x] index.css consolidado
+- [x] Colores duplicados fusionados
+- [x] main.tsx importa index.css ✓
+- [x] Build limpio (npm run build)
+- [x] Dev server funciona (npm run dev)
+- [x] Cambios en colores aparecen inmediatamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 ¡LISTO!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Sistema de CSS:  ✨ SIMPLIFICADO ✨
+Archivo único:   📍 src/index.css
+Cambios:         ⚡ En vivo, sin recompilar
+
+¿Ahora funciona? Abre el navegador y prueba cambiar un color 🎨
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

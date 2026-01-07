@@ -172,7 +172,7 @@ export function MapView({ onNavigate, searchData }: MapViewProps) {
         {/* Map or List View */}
         <div className="flex-1 relative">
           {view === 'map' ? (
-            <div className="w-full h-full bg-muted relative">
+            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 relative">
               {/* Simplified map representation */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ParkingMap } from './ParkingMap'
 import { Button } from '../ui/button';
 import { Card, Input } from '../ui';
 import {
@@ -173,12 +172,57 @@ export function MapView({ onNavigate, searchData }: MapViewProps) {
         {/* Map or List View */}
         <div className="flex-1 relative">
           {view === 'map' ? (
-            <ParkingMap
-              spots={parkingSpots}
-              onSelect={(spot: any) => {
-                setSelectedSpot(spot.id)
-              }}
-            />
+            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 relative">
+              {/* Simplified map representation */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Mapa de Tenerife</h3>
+                  <p className="text-muted-foreground">
+                    {parkingSpots.length} plazas disponibles en tu área
+                  </p>
+                </div>
+              </div>
+
+              {/* Map markers */}
+              {parkingSpots.slice(0, 4).map((spot, index) => (
+                <div
+                  key={spot.id}
+                  className="absolute cursor-pointer group"
+                  style={{
+                    left: `${20 + index * 20}%`,
+                    top: `${30 + (index % 2) * 25}%`,
+                  }}
+                  onClick={() => setSelectedSpot(spot.id)}
+                >
+                  <div className="relative">
+                    <div
+                      className={`bg-white rounded-full p-3 shadow-lg border-2 transition-all ${
+                        selectedSpot === spot.id
+                          ? 'border-primary scale-110'
+                          : 'border-transparent group-hover:border-primary group-hover:scale-105'
+                      }`}
+                    >
+                      <MapPin className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="bg-white rounded-lg shadow-xl p-3 whitespace-nowrap">
+                        <p className="font-semibold">{spot.price}€/hora</p>
+                        <p className="text-sm text-muted-foreground">{spot.name}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Current location button */}
+              <Button
+                className="absolute bottom-4 right-4 rounded-full h-12 w-12 shadow-lg"
+                size="icon"
+              >
+                <Navigation className="h-5 w-5" />
+              </Button>
+            </div>
           ) : (
             <div className="w-full h-full overflow-y-auto p-4">
               <div className="max-w-4xl mx-auto space-y-4">

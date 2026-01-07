@@ -15,7 +15,7 @@ interface NavigationData {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('login');
+  const [currentPage, setCurrentPage] = useState<Page>('map');
   const [navigationData, setNavigationData] = useState<NavigationData>({});
 
   const handleNavigation = (page: string, data?: any) => {

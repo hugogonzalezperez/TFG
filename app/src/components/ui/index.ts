@@ -8,3 +8,4 @@ export * from './badge';
 export * from './switch';
 export * from './avatar';
 export * from './tabs';
+export * from './RangeSlider';

@@ -126,18 +126,20 @@ function MapViewContent({ onNavigate, searchData }: MapViewProps) {
   const { filters, setSearchQuery, setDateTimeFilters, selectedParkingId, setSelectedParkingId } = useFilters();
   const [view, setView] = useState<'map' | 'list'>('map');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
-  // Cargar datos de fecha/hora desde searchData (viene de Home)
+  // Cargar datos de fecha/hora desde searchData (viene de Home) - SOLO UNA VEZ
   useEffect(() => {
-    if (searchData?.date) {
+    if (searchData?.date && !initialDataLoaded) {
       setDateTimeFilters({
         startDate: searchData.date,
         startTime: searchData.startTime || '',
         endDate: searchData.date,
         endTime: searchData.endTime || '',
       });
+      setInitialDataLoaded(true);
     }
-  }, [searchData, setDateTimeFilters]);
+  }, [searchData?.date, searchData?.startTime, searchData?.endTime, initialDataLoaded, setDateTimeFilters]);
 
   const filteredSpots = useMemo(() => {
     return filterParkings(parkingSpots, filters);

@@ -10,10 +10,10 @@ export function Filters({ onOpen }: FiltersProps) {
   const { filters } = useFilters();
 
   const isFiltered =
-    filters.type !== 'all' ||
+    filters.types.size < 3 ||
     filters.availability !== 'all' ||
     filters.priceRange[0] !== 0 ||
-    filters.priceRange[1] !== 10;
+    filters.priceRange[1] !== 100;
 
   return (
     <Button

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { Home } from './pages/Home';
@@ -18,6 +18,16 @@ interface NavigationData {
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [navigationData, setNavigationData] = useState<NavigationData>({});
+
+  // Aplicar el tema guardado al cargar la app
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (savedTheme === 'light') {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   const handleNavigation = (page: string, data?: any) => {
     setCurrentPage(page as Page);

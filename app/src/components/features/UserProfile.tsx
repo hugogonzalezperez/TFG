@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
-import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '../ui';
+import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Switch } from '../ui';
 import {
   ArrowLeft,
   User,
@@ -28,6 +28,27 @@ interface UserProfileProps {
 export function UserProfile({ onNavigate }: UserProfileProps) {
   const [activeTab, setActiveTab] = useState('bookings');
   const [isEditing, setIsEditing] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Cargar el tema guardado al montar el componente
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || document.documentElement.classList.contains('dark');
+    setIsDarkMode(isDark);
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   const user = {
     name: 'Juan Pérez',
@@ -110,7 +131,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-card border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => onNavigate('home')}>
@@ -159,33 +180,30 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveTab('bookings')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'bookings'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'bookings'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
+                    }`}
                 >
                   <Calendar className="h-5 w-5" />
                   <span>Mis reservas</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('favorites')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'favorites'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'favorites'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
+                    }`}
                 >
                   <Star className="h-5 w-5" />
                   <span>Favoritos</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('settings')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'settings'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'settings'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
+                    }`}
                 >
                   <Settings className="h-5 w-5" />
                   <span>Configuración</span>
@@ -334,11 +352,10 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
-                                  i < booking.rating!
-                                    ? 'fill-accent text-accent'
-                                    : 'text-muted-foreground'
-                                }`}
+                                className={`h-4 w-4 ${i < booking.rating!
+                                  ? 'fill-accent text-accent'
+                                  : 'text-muted-foreground'
+                                  }`}
                               />
                             ))}
                           </div>
@@ -468,7 +485,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                               Recibe actualizaciones de tus reservas
                             </p>
                           </div>
-                          <input type="checkbox" defaultChecked className="toggle" />
+                          <Switch defaultChecked />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -477,7 +494,16 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                               Alertas en tiempo real
                             </p>
                           </div>
-                          <input type="checkbox" defaultChecked className="toggle" />
+                          <Switch defaultChecked />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">Modo oscuro</p>
+                            <p className="text-sm text-muted-foreground">
+                              Cambiar a tema oscuro o claro
+                            </p>
+                          </div>
+                          <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
                         </div>
                       </div>
                     </div>

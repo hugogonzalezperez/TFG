@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Input, Card, Button } from '../components/ui';
 import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard, Menu, User, LogOut } from 'lucide-react';
+import { useFilters } from '../context/FilterContext';
 
 interface HomePageProps {
   onNavigate: (page: string, data?: any) => void;
 }
 
 export function Home({ onNavigate }: HomePageProps) {
+  const { setDateTimeFilters } = useFilters();
+  
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
     date: '',
@@ -16,7 +19,18 @@ export function Home({ onNavigate }: HomePageProps) {
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const isSearchDisabled = !searchData.date || !searchData.startTime || !searchData.endTime;
+
   const handleSearch = () => {
+    // Save to FilterContext
+    setDateTimeFilters({
+      startDate: searchData.date,
+      startTime: searchData.startTime,
+      endDate: searchData.date,
+      endTime: searchData.endTime,
+    });
+    
+    // Navigate to map
     onNavigate('map', searchData);
   };
 
@@ -176,6 +190,7 @@ export function Home({ onNavigate }: HomePageProps) {
                   type="date"
                   value={searchData.date}
                   onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
+                  min={new Date().toISOString().split('T')[0]}
                   className="h-12"
                 />
               </div>
@@ -201,7 +216,14 @@ export function Home({ onNavigate }: HomePageProps) {
                 <Input
                   type="time"
                   value={searchData.endTime}
-                  onChange={(e) => setSearchData({ ...searchData, endTime: e.target.value })}
+                  onChange={(e) => {
+                    // Prevent end time from being before start time
+                    if (searchData.startTime && e.target.value < searchData.startTime) {
+                      return;
+                    }
+                    setSearchData({ ...searchData, endTime: e.target.value });
+                  }}
+                  min={searchData.startTime || '00:00'}
                   className="h-12"
                 />
               </div>
@@ -209,10 +231,11 @@ export function Home({ onNavigate }: HomePageProps) {
 
             <Button
               onClick={handleSearch}
-              className="w-full h-14 bg-accent hover:bg-accent/90 text-white text-lg"
+              disabled={isSearchDisabled}
+              className="w-full h-14 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg"
             >
               <Search className="h-5 w-5 mr-2" />
-              Buscar aparcamiento
+              {isSearchDisabled ? 'Completa todos los campos' : 'Buscar aparcamiento'}
             </Button>
           </Card>
         </div>

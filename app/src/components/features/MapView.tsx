@@ -4,7 +4,7 @@ import { Filters } from './Filters';
 import { FilterDrawer } from './FilterDrawer';
 import { FilterSidebar } from './FilterSidebar';
 import { Button } from '../ui/button';
-import { Card, Input } from '../ui';
+import { Card, Input, Badge } from '../ui';
 import {
   MapPin,
   Star,
@@ -16,8 +16,7 @@ import {
   Map as MapIcon,
   Navigation,
 } from 'lucide-react';
-import { Badge } from '../ui';
-import { FilterProvider, useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/FilterContext';
 import { filterParkings, sortParkingsByDistance } from '../../utils/parkingFilters';
 
 interface MapViewProps {
@@ -120,36 +119,25 @@ const parkingSpots = [
 ];
 
 export function MapView({ onNavigate, searchData }: MapViewProps) {
-  return (
-    <FilterProvider>
-      <MapViewContent onNavigate={onNavigate} searchData={searchData} />
-    </FilterProvider>
-  );
+  return <MapViewContent onNavigate={onNavigate} searchData={searchData} />;
 }
 
 function MapViewContent({ onNavigate, searchData }: MapViewProps) {
-  const { filters, setSearchQuery, setDateTimeFilters, selectedParkingId, setSelectedParkingId, setFilteredParkings } = useFilters();
+  const { filters, setSearchQuery, setDateTimeFilters, selectedParkingId, setSelectedParkingId } = useFilters();
   const [view, setView] = useState<'map' | 'list'>('map');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   // Cargar datos de fecha/hora desde searchData (viene de Home)
   useEffect(() => {
-    if (searchData) {
+    if (searchData?.date) {
       setDateTimeFilters({
-        startDate: searchData.date || '',
+        startDate: searchData.date,
         startTime: searchData.startTime || '',
-        endDate: searchData.date || '', // En Home se usa la misma fecha
+        endDate: searchData.date,
         endTime: searchData.endTime || '',
       });
     }
-  }, [searchData?.date, searchData?.startTime, searchData?.endTime, setDateTimeFilters]);
-
-  // Calcular aparcamientos filtrados
-  useEffect(() => {
-    const filtered = filterParkings(parkingSpots, filters);
-    const sorted = sortParkingsByDistance(filtered);
-    setFilteredParkings(sorted);
-  }, [filters, setFilteredParkings]);
+  }, [searchData, setDateTimeFilters]);
 
   const filteredSpots = useMemo(() => {
     return filterParkings(parkingSpots, filters);

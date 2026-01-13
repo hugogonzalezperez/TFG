@@ -1,17 +1,24 @@
 import { useState } from 'react';
 import { Input, Label, Card, Button } from '../components/ui';
-import { Car, Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
+import { Car, Mail, Lock, User, Eye, EyeOff, Phone, AlertCircle } from 'lucide-react';
 import { Checkbox } from '../components/ui';
+import { useAuth } from '../context/AuthContext';
 
 interface SignUpPageProps {
   onNavigate: (page: string) => void;
 }
 
 export function SignUp({ onNavigate }: SignUpPageProps) {
+  const { register, loginWithGoogle, loginWithFacebook, loading } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
+    surname: '',
     email: '',
     phone: '',
     password: '',
@@ -20,10 +27,72 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
     acceptTerms: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): string | null => {
+    if (formData.password.length < 8) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      return 'Las contraseñas no coinciden';
+    }
+
+    if (!formData.acceptTerms) {
+      return 'Debes aceptar los términos y condiciones';
+    }
+
+    return null;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulación de registro exitoso
-    onNavigate('home');
+    setError(null);
+
+    // Validar formulario
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Antes de llamar a register, junta el nombre y apellido
+    const fullName = `${formData.name} ${formData.surname}`.trim();
+
+    try {
+      await register({
+        email: formData.email,
+        password: formData.password,
+        name: fullName, // Pasamos el nombre completo
+        phone: formData.phone,
+        isOwner: formData.isOwner
+      });
+      onNavigate('home');
+    } catch (err: any) {
+      setError(err.message || 'Error al registrarse');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError(null);
+    try {
+      await loginWithGoogle();
+      // El redirect manejará la navegación
+    } catch (err: any) {
+      setError(err.message || 'Error al registrarse con Google');
+    }
+  };
+
+  const handleFacebookSignUp = async () => {
+    setError(null);
+    try {
+      await loginWithFacebook();
+      // El redirect manejará la navegación
+    } catch (err: any) {
+      setError(err.message || 'Error al registrarse con Facebook');
+    }
   };
 
   return (
@@ -42,19 +111,45 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
           <p className="text-muted-foreground">Únete a la comunidad de Parky</p>
         </div>
 
+        {/* Mensaje de error */}
+        {error && (
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="name">Nombre completo</Label>
+            <Label htmlFor="name">Nombre</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="name"
                 type="text"
-                placeholder="Juan Pérez"
+                placeholder="Juan"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="pl-10"
                 required
+                disabled={isSubmitting || loading}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="surname">Apellidos</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                id="surname"
+                type="text"
+                placeholder="Pérez"
+                value={formData.surname}
+                onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+                className="pl-10"
+                required
+                disabled={isSubmitting || loading}
               />
             </div>
           </div>
@@ -71,12 +166,13 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="pl-10"
                 required
+                disabled={isSubmitting || loading}
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Teléfono</Label>
+            <Label htmlFor="phone">Teléfono (opcional)</Label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
@@ -86,7 +182,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="pl-10"
-                required
+                disabled={isSubmitting || loading}
               />
             </div>
           </div>
@@ -103,11 +199,14 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="pl-10 pr-10"
                 required
+                minLength={8}
+                disabled={isSubmitting || loading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                disabled={isSubmitting || loading}
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" />
@@ -130,11 +229,13 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className="pl-10 pr-10"
                 required
+                disabled={isSubmitting || loading}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                disabled={isSubmitting || loading}
               >
                 {showConfirmPassword ? (
                   <EyeOff className="h-5 w-5" />
@@ -150,6 +251,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
               id="isOwner"
               checked={formData.isOwner}
               onCheckedChange={(checked) => setFormData({ ...formData, isOwner: checked as boolean })}
+              disabled={isSubmitting || loading}
             />
             <label
               htmlFor="isOwner"
@@ -165,6 +267,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
               checked={formData.acceptTerms}
               onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
               required
+              disabled={isSubmitting || loading}
             />
             <label
               htmlFor="terms"
@@ -181,8 +284,12 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
             </label>
           </div>
 
-          <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white h-12">
-            Crear cuenta
+          <Button
+            type="submit"
+            className="w-full bg-accent hover:bg-accent/90 text-white h-12"
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
           </Button>
 
           <div className="relative my-6">
@@ -195,7 +302,13 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline" className="h-12">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12"
+              onClick={handleGoogleSignUp}
+              disabled={isSubmitting || loading}
+            >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -216,7 +329,13 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
               </svg>
               Google
             </Button>
-            <Button type="button" variant="outline" className="h-12">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12"
+              onClick={handleFacebookSignUp}
+              disabled={isSubmitting || loading}
+            >
               <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" />
               </svg>
@@ -231,6 +350,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
             <button
               onClick={() => onNavigate('login')}
               className="text-primary hover:underline font-medium"
+              disabled={isSubmitting || loading}
             >
               Inicia sesión
             </button>

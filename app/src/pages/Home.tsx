@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Input, Card, Button } from '../components/ui';
 import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard, Menu, User, LogOut } from 'lucide-react';
 import { useFilters } from '../context/FilterContext';
+// Al principio de Home.tsx
+import { useAuth } from '../context/AuthContext'; // Asegúrate de que la ruta sea correcta
 
 interface HomePageProps {
   onNavigate: (page: string, data?: any) => void;
@@ -9,6 +11,7 @@ interface HomePageProps {
 
 export function Home({ onNavigate }: HomePageProps) {
   const { setDateTimeFilters } = useFilters();
+  const { logout } = useAuth();
   
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
@@ -103,7 +106,7 @@ export function Home({ onNavigate }: HomePageProps) {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => onNavigate('login')}
+                onClick={logout}
                 className="flex items-center space-x-2"
               >
                 <LogOut className="h-5 w-5" />
@@ -142,7 +145,7 @@ export function Home({ onNavigate }: HomePageProps) {
                 Mi cuenta
               </button>
               <button
-                onClick={() => onNavigate('login')}
+                onClick={logout}
                 className="block w-full text-left px-4 py-2 hover:bg-muted rounded-lg text-destructive"
               >
                 Salir

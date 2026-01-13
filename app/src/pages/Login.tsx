@@ -1,20 +1,54 @@
 import { useState } from 'react';
 import { Input, Label, Card, Button } from '../components/ui';
-import { Car, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Car, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface LoginPageProps {
   onNavigate: (page: string) => void;
 }
 
 export function Login({ onNavigate }: LoginPageProps) {
+  const { login, loginWithGoogle, loginWithFacebook, loading } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulación de login exitoso
-    onNavigate('home');
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      await login({ email, password });
+      onNavigate('home');
+    } catch (err: any) {
+      setError(err.message || 'Error al iniciar sesión');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    try {
+      await loginWithGoogle();
+      // El redirect manejará la navegación
+    } catch (err: any) {
+      setError(err.message || 'Error al iniciar sesión con Google');
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    setError(null);
+    try {
+      await loginWithFacebook();
+      // El redirect manejará la navegación
+    } catch (err: any) {
+      setError(err.message || 'Error al iniciar sesión con Facebook');
+    }
   };
 
   return (
@@ -33,6 +67,14 @@ export function Login({ onNavigate }: LoginPageProps) {
           <p className="text-muted-foreground">Encuentra tu plaza perfecta en Tenerife</p>
         </div>
 
+        {/* Mensaje de error */}
+        {error && (
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -46,6 +88,7 @@ export function Login({ onNavigate }: LoginPageProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
                 required
+                disabled={isSubmitting || loading}
               />
             </div>
           </div>
@@ -56,6 +99,7 @@ export function Login({ onNavigate }: LoginPageProps) {
               <button
                 type="button"
                 className="text-sm text-primary hover:underline"
+                disabled={isSubmitting || loading}
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -70,11 +114,13 @@ export function Login({ onNavigate }: LoginPageProps) {
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 pr-10"
                 required
+                disabled={isSubmitting || loading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                disabled={isSubmitting || loading}
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" />
@@ -85,8 +131,12 @@ export function Login({ onNavigate }: LoginPageProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white h-12">
-            Iniciar sesión
+          <Button
+            type="submit"
+            className="w-full bg-primary hover:bg-primary/90 text-white h-12"
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Button>
 
           <div className="relative my-6">
@@ -99,7 +149,13 @@ export function Login({ onNavigate }: LoginPageProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline" className="h-12">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12"
+              onClick={handleGoogleLogin}
+              disabled={isSubmitting || loading}
+            >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -120,7 +176,13 @@ export function Login({ onNavigate }: LoginPageProps) {
               </svg>
               Google
             </Button>
-            <Button type="button" variant="outline" className="h-12">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12"
+              onClick={handleFacebookLogin}
+              disabled={isSubmitting || loading}
+            >
               <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" />
               </svg>
@@ -135,6 +197,7 @@ export function Login({ onNavigate }: LoginPageProps) {
             <button
               onClick={() => onNavigate('signup')}
               className="text-primary hover:underline font-medium"
+              disabled={isSubmitting || loading}
             >
               Regístrate gratis
             </button>

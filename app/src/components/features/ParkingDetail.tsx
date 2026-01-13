@@ -121,7 +121,7 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
+      <div className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="icon" onClick={() => onNavigate('map')}>
@@ -154,13 +154,13 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-card/90 hover:bg-card rounded-full p-2 shadow-lg transition-all"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-card/90 hover:bg-card rounded-full p-2 shadow-lg transition-all"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>

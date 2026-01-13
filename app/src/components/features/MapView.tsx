@@ -156,7 +156,7 @@ function MapViewContent({ onNavigate, searchData }: MapViewProps) {
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-border p-4 shadow-sm">
+      <div className="bg-white border-b border-border p-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
           <Button
             variant="ghost"
@@ -286,8 +286,8 @@ function MapViewContent({ onNavigate, searchData }: MapViewProps) {
 
         {/* Sidebar with results (desktop only for map view) */}
         {view === 'map' && (
-          <div className="hidden lg:block w-96 border-l border-border bg-card overflow-y-auto">
-            <div className="p-4 border-b border-border sticky top-0 bg-card z-10">
+          <div className="hidden lg:block w-96 border-l border-border bg-white overflow-y-auto">
+            <div className="p-4 border-b border-border sticky top-0 bg-white z-10">
               <h2 className="font-semibold text-lg">
                 {filteredSpots.length} plazas disponibles
               </h2>
@@ -348,7 +348,7 @@ function MapViewContent({ onNavigate, searchData }: MapViewProps) {
       </div>
 
       {/* Mobile view toggle */}
-      <div className="md:hidden border-t border-border bg-card p-2 flex gap-2">
+      <div className="md:hidden border-t border-border bg-white p-2 flex gap-2">
         <Button
           variant={view === 'map' ? 'default' : 'outline'}
           onClick={() => setView('map')}

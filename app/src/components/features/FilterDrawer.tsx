@@ -82,9 +82,9 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 w-96 bg-card shadow-lg z-50 overflow-y-auto transform transition-transform">
+      <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-lg z-50 overflow-y-auto transform transition-transform">
         {/* Header */}
-        <div className="sticky top-0 bg-card border-b border-border p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Filtros</h2>
           <button
             onClick={onClose}
@@ -222,7 +222,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
         </div>
 
         {/* Footer con botones */}
-        <div className="sticky bottom-0 bg-card border-t border-border p-4 space-y-3">
+        <div className="sticky bottom-0 bg-white border-t border-border p-4 space-y-3">
           {isFiltered && (
             <Button
               variant="outline"

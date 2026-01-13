@@ -41,9 +41,9 @@ export function FilterSidebar() {
     filters.endTime !== '';
 
   return (
-    <div className="w-80 bg-card border-r border-border overflow-y-auto">
+    <div className="w-80 bg-white border-r border-border overflow-y-auto">
       {/* Header */}
-      <div className="sticky top-0 bg-card border-b border-border p-4 z-10">
+      <div className="sticky top-0 bg-white border-b border-border p-4 z-10">
         <div className="flex items-center justify-between mb-2">
           <h2 className="font-semibold text-lg">Filtros</h2>
           {isFiltered && (

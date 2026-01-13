@@ -120,7 +120,7 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button
@@ -138,7 +138,7 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
       </div>
 
       {/* Progress indicator */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-center gap-4">
             <div className="flex items-center gap-2">

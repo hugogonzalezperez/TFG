@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
-import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '../ui';
+import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Switch } from '../ui';
 import {
   ArrowLeft,
   User,
@@ -25,9 +25,32 @@ interface UserProfileProps {
   onNavigate: (page: string) => void;
 }
 
+
+
 export function UserProfile({ onNavigate }: UserProfileProps) {
   const [activeTab, setActiveTab] = useState('bookings');
   const [isEditing, setIsEditing] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Cargar el tema guardado al montar el componente
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || document.documentElement.classList.contains('dark');
+    setIsDarkMode(isDark);
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   const user = {
     name: 'Juan Pérez',
@@ -110,7 +133,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-card border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => onNavigate('home')}>
@@ -478,6 +501,15 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                             </p>
                           </div>
                           <input type="checkbox" defaultChecked className="toggle" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">Modo oscuro</p>
+                            <p className="text-sm text-muted-foreground">
+                              Cambiar a tema oscuro o claro
+                            </p>
+                          </div>
+                          <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
                         </div>
                       </div>
                     </div>

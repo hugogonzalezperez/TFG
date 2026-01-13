@@ -173,9 +173,7 @@ export const loginWithFacebook = async () => {
       },
     });
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return data;
   } catch (error) {

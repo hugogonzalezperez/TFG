@@ -29,7 +29,7 @@ function AppContent() {
       if (authUser) {
         setCurrentPage('home');
       } else if (currentPage !== 'login') {
-        setCurrentPage('signup');
+        setCurrentPage('login');
       }
     }
   }, [authUser, loading]);
@@ -39,7 +39,7 @@ function AppContent() {
   if (loading && currentPage !== 'login' && currentPage !== 'signup') {
     return <AnimatedLoader message="Preparando tu experiencia..." />;
   }
-  
+
   const handleNavigation = (page: string) => setCurrentPage(page);
 
   // El enrutador sencillo

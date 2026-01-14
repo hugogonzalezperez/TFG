@@ -20,6 +20,9 @@ import {
   Check,
   X,
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { AnimatedLoader } from '../loaders/animatedLoader';
+import { ErrorMessage } from '../ui/errorMessage';
 
 interface UserProfileProps {
   onNavigate: (page: string) => void;
@@ -28,9 +31,31 @@ interface UserProfileProps {
 
 
 export function UserProfile({ onNavigate }: UserProfileProps) {
+  const { authUser, updateProfile, logout, loading } = useAuth();
+
   const [activeTab, setActiveTab] = useState('bookings');
   const [isEditing, setIsEditing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Datos del formulario
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    avatar_url: '',
+  });
+
+  // Cargar datos del usuario al montar
+  useEffect(() => {
+    if (authUser?.user) {
+      setFormData({
+        name: authUser.user.name || '',
+        phone: authUser.user.phone || '',
+        avatar_url: authUser.user.avatar_url || '',
+      });
+    }
+  }, [authUser]);
 
   // Cargar el tema guardado al montar el componente
   useEffect(() => {
@@ -52,14 +77,49 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
     }
   };
 
+  const handleSaveProfile = async () => {
+    setError(null);
+    setIsSaving(true);
+
+    try {
+      await updateProfile({
+        name: formData.name,
+        phone: formData.phone || undefined,
+        avatar_url: formData.avatar_url || undefined,
+      });
+      setIsEditing(false);
+    } catch (err: any) {
+      setError(err.message || 'Error al actualizar el perfil');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Aquí deberías subir la imagen a un servicio (Supabase Storage, Cloudinary, etc.)
+      // Por ahora, solo mostramos un mensaje
+      alert('Función de subida de avatar en desarrollo. Por ahora, puedes pegar una URL de imagen en el campo de configuración.');
+    }
+  };
+
+  // Mostrar loader mientras carga
+  if (loading || !authUser) {
+    return <AnimatedLoader message="Cargando perfil..." />;
+  }
+
   const user = {
-    name: 'Juan Pérez',
-    email: 'juan@email.com',
-    phone: '+34 600 123 456',
-    avatar: 'https://images.unsplash.com/photo-1623582854588-d60de57fa33f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBhdmF0YXJ8ZW58MXx8fHwxNzY3NjIwMjg1fDA&ixlib=rb-4.1.0&q=80&w=200',
-    memberSince: 'Enero 2024',
-    totalBookings: 12,
-    rating: 4.9,
+    name: authUser.user.name || 'Usuario',
+    email: authUser.user.email || '',
+    phone: authUser.user.phone || 'No especificado',
+    avatar: authUser.user.avatar_url || '',
+    memberSince: new Date(authUser.user.created_at).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long'
+    }),
+    totalBookings: 12, // TODO: Obtener de la BD
+    rating: 4.9, // TODO: Obtener de la BD
   };
 
   const activeBookings = [
@@ -153,11 +213,27 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
               <div className="text-center mb-6">
                 <div className="relative inline-block mb-4">
                   <Avatar className="h-24 w-24">
-                    <img src={user.avatar} alt={user.name} />
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="object-cover w-full h-full" />
+                    ) : (
+                      <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                        <User className="h-12 w-12 text-primary" />
+                      </div>
+                    )}
                   </Avatar>
-                  <button className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90">
+                  <label
+                    htmlFor="avatar-upload"
+                    className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 cursor-pointer transition-colors"
+                  >
                     <Camera className="h-4 w-4" />
-                  </button>
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarUpload}
+                    />
+                  </label>
                 </div>
                 <h2 className="text-xl font-bold mb-1">{user.name}</h2>
                 <p className="text-sm text-muted-foreground">Miembro desde {user.memberSince}</p>
@@ -182,33 +258,30 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveTab('bookings')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'bookings'
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'bookings'
                       ? 'bg-primary text-white'
                       : 'hover:bg-muted text-foreground'
-                  }`}
+                    }`}
                 >
                   <Calendar className="h-5 w-5" />
                   <span>Mis reservas</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('favorites')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'favorites'
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'favorites'
                       ? 'bg-primary text-white'
                       : 'hover:bg-muted text-foreground'
-                  }`}
+                    }`}
                 >
                   <Star className="h-5 w-5" />
                   <span>Favoritos</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('settings')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'settings'
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'settings'
                       ? 'bg-primary text-white'
                       : 'hover:bg-muted text-foreground'
-                  }`}
+                    }`}
                 >
                   <Settings className="h-5 w-5" />
                   <span>Configuración</span>
@@ -357,11 +430,10 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
-                                  i < booking.rating!
+                                className={`h-4 w-4 ${i < booking.rating!
                                     ? 'fill-accent text-accent'
                                     : 'text-muted-foreground'
-                                }`}
+                                  }`}
                               />
                             ))}
                           </div>
@@ -421,25 +493,41 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
-                        onClick={() => setIsEditing(false)}
+                        onClick={() => {
+                          setIsEditing(false);
+                          setError(null);
+                          // Restaurar datos originales
+                          if (authUser?.user) {
+                            setFormData({
+                              name: authUser.user.name || '',
+                              phone: authUser.user.phone || '',
+                              avatar_url: authUser.user.avatar_url || '',
+                            });
+                          }
+                        }}
                         className="gap-2"
+                        disabled={isSaving}
                       >
                         <X className="h-4 w-4" />
                         Cancelar
                       </Button>
                       <Button
-                        onClick={() => setIsEditing(false)}
+                        onClick={handleSaveProfile}
                         className="gap-2 bg-secondary hover:bg-secondary/90"
+                        disabled={isSaving}
                       >
                         <Check className="h-4 w-4" />
-                        Guardar
+                        {isSaving ? 'Guardando...' : 'Guardar'}
                       </Button>
                     </div>
                   )}
                 </div>
 
+                {/* Mensaje de error */}
+                <ErrorMessage message={error || ''} onClose={() => setError(null)} />
+
                 <Card className="p-6">
-                  <form className="space-y-6">
+                  <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleSaveProfile(); }}>
                     <div className="space-y-2">
                       <Label htmlFor="name" className="flex items-center gap-2">
                         <User className="h-4 w-4" />
@@ -447,9 +535,11 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                       </Label>
                       <Input
                         id="name"
-                        defaultValue={user.name}
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         disabled={!isEditing}
                         className={!isEditing ? 'bg-muted' : ''}
+                        required
                       />
                     </div>
 
@@ -461,10 +551,13 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                       <Input
                         id="email"
                         type="email"
-                        defaultValue={user.email}
-                        disabled={!isEditing}
-                        className={!isEditing ? 'bg-muted' : ''}
+                        value={user.email}
+                        disabled
+                        className="bg-muted"
                       />
+                      <p className="text-xs text-muted-foreground">
+                        El email no se puede cambiar
+                      </p>
                     </div>
 
                     <div className="space-y-2">
@@ -475,11 +568,32 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                       <Input
                         id="phone"
                         type="tel"
-                        defaultValue={user.phone}
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         disabled={!isEditing}
                         className={!isEditing ? 'bg-muted' : ''}
+                        placeholder="+34 600 000 000"
                       />
                     </div>
+
+                    {isEditing && (
+                      <div className="space-y-2">
+                        <Label htmlFor="avatar_url" className="flex items-center gap-2">
+                          <Camera className="h-4 w-4" />
+                          URL del Avatar
+                        </Label>
+                        <Input
+                          id="avatar_url"
+                          type="url"
+                          value={formData.avatar_url}
+                          onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+                          placeholder="https://ejemplo.com/mi-foto.jpg"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Pega la URL de tu foto de perfil
+                        </p>
+                      </div>
+                    )}
 
                     <div className="pt-6 border-t border-border">
                       <h3 className="font-semibold mb-4">Preferencias</h3>

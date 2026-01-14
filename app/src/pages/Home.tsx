@@ -106,8 +106,18 @@ export function Home({ onNavigate }: HomePageProps) {
                 onClick={() => onNavigate('profile')}
                 className="flex items-center space-x-2"
               >
-                <User className="h-5 w-5" />
-                <span>Mi cuenta</span>
+                {authUser?.user?.avatar_url ? (
+                  <img
+                    src={authUser.user.avatar_url}
+                    alt={authUser.user.name}
+                    className="h-8 w-8 rounded-full object-cover border-2 border-primary"
+                  />
+                ) : (
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                )}
+                <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
               </Button>
               <Button
                 variant="outline"
@@ -131,6 +141,25 @@ export function Home({ onNavigate }: HomePageProps) {
           {/* Mobile Menu */}
           {showMobileMenu && (
             <div className="md:hidden py-4 space-y-2 border-t border-border">
+              {/* User info in mobile */}
+              <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-lg mb-2">
+                {authUser?.user?.avatar_url ? (
+                  <img
+                    src={authUser.user.avatar_url}
+                    alt={authUser.user.name}
+                    className="h-10 w-10 rounded-full object-cover border-2 border-primary"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold">{authUser?.user?.name || 'Usuario'}</p>
+                  <p className="text-xs text-muted-foreground">{authUser?.user?.email}</p>
+                </div>
+              </div>
+
               <button className="block w-full text-left px-4 py-2 hover:bg-muted rounded-lg">
                 Encuentra aparcamiento
               </button>

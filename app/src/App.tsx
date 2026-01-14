@@ -9,14 +9,22 @@ import { UserProfile } from './components/features/UserProfile';
 import { OwnerProfile } from './components/features/OwnerProfile';
 import { FilterProvider } from './context/FilterContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { AnimatedLoader } from './components/loaders/animatedLoader';
 
 function AppContent() {
   const { authUser, loading } = useAuth();
-  const [currentPage, setCurrentPage] = useState<any>('signup');
+  const [currentPage, setCurrentPage] = useState<any>('login');
   const [navigationData, setNavigationData] = useState<any>({});
 
   // EFECTO MÁGICO: Si detecta sesión, te manda a Home automáticamente
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (savedTheme === 'light') {
+      document.documentElement.classList.remove('dark');
+    }
+
     if (!loading) {
       if (authUser) {
         setCurrentPage('home');
@@ -26,16 +34,13 @@ function AppContent() {
     }
   }, [authUser, loading]);
 
-  const handleNavigation = (page: string) => setCurrentPage(page);
-
-  // Mientras carga la sesión, mostramos un spinner limpio
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
+  // CAMBIO: Solo mostrar loader de pantalla completa al inicio de la app,
+  // pero no cuando ya estamos en Login o SignUp intentando entrar.
+  if (loading && currentPage !== 'login' && currentPage !== 'signup') {
+    return <AnimatedLoader message="Preparando tu experiencia..." />;
   }
+  
+  const handleNavigation = (page: string) => setCurrentPage(page);
 
   // El enrutador sencillo
   switch (currentPage) {

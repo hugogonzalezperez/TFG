@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Input, Label, Card, Button } from '../components/ui';
-import { Car, Mail, Lock, User, Eye, EyeOff, Phone, AlertCircle } from 'lucide-react';
+import { Car, Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
 import { Checkbox } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
+import { AnimatedLoader } from '../components/loaders/animatedLoader';
+import { ErrorMessage } from '../components/ui/errorMessage';
 
 interface SignUpPageProps {
   onNavigate: (page: string) => void;
@@ -47,7 +49,6 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
     e.preventDefault();
     setError(null);
 
-    // Validar formulario
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -56,22 +57,29 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
 
     setIsSubmitting(true);
 
-    // Antes de llamar a register, junta el nombre y apellido
     const fullName = `${formData.name} ${formData.surname}`.trim();
 
     try {
       await register({
         email: formData.email,
         password: formData.password,
-        name: fullName, // Pasamos el nombre completo
+        name: fullName,
         phone: formData.phone,
         isOwner: formData.isOwner
       });
+
+      // Si tiene éxito, navegamos
       onNavigate('home');
     } catch (err: any) {
-      setError(err.message || 'Error al registrarse');
-    } finally {
+      // Al fallar (ej: correo duplicado), detenemos el loader inmediatamente
       setIsSubmitting(false);
+
+      // Traducimos errores comunes de Supabase si es necesario
+      const msg = err.message === 'User already registered'
+        ? 'Este correo ya está registrado'
+        : err.message;
+
+      setError(msg || 'Error al registrarse');
     }
   };
 
@@ -111,13 +119,8 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
           <p className="text-muted-foreground">Únete a la comunidad de Parky</p>
         </div>
 
-        {/* Mensaje de error */}
-        {error && (
-          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-destructive">{error}</p>
-          </div>
-        )}
+        {/* Mensaje de error mejorado */}
+        <ErrorMessage message={error || ''} onClose={() => setError(null)} />
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -250,7 +253,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
             <Checkbox
               id="isOwner"
               checked={formData.isOwner}
-              onCheckedChange={(checked) => setFormData({ ...formData, isOwner: checked as boolean })}
+              onCheckedChange={(checked: any) => setFormData({ ...formData, isOwner: checked as boolean })}
               disabled={isSubmitting || loading}
             />
             <label
@@ -265,7 +268,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
             <Checkbox
               id="terms"
               checked={formData.acceptTerms}
-              onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
+              onCheckedChange={(checked: any) => setFormData({ ...formData, acceptTerms: checked as boolean })}
               required
               disabled={isSubmitting || loading}
             />

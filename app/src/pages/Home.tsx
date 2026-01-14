@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Input, Card, Button } from '../components/ui';
 import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard, Menu, User, LogOut } from 'lucide-react';
 import { useFilters } from '../context/FilterContext';
-// Al principio de Home.tsx
-import { useAuth } from '../context/AuthContext'; // Asegúrate de que la ruta sea correcta
+import { useAuth } from '../context/AuthContext';
+import { HomeSkeleton } from '../components/loaders/homeSkeleton';
 
 interface HomePageProps {
   onNavigate: (page: string, data?: any) => void;
@@ -11,8 +11,8 @@ interface HomePageProps {
 
 export function Home({ onNavigate }: HomePageProps) {
   const { setDateTimeFilters } = useFilters();
-  const { logout } = useAuth();
-  
+  const { logout, loading, authUser } = useAuth();
+
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
     date: '',
@@ -21,6 +21,11 @@ export function Home({ onNavigate }: HomePageProps) {
   });
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  // Mostrar skeleton mientras se cargan los datos del usuario
+  if (loading) {
+    return <HomeSkeleton />;
+  }
 
   const isSearchDisabled = !searchData.date || !searchData.startTime || !searchData.endTime;
 
@@ -32,7 +37,7 @@ export function Home({ onNavigate }: HomePageProps) {
       endDate: searchData.date,
       endTime: searchData.endTime,
     });
-    
+
     // Navigate to map
     onNavigate('map', searchData);
   };
@@ -247,7 +252,7 @@ export function Home({ onNavigate }: HomePageProps) {
       {/* Popular Locations */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold mb-8 text-center">Zonas populares en Tenerife</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {popularLocations.map((location) => (
             <Card
               key={location.name}

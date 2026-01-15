@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, Badge, Avatar } from '../ui';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Button } from '../../../ui/button';
+import { Card, Badge, Avatar } from '../../../ui';
 import {
   ArrowLeft,
   Star,
@@ -18,12 +19,12 @@ import {
   MessageCircle,
 } from 'lucide-react';
 
-interface ParkingDetailProps {
-  onNavigate: (page: string, data?: any) => void;
-  parkingData?: any;
-}
+export function ParkingDetail() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { parkingId } = useParams();
+  const parkingData = location.state?.parkingData; // En el futuro, usaremos parkingId para hacer un fetch
 
-export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -76,11 +77,11 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
   };
 
   // Maneja tanto 'image' (singular) como 'images' (array)
-  const images = parking.images && Array.isArray(parking.images) 
-    ? parking.images 
-    : parking.image 
-    ? [parking.image] 
-    : [];
+  const images = parking.images && Array.isArray(parking.images)
+    ? parking.images
+    : parking.image
+      ? [parking.image]
+      : [];
 
   const nextImage = () => {
     if (images.length > 0) {
@@ -124,7 +125,7 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
       <div className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Button variant="ghost" size="icon" onClick={() => onNavigate('map')}>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/map')}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex gap-2">
@@ -148,7 +149,7 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
               alt={`${parking.name} - Imagen ${currentImageIndex + 1}`}
               className="w-full h-full object-cover"
             />
-            
+
             {/* Image navigation */}
             {images.length > 1 && (
               <>
@@ -164,7 +165,7 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>
-                
+
                 {/* Image counter */}
                 <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
                   {currentImageIndex + 1} / {images.length}
@@ -316,11 +317,10 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-4 w-4 ${
-                                i < review.rating
-                                  ? 'fill-accent text-accent'
-                                  : 'text-muted-foreground'
-                              }`}
+                              className={`h-4 w-4 ${i < review.rating
+                                ? 'fill-accent text-accent'
+                                : 'text-muted-foreground'
+                                }`}
                             />
                           ))}
                         </div>
@@ -372,7 +372,7 @@ export function ParkingDetail({ onNavigate, parkingData }: ParkingDetailProps) {
               </div>
 
               <Button
-                onClick={() => onNavigate('booking', parking)}
+                onClick={() => navigate(`/book/${parking.id}`, { state: { parkingData: parking } })}
                 className="w-full h-12 bg-accent hover:bg-accent/90 text-white mb-4"
               >
                 Reservar ahora

@@ -1,6 +1,5 @@
 // =====================================================
 // SERVICIO DE AUTENTICACIÓN - VERSIÓN SIMPLIFICADA
-// Sin bcryptjs, usando Supabase Auth directamente
 // =====================================================
 
 import { supabase } from '../lib/supabase';
@@ -41,8 +40,9 @@ export const registerWithEmail = async ({
 
   if (authError) {
     // Si el error es 422 aquí, es definitivamente el Trigger
-    console.error("Error detallado de Supabase:", authError);
-    throw new Error(authError.message);
+    // o un usuario ya existente. Devolvemos el mensaje de Supabase que es claro.
+    console.error('Error en signUp:', authError.message);
+    throw new Error(authError.message || 'Error al registrar el usuario.');
   }
 
   if (!authData.user) throw new Error('No se pudo crear el usuario');
@@ -70,7 +70,9 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
     });
 
     if (authError) {
-      throw new Error('Credenciales incorrectas');
+      // Devolvemos el mensaje de Supabase, que es más específico
+      // ej: "Invalid login credentials"
+      throw new Error(authError.message || 'Credenciales incorrectas');
     }
 
     if (!authData.user) {

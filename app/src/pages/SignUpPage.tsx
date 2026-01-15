@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input, Label, Card, Button } from '../components/ui';
 import { Car, Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
 import { Checkbox } from '../components/ui';
@@ -6,11 +7,8 @@ import { useAuth } from '../context/AuthContext';
 import { AnimatedLoader } from '../components/loaders/animatedLoader';
 import { ErrorMessage } from '../components/ui/errorMessage';
 
-interface SignUpPageProps {
-  onNavigate: (page: string) => void;
-}
-
-export function SignUp({ onNavigate }: SignUpPageProps) {
+export function SignUp() {
+  const navigate = useNavigate();
   const { register, loginWithGoogle, loginWithFacebook, loading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -69,7 +67,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
       });
 
       // Si tiene éxito, navegamos
-      onNavigate('home');
+      navigate('/');
     } catch (err: any) {
       // Al fallar (ej: correo duplicado), detenemos el loader inmediatamente
       setIsSubmitting(false);
@@ -350,11 +348,7 @@ export function SignUp({ onNavigate }: SignUpPageProps) {
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
-            <button
-              onClick={() => onNavigate('login')}
-              className="text-primary hover:underline font-medium"
-              disabled={isSubmitting || loading}
-            >
+            <button onClick={() => navigate('/login')} className="text-primary hover:underline font-medium" disabled={isSubmitting || loading}>
               Inicia sesión
             </button>
           </p>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Switch } from '../ui';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../../../ui/button';
+import { Card, Input, Label, Avatar, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Switch } from '../../../ui';
 import {
   ArrowLeft,
   User,
@@ -20,18 +21,13 @@ import {
   Check,
   X,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { AnimatedLoader } from '../loaders/animatedLoader';
-import { ErrorMessage } from '../ui/errorMessage';
+import { useAuth } from '../../../../context/AuthContext';
+import { AnimatedLoader } from '../../../loaders/animatedLoader';
+import { ErrorMessage } from '../../../ui/errorMessage';
 
-interface UserProfileProps {
-  onNavigate: (page: string) => void;
-}
-
-
-
-export function UserProfile({ onNavigate }: UserProfileProps) {
+export function UserProfile() {
   const { authUser, updateProfile, logout, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('bookings');
   const [isEditing, setIsEditing] = useState(false);
@@ -196,7 +192,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
       <div className="bg-card border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => onNavigate('home')}>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="text-2xl font-bold">Mi Perfil</h1>
@@ -259,8 +255,8 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                 <button
                   onClick={() => setActiveTab('bookings')}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'bookings'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
                     }`}
                 >
                   <Calendar className="h-5 w-5" />
@@ -269,8 +265,8 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                 <button
                   onClick={() => setActiveTab('favorites')}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'favorites'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
                     }`}
                 >
                   <Star className="h-5 w-5" />
@@ -279,8 +275,8 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                 <button
                   onClick={() => setActiveTab('settings')}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'settings'
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-muted text-foreground'
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-muted text-foreground'
                     }`}
                 >
                   <Settings className="h-5 w-5" />
@@ -304,7 +300,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                 <Button
                   variant="outline"
                   className="w-full gap-2 text-destructive hover:bg-destructive/10"
-                  onClick={() => onNavigate('login')}
+                  onClick={logout}
                 >
                   <LogOut className="h-4 w-4" />
                   Cerrar sesión
@@ -385,10 +381,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                     <Card className="p-12 text-center">
                       <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground">No tienes reservas activas</p>
-                      <Button
-                        onClick={() => onNavigate('home')}
-                        className="mt-4 bg-primary hover:bg-primary/90"
-                      >
+                      <Button onClick={() => navigate('/')} className="mt-4 bg-primary hover:bg-primary/90">
                         Buscar aparcamiento
                       </Button>
                     </Card>
@@ -431,8 +424,8 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                               <Star
                                 key={i}
                                 className={`h-4 w-4 ${i < booking.rating!
-                                    ? 'fill-accent text-accent'
-                                    : 'text-muted-foreground'
+                                  ? 'fill-accent text-accent'
+                                  : 'text-muted-foreground'
                                   }`}
                               />
                             ))}
@@ -614,7 +607,7 @@ export function UserProfile({ onNavigate }: UserProfileProps) {
                               Alertas en tiempo real
                             </p>
                           </div>
-                          <input type="checkbox" defaultChecked className="toggle" />
+                          <Switch defaultChecked />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>

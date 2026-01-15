@@ -1,15 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input, Label, Card, Button } from '../components/ui';
 import { Car, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedLoader } from '../components/loaders/animatedLoader';
 import { ErrorMessage } from '../components/ui/errorMessage';
 
-interface LoginPageProps {
-  onNavigate: (page: string) => void;
-}
-
-export function Login({ onNavigate }: LoginPageProps) {
+export function Login() {
+  const navigate = useNavigate();
   const { login, loginWithGoogle, loginWithFacebook, loading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +28,7 @@ export function Login({ onNavigate }: LoginPageProps) {
       // Si llegamos aquí, el login fue exitoso
       // Es vital NO resetear isSubmitting aquí si vamos a navegar, 
       // para evitar que el formulario parpadee antes de irse
-      onNavigate('home');
+      navigate('/');
     } catch (err: any) {
       // IMPORTANTE: Primero desactivamos el estado de carga
       setIsSubmitting(false);
@@ -189,11 +187,7 @@ export function Login({ onNavigate }: LoginPageProps) {
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               ¿No tienes cuenta?{' '}
-              <button
-                onClick={() => onNavigate('signup')}
-                className="text-primary hover:underline font-medium"
-                disabled={isSubmitting || loading}
-              >
+              <button onClick={() => navigate('/signup')} className="text-primary hover:underline font-medium" disabled={isSubmitting || loading}>
                 Regístrate gratis
               </button>
             </p>

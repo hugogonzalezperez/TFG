@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, Input, Label, Textarea, Badge, Switch } from '../ui';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../../../ui/button';
+import { Card, Input, Label, Textarea, Badge } from '../../../ui';
 import {
-  ArrowLeft,
   Plus,
   MapPin,
-  Euro,
   Calendar,
   Clock,
   Star,
@@ -17,14 +16,13 @@ import {
   AlertCircle,
   TrendingUp,
   DollarSign,
+  Euro,
 } from 'lucide-react';
+import { PageHeader, StatCard } from '../../../shared';
 
-interface OwnerProfileProps {
-  onNavigate: (page: string) => void;
-}
-
-export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
+export function OwnerProfile() {
   const [showAddSpot, setShowAddSpot] = useState(false);
+  const navigate = useNavigate();
 
   const stats = {
     totalEarnings: 1248.50,
@@ -109,76 +107,53 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => onNavigate('home')}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold">Panel de propietario</h1>
-              <p className="text-sm text-muted-foreground">
-                Gestiona tus plazas de aparcamiento
-              </p>
-            </div>
-            <Button
-              onClick={() => setShowAddSpot(true)}
-              className="gap-2 bg-accent hover:bg-accent/90 text-white"
-            >
-              <Plus className="h-5 w-5" />
-              <span className="hidden sm:inline">Añadir plaza</span>
-            </Button>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Panel de propietario"
+        subtitle="Gestiona tus plazas de aparcamiento"
+        actions={
+          <Button
+            onClick={() => setShowAddSpot(true)}
+            className="gap-2 bg-accent hover:bg-accent/90 text-white"
+          >
+            <Plus className="h-5 w-5" />
+            <span className="hidden sm:inline">Añadir plaza</span>
+          </Button>
+        }
+      />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Ingresos totales</span>
-              <DollarSign className="h-5 w-5 text-primary" />
-            </div>
-            <p className="text-3xl font-bold text-primary">
-              {stats.totalEarnings.toFixed(2)}€
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Este mes</span>
-              <TrendingUp className="h-5 w-5 text-secondary" />
-            </div>
-            <p className="text-3xl font-bold text-secondary">
-              {stats.monthlyEarnings.toFixed(2)}€
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Reservas</span>
-              <Calendar className="h-5 w-5 text-accent" />
-            </div>
-            <p className="text-3xl font-bold">{stats.totalBookings}</p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Valoración</span>
-              <Star className="h-5 w-5 text-accent" />
-            </div>
-            <p className="text-3xl font-bold">{stats.averageRating}</p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Plazas activas</span>
-              <MapPin className="h-5 w-5 text-primary" />
-            </div>
-            <p className="text-3xl font-bold">{stats.activeSpots}</p>
-          </Card>
+          <StatCard
+            label="Ingresos totales"
+            value={`${stats.totalEarnings.toFixed(2)}€`}
+            icon={DollarSign}
+            valueColor="text-primary"
+          />
+          <StatCard
+            label="Este mes"
+            value={`${stats.monthlyEarnings.toFixed(2)}€`}
+            icon={TrendingUp}
+            iconColor="text-secondary"
+            valueColor="text-secondary"
+          />
+          <StatCard
+            label="Reservas"
+            value={stats.totalBookings}
+            icon={Calendar}
+            iconColor="text-accent"
+          />
+          <StatCard
+            label="Valoración"
+            value={stats.averageRating}
+            icon={Star}
+            iconColor="text-accent"
+          />
+          <StatCard
+            label="Plazas activas"
+            value={stats.activeSpots}
+            icon={MapPin}
+          />
         </div>
 
         {/* Main content */}
@@ -205,59 +180,40 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                 <form className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="spotName">Nombre de la plaza</Label>
-                    <Input
-                      id="spotName"
-                      placeholder="Ej: Plaza garaje centro ciudad"
-                    />
+                    <Input id="spotName" placeholder="Mi plaza en el centro" required />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="address">Dirección completa</Label>
-                    <Input
-                      id="address"
-                      placeholder="Calle, número, código postal, ciudad"
-                    />
+                    <Label htmlFor="location">Ubicación</Label>
+                    <Input id="location" placeholder="Calle Castillo, 45" required />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="price">Precio por hora (€)</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        step="0.5"
-                        placeholder="2.50"
-                      />
+                      <Input id="price" type="number" step="0.1" min="0" placeholder="2.50" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="type">Tipo de plaza</Label>
-                      <select
-                        id="type"
-                        className="w-full px-3 py-2 border border-border rounded-lg"
-                      >
-                        <option>Cubierta</option>
-                        <option>Subterránea</option>
-                        <option>Al aire libre</option>
+                      <select id="type" className="w-full h-10 px-3 rounded-md border border-input bg-background" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="cubierta">Cubierta</option>
+                        <option value="descubierta">Descubierta</option>
+                        <option value="garaje">Garaje privado</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="description">Descripción</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Describe tu plaza, ubicación exacta, facilidades de acceso..."
-                      rows={3}
-                    />
+                    <Textarea id="description" placeholder="Describe tu plaza..." rows={3} />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Fotos de la plaza</Label>
                     <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
                       <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Haz clic para subir fotos
-                      </p>
+                      <p className="text-sm text-muted-foreground">Haz clic para subir fotos</p>
                     </div>
                   </div>
 
@@ -270,10 +226,7 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                     >
                       Cancelar
                     </Button>
-                    <Button
-                      type="submit"
-                      className="flex-1 bg-secondary hover:bg-secondary/90"
-                    >
+                    <Button type="submit" className="flex-1 bg-secondary hover:bg-secondary/90">
                       Publicar plaza
                     </Button>
                   </div>
@@ -292,11 +245,10 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                         className="w-32 h-32 object-cover rounded-lg"
                       />
                       <Badge
-                        className={`absolute top-2 left-2 ${
-                          spot.status === 'active'
+                        className={`absolute top-2 left-2 ${spot.status === 'active'
                             ? 'bg-secondary text-white'
                             : 'bg-muted text-muted-foreground'
-                        }`}
+                          }`}
                       >
                         {spot.status === 'active' ? 'Activa' : 'Inactiva'}
                       </Badge>
@@ -318,11 +270,7 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                           <Button variant="outline" size="icon">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="text-destructive"
-                          >
+                          <Button variant="outline" size="icon" className="text-destructive">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -331,9 +279,7 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                         <div>
                           <p className="text-sm text-muted-foreground">Precio</p>
-                          <p className="font-semibold text-primary">
-                            {spot.price}€/h
-                          </p>
+                          <p className="font-semibold text-primary">{spot.price}€/h</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Reservas</p>
@@ -360,11 +306,10 @@ export function OwnerProfile({ onNavigate }: OwnerProfileProps) {
                           {Object.entries(spot.availability).map(([day, available]) => (
                             <div
                               key={day}
-                              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs ${
-                                available
+                              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs ${available
                                   ? 'bg-secondary/10 text-secondary'
                                   : 'bg-muted text-muted-foreground'
-                              }`}
+                                }`}
                             >
                               {day.charAt(0).toUpperCase()}
                             </div>

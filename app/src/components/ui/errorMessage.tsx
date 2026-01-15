@@ -6,19 +6,23 @@ interface ErrorMessageProps {
 }
 
 export function ErrorMessage({ message, onClose }: ErrorMessageProps) {
-  if (!message) return null;
+  if (!message || message.trim() === '') return null;
 
   return (
-    <div className="mb-6 p-4 bg-destructive/10 border-2 border-destructive/30 rounded-lg flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-      <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+    <div
+      className="mb-6 p-4 bg-red-50 dark:bg-red-950/20 border-2 border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3 transition-all"
+      role="alert"
+    >
+      <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
       <div className="flex-1">
-        <p className="text-sm font-medium text-destructive">{message}</p>
+        <p className="text-sm font-medium text-red-800 dark:text-red-300">{message}</p>
       </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="text-destructive/70 hover:text-destructive transition-colors"
+          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
           aria-label="Cerrar mensaje"
+          type="button"
         >
           <X className="h-5 w-5" />
         </button>

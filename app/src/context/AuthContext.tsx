@@ -130,40 +130,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
   /**
    * Registrar nuevo usuario
    */
-  // En AuthContext.tsx
   const register = async (data: RegisterRequest) => {
     try {
       setLoading(true);
-      const response = await registerWithEmail(data);
-
-      // IMPORTANTE: Asegurarnos de que tenemos el ID antes de cargar el usuario
-      if (response.user && response.user.id) {
-        await loadUser(response.user.id);
-      } else {
-        console.error("No se recibió el ID del usuario tras el registro");
-        setLoading(false);
-      }
+      await registerWithEmail(data);
+      // Si el registro es exitoso, `onAuthStateChange` se disparará,
+      // llamará a `loadUser`, y `loadUser` se encargará de poner `setLoading(false)`.
     } catch (error) {
-      setLoading(false);
+      setLoading(false); // En caso de error, detenemos el loading.
       throw error;
     }
   };
 
   /**
-   * Iniciar sesión con email
+   * Iniciar sesión con email/contraseña
    */
+
   const login = async (data: LoginRequest) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await loginWithEmail(data);
-      await loadUser();
+      return { success: true };
     } catch (error: any) {
-      console.error('Error in login:', error);
-      throw new Error(error.message || 'Error al iniciar sesión');
+      console.error('Error en el contexto de login:', error);
+      return {
+        success: false,
+        message: error.message ?? 'Error desconocido',
+      };
     } finally {
       setLoading(false);
     }
   };
+
 
   /**
    * Iniciar sesión con Google

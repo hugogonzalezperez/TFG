@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, Input, Label, Badge } from '../ui';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Button } from '../../../ui/button';
+import { Card, Input, Label, Badge } from '../../../ui';
 import {
   ArrowLeft,
   CreditCard,
@@ -12,18 +13,15 @@ import {
   Shield,
   AlertCircle,
 } from 'lucide-react';
-import { Checkbox } from '../ui';
+import { Checkbox } from '../../../ui';
 
-interface BookingProcessProps {
-  onNavigate: (page: string, data?: any) => void;
-  parkingData?: any;
-}
-
-export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps) {
+export function BookingProcess() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { parkingData } = location.state || {};
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [bookingComplete, setBookingComplete] = useState(false);
-
   const parking = parkingData || {
     name: 'Plaza Centro',
     location: 'Calle Castillo, 45',
@@ -100,15 +98,11 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               variant="outline"
-              onClick={() => onNavigate('profile')}
-              className="flex-1"
-            >
+              onClick={() => navigate('/profile')}
+              className="flex-1">
               Ver mis reservas
             </Button>
-            <Button
-              onClick={() => onNavigate('home')}
-              className="flex-1 bg-primary hover:bg-primary/90"
-            >
+            <Button onClick={() => navigate('/')} className="flex-1 bg-primary hover:bg-primary/90">
               Volver al inicio
             </Button>
           </div>
@@ -126,8 +120,7 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => step > 1 ? setStep(step - 1) : onNavigate('detail', parking)}
-            >
+              onClick={() => (step > 1 ? setStep(step - 1) : navigate(-1))}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1">
@@ -143,9 +136,8 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
           <div className="flex items-center justify-center gap-4">
             <div className="flex items-center gap-2">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= 1 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                  }`}
               >
                 {step > 1 ? <Check className="h-5 w-5" /> : '1'}
               </div>
@@ -156,9 +148,8 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
             <div className={`w-16 h-0.5 ${step >= 2 ? 'bg-primary' : 'bg-border'}`} />
             <div className="flex items-center gap-2">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= 2 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                  }`}
               >
                 {step > 2 ? <Check className="h-5 w-5" /> : '2'}
               </div>
@@ -167,9 +158,8 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
             <div className={`w-16 h-0.5 ${step >= 3 ? 'bg-primary' : 'bg-border'}`} />
             <div className="flex items-center gap-2">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= 3 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                  }`}
               >
                 3
               </div>
@@ -253,22 +243,20 @@ export function BookingProcess({ onNavigate, parkingData }: BookingProcessProps)
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <button
                     onClick={() => setPaymentMethod('card')}
-                    className={`p-4 border-2 rounded-lg transition-all ${
-                      paymentMethod === 'card'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
-                    }`}
+                    className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'card'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/50'
+                      }`}
                   >
                     <CreditCard className="h-6 w-6 mx-auto mb-2" />
                     <p className="text-sm font-medium">Tarjeta</p>
                   </button>
                   <button
                     onClick={() => setPaymentMethod('paypal')}
-                    className={`p-4 border-2 rounded-lg transition-all ${
-                      paymentMethod === 'paypal'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
-                    }`}
+                    className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'paypal'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/50'
+                      }`}
                   >
                     <div className="h-6 w-6 mx-auto mb-2 bg-[#0070BA] rounded flex items-center justify-center text-white text-xs font-bold">
                       P

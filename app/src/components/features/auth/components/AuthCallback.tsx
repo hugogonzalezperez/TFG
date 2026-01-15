@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { Card } from '../ui';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../../../lib/supabase';
+import { Card } from '../../../ui';
+import { AnimatedLoader } from '../../../loaders/animatedLoader';
+import { HomeSkeleton } from '../../../loaders/homeSkeleton';
 
-interface AuthCallbackProps {
-  onNavigate: (page: string) => void;
-}
-
-export function AuthCallback({ onNavigate }: AuthCallbackProps) {
+export function AuthCallback() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -21,8 +21,8 @@ export function AuthCallback({ onNavigate }: AuthCallbackProps) {
         if (data.session?.user) {
           // Esperar un poco para que se cree el perfil
           await new Promise(resolve => setTimeout(resolve, 1000));
-          // Redirigir a home
-          onNavigate('home');
+          // Redirigir a home usando el nuevo enrutador
+          navigate('/');
         } else {
           setError('No se pudo completar la autenticación');
         }
@@ -34,20 +34,11 @@ export function AuthCallback({ onNavigate }: AuthCallbackProps) {
     };
 
     handleCallback();
-  }, [onNavigate]);
+  }, [navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Card className="p-8 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-          <p className="text-muted-foreground">Completando autenticación...</p>
-        </Card>
-      </div>
-    );
-  }
+    return <HomeSkeleton />;
+    }
 
   if (error) {
     return (
@@ -56,7 +47,7 @@ export function AuthCallback({ onNavigate }: AuthCallbackProps) {
           <p className="text-destructive font-semibold mb-4">Error de autenticación</p>
           <p className="text-muted-foreground mb-6">{error}</p>
           <button
-            onClick={() => onNavigate('login')}
+            onClick={() => navigate('/login')}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             Volver a intentar

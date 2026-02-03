@@ -84,7 +84,7 @@ export default function Home() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <button className="text-foreground hover:text-primary transition-colors">
+              <button onClick={() => navigate('/map')} className="text-foreground hover:text-primary transition-colors">
                 Encuentra aparcamiento
               </button>
               <button

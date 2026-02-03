@@ -1,126 +1,63 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Heart, Share2 } from 'lucide-react';
 import { Button } from '../../../ui/button';
-import { Card, Badge, Avatar } from '../../../ui';
-import {
-  ArrowLeft,
-  Star,
-  MapPin,
-  Shield,
-  Car,
-  Clock,
-  Camera,
-  Wifi,
-  Zap,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  Share2,
-  MessageCircle,
-} from 'lucide-react';
+import { AnimatedLoader } from '../../../shared/components/loaders';
+import { ErrorMessage } from '../../../ui';
 
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+// Sub-components
+import { ParkingGallery } from './detail/ParkingGallery';
+import { ParkingHeader } from './detail/ParkingHeader';
+import { ParkingOwnerCard } from './detail/ParkingOwnerCard';
+import { ParkingFeatures } from './detail/ParkingFeatures';
+import { ParkingReviews } from './detail/ParkingReviews';
+import { ParkingBookingCard } from './detail/ParkingBookingCard';
+
+// Hooks
+import { useParkingSpot } from '../hooks/useParkingSpot';
 
 export function ParkingDetail() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = useParams();
-  const parkingData = location.state;
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { id } = useParams<{ id: string }>();
+
+  // Real data fetching with React Query
+  const { data: parking, isLoading, error: queryError } = useParkingSpot(id);
+
   const [isFavorite, setIsFavorite] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Datos por defecto coincidiendo con el nuevo esquema
-  const defaultParking = {
-    id: '123e4567-e89b-12d3-a456-426614174000', // Ejemplo UUID
-    garage_id: '123e4567-e89b-12d3-a456-426614174001',
-    name: 'Plaza Sol',
-    address: 'Calle Castillo, 45',
-    city: 'Santa Cruz de Tenerife',
-    base_price_per_hour: 2.5,
-    current_price_per_hour: 2.5,
-    rating: 4.8,
-    reviews: 124,
-    distance: 0.3,
-    type: 'Cubierta',
-    is_verified: true,
-    is_active: true,
-    total_spots: 1,
-    image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
-    images: [
-      'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1590674899484-d5640e854abe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bmRlcmdyb3VuZCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQzfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    ],
-    owner: {
-      id: 'owner-uuid',
-      name: 'María González',
-      avatar: 'https://images.unsplash.com/photo-1623582854588-d60de57fa33f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBhdmF0YXJ8ZW58MXx8fHwxNzY3NjIwMjg1fDA&ixlib=rb-4.1.0&q=80&w=200',
-      rating: 4.9,
-      reviewCount: 87,
-    },
-    amenities: ['Vigilancia 24/7', 'Cámara de seguridad', 'WiFi', 'Carga eléctrica'],
-    description:
-      'Plaza de aparcamiento cubierta en el corazón de Santa Cruz, ideal para turistas que visitan la ciudad.',
-    rules: [
-      'Altura máxima: 2.10m',
-      'Horario de acceso: 24 horas',
-    ],
-  };
-
-  // Merge: datos recibidos + datos por defecto
-  const parking = {
-    ...defaultParking,
-    ...parkingData,
-    owner: {
-      ...defaultParking.owner,
-      ...(parkingData?.owner || {}),
-    },
-  };
-
-  // Maneja tanto 'image' (singular) como 'images' (array)
-  const images = parking.images && Array.isArray(parking.images)
-    ? parking.images
-    : parking.image
-      ? [parking.image]
-      : [];
-
-  const nextImage = () => {
-    if (images.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }
-  };
-
-  const prevImage = () => {
-    if (images.length > 0) {
-      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    }
-  };
-
-  const reviews = [
+  // Mocked reviews for now (as the schema only has a reviews table but we might need a separate query)
+  const mockReviews = [
     {
       id: 1,
       author: 'Carlos Ruiz',
       rating: 5,
       date: 'Hace 2 semanas',
-      comment: 'Excelente ubicación, muy cerca del centro. La plaza es amplia y el garaje está muy bien mantenido. Totalmente recomendable.',
+      comment: 'Excelente ubicación, muy cerca del centro. La plaza es amplia y el garaje está muy bien mantenido.',
     },
     {
       id: 2,
       author: 'Laura Martín',
       rating: 5,
       date: 'Hace 1 mes',
-      comment: 'Perfecta para aparcar cuando visitas Santa Cruz. María fue muy amable y el proceso super fácil. Volveré sin duda.',
-    },
-    {
-      id: 3,
-      author: 'Pedro Sánchez',
-      rating: 4,
-      date: 'Hace 2 meses',
-      comment: 'Muy buena plaza, solo un pequeño detalle con el acceso que se solucionó rápido. Por lo demás, todo perfecto.',
-    },
+      comment: 'Perfecta para aparcar cuando visitas Santa Cruz. María fue muy amable y el proceso super fácil.',
+    }
   ];
+
+  if (isLoading) return <AnimatedLoader message="Cargando detalles de la plaza..." />;
+  if (queryError || !parking) return (
+    <div className="p-8">
+      <ErrorMessage
+        message="No se pudo encontrar la plaza solicitada."
+        onClose={() => navigate('/map')}
+      />
+      <Button onClick={() => navigate('/map')} className="mt-4">Volver al mapa</Button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      {/* Header Sticky */}
       <div className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -139,271 +76,39 @@ export function ParkingDetail() {
         </div>
       </div>
 
-      {/* Image Gallery */}
-      <div className="relative bg-black">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative aspect-video lg:aspect-[21/9]">
-            <img
-              src={images[currentImageIndex]}
-              alt={`${parking.name} - Imagen ${currentImageIndex + 1}`}
-              className="w-full h-full object-cover"
-            />
+      <ParkingGallery images={parking.images || [parking.image]} isVerified={parking.is_verified} />
 
-            {/* Image navigation */}
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-card/90 hover:bg-card rounded-full p-2 shadow-lg transition-all"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-card/90 hover:bg-card rounded-full p-2 shadow-lg transition-all"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-
-                {/* Image counter */}
-                <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
-                  {currentImageIndex + 1} / {images.length}
-                </div>
-              </>
-            )}
-
-            {/* Verified badge */}
-            {parking.is_verified && (
-              <div className="absolute top-4 left-4">
-                <Badge className="bg-secondary text-white">
-                  <Shield className="h-3 w-3 mr-1" />
-                  Verificado
-                </Badge>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
+          {/* Columna Principal */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Title and basic info */}
-            <div>
-              <h1 className="text-3xl font-bold mb-4">{parking.name}</h1>
-              <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
-                <div className="flex items-center gap-1">
-                  <Star className="h-5 w-5 fill-accent text-accent" />
-                  <span className="font-semibold text-foreground">{parking.rating}</span>
-                  <span>({parking.reviews} valoraciones)</span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-5 w-5" />
-                  <span>{parking.location}, {parking.city}</span>
-                </div>
-                <span>•</span>
-                <span>{parking.distance} km de distancia</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">{parking.type}</Badge>
-                <Badge variant="outline" className="bg-secondary/10 text-secondary">
-                  Disponible ahora
-                </Badge>
-              </div>
-            </div>
+            <ParkingHeader
+              name={parking.name}
+              rating={parking.rating || 4.8}
+              reviews={parking.reviews || 12}
+              address={parking.address}
+              city={parking.city}
+              type={parking.type}
+            />
 
-            {/* Owner info */}
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16">
-                    <img src={parking.owner.avatar} alt={parking.owner.name} />
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold text-lg">{parking.owner.name}</h3>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-accent text-accent" />
-                        <span>{parking.owner.rating}</span>
-                      </div>
-                      <span>•</span>
-                      <span>{parking.owner.reviewCount} valoraciones</span>
-                      <span>•</span>
-                      <span>Miembro desde {parking.owner.memberSince}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Tiempo de respuesta: {parking.owner.responseTime}
-                    </p>
-                  </div>
-                </div>
-                <Button variant="outline" className="gap-2">
-                  <MessageCircle className="h-4 w-4" />
-                  Contactar
-                </Button>
-              </div>
-            </Card>
+            {parking.owner && <ParkingOwnerCard owner={parking.owner} />}
 
-            {/* Description */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Descripción</h2>
-              <p className="text-muted-foreground leading-relaxed">{parking.description}</p>
-            </div>
+            <ParkingFeatures
+              description={parking.description}
+              amenities={parking.amenities}
+              rules={parking.rules}
+            />
 
-            {/* Amenities */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Servicios incluidos</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {parking.amenities.map((amenity: string, index: number) => {
-                  const icons = [Shield, Camera, Wifi, Zap];
-                  const Icon = icons[index % icons.length];
-                  return (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="bg-primary/10 p-2 rounded-lg">
-                        <Icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <span>{amenity}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Rules */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Normas y condiciones</h2>
-              <ul className="space-y-2">
-                {parking.rules.map((rule: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <div className="bg-secondary/10 p-1 rounded-full mt-0.5">
-                      <div className="w-1.5 h-1.5 bg-secondary rounded-full" />
-                    </div>
-                    <span className="text-muted-foreground">{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Reviews */}
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold">
-                  Valoraciones ({parking.reviews})
-                </h2>
-                <div className="flex items-center gap-2">
-                  <Star className="h-6 w-6 fill-accent text-accent" />
-                  <span className="text-2xl font-bold">{parking.rating}</span>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                {reviews.map((review) => (
-                  <Card key={review.id} className="p-6">
-                    <div className="flex items-start gap-4">
-                      <Avatar className="h-12 w-12">
-                        <div className="bg-primary/10 w-full h-full flex items-center justify-center text-primary font-semibold">
-                          {review.author.charAt(0)}
-                        </div>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold">{review.author}</h4>
-                          <span className="text-sm text-muted-foreground">{review.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1 mb-2">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${i < review.rating
-                                ? 'fill-accent text-accent'
-                                : 'text-muted-foreground'
-                                }`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-muted-foreground">{review.comment}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-
-              <Button variant="outline" className="w-full mt-6">
-                Ver todas las valoraciones
-              </Button>
-            </div>
+            <ParkingReviews
+              rating={parking.rating || 4.8}
+              reviewsCount={parking.reviews || 12}
+              reviews={mockReviews}
+            />
           </div>
 
-          {/* Booking Card */}
+          {/* Columna Lateral (Reserva) */}
           <div className="lg:col-span-1">
-            <Card className="p-6 sticky top-24 shadow-xl">
-              <div className="mb-6">
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-primary">{parking.base_price_per_hour}€</span>
-                  <span className="text-muted-foreground">/hora</span>
-                </div>
-                <p className="text-sm text-muted-foreground text-secondary">
-                  <Zap className="h-3 w-3 inline mr-1" />
-                  Precio dinámico disponible
-                </p>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div>
-                  <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-primary" />
-                    Entrada (Mínimo 2h)
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-primary" />
-                    Salida
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-              </div>
-
-              <Button
-                onClick={() => navigate(`/book/${parking.id}`, { state: parking })}
-                className="w-full h-12 bg-accent hover:bg-accent/90 text-white mb-4"
-              >
-                Reservar ahora
-              </Button>
-
-              <div className="border-t border-border pt-4 space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Estimación base (4h)</span>
-                  <span className="font-semibold">{(parking.base_price_per_hour * 4).toFixed(2)}€</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tarifa de servicio</span>
-                  <span className="font-semibold">1.50€</span>
-                </div>
-                <div className="border-t border-border pt-3 flex justify-between text-base">
-                  <span className="font-semibold">Total estimado</span>
-                  <span className="font-bold text-primary">
-                    {((parking.base_price_per_hour * 4) + 1.5).toFixed(2)}€
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-border">
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <Shield className="h-5 w-5 text-secondary" />
-                  <span>Protección de reserva incluida</span>
-                </div>
-              </div>
-            </Card>
+            <ParkingBookingCard parking={parking} />
           </div>
         </div>
       </div>

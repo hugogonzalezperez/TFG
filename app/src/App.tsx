@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FilterProvider } from './features/parking';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './features/auth';
 import { AnimatedLoader } from './shared/components/loaders';
 
@@ -40,11 +41,22 @@ function AppContent() {
 }
 
 export default function App() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: 1,
+      },
+    },
+  });
+
   return (
-    <AuthProvider>
-      <FilterProvider>
-        <AppContent />
-      </FilterProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <FilterProvider>
+          <AppContent />
+        </FilterProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

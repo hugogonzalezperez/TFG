@@ -23,7 +23,7 @@ import { filterParkings, sortParkingsByDistance } from '../utils/parkingFilters'
 
 
 import { useNavigate, useLocation } from 'react-router-dom';
-import { parkingService } from '../services/parking.service';
+import { useGarages } from '../hooks/useGarages';
 import { Parking, Garage } from '../types/parking.types';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 import { ErrorMessage } from '../../../ui';
@@ -41,26 +41,16 @@ export function MapView() {
   const [hoveredGarageId, setHoveredGarageId] = useState<string | null>(null);
   const [isGarageModalOpen, setIsGarageModalOpen] = useState(false);
 
-  // Estado para los datos reales
-  const [allGarages, setAllGarages] = useState<Garage[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Uso del hook profesional React Query
+  const { data: allGarages = [], isLoading: loading, error: queryError } = useGarages();
   const [error, setError] = useState<string | null>(null);
 
-  // 1. Cargar datos de la base de datos
+  // Sincronizar error de Query con el estado local para compatibilidad con la UI de ErrorMessage
   useEffect(() => {
-    const fetchGarages = async () => {
-      try {
-        setLoading(true);
-        const data = await parkingService.getGaragesWithSpots();
-        setAllGarages(data);
-      } catch (err) {
-        setError('No se pudieron cargar los garajes. Revisa tu conexión.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchGarages();
-  }, []);
+    if (queryError) {
+      setError('No se pudieron cargar los garajes. Revisa tu conexión.');
+    }
+  }, [queryError]);
 
   // Cargar datos de fecha/hora desde searchData (viene de Home) - SOLO UNA VEZ
   useEffect(() => {
@@ -123,7 +113,7 @@ export function MapView() {
     return `${min.toFixed(2)} - ${max.toFixed(2)}€`;
   };
 
-  // Debug logs
+  /* // Debug logs
   useEffect(() => {
     console.log('Filters:', filters);
     console.log('Filtered Spots:', filteredSpots.length);
@@ -131,7 +121,7 @@ export function MapView() {
       console.log('Selected Garage Spots:', selectedGarage.spots?.length);
       console.log('Garage Filtered Spots in Modal:', garageFilteredSpots.length);
     }
-  }, [filters, filteredSpots, selectedGarage, garageFilteredSpots]);
+  }, [filters, filteredSpots, selectedGarage, garageFilteredSpots]); */
 
   if (loading) return <AnimatedLoader message="Buscando plazas libres en Santa Cruz..." />;
 

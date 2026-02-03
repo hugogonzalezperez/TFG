@@ -9,6 +9,9 @@ export { FilterDrawer } from './components/FilterDrawer';
 export { FilterSidebar } from './components/FilterSidebar';
 export { Filters } from './components/Filters';
 
+// Services
+export { parkingService } from './services/parking.service';
+
 // Context
 export { FilterProvider, useFilters } from './context/FilterContext';
 

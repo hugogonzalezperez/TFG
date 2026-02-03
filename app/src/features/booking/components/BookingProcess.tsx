@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '../../../ui/button';
 import { Card, Input, Label, Badge } from '../../../ui';
 import {
@@ -11,40 +11,131 @@ import {
   Clock,
   Shield,
   AlertCircle,
+  Loader2,
+  Zap,
 } from 'lucide-react';
 import { Checkbox } from '../../../ui';
 
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../auth';
+import { bookingService, pricingService, BookingEstimation, PricingRule } from '../index';
+import { AnimatedLoader } from '../../../shared/components/loaders';
+import { ErrorMessage } from '../../../ui';
 
 export function BookingProcess() {
   const navigate = useNavigate();
   const location = useLocation();
-  const parkingData = location.state;
+  const { authUser } = useAuth();
+
+  const parking = location.state || {
+    id: '',
+    name: 'Plaza Centro',
+    address: 'Calle Castillo, 45',
+    city: 'Santa Cruz',
+    base_price_per_hour: 2.5,
+  };
+
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [bookingComplete, setBookingComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [rulesLoading, setRulesLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
+  const [estimation, setEstimation] = useState<BookingEstimation | null>(null);
 
-  const parking = parkingData || {
-    name: 'Plaza Centro',
-    location: 'Calle Castillo, 45',
-    city: 'Santa Cruz',
-    price: 2.5,
+  // Datos del formulario pre-rellenados del usuario autenticado
+  const [formData, setFormData] = useState({
+    firstName: authUser?.user.name?.split(' ')[0] || '',
+    lastName: authUser?.user.name?.split(' ').slice(1).join(' ') || '',
+    email: authUser?.user.email || '',
+    phone: authUser?.user.phone || '',
+    licensePlate: '',
+    carModel: '',
+  });
+
+  // Fechas por defecto (pueden venir del state o ser hoy)
+  const bookingDates = useMemo(() => {
+    return {
+      start: new Date(),
+      end: new Date(new Date().getTime() + 4 * 60 * 60 * 1000) // +4h por defecto
+    };
+  }, []);
+
+  // 1. Cargar reglas de precio al iniciar
+  useEffect(() => {
+    const fetchRules = async () => {
+      try {
+        if (!parking.id) return;
+        setRulesLoading(true);
+        const rules = await bookingService.getPricingRules(parking.id);
+        setPricingRules(rules);
+
+        // Calcular primera estimación
+        const est = pricingService.calculateEstimation(
+          parking.base_price_per_hour,
+          bookingDates.start,
+          bookingDates.end,
+          rules
+        );
+        setEstimation(est);
+      } catch (err) {
+        console.error('Error fetching rules:', err);
+      } finally {
+        setRulesLoading(false);
+      }
+    };
+
+    fetchRules();
+  }, [parking.id, parking.base_price_per_hour, bookingDates]);
+
+  const handleConfirmBooking = async () => {
+    if (!authUser?.user.id) {
+      setError('Debes iniciar sesión para reservar');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    // Validar duración mínima (2 horas)
+    const durationHours = (bookingDates.end.getTime() - bookingDates.start.getTime()) / (1000 * 60 * 60);
+    if (durationHours < 1.9) { // Un pequeño margen para evitar problemas de precisión
+      setError('La reserva mínima debe ser de 2 horas.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Verificar disponibilidad real
+      const isAvailable = await bookingService.checkAvailability(
+        parking.id,
+        bookingDates.start,
+        bookingDates.end
+      );
+
+      if (!isAvailable) {
+        throw new Error('Lo sentimos, esta plaza ya no está disponible para las horas seleccionadas.');
+      }
+
+      // Crear la reserva real
+      await bookingService.createBooking({
+        spotId: parking.id,
+        userId: authUser.user.id,
+        startTime: bookingDates.start,
+        endTime: bookingDates.end,
+        basePrice: parking.base_price_per_hour,
+      });
+
+      setBookingComplete(true);
+    } catch (err: any) {
+      setError(err.message || 'Error al procesar la reserva');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const bookingDetails = {
-    startDate: '2026-01-10',
-    startTime: '14:00',
-    endDate: '2026-01-10',
-    endTime: '18:00',
-    hours: 4,
-    subtotal: parking.price * 4,
-    serviceFee: 1.5,
-    total: (parking.price * 4) + 1.5,
-  };
-
-  const handleConfirmBooking = () => {
-    setBookingComplete(true);
-  };
+  if (rulesLoading) return <AnimatedLoader message="Calculando precios dinámicos..." />;
 
   if (bookingComplete) {
     return (
@@ -71,9 +162,11 @@ export function BookingProcess() {
               <div className="flex items-start gap-3">
                 <Calendar className="h-5 w-5 text-primary mt-0.5" />
                 <div>
-                  <p className="font-medium">10 de enero de 2026</p>
+                  <p className="font-medium">
+                    {bookingDates.start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
                   <p className="text-muted-foreground">
-                    {bookingDetails.startTime} - {bookingDetails.endTime}
+                    {bookingDates.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {bookingDates.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
               </div>
@@ -81,7 +174,7 @@ export function BookingProcess() {
                 <CreditCard className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="font-medium">Total pagado</p>
-                  <p className="text-2xl font-bold text-primary">{bookingDetails.total.toFixed(2)}€</p>
+                  <p className="text-2xl font-bold text-primary">{estimation?.total_price.toFixed(2)}€</p>
                 </div>
               </div>
             </div>
@@ -190,22 +283,44 @@ export function BookingProcess() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">Nombre</Label>
-                      <Input id="firstName" placeholder="Juan" />
+                      <Input
+                        id="firstName"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        placeholder="Juan"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Apellidos</Label>
-                      <Input id="lastName" placeholder="Pérez García" />
+                      <Input
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        placeholder="Pérez García"
+                      />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="juan@email.com" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="juan@email.com"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="phone">Teléfono</Label>
-                    <Input id="phone" type="tel" placeholder="+34 600 000 000" />
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+34 600 000 000"
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -251,8 +366,8 @@ export function BookingProcess() {
                   <button
                     onClick={() => setPaymentMethod('card')}
                     className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'card'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/50'
                       }`}
                   >
                     <CreditCard className="h-6 w-6 mx-auto mb-2" />
@@ -261,8 +376,8 @@ export function BookingProcess() {
                   <button
                     onClick={() => setPaymentMethod('paypal')}
                     className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'paypal'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/50'
                       }`}
                   >
                     <div className="h-6 w-6 mx-auto mb-2 bg-[#0070BA] rounded flex items-center justify-center text-white text-xs font-bold">
@@ -315,13 +430,25 @@ export function BookingProcess() {
                       </div>
                     </div>
 
+                    <ErrorMessage message={error || ''} onClose={() => setError(null)} />
+
                     <Button
                       type="button"
                       onClick={handleConfirmBooking}
+                      disabled={loading}
                       className="w-full h-12 bg-accent hover:bg-accent/90 text-white mt-6"
                     >
-                      <Lock className="h-5 w-5 mr-2" />
-                      Confirmar y pagar {bookingDetails.total.toFixed(2)}€
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Procesando...
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="h-5 w-5 mr-2" />
+                          Confirmar y pagar {estimation?.total_price.toFixed(2)}€
+                        </>
+                      )}
                     </Button>
                   </form>
                 )}
@@ -372,7 +499,9 @@ export function BookingProcess() {
                   <Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
                   <div className="flex-1">
                     <p className="font-medium">Fecha</p>
-                    <p className="text-muted-foreground">10 de enero de 2026</p>
+                    <p className="text-muted-foreground">
+                      {bookingDates.start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
@@ -380,7 +509,7 @@ export function BookingProcess() {
                   <div className="flex-1">
                     <p className="font-medium">Horario</p>
                     <p className="text-muted-foreground">
-                      {bookingDetails.startTime} - {bookingDetails.endTime} ({bookingDetails.hours}h)
+                      {bookingDates.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {bookingDates.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} ({estimation?.hours}h)
                     </p>
                   </div>
                 </div>
@@ -389,20 +518,29 @@ export function BookingProcess() {
               <div className="space-y-3 text-sm mb-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">
-                    {parking.price}€ x {bookingDetails.hours} horas
+                    {parking.base_price_per_hour}€ x {estimation?.hours} horas
                   </span>
-                  <span>{bookingDetails.subtotal.toFixed(2)}€</span>
+                  <span>{(parking.base_price_per_hour * (estimation?.hours || 1)).toFixed(2)}€</span>
                 </div>
+                {estimation && estimation.multiplier_applied > 1 && (
+                  <div className="flex justify-between text-secondary">
+                    <span className="flex items-center gap-1">
+                      <Zap className="h-3 w-3" />
+                      Tarifa dinámica ({((estimation.multiplier_applied - 1) * 100).toFixed(0)}%)
+                    </span>
+                    <span>{((estimation.total_price - (parking.base_price_per_hour * estimation.hours)) - 1.5).toFixed(2)}€</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tarifa de servicio</span>
-                  <span>{bookingDetails.serviceFee.toFixed(2)}€</span>
+                  <span>1.50€</span>
                 </div>
               </div>
 
               <div className="border-t border-border pt-4 flex justify-between items-center">
                 <span className="font-semibold">Total</span>
                 <span className="text-2xl font-bold text-primary">
-                  {bookingDetails.total.toFixed(2)}€
+                  {estimation?.total_price.toFixed(2)}€
                 </span>
               </div>
 

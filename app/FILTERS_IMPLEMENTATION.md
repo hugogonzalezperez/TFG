@@ -195,6 +195,3 @@ npm run build  # Verifica compilación sin errores
 npm run dev    # Servidor de desarrollo
 ```
 
-El proyecto compila sin errores ✅
-Tamaño final: ~455KB JS / 74KB CSS (gzipped)
-

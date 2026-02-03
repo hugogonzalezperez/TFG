@@ -2,32 +2,52 @@
 // TIPOS DE PARKING
 // =====================================================
 
-export interface Parking {
-  id: number;
+export interface Garage {
+  id: string;
   name: string;
-  location: string;
+  address: string;
   city: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  distance: number;
   lat: number;
   lng: number;
-  type: 'Cubierta' | 'Subterráneo' | 'Al aire libre';
-  verified: boolean;
+  is_active: boolean;
+  is_verified: boolean;
+  total_spots: number;
+  owner_id: string;
+  image?: string;
+  rating?: number;
+  reviews?: number;
+  spots?: Parking[];
+}
+
+export interface Parking {
+  id: string; // UUID de parking_spots
+  garage_id: string; // UUID de garages
+  name: string;
+  spot_number: string;
+  address: string;
+  city: string;
+  base_price_per_hour: number;
+  current_price_per_hour: number;
+  rating?: number;
+  reviews?: number;
+  distance?: number;
+  lat: number;
+  lng: number;
+  type?: 'Cubierta' | 'Subterráneo' | 'Al aire libre';
+  is_active: boolean;
+  is_verified: boolean;
   image: string;
   images?: string[];
-  available?: boolean;
+  description?: string;
+  total_spots: number;
   owner?: {
+    id: string;
     name: string;
-    avatar: string;
-    rating: number;
-    reviewCount: number;
-    responseTime: string;
-    memberSince: string;
+    avatar?: string;
+    rating?: number;
+    reviewCount?: number;
   };
   amenities?: string[];
-  description?: string;
   rules?: string[];
 }
 

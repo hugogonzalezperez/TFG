@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ParkingMap } from './ParkingMap'
+import { GarageDetailModal } from './GarageDetailModal';
 import { Filters } from './Filters';
 import { FilterDrawer } from './FilterDrawer';
 import { FilterSidebar } from './FilterSidebar';
@@ -21,101 +22,11 @@ import { filterParkings, sortParkingsByDistance } from '../utils/parkingFilters'
 
 
 
-// Mock data de plazas
-const parkingSpots: any[] = [
-  {
-    id: 1,
-    name: 'Plaza Centro',
-    location: 'Calle Castillo, 45',
-    city: 'Santa Cruz',
-    price: 2.5,
-    rating: 4.8,
-    reviews: 124,
-    distance: 0.3,
-    lat: 28.4682,
-    lng: -16.2546,
-    type: 'Cubierta',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=400',
-  },
-  {
-    id: 2,
-    name: 'Garaje Privado Marina',
-    location: 'Av. Marítima, 12',
-    city: 'Santa Cruz',
-    price: 3.0,
-    rating: 4.9,
-    reviews: 89,
-    distance: 0.5,
-    lat: 28.4695,
-    lng: -16.2523,
-    type: 'Subterráneo',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bmRlcmdyb3VuZCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQzfDA&ixlib=rb-4.1.0&q=80&w=400',
-  },
-  {
-    id: 3,
-    name: 'Plaza Residencial',
-    location: 'C/ San Francisco, 78',
-    city: 'La Laguna',
-    price: 2.0,
-    rating: 4.6,
-    reviews: 56,
-    distance: 1.2,
-    lat: 28.4875,
-    lng: -16.3154,
-    type: 'Al aire libre',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1761479353275-a66a51af32ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpZGVudGlhbCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQ0fDA&ixlib=rb-4.1.0&q=80&w=400',
-  },
-  {
-    id: 4,
-    name: 'Parking Zona Norte',
-    location: 'Plaza del Adelantado',
-    city: 'La Laguna',
-    price: 1.8,
-    rating: 4.7,
-    reviews: 142,
-    distance: 1.5,
-    lat: 28.4876,
-    lng: -16.3140,
-    type: 'Cubierta',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1621929747188-0b4dc28498d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJlZXQlMjBwYXJraW5nfGVufDF8fHx8MTc2NzY0NTU0NHww&ixlib=rb-4.1.0&q=80&w=400',
-  },
-  {
-    id: 5,
-    name: 'Garaje Centro Comercial',
-    location: 'C/ Bethencourt Alfonso',
-    city: 'Santa Cruz',
-    price: 2.2,
-    rating: 4.5,
-    reviews: 98,
-    distance: 0.8,
-    lat: 28.4670,
-    lng: -16.2560,
-    type: 'Subterráneo',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=400',
-  },
-  {
-    id: 6,
-    name: 'Plaza Familiar',
-    location: 'Rambla General Franco',
-    city: 'Santa Cruz',
-    price: 2.8,
-    rating: 4.9,
-    reviews: 167,
-    distance: 0.4,
-    lat: 28.4688,
-    lng: -16.2535,
-    type: 'Cubierta',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bmRlcmdyb3VuZCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQzfDA&ixlib=rb-4.1.0&q=80&w=400',
-  },
-];
-
 import { useNavigate, useLocation } from 'react-router-dom';
+import { parkingService } from '../services/parking.service';
+import { Parking, Garage } from '../types/parking.types';
+import { AnimatedLoader } from '../../../shared/components/loaders';
+import { ErrorMessage } from '../../../ui';
 
 export function MapView() {
   const navigate = useNavigate();
@@ -126,6 +37,30 @@ export function MapView() {
   const [view, setView] = useState<'map' | 'list'>('map');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [selectedGarage, setSelectedGarage] = useState<Garage | null>(null);
+  const [hoveredGarageId, setHoveredGarageId] = useState<string | null>(null);
+  const [isGarageModalOpen, setIsGarageModalOpen] = useState(false);
+
+  // Estado para los datos reales
+  const [allGarages, setAllGarages] = useState<Garage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 1. Cargar datos de la base de datos
+  useEffect(() => {
+    const fetchGarages = async () => {
+      try {
+        setLoading(true);
+        const data = await parkingService.getGaragesWithSpots();
+        setAllGarages(data);
+      } catch (err) {
+        setError('No se pudieron cargar los garajes. Revisa tu conexión.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGarages();
+  }, []);
 
   // Cargar datos de fecha/hora desde searchData (viene de Home) - SOLO UNA VEZ
   useEffect(() => {
@@ -140,20 +75,78 @@ export function MapView() {
     }
   }, [searchData, initialDataLoaded, setDateTimeFilters]);
 
+  const allSpots = useMemo(() => allGarages.flatMap(g => g.spots || []), [allGarages]);
+
   const filteredSpots = useMemo(() => {
-    return filterParkings(parkingSpots, filters);
-  }, [filters]);
+    return filterParkings(allSpots, filters);
+  }, [allSpots, filters]);
+
+  // Garajes filtrados (solo aquellos que tengan plazas que pasen el filtro)
+  const filteredGarages = useMemo(() => {
+    return allGarages.filter(g =>
+      g.spots?.some((s: Parking) => filteredSpots.some(fs => fs.id === s.id))
+    );
+  }, [allGarages, filteredSpots]);
 
   const handleSearch = (term: string) => {
     setSearchQuery(term);
   };
 
-  const handleSpotSelect = (spot: any) => {
+  const handleGarageClick = (garage: Garage) => {
+    setSelectedGarage(garage);
+    setIsGarageModalOpen(true);
+  };
+
+  const handleSpotHover = (spot: Parking) => {
     setSelectedParkingId(spot.id);
   };
 
+  const handleSpotSelect = (spot: Parking) => {
+    setSelectedParkingId(spot.id);
+    setIsGarageModalOpen(false);
+    navigate(`/parking/${spot.id}`, { state: spot });
+  };
+
+  // Get filtered spots for the selected garage
+  const garageFilteredSpots = useMemo(() => {
+    if (!selectedGarage) return [];
+    return filteredSpots.filter(s => s.garage_id === selectedGarage.id);
+  }, [selectedGarage, filteredSpots]);
+
+  // Helper para rango de precios
+  const getPriceRange = (spots: Parking[]) => {
+    if (!spots || spots.length === 0) return 'N/A';
+    const prices = spots.map((s) => s.current_price_per_hour);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    if (min === max) return `${min.toFixed(2)}€`;
+    return `${min.toFixed(2)} - ${max.toFixed(2)}€`;
+  };
+
+  // Debug logs
+  useEffect(() => {
+    console.log('Filters:', filters);
+    console.log('Filtered Spots:', filteredSpots.length);
+    if (selectedGarage) {
+      console.log('Selected Garage Spots:', selectedGarage.spots?.length);
+      console.log('Garage Filtered Spots in Modal:', garageFilteredSpots.length);
+    }
+  }, [filters, filteredSpots, selectedGarage, garageFilteredSpots]);
+
+  if (loading) return <AnimatedLoader message="Buscando plazas libres en Santa Cruz..." />;
+
   return (
     <div className="h-screen flex flex-col bg-background">
+      <ErrorMessage message={error || ''} onClose={() => setError(null)} />
+
+      <GarageDetailModal
+        garage={selectedGarage}
+        // Only pass spots that match the global filter
+        visibleSpots={garageFilteredSpots}
+        isOpen={isGarageModalOpen}
+        onClose={() => setIsGarageModalOpen(false)}
+        onSpotSelect={handleSpotSelect}
+      />
       {/* Header */}
       <div className="bg-card border-b border-border p-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
@@ -206,44 +199,48 @@ export function MapView() {
         {/* Map or List View */}
         <div className="flex-1 relative">
           {view === 'map' ? (
-            <ParkingMap
-              spots={filteredSpots}
-              onSelect={handleSpotSelect}
-              selectedSpotId={selectedParkingId}
-            />
+            <div className="flex-1 relative h-full">
+              <ParkingMap
+                garages={filteredGarages}
+                onGarageClick={handleGarageClick}
+                selectedGarageId={selectedGarage?.id}
+                hoveredGarageId={hoveredGarageId}
+              />
+            </div>
           ) : (
             <div className="w-full h-full overflow-y-auto p-4">
               <div className="max-w-4xl mx-auto space-y-4">
                 <h2 className="text-2xl font-semibold mb-4">
-                  {filteredSpots.length} plazas disponibles
+                  {filteredGarages.length} garajes encontrados
                 </h2>
-                {filteredSpots.length > 0 ? (
-                  filteredSpots.map((spot) => (
+                {filteredGarages.length > 0 ? (
+                  filteredGarages.map((garage) => (
                     <Card
-                      key={spot.id}
-                      className={`p-4 hover:shadow-lg transition-all cursor-pointer ${selectedParkingId === spot.id ? 'ring-2 ring-primary' : ''
+                      key={garage.id}
+                      className={`p-4 hover:shadow-lg transition-all cursor-pointer ${selectedGarage?.id === garage.id ? 'ring-2 ring-primary' : ''
                         }`}
-                      onClick={() => {
-                        handleSpotSelect(spot);
-                        navigate(`/parking/${spot.id}`, { state: spot });
-                      }}
+                      onClick={() => handleGarageClick(garage)}
                     >
                       <div className="flex gap-4">
-                        <img
-                          src={spot.image}
-                          alt={spot.name}
-                          className="w-32 h-32 object-cover rounded-lg"
-                        />
+                        {/* Placeholder image or first spot image logic */}
+                        <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
+                          {garage.spots?.[0]?.image ? (
+                            <img src={garage.spots[0].image} alt={garage.name} className="w-full h-full object-cover rounded-lg" />
+                          ) : (
+                            <MapIcon className="w-10 h-10 opacity-20" />
+                          )}
+                        </div>
+
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="font-semibold text-lg mb-1">{spot.name}</h3>
+                              <h3 className="font-semibold text-lg mb-1">{garage.name}</h3>
                               <p className="text-sm text-muted-foreground flex items-center gap-1">
                                 <MapPin className="h-4 w-4" />
-                                {spot.location}, {spot.city}
+                                {garage.address}, {garage.city}
                               </p>
                             </div>
-                            {spot.verified && (
+                            {garage.is_verified && (
                               <Badge variant="secondary" className="bg-secondary/10 text-secondary">
                                 Verificado
                               </Badge>
@@ -252,19 +249,18 @@ export function MapView() {
                           <div className="flex items-center gap-4 text-sm">
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 fill-accent text-accent" />
-                              <span className="font-semibold">{spot.rating}</span>
-                              <span className="text-muted-foreground">({spot.reviews})</span>
+                              <span className="font-semibold">{garage.rating || 'N/A'}</span>
+                              <span className="text-muted-foreground">({garage.reviews || 0})</span>
                             </div>
-                            <span className="text-muted-foreground">{spot.distance} km</span>
-                            <Badge variant="outline">{spot.type}</Badge>
+                            <Badge variant="outline">{garage.total_spots} plazas</Badge>
                           </div>
                           <div className="mt-3 flex items-center justify-between">
                             <div>
-                              <span className="text-2xl font-bold text-primary">{spot.price}€</span>
-                              <span className="text-muted-foreground">/hora</span>
+                              <span className="text-xl font-bold text-primary">{getPriceRange(garage.spots || [])}</span>
+                              <span className="text-muted-foreground text-sm"> /hora</span>
                             </div>
                             <Button className="bg-accent hover:bg-accent/90 text-white">
-                              Ver detalles
+                              Ver plazas
                             </Button>
                           </div>
                         </div>
@@ -274,7 +270,7 @@ export function MapView() {
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground text-lg">
-                      No se encontraron plazas con los filtros seleccionados
+                      No se encontraron garajes con los filtros seleccionados
                     </p>
                   </div>
                 )}
@@ -288,54 +284,53 @@ export function MapView() {
           <div className="hidden lg:block w-96 border-l border-border bg-card overflow-y-auto">
             <div className="p-4 border-b border-border sticky top-0 bg-card z-10">
               <h2 className="font-semibold text-lg">
-                {filteredSpots.length} plazas disponibles
+                {filteredGarages.length} garajes
               </h2>
-              <p className="text-sm text-muted-foreground">en tu búsqueda</p>
+              <p className="text-sm text-muted-foreground">cerca de ti</p>
             </div>
             <div className="divide-y divide-border">
-              {filteredSpots.length > 0 ? (
-                filteredSpots.map((spot) => (
-                  <div
-                    key={spot.id}
-                    className={`p-4 cursor-pointer transition-colors ${selectedParkingId === spot.id
-                      ? 'bg-primary/5 border-l-4 border-primary'
-                      : 'hover:bg-muted/50'
-                      }`}
-                    onClick={() => {
-                      handleSpotSelect(spot);
-                      navigate(`/parking/${spot.id}`, { state: spot });
-                    }}
-                    onMouseEnter={() => handleSpotSelect(spot)}
-                  >
-                    <div className="flex gap-3">
-                      <img
-                        src={spot.image}
-                        alt={spot.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold mb-1 truncate">{spot.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2 truncate">
-                          {spot.location}
-                        </p>
-                        <div className="flex items-center gap-2 text-sm mb-2">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-accent text-accent" />
-                            <span className="font-semibold">{spot.rating}</span>
-                          </div>
-                          <span className="text-muted-foreground">•</span>
-                          <span className="text-muted-foreground">{spot.distance} km</span>
+              {filteredGarages.length > 0 ? (
+                filteredGarages.map((garage) => {
+                  // Calculate specific filtered spots for this garage to show correct price range
+                  const garageSpots = filteredSpots.filter(s => s.garage_id === garage.id);
+
+                  return (
+                    <div
+                      key={garage.id}
+                      className={`p-4 cursor-pointer transition-colors ${selectedGarage?.id === garage.id
+                        ? 'bg-primary/5 border-l-4 border-primary'
+                        : 'hover:bg-muted/50'
+                        }`}
+                      onClick={() => handleGarageClick(garage)}
+                      onMouseEnter={() => setHoveredGarageId(garage.id)}
+                      onMouseLeave={() => setHoveredGarageId(null)}
+                    >
+                      <div className="flex gap-3">
+                        <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden">
+                          {garage.spots?.[0]?.image ? (
+                            <img src={garage.spots[0].image} alt={garage.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <MapIcon className="w-8 h-8 opacity-20" />
+                          )}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-primary">{spot.price}€/h</span>
-                          <Badge variant="outline" className="text-xs">
-                            {spot.type}
-                          </Badge>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold mb-1 truncate">{garage.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-2 truncate">
+                            {garage.address}
+                          </p>
+                          <div className="flex items-center gap-2 text-sm mb-2">
+                            <Badge variant="secondary" className="text-[10px] h-5">
+                              {garageSpots.length} libres
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-primary text-sm">{getPriceRange(garageSpots)}/h</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  )
+                })
               ) : (
                 <div className="p-4 text-center text-muted-foreground">
                   No hay resultados con los filtros seleccionados

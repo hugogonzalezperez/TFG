@@ -18,12 +18,44 @@ import {
   TrendingUp,
   DollarSign,
 } from 'lucide-react';
-
+import { AddressSearch } from '../../../ui/address-search';
+import { GeocodingResult } from '../../../shared/services/geocoding.service';
 import { useNavigate } from 'react-router-dom';
+import { GarageImageUploader } from './GarageImageUploader';
+import { useAuth } from '../../auth';
 
 export function OwnerProfile() {
   const navigate = useNavigate();
+  const { authUser } = useAuth();
   const [showAddSpot, setShowAddSpot] = useState(false);
+  const [formData, setFormData] = useState<{
+    name: string;
+    address: string;
+    lat: number;
+    lng: number;
+    price: string;
+    type: string;
+    description: string;
+    images: string[];
+  }>({
+    name: '',
+    address: '',
+    lat: 0,
+    lng: 0,
+    price: '',
+    type: 'Cubierta',
+    description: '',
+    images: [] // Inicializar array de imagenes
+  });
+
+  const handleAddressSelect = (result: GeocodingResult) => {
+    setFormData(prev => ({
+      ...prev,
+      address: result.formatted,
+      lat: result.lat,
+      lng: result.lng
+    }));
+  };
 
   const stats = {
     totalEarnings: 1248.50,
@@ -212,10 +244,28 @@ export function OwnerProfile() {
 
                   <div className="space-y-2">
                     <Label htmlFor="address">Dirección completa</Label>
-                    <Input
-                      id="address"
-                      placeholder="Calle, número, código postal, ciudad"
+                    <AddressSearch
+                      onAddressSelect={handleAddressSelect}
+                      initialAddress={formData.address}
                     />
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Latitud</Label>
+                        <Input
+                          value={formData.lat || ''}
+                          readOnly
+                          className="bg-muted text-xs h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Longitud</Label>
+                        <Input
+                          value={formData.lng || ''}
+                          readOnly
+                          className="bg-muted text-xs h-8"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -252,12 +302,11 @@ export function OwnerProfile() {
 
                   <div className="space-y-2">
                     <Label>Fotos de la plaza</Label>
-                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
-                      <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Haz clic para subir fotos
-                      </p>
-                    </div>
+                    <GarageImageUploader
+                      userId={authUser?.user?.id || 'temp'}
+                      currentImages={formData.images || []}
+                      onImagesChange={(urls) => setFormData(prev => ({ ...prev, images: urls }))}
+                    />
                   </div>
 
                   <div className="flex gap-3">
@@ -292,8 +341,8 @@ export function OwnerProfile() {
                       />
                       <Badge
                         className={`absolute top-2 left-2 ${spot.status === 'active'
-                            ? 'bg-secondary text-white'
-                            : 'bg-muted text-muted-foreground'
+                          ? 'bg-secondary text-white'
+                          : 'bg-muted text-muted-foreground'
                           }`}
                       >
                         {spot.status === 'active' ? 'Activa' : 'Inactiva'}
@@ -359,8 +408,8 @@ export function OwnerProfile() {
                             <div
                               key={day}
                               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs ${available
-                                  ? 'bg-secondary/10 text-secondary'
-                                  : 'bg-muted text-muted-foreground'
+                                ? 'bg-secondary/10 text-secondary'
+                                : 'bg-muted text-muted-foreground'
                                 }`}
                             >
                               {day.charAt(0).toUpperCase()}

@@ -20,25 +20,24 @@ import {
   Check,
   X,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth';
+import { bookingService } from '../../booking';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 import { ErrorMessage } from '../../../ui';
-
-
-
-
-
-import { useNavigate } from 'react-router-dom';
+import { AvatarUploader } from './AvatarUploader';
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { authUser, updateProfile, logout, loading } = useAuth();
+  const { authUser, updateProfile, logout, loading: authLoading } = useAuth();
 
   const [activeTab, setActiveTab] = useState('bookings');
   const [isEditing, setIsEditing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
 
   // Datos del formulario
   const [formData, setFormData] = useState({
@@ -47,7 +46,7 @@ export function UserProfile() {
     avatar_url: '',
   });
 
-  // Cargar datos del usuario al montar
+  // Cargar datos del usuario y sus reservas
   useEffect(() => {
     if (authUser?.user) {
       setFormData({
@@ -55,6 +54,19 @@ export function UserProfile() {
         phone: authUser.user.phone || '',
         avatar_url: authUser.user.avatar_url || '',
       });
+
+      const fetchBookings = async () => {
+        try {
+          setBookingsLoading(true);
+          const data = await bookingService.getUserBookings(authUser.user.id);
+          setBookings(data);
+        } catch (err) {
+          console.error('Error fetching bookings:', err);
+        } finally {
+          setBookingsLoading(false);
+        }
+      };
+      fetchBookings();
     }
   }, [authUser]);
 
@@ -106,7 +118,7 @@ export function UserProfile() {
   };
 
   // Mostrar loader mientras carga
-  if (loading || !authUser) {
+  if (authLoading || !authUser) {
     return <AnimatedLoader message="Cargando perfil..." />;
   }
 
@@ -115,64 +127,18 @@ export function UserProfile() {
     email: authUser.user.email || '',
     phone: authUser.user.phone || 'No especificado',
     avatar: authUser.user.avatar_url || '',
-    memberSince: new Date(authUser.user.created_at).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long'
-    }),
-    totalBookings: 12, // TODO: Obtener de la BD
-    rating: 4.9, // TODO: Obtener de la BD
+    memberSince: authUser.user.created_at
+      ? new Date(authUser.user.created_at).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long'
+      })
+      : 'Recientemente',
+    totalBookings: bookings.length,
+    rating: 5.0,
   };
 
-  const activeBookings = [
-    {
-      id: 1,
-      parkingName: 'Plaza Centro',
-      location: 'Calle Castillo, 45, Santa Cruz',
-      date: '2026-01-10',
-      startTime: '14:00',
-      endTime: '18:00',
-      price: 11.50,
-      status: 'confirmed',
-      image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=400',
-    },
-    {
-      id: 2,
-      parkingName: 'Garaje Privado Marina',
-      location: 'Av. Marítima, 12, Santa Cruz',
-      date: '2026-01-15',
-      startTime: '09:00',
-      endTime: '20:00',
-      price: 33.00,
-      status: 'confirmed',
-      image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bmRlcmdyb3VuZCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQzfDA&ixlib=rb-4.1.0&q=80&w=400',
-    },
-  ];
-
-  const pastBookings = [
-    {
-      id: 3,
-      parkingName: 'Plaza Residencial',
-      location: 'C/ San Francisco, 78, La Laguna',
-      date: '2025-12-20',
-      startTime: '10:00',
-      endTime: '14:00',
-      price: 8.00,
-      status: 'completed',
-      rated: true,
-      rating: 5,
-    },
-    {
-      id: 4,
-      parkingName: 'Parking Zona Norte',
-      location: 'Plaza del Adelantado, La Laguna',
-      date: '2025-12-15',
-      startTime: '16:00',
-      endTime: '22:00',
-      price: 10.80,
-      status: 'completed',
-      rated: false,
-    },
-  ];
+  const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active');
+  const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
 
   const favoriteSpots = [
     {
@@ -222,19 +188,31 @@ export function UserProfile() {
                       </div>
                     )}
                   </Avatar>
-                  <label
-                    htmlFor="avatar-upload"
-                    className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 cursor-pointer transition-colors"
-                  >
-                    <Camera className="h-4 w-4" />
-                    <input
-                      id="avatar-upload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleAvatarUpload}
+
+                  {authUser?.user?.id && (
+                    <AvatarUploader
+                      userId={authUser.user.id}
+                      currentAvatarUrl={user.avatar}
+                      onUploadComplete={(url) => {
+                        setFormData(prev => ({ ...prev, avatar_url: url }));
+                        // Opcional: Guardar automáticamente al subir
+                        // Pero como hay un botón Guardar general, solo actualizamos el form state.
+                        // Y para mejor UX, actualizamos visualmente el avatar local:
+                        // Sin embargo, user.avatar viene de authUser.user.avatar_url, no de formData (todavía).
+                        // Necesitamos que el cambio se refleje inmediatamente.
+                        // Podemos hacer un guardado parcial o simplemente actualizar el estado visual si UserProfile usara formData para mostrar el avatar.
+                        // Actualmente usa `user.avatar` que viene de `authUser`.
+                        // Haremos un pequeño hack: actualizar el formData Y llamar a updateProfile silenciosamente?
+                        // Mejor: Dejamos que el usuario le de a Guardar, pero actualizamos la vista previa.
+                        // UserProfile usa `user` que viene de `authUser`.
+                        // Deberíamos cambiar la vista para usar `formData.avatar_url` como fuente prioritaria si estamos editando?
+                        // O simplemente, al subir, llamamos a updateProfile directamente?
+                        // Lo más común en avatares es updated inmediato.
+                        updateProfile({ avatar_url: url }).catch(console.error);
+                      }}
                     />
-                  </label>
+                  )}
+
                 </div>
                 <h2 className="text-xl font-bold mb-1">{user.name}</h2>
                 <p className="text-sm text-muted-foreground">Miembro desde {user.memberSince}</p>
@@ -305,7 +283,7 @@ export function UserProfile() {
                 <Button
                   variant="outline"
                   className="w-full gap-2 text-destructive hover:bg-destructive/10"
-                  onClick={() => navigate('/login')}
+                  onClick={logout}
                 >
                   <LogOut className="h-4 w-4" />
                   Cerrar sesión
@@ -348,7 +326,7 @@ export function UserProfile() {
                               <div className="space-y-2 text-sm mb-4">
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span>{new Date(booking.date).toLocaleDateString('es-ES', {
+                                  <span>{new Date(booking.start_time).toLocaleDateString('es-ES', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -358,14 +336,14 @@ export function UserProfile() {
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Clock className="h-4 w-4" />
                                   <span>
-                                    {booking.startTime} - {booking.endTime}
+                                    {new Date(booking.start_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {new Date(booking.end_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                                   </span>
                                 </div>
                               </div>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <span className="text-2xl font-bold text-primary">
-                                    {booking.price.toFixed(2)}€
+                                    {Number(booking.total_price).toFixed(2)}€
                                   </span>
                                 </div>
                                 <div className="flex gap-2">
@@ -398,50 +376,50 @@ export function UserProfile() {
 
                 <div>
                   <h2 className="text-2xl font-bold mb-4">Historial de reservas</h2>
-                  <div className="space-y-4">
-                    {pastBookings.map((booking) => (
-                      <Card key={booking.id} className="p-6">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h3 className="font-semibold mb-1">{booking.parkingName}</h3>
-                            <p className="text-sm text-muted-foreground">{booking.location}</p>
-                          </div>
-                          <Badge variant="outline">Completada</Badge>
+                  {pastBookings.map((booking) => (
+                    <Card key={booking.id} className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold mb-1">{booking.parkingName}</h3>
+                          <p className="text-sm text-muted-foreground">{booking.location}</p>
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                          <span>{new Date(booking.date).toLocaleDateString('es-ES')}</span>
-                          <span>•</span>
-                          <span>
-                            {booking.startTime} - {booking.endTime}
-                          </span>
-                          <span>•</span>
-                          <span className="font-semibold text-foreground">
-                            {booking.price.toFixed(2)}€
-                          </span>
+                        <Badge variant="outline">
+                          {booking.status === 'completed' ? 'Completada' : 'Cancelada'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                        <span>{new Date(booking.start_time).toLocaleDateString('es-ES')}</span>
+                        <span>•</span>
+                        <span>
+                          {new Date(booking.start_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <span>•</span>
+                        <span className="font-semibold text-foreground">
+                          {Number(booking.total_price).toFixed(2)}€
+                        </span>
+                      </div>
+                      {!booking.rated && (
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <Star className="h-4 w-4" />
+                          Valorar reserva
+                        </Button>
+                      )}
+                      {booking.rated && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-muted-foreground">Tu valoración:</span>
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${i < booking.rating!
+                                ? 'fill-accent text-accent'
+                                : 'text-muted-foreground'
+                                }`}
+                            />
+                          ))}
                         </div>
-                        {!booking.rated && (
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <Star className="h-4 w-4" />
-                            Valorar reserva
-                          </Button>
-                        )}
-                        {booking.rated && (
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-muted-foreground">Tu valoración:</span>
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 ${i < booking.rating!
-                                  ? 'fill-accent text-accent'
-                                  : 'text-muted-foreground'
-                                  }`}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </Card>
-                    ))}
-                  </div>
+                      )}
+                    </Card>
+                  ))}
                 </div>
               </div>
             )}

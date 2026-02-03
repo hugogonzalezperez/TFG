@@ -11,8 +11,8 @@ interface FilterContextType {
   setSearchQuery: (query: string) => void;
   setDateTimeFilters: (data: { startDate: string; startTime: string; endDate: string; endTime: string }) => void;
   resetFilters: () => void;
-  selectedParkingId: number | null;
-  setSelectedParkingId: (id: number | null) => void;
+  selectedParkingId: string | null;
+  setSelectedParkingId: (id: string | null) => void;
   filteredParkings: any[];
   setFilteredParkings: (parkings: any[]) => void;
 }
@@ -33,7 +33,7 @@ const defaultFilters: ParkingFilter = {
 
 export function FilterProvider({ children }: { children: React.ReactNode }) {
   const [filters, setFilters] = useState<ParkingFilter>(defaultFilters);
-  const [selectedParkingId, setSelectedParkingId] = useState<number | null>(null);
+  const [selectedParkingId, setSelectedParkingId] = useState<string | null>(null);
   const [filteredParkings, setFilteredParkings] = useState<any[]>([]);
 
   const toggleType = (type: string) => {

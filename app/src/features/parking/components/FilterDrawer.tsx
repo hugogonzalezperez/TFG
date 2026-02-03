@@ -223,7 +223,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
         </div>
 
         {/* Footer con botones */}
-        <div className="sticky bottom-0 bg-foreground border-t border-border p-4 space-y-3">
+        <div className="sticky bottom-0 bg-card border-t border-border p-4 space-y-3">
           {isFiltered && (
             <Button
               variant="outline"

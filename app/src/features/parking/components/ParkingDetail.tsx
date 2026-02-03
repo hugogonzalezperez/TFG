@@ -28,42 +28,41 @@ export function ParkingDetail() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Datos por defecto
+  // Datos por defecto coincidiendo con el nuevo esquema
   const defaultParking = {
-    id: 1,
+    id: '123e4567-e89b-12d3-a456-426614174000', // Ejemplo UUID
+    garage_id: '123e4567-e89b-12d3-a456-426614174001',
     name: 'Plaza Sol',
-    location: 'Calle Castillo, 45',
+    address: 'Calle Castillo, 45',
     city: 'Santa Cruz de Tenerife',
-    price: 2.5,
+    base_price_per_hour: 2.5,
+    current_price_per_hour: 2.5,
     rating: 4.8,
     reviews: 124,
     distance: 0.3,
     type: 'Cubierta',
-    verified: true,
+    is_verified: true,
+    is_active: true,
+    total_spots: 1,
     image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://imgs.search.brave.com/N5PiB-sq8nz-YyWStb0dX8MiUQWFfoDF7nRBeEkYs20/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZW5lcy4yMG1pbnV0/b3MuZXMvZmlsZXMv/aW1hZ2VfNjQwXzM2/MC91cGxvYWRzL2lt/YWdlbmVzLzIwMjUv/MDcvMDEvd2lsbHly/ZXgtZW4tc3UtY2Fu/YWwtZGUteW91dHVi/ZS5wbmc',
+      'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
       'https://images.unsplash.com/photo-1590674899484-d5640e854abe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bmRlcmdyb3VuZCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQzfDA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1761479353275-a66a51af32ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpZGVudGlhbCUyMHBhcmtpbmd8ZW58MXx8fHwxNzY3NjQ1NTQ0fDA&ixlib=rb-4.1.0&q=80&w=1080',
     ],
     owner: {
+      id: 'owner-uuid',
       name: 'María González',
       avatar: 'https://images.unsplash.com/photo-1623582854588-d60de57fa33f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBhdmF0YXJ8ZW58MXx8fHwxNzY3NjIwMjg1fDA&ixlib=rb-4.1.0&q=80&w=200',
       rating: 4.9,
       reviewCount: 87,
-      responseTime: '15 min',
-      memberSince: '2023',
     },
     amenities: ['Vigilancia 24/7', 'Cámara de seguridad', 'WiFi', 'Carga eléctrica'],
     description:
-      'Plaza de aparcamiento cubierta en el corazón de Santa Cruz, ideal para turistas que visitan la ciudad. Acceso fácil desde la autopista y a solo 5 minutos andando de la zona comercial y el puerto. La plaza está en un garaje privado con seguridad 24/7 y cámaras de vigilancia.',
+      'Plaza de aparcamiento cubierta en el corazón de Santa Cruz, ideal para turistas que visitan la ciudad.',
     rules: [
       'Altura máxima: 2.10m',
-      'No se permiten vehículos comerciales grandes',
       'Horario de acceso: 24 horas',
-      'Check-in flexible',
     ],
-    availability: true,
   };
 
   // Merge: datos recibidos + datos por defecto
@@ -174,7 +173,7 @@ export function ParkingDetail() {
             )}
 
             {/* Verified badge */}
-            {parking.verified && (
+            {parking.is_verified && (
               <div className="absolute top-4 left-4">
                 <Badge className="bg-secondary text-white">
                   <Shield className="h-3 w-3 mr-1" />
@@ -342,17 +341,20 @@ export function ParkingDetail() {
             <Card className="p-6 sticky top-24 shadow-xl">
               <div className="mb-6">
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-primary">{parking.price}€</span>
+                  <span className="text-4xl font-bold text-primary">{parking.base_price_per_hour}€</span>
                   <span className="text-muted-foreground">/hora</span>
                 </div>
-                <p className="text-sm text-muted-foreground">Precios especiales por día disponibles</p>
+                <p className="text-sm text-muted-foreground text-secondary">
+                  <Zap className="h-3 w-3 inline mr-1" />
+                  Precio dinámico disponible
+                </p>
               </div>
 
               <div className="space-y-4 mb-6">
                 <div>
                   <label className="text-sm font-medium mb-2 flex items-center gap-2">
                     <Clock className="h-4 w-4 text-primary" />
-                    Fecha y hora de entrada
+                    Entrada (Mínimo 2h)
                   </label>
                   <input
                     type="datetime-local"
@@ -362,7 +364,7 @@ export function ParkingDetail() {
                 <div>
                   <label className="text-sm font-medium mb-2 flex items-center gap-2">
                     <Clock className="h-4 w-4 text-primary" />
-                    Fecha y hora de salida
+                    Salida
                   </label>
                   <input
                     type="datetime-local"
@@ -378,23 +380,19 @@ export function ParkingDetail() {
                 Reservar ahora
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground mb-4">
-                No se realizará ningún cargo todavía
-              </p>
-
               <div className="border-t border-border pt-4 space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{parking.price}€ x 4 horas</span>
-                  <span className="font-semibold">{(parking.price * 4).toFixed(2)}€</span>
+                  <span className="text-muted-foreground">Estimación base (4h)</span>
+                  <span className="font-semibold">{(parking.base_price_per_hour * 4).toFixed(2)}€</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tarifa de servicio</span>
                   <span className="font-semibold">1.50€</span>
                 </div>
                 <div className="border-t border-border pt-3 flex justify-between text-base">
-                  <span className="font-semibold">Total</span>
+                  <span className="font-semibold">Total estimado</span>
                   <span className="font-bold text-primary">
-                    {((parking.price * 4) + 1.5).toFixed(2)}€
+                    {((parking.base_price_per_hour * 4) + 1.5).toFixed(2)}€
                   </span>
                 </div>
               </div>

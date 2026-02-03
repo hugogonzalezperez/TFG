@@ -1,6 +1,4 @@
-// =====================================================
-// PUBLIC API - FEATURE BOOKING
-// =====================================================
-
-// Components
-export { BookingProcess } from './components/BookingProcess';
+export * from './types/booking.types';
+export * from './services/booking.service';
+export * from './services/pricing.service';
+export * from './components/BookingProcess';

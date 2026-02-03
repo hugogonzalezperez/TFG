@@ -53,22 +53,24 @@ function createSelectedParkingPinIcon(color: string) {
   })
 }
 
-export function ParkingMap({ spots, onSelect, selectedSpotId }: any) {
+interface ParkingMapProps {
+  garages: any[];
+  onGarageClick: (garage: any) => void;
+  selectedGarageId?: string | null;
+  hoveredGarageId?: string | null;
+}
+
+export function ParkingMap({ garages = [], onGarageClick, selectedGarageId, hoveredGarageId }: ParkingMapProps) {
   const [primaryColor, setPrimaryColor] = useState<string>(getPrimaryColor())
   const [parkingPinIcon, setParkingPinIcon] = useState(createParkingPinIcon(primaryColor))
   const [selectedParkingPinIcon, setSelectedParkingPinIcon] = useState(createSelectedParkingPinIcon(primaryColor))
 
   useEffect(() => {
-    // Obtener color inicial
     const initialColor = getPrimaryColor()
     setPrimaryColor(initialColor)
     setParkingPinIcon(createParkingPinIcon(initialColor))
     setSelectedParkingPinIcon(createSelectedParkingPinIcon(initialColor))
-
-    // Variable para almacenar el último color conocido
     let lastColor = initialColor
-
-    // Crear observer para detectar cambios en los <style> inyectados por HMR
     const observer = new MutationObserver(() => {
       const newColor = getPrimaryColor()
       if (newColor !== lastColor) {
@@ -78,22 +80,11 @@ export function ParkingMap({ spots, onSelect, selectedSpotId }: any) {
         setSelectedParkingPinIcon(createSelectedParkingPinIcon(newColor))
       }
     })
-
-    // Observar cambios en el <head> (donde se inyectan los <style>)
-    observer.observe(document.head, {
-      childList: true,
-      subtree: true,
-    })
-
-    // También observar cambios en el <html> por si acaso
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['style', 'class'],
-      subtree: false,
-    })
-
+    observer.observe(document.head, { childList: true, subtree: true })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'], subtree: false })
     return () => observer.disconnect()
   }, [])
+
   return (
     <MapContainer
       center={[28.4682, -16.2546]}
@@ -101,35 +92,35 @@ export function ParkingMap({ spots, onSelect, selectedSpotId }: any) {
       className="w-full h-full z-0 shadow-lg"
     >
       <TileLayer
-        // SOBRIO Y MUY MUY BASICO
-        //url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-
-        /* url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=x4rkNwBT7ZNmaPfbybAX"
-        tileSize={512}
-        maxZoom={20} */
-
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
 
-      {spots.map((spot: any) => (
-        <Marker
-          key={spot.id}
-          position={[spot.lat, spot.lng]}
-          icon={selectedSpotId === spot.id ? selectedParkingPinIcon : parkingPinIcon}
-          eventHandlers={{
-            click: () => onSelect(spot),
-          }}
-        >
-          <Popup>
-            <div className="space-y-1">
-              <p className="font-semibold text-sm">{spot.name}</p>
-              <p className="text-xs text-muted-foreground">{spot.location}</p>
-              <p className="font-bold text-primary">{spot.price}€/hora</p>
-              <p className="text-xs">⭐ {spot.rating} ({spot.reviews} reseñas)</p>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {garages.map((garage: any) => {
+        const isSelected = garage.id === selectedGarageId || garage.id === hoveredGarageId;
+
+        return (
+          <Marker
+            key={garage.id}
+            position={[garage.lat, garage.lng]}
+            icon={isSelected ? selectedParkingPinIcon : parkingPinIcon}
+            eventHandlers={{
+              click: () => onGarageClick(garage)
+            }}
+          >
+            {/* Popup opcional, ya que al hacer click abrimos el modal. 
+               Podemos dejarlo como "tooltip" informativo rápido */}
+            <Popup>
+              <div className="p-2 min-w-[150px] text-center">
+                <p className="font-bold text-sm">{garage.name}</p>
+                <p className="text-xs text-muted-foreground mt-1">Click para ver disponibilidad</p>
+                <div className="mt-2 text-xs font-semibold text-primary">
+                  {garage.spots?.length || 0} plazas libres
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   )
 }

@@ -7,5 +7,9 @@ export * from './textarea';
 export * from './badge';
 export * from './switch';
 export * from './avatar';
+export * from './dialog';
+export * from './utils';
+export * from './address-search';
+
 export * from './tabs';
-export * from './RangeSlider';export * from './errorMessage';
+export * from './RangeSlider'; export * from './errorMessage';

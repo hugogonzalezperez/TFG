@@ -6,17 +6,17 @@ import { Parking, ParkingFilter } from '../types/parking.types';
 export function filterParkings(parkings: Parking[], filters: ParkingFilter): Parking[] {
   return parkings.filter((parking) => {
     // Filtro por tipo: si hay tipos seleccionados, solo mostrar esos
-    if (filters.types.size > 0 && !filters.types.has(parking.type)) {
+    if (filters.types.size > 0 && parking.type && !filters.types.has(parking.type)) {
       return false;
     }
 
     // Filtro por disponibilidad
-    if (filters.availability === 'available' && parking.available === false) {
+    if (filters.availability === 'available' && !parking.is_active) {
       return false;
     }
 
     // Filtro por rango de precio
-    if (parking.price < filters.priceRange[0] || parking.price > filters.priceRange[1]) {
+    if (parking.base_price_per_hour < filters.priceRange[0] || parking.base_price_per_hour > filters.priceRange[1]) {
       return false;
     }
 
@@ -25,7 +25,7 @@ export function filterParkings(parkings: Parking[], filters: ParkingFilter): Par
       const query = filters.searchQuery.toLowerCase();
       const matchesSearch =
         parking.name.toLowerCase().includes(query) ||
-        parking.location.toLowerCase().includes(query) ||
+        parking.address.toLowerCase().includes(query) ||
         parking.city.toLowerCase().includes(query);
 
       if (!matchesSearch) {
@@ -41,19 +41,19 @@ export function filterParkings(parkings: Parking[], filters: ParkingFilter): Par
  * Ordena aparcamientos por distancia (por defecto)
  */
 export function sortParkingsByDistance(parkings: Parking[]): Parking[] {
-  return [...parkings].sort((a, b) => a.distance - b.distance);
+  return [...parkings].sort((a, b) => (a.distance || 0) - (b.distance || 0));
 }
 
 /**
  * Ordena aparcamientos por rating
  */
 export function sortParkingsByRating(parkings: Parking[]): Parking[] {
-  return [...parkings].sort((a, b) => b.rating - a.rating);
+  return [...parkings].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 }
 
 /**
  * Ordena aparcamientos por precio (ascendente)
  */
 export function sortParkingsByPrice(parkings: Parking[]): Parking[] {
-  return [...parkings].sort((a, b) => a.price - b.price);
+  return [...parkings].sort((a, b) => a.base_price_per_hour - b.base_price_per_hour);
 }

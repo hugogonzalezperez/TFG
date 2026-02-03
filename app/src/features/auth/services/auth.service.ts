@@ -35,6 +35,7 @@ export const registerWithEmail = async ({
       data: {
         name: name || 'Usuario',
         phone: phone || '',
+        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name || 'Usuario'}`,
       },
     },
   });
@@ -93,6 +94,7 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
           email: authData.user.email!,
           name: authData.user.user_metadata?.name || 'Usuario',
           phone: authData.user.user_metadata?.phone,
+          avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authData.user.user_metadata?.name || 'Usuario'}`,
           is_active: true,
         })
         .select()
@@ -239,7 +241,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
         id: authUser.id,
         email: authUser.email!,
         name: authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario',
-        avatar_url: authUser.user_metadata.avatar_url,
+        avatar_url: authUser.user_metadata.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario'}`,
         is_active: true,
       })
       .select()
@@ -314,7 +316,7 @@ export const getCurrentUserWithRoles = async (userId: string): Promise<AuthUser 
     // Especificamos los campos exactos en lugar de '*' para evitar el 406
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, name, phone, avatar_url, is_active')
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .eq('id', userId)
       .maybeSingle(); // Usamos maybeSingle en lugar de single para evitar errores si no existe
 

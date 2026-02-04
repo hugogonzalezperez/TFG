@@ -26,16 +26,27 @@ export default function Home() {
     return <HomeSkeleton />;
   }
 
-  const isSearchDisabled = !searchData.date || !searchData.startTime || !searchData.endTime;
+  // Ahora la búsqueda es más flexible: solo la ubicación es obligatoria
+  const isSearchDisabled = !searchData.location.trim();
 
   const handleSearch = () => {
-    // Save to FilterContext
-    setDateTimeFilters({
-      startDate: searchData.date,
-      startTime: searchData.startTime,
-      endDate: searchData.date,
-      endTime: searchData.endTime,
-    });
+    // Si hay datos de fecha/hora, los guardamos en el contexto
+    if (searchData.date && searchData.startTime && searchData.endTime) {
+      setDateTimeFilters({
+        startDate: searchData.date,
+        startTime: searchData.startTime,
+        endDate: searchData.date,
+        endTime: searchData.endTime,
+      });
+    } else {
+      // Si no hay fechas, limpiamos filtros temporales previos para mostrar todo
+      setDateTimeFilters({
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: '',
+      });
+    }
 
     // Navigate to map
     navigate('/map', { state: searchData });
@@ -238,6 +249,7 @@ export default function Home() {
                 </label>
                 <Input
                   type="time"
+                  step="600" // 10 minutos
                   value={searchData.startTime}
                   onChange={(e) => setSearchData({ ...searchData, startTime: e.target.value })}
                   className="h-12"
@@ -251,6 +263,7 @@ export default function Home() {
                 </label>
                 <Input
                   type="time"
+                  step="600" // 10 minutos
                   value={searchData.endTime}
                   onChange={(e) => {
                     // Prevent end time from being before start time
@@ -271,7 +284,7 @@ export default function Home() {
               className="w-full h-14 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg"
             >
               <Search className="h-5 w-5 mr-2" />
-              {isSearchDisabled ? 'Completa todos los campos' : 'Buscar aparcamiento'}
+              {isSearchDisabled ? 'Introduce una ubicación' : 'Buscar aparcamiento'}
             </Button>
           </Card>
         </div>

@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
@@ -58,9 +57,27 @@ interface ParkingMapProps {
   onGarageClick: (garage: any) => void;
   selectedGarageId?: string | null;
   hoveredGarageId?: string | null;
+  center?: [number, number];
+  zoom?: number;
 }
 
-export function ParkingMap({ garages = [], onGarageClick, selectedGarageId, hoveredGarageId }: ParkingMapProps) {
+// Componente helper para mover el mapa programáticamente
+function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom, { animate: true });
+  }, [center, zoom, map]);
+  return null;
+}
+
+export function ParkingMap({
+  garages = [],
+  onGarageClick,
+  selectedGarageId,
+  hoveredGarageId,
+  center = [28.4682, -16.2546],
+  zoom = 14
+}: ParkingMapProps) {
   const [primaryColor, setPrimaryColor] = useState<string>(getPrimaryColor())
   const [parkingPinIcon, setParkingPinIcon] = useState(createParkingPinIcon(primaryColor))
   const [selectedParkingPinIcon, setSelectedParkingPinIcon] = useState(createSelectedParkingPinIcon(primaryColor))
@@ -87,13 +104,15 @@ export function ParkingMap({ garages = [], onGarageClick, selectedGarageId, hove
 
   return (
     <MapContainer
-      center={[28.4682, -16.2546]}
-      zoom={14}
+      center={center}
+      zoom={zoom}
       className="w-full h-full z-0 shadow-lg"
     >
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
+
+      <MapController center={center} zoom={zoom} />
 
       {garages.map((garage: any) => {
         const isSelected = garage.id === selectedGarageId || garage.id === hoveredGarageId;

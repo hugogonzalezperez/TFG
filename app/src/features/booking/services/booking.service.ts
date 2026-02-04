@@ -84,7 +84,7 @@ export const bookingService = {
   },
 
   /**
-   * Obtiene todas las reservas de un usuario
+   * Obtiene todas las reservas de un usuario con detalles de la plaza y garaje
    */
   async getUserBookings(userId: string): Promise<any[]> {
     const { data, error } = await supabase
@@ -94,9 +94,14 @@ export const bookingService = {
         spot:parking_spots (
           spot_number,
           garage:garages (
+            id,
             name,
             address,
-            city
+            city,
+            images:garage_images (
+              image_url,
+              is_main
+            )
           )
         )
       `)
@@ -105,12 +110,19 @@ export const bookingService = {
 
     if (error) throw error;
 
-    return (data || []).map(b => ({
-      ...b,
-      parkingName: b.spot.garage.name,
-      location: `${b.spot.garage.address}, ${b.spot.garage.city}`,
-      spotNumber: b.spot.spot_number,
-      image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400' // Mocked image
-    }));
+    return (data || []).map(b => {
+      const garage = b.spot.garage;
+      const mainImage = garage.images?.find((img: any) => img.is_main)?.image_url
+        || garage.images?.[0]?.image_url
+        || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
+
+      return {
+        ...b,
+        parkingName: garage.name,
+        location: `${garage.address}, ${garage.city}`,
+        spotNumber: b.spot.spot_number,
+        image: mainImage
+      };
+    });
   }
 };

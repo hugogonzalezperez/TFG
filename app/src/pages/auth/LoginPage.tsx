@@ -20,6 +20,14 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Validación de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Formato de email no válido');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -82,10 +90,10 @@ export default function LoginPage() {
             <p className="text-muted-foreground">Encuentra tu plaza perfecta en Tenerife</p>
           </div>
 
-          {/* Mensaje de error: Ahora se mantendrá visible porque el componente no se desmonta */}
-          <ErrorMessage message={error || ''} onClose={() => setError(null)} />
-
           <form onSubmit={handleLogin} className="space-y-6">
+            {/* Mensaje de error personalizado: Ahora se muestra encima del email */}
+            <ErrorMessage message={error || ''} onClose={() => setError(null)} />
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">

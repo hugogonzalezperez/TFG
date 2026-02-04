@@ -27,6 +27,7 @@ import { useGarages } from '../hooks/useGarages';
 import { Parking, Garage } from '../types/parking.types';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 import { ErrorMessage } from '../../../ui';
+import { geocodingService } from '../../../shared/services/geocoding.service';
 
 export function MapView() {
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ export function MapView() {
   const [hoveredGarageId, setHoveredGarageId] = useState<string | null>(null);
   const [isGarageModalOpen, setIsGarageModalOpen] = useState(false);
 
+  // Estado para el centro del mapa
+  const [mapCenter, setMapCenter] = useState<[number, number]>([28.4682, -16.2546]);
+  const [mapZoom, setMapZoom] = useState(14);
+
   // Uso del hook profesional React Query
   const { data: allGarages = [], isLoading: loading, error: queryError } = useGarages();
   const [error, setError] = useState<string | null>(null);
@@ -52,18 +57,37 @@ export function MapView() {
     }
   }, [queryError]);
 
-  // Cargar datos de fecha/hora desde searchData (viene de Home) - SOLO UNA VEZ
+  // Cargar datos de fecha/hora y geolocalizar dirección inicial
   useEffect(() => {
-    if (searchData?.date && !initialDataLoaded) {
-      setDateTimeFilters({
-        startDate: searchData.date,
-        startTime: searchData.startTime || '',
-        endDate: searchData.date,
-        endTime: searchData.endTime || '',
-      });
+    if (!initialDataLoaded) {
+      if (searchData?.date) {
+        setDateTimeFilters({
+          startDate: searchData.date,
+          startTime: searchData.startTime || '',
+          endDate: searchData.date,
+          endTime: searchData.endTime || '',
+        });
+      }
+
+      if (searchData?.location) {
+        handleGeocode(searchData.location);
+      }
+
       setInitialDataLoaded(true);
     }
   }, [searchData, initialDataLoaded, setDateTimeFilters]);
+
+  const handleGeocode = async (query: string) => {
+    try {
+      const result = await geocodingService.forwardGeocode(query);
+      if (result) {
+        setMapCenter([result.lat, result.lng]);
+        setMapZoom(15);
+      }
+    } catch (err) {
+      console.error('Error centrado mapa:', err);
+    }
+  };
 
   const allSpots = useMemo(() => allGarages.flatMap(g => g.spots || []), [allGarages]);
 
@@ -195,6 +219,8 @@ export function MapView() {
                 onGarageClick={handleGarageClick}
                 selectedGarageId={selectedGarage?.id}
                 hoveredGarageId={hoveredGarageId}
+                center={mapCenter}
+                zoom={mapZoom}
               />
             </div>
           ) : (
@@ -213,9 +239,13 @@ export function MapView() {
                     >
                       <div className="flex gap-4">
                         {/* Placeholder image or first spot image logic */}
-                        <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
-                          {garage.spots?.[0]?.image ? (
-                            <img src={garage.spots[0].image} alt={garage.name} className="w-full h-full object-cover rounded-lg" />
+                        <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center text-muted-foreground overflow-hidden">
+                          {garage.image || garage.spots?.[0]?.image ? (
+                            <img
+                              src={garage.image || garage.spots?.[0]?.image}
+                              alt={garage.name}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
                           ) : (
                             <MapIcon className="w-10 h-10 opacity-20" />
                           )}
@@ -297,8 +327,12 @@ export function MapView() {
                     >
                       <div className="flex gap-3">
                         <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden">
-                          {garage.spots?.[0]?.image ? (
-                            <img src={garage.spots[0].image} alt={garage.name} className="w-full h-full object-cover" />
+                          {garage.image || garage.spots?.[0]?.image ? (
+                            <img
+                              src={garage.image || garage.spots?.[0]?.image}
+                              alt={garage.name}
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
                             <MapIcon className="w-8 h-8 opacity-20" />
                           )}

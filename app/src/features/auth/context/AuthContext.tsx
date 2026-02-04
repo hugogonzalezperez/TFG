@@ -24,6 +24,7 @@ interface AuthContextType {
   // Estado
   authUser: AuthUser | null;
   loading: boolean;
+  initialized: boolean;
 
   // Métodos de autenticación
   register: (data: RegisterRequest) => Promise<void>;
@@ -41,6 +42,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isOwner: boolean;
   isAdmin: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 // =====================================================
@@ -60,6 +62,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   // =====================================================
   // INICIALIZACIÓN
@@ -120,10 +123,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setAuthUser(null);
     } finally {
       setLoading(false);
+      setInitialized(true);
     }
   };
 
   // =====================================================
+  /**
+   * Refrescar datos del usuario actual
+   */
+  const refreshUser = async () => {
+    if (authUser?.user.id) {
+      await loadUser(authUser.user.id);
+    }
+  };
+
   // MÉTODOS DE AUTENTICACIÓN
   // =====================================================
 
@@ -270,6 +283,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const value: AuthContextType = {
     authUser,
     loading,
+    initialized,
     register,
     login,
     loginWithGoogle: handleLoginWithGoogle,
@@ -281,6 +295,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated,
     isOwner,
     isAdmin,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

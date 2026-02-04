@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from './features/auth';
 import { AnimatedLoader } from './shared/components/loaders';
 
 function AppContent() {
-  const { authUser, loading } = useAuth();
+  const { authUser, loading, initialized } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,7 +18,7 @@ function AppContent() {
       document.documentElement.classList.remove('dark');
     }
 
-    if (!loading) {
+    if (initialized) {
       if (authUser) {
         if (['/login', '/signup'].includes(location.pathname)) {
           navigate('/');
@@ -31,9 +31,9 @@ function AppContent() {
         }
       }
     }
-  }, [authUser, loading, location.pathname, navigate]);
+  }, [authUser, initialized, location.pathname, navigate]);
 
-  if (loading) {
+  if (!initialized) {
     return <AnimatedLoader message="Iniciando aplicación..." />;
   }
 

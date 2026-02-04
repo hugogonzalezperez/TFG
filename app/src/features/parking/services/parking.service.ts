@@ -11,6 +11,7 @@ interface GarageResponse extends GarageRow {
   parking_spots: (ParkingSpotRow & {
     owner: Pick<UserRow, 'id' | 'name' | 'avatar_url'> | null;
   })[];
+  garage_images: Database['public']['Tables']['garage_images']['Row'][];
 }
 
 export const parkingService = {
@@ -25,7 +26,8 @@ export const parkingService = {
         parking_spots (
           *,
           owner:users (id, name, avatar_url)
-        )
+        ),
+        garage_images (*)
       `)
       .eq('is_active', true)
       .returns<GarageResponse[]>();
@@ -50,7 +52,9 @@ export const parkingService = {
       owner_id: garage.owner_id,
       rating: 4.8, // Fallback/Mock
       reviews: 12, // Fallback/Mock
-      image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400', // Garage image fallback
+      image: garage.garage_images?.find(img => img.is_main)?.image_url ||
+        garage.garage_images?.[0]?.image_url ||
+        'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400',
       spots: garage.parking_spots.map((spot) => ({
         id: spot.id,
         garage_id: spot.garage_id,
@@ -63,7 +67,9 @@ export const parkingService = {
         lng: garage.lng,
         is_active: spot.is_active || false,
         is_verified: true,
-        image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
+        image: garage.garage_images?.find(img => img.is_main)?.image_url ||
+          garage.garage_images?.[0]?.image_url ||
+          'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
         description: spot.description || undefined,
         total_spots: 1,
         spot_number: spot.spot_number,
@@ -99,8 +105,12 @@ export const parkingService = {
       .from('parking_spots')
       .select(`
         *,
-        garage:garages (*),
-        owner:users (id, name, avatar_url)
+        garage:garages (
+          *,
+          garage_images (*)
+        ),
+        owner:users (id, name, avatar_url),
+        parking_spot_images (*)
       `)
       .eq('id', id)
       .single();
@@ -129,11 +139,19 @@ export const parkingService = {
       lng: garage.lng,
       is_active: spot.is_active || false,
       is_verified: true,
-      image: 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
-      images: [
+      image: spot.parking_spot_images?.[0]?.image_url ||
+        spot.garage?.garage_images?.find((img: any) => img.is_main)?.image_url ||
+        spot.garage?.garage_images?.[0]?.image_url ||
         'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
-        'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400'
-      ],
+      images: spot.parking_spot_images?.length > 0
+        ? spot.parking_spot_images.map((img: any) => img.image_url)
+        : (spot.garage?.garage_images?.length > 0
+          ? spot.garage.garage_images.map((img: any) => img.image_url)
+          : [
+            'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
+            'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400'
+          ]
+        ),
       description: spot.description || undefined,
       total_spots: 1,
       spot_number: spot.spot_number,
@@ -153,4 +171,203 @@ export const parkingService = {
       rules: ['Altura máxima: 2.10m', 'Horario de acceso: 24 horas'], // Fallback/Mock
     };
   },
+
+  /**
+   * Solo crea el garaje (sin plazas)
+   */
+  async createGarage(data: {
+    owner_id: string;
+    name: string;
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+    description?: string;
+  }) {
+    const { data: garage, error } = await supabase
+      .from('garages')
+      .insert({
+        owner_id: data.owner_id,
+        name: data.name,
+        address: data.address,
+        city: data.city,
+        lat: data.lat,
+        lng: data.lng,
+        total_spots: 0,
+        is_active: true,
+        description: data.description
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return garage;
+  },
+
+  /**
+   * Crea una plaza en un garaje existente
+   */
+  async createParkingSpot(data: {
+    garage_id: string;
+    owner_id: string;
+    spot_number: string;
+    price: number;
+    description?: string;
+    type: string;
+    images?: string[];
+  }) {
+    const { data: spot, error: spotError } = await supabase
+      .from('parking_spots')
+      .insert({
+        garage_id: data.garage_id,
+        owner_id: data.owner_id,
+        spot_number: data.spot_number,
+        base_price_per_hour: data.price,
+        current_price_per_hour: data.price,
+        description: data.description,
+        is_active: true,
+        type: data.type
+      })
+      .select()
+      .single();
+
+    if (spotError) throw spotError;
+
+    // Incrementar el contador de plazas del garaje
+    await supabase.rpc('increment_garage_spots', { garage_id_param: data.garage_id });
+
+    // Imágenes de la plaza si existen
+    if (data.images && data.images.length > 0) {
+      const imagesToInsert = data.images.map((url, index) => ({
+        parking_spot_id: spot.id,
+        image_url: url,
+        display_order: index
+      }));
+
+      const { error: imagesError } = await supabase
+        .from('parking_spot_images')
+        .insert(imagesToInsert);
+
+      if (imagesError) throw imagesError;
+    }
+
+    return spot;
+  },
+
+  /**
+   * Sube o asocia imágenes a un garaje
+   */
+  async addGarageImages(garageId: string, images: string[]) {
+    const imagesToInsert = images.map((url, index) => ({
+      garage_id: garageId,
+      image_url: url,
+      is_main: index === 0,
+      display_order: index
+    }));
+
+    const { error } = await supabase
+      .from('garage_images')
+      .insert(imagesToInsert);
+
+    if (error) throw error;
+  },
+
+  /**
+   * Crea un nuevo garaje junto con su primera plaza y opcionalmente imágenes.
+   * (Mantenido por compatibilidad y conveniencia)
+   */
+  async createGarageWithSpot(data: {
+    owner_id: string;
+    name: string;
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+    price: number;
+    type: string;
+    spot_number?: string;
+    description?: string;
+    images?: string[];
+  }) {
+    // 1. Crear el garaje
+    const garage = await this.createGarage({
+      owner_id: data.owner_id,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      lat: data.lat,
+      lng: data.lng,
+      description: data.description
+    });
+
+    // 2. Crear la plaza inicial
+    await this.createParkingSpot({
+      garage_id: garage.id,
+      owner_id: data.owner_id,
+      spot_number: data.spot_number || '1',
+      price: data.price,
+      type: data.type,
+      description: data.description
+    });
+
+    // 3. Imágenes del garaje (usamos las mismas para el garaje por ahora)
+    if (data.images && data.images.length > 0) {
+      await this.addGarageImages(garage.id, data.images);
+    }
+
+    return garage;
+  },
+
+  /**
+   * Eliminar una plaza
+   */
+  async deleteParkingSpot(spotId: string, garageId: string) {
+    const { error } = await supabase
+      .from('parking_spots')
+      .delete()
+      .eq('id', spotId);
+
+    if (error) throw error;
+
+    // Decrementar contador
+    await supabase.rpc('decrement_garage_spots', { garage_id_param: garageId });
+  },
+
+  async deleteGarage(garageId: string) {
+    try {
+      console.log('--- INICIO BORRADO GARAJE ---');
+      console.log('ID:', garageId);
+
+      // Perform the deletion. 
+      // NOTE: For a professional production environment, images, spots, and reviews 
+      // should be handled by 'ON DELETE CASCADE' constraints in the database.
+      const { status, error } = await supabase
+        .from('garages')
+        .delete()
+        .eq('id', garageId);
+
+      if (error) {
+        console.error('Error de Supabase al borrar:', error);
+        throw error;
+      }
+
+      console.log('Status de borrado garaje:', status);
+
+      // Verify if it was actually deleted (check for RLS or dependency blocks)
+      const { data: exists } = await supabase
+        .from('garages')
+        .select('id')
+        .eq('id', garageId)
+        .maybeSingle();
+
+      if (exists) {
+        throw new Error('El garaje no pudo ser borrado. Verifica que eres el dueño y que no tenga reservas activas.');
+      }
+
+      console.log('--- FIN BORRADO GARAJE (ÉXITO) ---');
+    } catch (error) {
+      console.error('Error en proceso de borrado:', error);
+      throw error;
+    }
+  }
 };

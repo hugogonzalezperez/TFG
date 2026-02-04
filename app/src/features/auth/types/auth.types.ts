@@ -53,7 +53,6 @@ export interface RegisterRequest {
   password: string;
   name: string;
   phone?: string;
-  isOwner?: boolean;
 }
 
 export interface LoginRequest {

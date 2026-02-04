@@ -66,9 +66,19 @@ export function GarageDetailModal({
         <div className="relative h-32 w-full bg-muted/50 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10" />
 
-          {/* Si tuviéramos imagen real garage.image */}
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-primary/5">
-            <Car className="w-12 h-12 opacity-20" />
+          {/* Imagen real del garaje o fallback */}
+          <div className="absolute inset-0">
+            {garage.image ? (
+              <img
+                src={garage.image}
+                alt={garage.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-primary/5">
+                <Car className="w-12 h-12 opacity-20" />
+              </div>
+            )}
           </div>
 
           <div className="absolute bottom-4 left-6 z-20">

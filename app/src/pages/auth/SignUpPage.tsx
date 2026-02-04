@@ -24,11 +24,28 @@ export default function SignUpPage() {
     phone: '',
     password: '',
     confirmPassword: '',
-    isOwner: false,
     acceptTerms: false,
   });
 
   const validateForm = (): string | null => {
+    // Regex para permitir solo letras (incluyendo acentos y ñ)
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+$/;
+    const surnameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+)*$/;
+
+    if (!nameRegex.test(formData.name)) {
+      return 'El nombre solo puede contener letras (sin espacios ni números)';
+    }
+
+    if (!surnameRegex.test(formData.surname)) {
+      return 'Los apellidos solo pueden contener letras (sin espacios ni números)';
+    }
+
+    // Regex para validación robusta de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return 'Introduce un formato de email válido';
+    }
+
     if (formData.password.length < 8) {
       return 'La contraseña debe tener al menos 8 caracteres';
     }
@@ -63,8 +80,7 @@ export default function SignUpPage() {
         email: formData.email,
         password: formData.password,
         name: fullName,
-        phone: formData.phone,
-        isOwner: formData.isOwner
+        phone: formData.phone
       });
 
       // Si tiene éxito, navegamos
@@ -248,20 +264,6 @@ export default function SignUpPage() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 bg-muted/50 p-3 rounded-lg">
-            <Checkbox
-              id="isOwner"
-              checked={formData.isOwner}
-              onCheckedChange={(checked: any) => setFormData({ ...formData, isOwner: checked as boolean })}
-              disabled={isSubmitting || loading}
-            />
-            <label
-              htmlFor="isOwner"
-              className="text-sm cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Quiero alquilar mi plaza de aparcamiento
-            </label>
-          </div>
 
           <div className="flex items-start space-x-2">
             <Checkbox

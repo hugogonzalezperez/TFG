@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { Calendar, MapPin, Clock, Star, History, Trash2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, Star, History, Trash2, Car, Building2 } from 'lucide-react';
 import { Card, Badge, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
 import { BookingTimeline, CalendarGarage } from '../../../../shared/components/calendar/BookingTimeline';
+import { cn } from '../../../../shared/lib/cn';
 
 interface BookingHistoryProps {
   bookings: any[];
@@ -96,99 +97,113 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
     switch (status) {
       case 'pending': return 'bg-yellow-500/10 text-yellow-600 border-yellow-200';
       case 'confirmed': return 'bg-green-500/10 text-green-600 border-green-200';
-      case 'active': return 'bg-green-500/10 text-green-600 border-green-200';
+      case 'active': return 'bg-blue-500/10 text-blue-600 border-blue-200';
       default: return 'bg-secondary text-white';
     }
   };
 
   return (
-    <div className="space-y-10">
-      {/* Calendar View */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Calendar className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl font-bold">Tus próximas reservas</h2>
-        </div>
-
-        {activeBookings.length > 0 ? (
-          <BookingTimeline
-            data={timelineData}
-            viewDate={viewDate}
-            onDateChange={setViewDate}
-          />
-        ) : (
-          <Card className="p-8 text-center border-dashed">
-            <p className="text-muted-foreground">No tienes reservas pendientes para hoy.</p>
-          </Card>
-        )}
-      </section>
-
+    <div className="space-y-12 py-5">
       {/* Detailed Active Bookings */}
-      <section>
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+      <section className="mb-4">
+        <h2 className="text-2xl font-bold mb-2 flex items-center gap-3">
           Detalle de reservas activas
-          <Badge variant="secondary" className="rounded-full">{activeBookings.length}</Badge>
+          <Badge variant="outline" className="rounded-full px-2.5 py-0.5">{activeBookings.length}</Badge>
         </h2>
+
+        <div className="h-2"></div>
+
         {activeBookings.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeBookings.map((booking) => (
-              <Card key={booking.id} className="p-5 border-2 border-border/40 hover:border-primary/30 transition-all group">
-                <div className="flex gap-4">
-                  <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                    <img
-                      src={booking.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
-                      alt={booking.parkingName}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-1">
-                      <h3 className="font-bold truncate" title={booking.parkingName}>{booking.parkingName}</h3>
-                      <Badge className={getStatusColor(booking.status)} variant="outline">
+          <Card className="overflow-hidden border-border/50">
+            <div className="divide-y divide-border">
+              {/* Header row */}
+              <div className="hidden md:grid grid-cols-12 gap-2 px-5 py-4 bg-muted/20 text-[11px] font-bold text-muted-foreground uppercase tracking-wider items-center">
+                <div className="col-span-4">Ubicación y Plaza</div>
+                <div className="col-span-3 text-center">Fechas y Horas</div>
+                <div className="col-span-1 text-center">Importe</div>
+                <div className="col-span-2 text-center">Estado</div>
+                <div className="col-span-2 text-right pr-5">Acción</div>
+              </div>
+              {activeBookings.map((booking) => {
+                const startDate = new Date(booking.start_time);
+                const endDate = new Date(booking.end_time);
+                return (
+                  <div key={booking.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 px-5 py-3 items-center hover:bg-muted/5 transition-colors">
+                    {/* Garage & Spot Info */}
+                    <div className="col-span-4 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary flex-shrink-0 cursor-pointer hover:bg-primary/10 transition-colors"
+                        onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}>
+                        <Building2 className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4
+                          className="font-bold text-sm truncate cursor-pointer hover:text-primary transition-colors"
+                          title={booking.parkingName}
+                          onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}
+                        >
+                          {booking.parkingName?.split(' - ')[0] || booking.parkingName}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <p className="text-[10px] text-muted-foreground font-mono bg-muted/50 px-1.5 py-0.5 rounded shrink-0">
+                            {booking.spotNumber || 'N/A'}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground truncate flex items-center gap-1">
+                            <MapPin className="h-3 w-3 shrink-0" />
+                            <span className="truncate">{booking.location?.split(',')[0]}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Dates */}
+                    <div className="col-span-3 text-center">
+                      <p className="text-sm font-semibold text-foreground">
+                        {startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })} — {endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {endDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+
+                    {/* Amount */}
+                    <div className="col-span-1 text-center">
+                      <p className="text-base font-bold text-foreground">
+                        {Number(booking.total_price).toFixed(2)}<span className="text-xs">€</span>
+                      </p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="col-span-2 flex justify-center">
+                      <Badge className={cn("text-[10px] px-2 py-0.5 h-auto leading-none uppercase font-bold", getStatusColor(booking.status))} variant="outline">
                         {getStatusLabel(booking.status)}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mb-3 truncate">
-                      <MapPin className="h-3 w-3" />
-                      {booking.location}
-                    </p>
-                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground bg-muted/50 p-2 rounded-md">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(booking.start_time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(booking.start_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                        -
-                        {new Date(booking.end_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                      </div>
+
+                    {/* Actions */}
+                    <div className="col-span-2 flex justify-end gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-xs px-2.5"
+                        onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}
+                      >
+                        Ver
+                      </Button>
+                      <Button
+                        variant="exit"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:opacity-50"
+                        onClick={() => handleCancel(booking.id)}
+                        disabled={cancellingId === booking.id || booking.status === 'active'}
+                      >
+                        {cancellingId === booking.id ? '...' : <Trash2 className="h-4 w-4" />}
+                      </Button>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                  <span className="font-bold text-lg text-primary">
-                    {Number(booking.total_price).toFixed(2)}€
-                  </span>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}>
-                      Ver plaza
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 text-xs text-destructive hover:bg-destructive/10"
-                      onClick={() => handleCancel(booking.id)}
-                      disabled={cancellingId === booking.id || booking.status === 'active'}
-                    >
-                      {cancellingId === booking.id ? '...' : 'Cancelar'}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          </Card>
         ) : (
           <div className="py-12 text-center text-muted-foreground">
             <p>No hay reservas activas en este momento.</p>
@@ -197,8 +212,8 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
       </section>
 
       {/* History */}
-      <section>
-        <div className="flex items-center gap-2 mb-6">
+      <section className="mt-8">
+        <div className="flex items-center gap-2 mb-4">
           <History className="h-5 w-5 text-muted-foreground" />
           <h2 className="text-xl font-bold">Historial de reservas</h2>
         </div>
@@ -206,7 +221,7 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
         <div className="space-y-3">
           {pastBookings.length > 0 ? (
             pastBookings.map((booking) => (
-              <Card key={booking.id} className="p-4 border border-border/60 hover:bg-muted/10 transition-colors">
+              <Card key={booking.id} className="p-4 border border-border/50">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded bg-muted flex items-center justify-center text-muted-foreground">
@@ -234,9 +249,9 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                       </Button>
                     )}
                     <Button
-                      variant="ghost"
+                      variant="exit"
                       size="icon"
-                      className="h-8 w-8 text-destructive opacity-40 hover:opacity-100"
+                      className="h-8 w-8 text-destructive hover:opacity-50"
                       onClick={() => handleDelete(booking.id)}
                       disabled={deletingId === booking.id}
                     >

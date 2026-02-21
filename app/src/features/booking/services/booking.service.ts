@@ -52,6 +52,8 @@ export const bookingService = {
     startTime: Date;
     endTime: Date;
     basePrice: number;
+    vehiclePlate: string;
+    vehicleDescription: string;
   }): Promise<Booking> {
     // 1. Obtener reglas y calcular precio final (Seguridad lado cliente + validación DB)
     const rules = await this.getPricingRules(params.spotId);
@@ -74,6 +76,8 @@ export const bookingService = {
         total_price: estimation.total_price,
         price_per_hour_at_booking: estimation.base_price,
         dynamic_multiplier_applied: estimation.multiplier_applied,
+        vehicle_plate: params.vehiclePlate,
+        vehicle_description: params.vehicleDescription,
         status: 'confirmed' as BookingStatus
       })
       .select()
@@ -87,6 +91,13 @@ export const bookingService = {
    * Obtiene todas las reservas de un usuario con detalles de la plaza y garaje
    */
   async getUserBookings(userId: string): Promise<any[]> {
+    // Asegurar que las reservas pasadas se marquen como completadas (silencioso si falla)
+    try {
+      await supabase.rpc('complete_past_bookings');
+    } catch (e) {
+      console.warn('Error auto-completing bookings:', e);
+    }
+
     const { data, error } = await supabase
       .from('bookings')
       .select(`
@@ -112,18 +123,24 @@ export const bookingService = {
     if (error) throw error;
 
     return (data || []).map(b => {
-      const garage = b.spot.garage;
-      const mainImage = garage.images?.find((img: any) => img.is_main)?.image_url
-        || garage.images?.[0]?.image_url
+      // Supabase sometimes returns joins as arrays if the relationship isn't strictly 1:1 in the schema
+      const spot = Array.isArray(b.spot) ? b.spot[0] : b.spot;
+      const garage = spot?.garage ? (Array.isArray(spot.garage) ? spot.garage[0] : spot.garage) : null;
+
+      const mainImage = garage?.images?.find((img: any) => img.is_main)?.image_url
+        || garage?.images?.[0]?.image_url
         || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
+
+      const hasReview = Array.isArray(b.reviews) ? b.reviews.length > 0 : !!b.reviews;
 
       return {
         ...b,
-        parkingName: garage.name,
-        location: `${garage.address}, ${garage.city}`,
-        spotNumber: b.spot.spot_number,
+        parkingName: garage?.name || (spot ? `Plaza ${spot.spot_number}` : 'Garaje no disponible'),
+        location: garage ? `${garage.address}, ${garage.city}` : 'Ubicación no disponible',
+        spotNumber: spot?.spot_number || 'N/A',
         image: mainImage,
-        rated: (b.reviews && b.reviews.length > 0) || false
+        rated: hasReview,
+        garage_id: garage?.id || spot?.garage_id
       };
     });
   },

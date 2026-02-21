@@ -61,7 +61,7 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
         </div>
         <div className="text-center">
           <p className="text-2xl font-bold">{user.totalBookings}</p>
-          <p className="text-sm text-muted-foreground">Reservas</p>
+          <p className="text-sm text-muted-foreground">Reservas activas</p>
         </div>
       </div>
 

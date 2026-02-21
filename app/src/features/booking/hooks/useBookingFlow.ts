@@ -100,12 +100,26 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
         throw new Error('Esta plaza ya no está disponible para las horas seleccionadas.');
       }
 
+      // Normalizar matrícula: eliminar espacios extra y añadir el espacio correcto
+      const rawPlate = formData.licensePlate.replace(/\s+/g, '').toUpperCase();
+      let normalizedPlate = rawPlate;
+      if (/^[0-9]{4}[A-Z]{3}$/.test(rawPlate)) {
+        // Formato moderno: 1234ABC → 1234 ABC
+        normalizedPlate = rawPlate.slice(0, 4) + ' ' + rawPlate.slice(4);
+      } else if (/^[A-Z]{1,2}[0-9]{4}[A-Z]{1,2}$/.test(rawPlate)) {
+        // Formato provincial: TF1234AB → TF 1234 AB
+        const match = rawPlate.match(/^([A-Z]{1,2})([0-9]{4})([A-Z]{1,2})$/);
+        if (match) normalizedPlate = `${match[1]} ${match[2]} ${match[3]}`;
+      }
+
       await bookingService.createBooking({
         spotId: parkingId,
         userId: authUser.user.id,
         startTime: bookingDates.start,
         endTime: bookingDates.end,
         basePrice: basePrice,
+        vehiclePlate: normalizedPlate,
+        vehicleDescription: formData.carModel,
       });
 
       setBookingComplete(true);

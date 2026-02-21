@@ -21,7 +21,8 @@ export const profileService = {
     const { count, error: bookingsError } = await supabase
       .from('bookings')
       .select('*', { count: 'exact', head: true })
-      .eq('renter_id', userId);
+      .eq('renter_id', userId)
+      .in('status', ['confirmed', 'active', 'pending']);
 
     if (bookingsError) throw bookingsError;
 
@@ -66,17 +67,9 @@ export const profileService = {
 
     if (spotsError) throw spotsError;
 
-    // 3. Obtener rating real de sus garajes
-    const { data: reviews, error: reviewsError } = await supabase
-      .from('reviews')
-      .select('rating, garage:garages!inner(owner_id)')
-      .eq('garage.owner_id', ownerId);
-
-    if (reviewsError) throw reviewsError;
-
-    const avgRating = reviews && reviews.length > 0
-      ? reviews.reduce((acc, current) => acc + current.rating, 0) / reviews.length
-      : 5.0;
+    // 3. Obtener rating real de sus garajes mediante RPC
+    const { data: avgRating, error: reviewsError } = await supabase
+      .rpc('get_owner_average_rating', { owner_uuid: ownerId });
 
     // Calcular ingresos
     const now = new Date();
@@ -124,6 +117,13 @@ export const profileService = {
    * Obtiene todas las reservas hechas en plazas de este propietario
    */
   async getOwnerBookings(ownerId: string): Promise<any[]> {
+    // Asegurar que las reservas pasadas se marquen como completadas (silencioso si falla)
+    try {
+      await supabase.rpc('complete_past_bookings');
+    } catch (e) {
+      console.warn('Error auto-completing bookings for owner:', e);
+    }
+
     const { data, error } = await supabase
       .from('bookings')
       .select(`
@@ -139,6 +139,14 @@ export const profileService = {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    return (data || []).map(b => {
+      const spot = b.spot;
+      const garage = spot?.garage;
+      return {
+        ...b,
+        parkingName: garage?.name || 'Garaje no disponible',
+        spotNumber: spot?.spot_number || 'N/A'
+      };
+    });
   }
 };

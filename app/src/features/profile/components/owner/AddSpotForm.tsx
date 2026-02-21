@@ -68,7 +68,7 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
           city: formData.city,
           lat: formData.lat,
           lng: formData.lng,
-          price: parseFloat(formData.price),
+          price: Math.max(0, parseFloat(formData.price)),
           type: formData.type,
           spot_number: formData.spotNumber,
           description: formData.description,
@@ -156,7 +156,14 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Precio por hora (€)</Label>
-                <Input type="number" step="0.01" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} placeholder="2.50" />
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price}
+                  onChange={e => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="2.50"
+                />
               </div>
               <div className="space-y-2">
                 <Label>Tipo de plaza</Label>

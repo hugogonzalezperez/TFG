@@ -104,7 +104,7 @@ export function OwnerProfile() {
                 <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
               </Button>
               <Button
-                variant="outline"
+                variant="exit"
                 onClick={logout}
                 className="flex items-center space-x-2"
               >

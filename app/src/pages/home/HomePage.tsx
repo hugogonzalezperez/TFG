@@ -135,7 +135,7 @@ export default function Home() {
                 <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
               </Button>
               <Button
-                variant="outline"
+                variant="exit"
                 onClick={logout}
                 className="flex items-center space-x-2"
               >
@@ -205,116 +205,135 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <div className="relative bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-6xl font-bold mb-4 text-foreground">
+      <div className="relative overflow-hidden bg-background">
+        {/* Decorative Background Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[50%] bg-primary/10 rounded-full blur-[120px] animate-blob"></div>
+          <div className="absolute bottom-[10%] right-[-5%] w-[35%] h-[45%] bg-secondary/10 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+          <div className="absolute top-[20%] right-[10%] w-[25%] h-[35%] bg-accent/5 rounded-full blur-[80px] animate-blob animation-delay-4000"></div>
+
+          {/* Grid pattern overlay for extra texture */}
+          <div className="absolute inset-0 bg-[url('https://parallel.report/assets/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl lg:text-7xl font-bold mb-6 text-foreground tracking-tight">
               Encuentra <span className="text-primary">aparcamiento</span>
-              <span className="block mt-2">
+              <span className="block mt-3">
                 en cualquier lugar de <span className="text-primary">Tenerife</span>
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-5xl mx-auto">
-              Reserva plazas privadas hasta un 60% más baratas que los parkings públicos
+            <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto font-medium">
+              Reserva plazas privadas hasta un <span className="text-foreground font-bold">60% más baratas</span> que los parkings públicos
             </p>
           </div>
 
           {/* Search Card */}
-          <Card className="max-w-4xl mx-auto p-6 lg:p-8 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center">
-                  <MapPin className="h-4 w-4 mr-2 text-primary" />
-                  Ubicación
-                </label>
-                <Input
-                  placeholder="¿Dónde aparcar?"
-                  value={searchData.location}
-                  onChange={(e) => setSearchData({ ...searchData, location: e.target.value })}
-                  className="h-12"
-                />
+          <Card className="max-w-5xl mx-auto p-2 lg:p-2 shadow-[0_20px_50px_rgba(18,29,182,0.15)] rounded-3xl border-0 bg-card/80 backdrop-blur-xl">
+            <div className="p-6 lg:p-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center">
+                    <MapPin className="h-4 w-4 mr-2 text-primary" />
+                    Ubicación
+                  </label>
+                  <Input
+                    placeholder="¿Dónde aparcar?"
+                    value={searchData.location}
+                    onChange={(e) => setSearchData({ ...searchData, location: e.target.value })}
+                    className="h-12"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center">
+                    <Calendar className="h-4 w-4 mr-2 text-primary" />
+                    Fecha
+                  </label>
+                  <Input
+                    type="date"
+                    value={searchData.date}
+                    onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="h-12"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center">
+                    <Clock className="h-4 w-4 mr-2 text-primary" />
+                    Entrada
+                  </label>
+                  <Input
+                    type="time"
+                    step="600" // 10 minutos
+                    value={searchData.startTime}
+                    onChange={(e) => setSearchData({ ...searchData, startTime: e.target.value })}
+                    className="h-12"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center">
+                    <Clock className="h-4 w-4 mr-2 text-primary" />
+                    Salida
+                  </label>
+                  <Input
+                    type="time"
+                    step="600" // 10 minutos
+                    value={searchData.endTime}
+                    onChange={(e) => {
+                      // Prevent end time from being before start time
+                      if (searchData.startTime && e.target.value < searchData.startTime) {
+                        return;
+                      }
+                      setSearchData({ ...searchData, endTime: e.target.value });
+                    }}
+                    min={searchData.startTime || '00:00'}
+                    className="h-12"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-primary" />
-                  Fecha
-                </label>
-                <Input
-                  type="date"
-                  value={searchData.date}
-                  onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="h-12"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center">
-                  <Clock className="h-4 w-4 mr-2 text-primary" />
-                  Entrada
-                </label>
-                <Input
-                  type="time"
-                  step="600" // 10 minutos
-                  value={searchData.startTime}
-                  onChange={(e) => setSearchData({ ...searchData, startTime: e.target.value })}
-                  className="h-12"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center">
-                  <Clock className="h-4 w-4 mr-2 text-primary" />
-                  Salida
-                </label>
-                <Input
-                  type="time"
-                  step="600" // 10 minutos
-                  value={searchData.endTime}
-                  onChange={(e) => {
-                    // Prevent end time from being before start time
-                    if (searchData.startTime && e.target.value < searchData.startTime) {
-                      return;
-                    }
-                    setSearchData({ ...searchData, endTime: e.target.value });
-                  }}
-                  min={searchData.startTime || '00:00'}
-                  className="h-12"
-                />
-              </div>
+              <Button
+                onClick={handleSearch}
+                disabled={isSearchDisabled}
+                className="w-full h-16 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xl rounded-2xl shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3"
+              >
+                <Search className="h-6 w-6" />
+                {isSearchDisabled ? 'Introduce una ubicación' : 'Buscar aparcamiento'}
+              </Button>
             </div>
-
-            <Button
-              onClick={handleSearch}
-              disabled={isSearchDisabled}
-              className="w-full h-14 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-muted font-bold text-lg"
-            >
-              <Search className="h-5 w-5 mr-2" />
-              {isSearchDisabled ? 'Introduce una ubicación' : 'Buscar aparcamiento'}
-            </Button>
           </Card>
         </div>
+
+        {/* Clear boundary transition */}
+        <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background to-transparent opacity-100 z-10"></div>
       </div>
 
-      {/* Popular Locations */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">Zonas populares en Tenerife</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {popularLocations.map((location) => (
-            <Card
-              key={location.name}
-              className="p-6 hover:shadow-lg transition-all cursor-pointer hover:border-primary group"
-              onClick={() => {
-                setSearchData({ ...searchData, location: location.name });
-                handleSearch();
-              }}
-            >
-              <MapPin className="h-8 w-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
-              <h3 className="font-semibold mb-1">{location.name}</h3>
-              <p className="text-sm text-muted-foreground">{location.spots} plazas</p>
-            </Card>
-          ))}
+      {/* Popular Locations - High contrast background and clear separation */}
+      <div className="relative bg-muted/40 border-y border-border/50 z-20 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <h2 className="text-4xl font-bold mb-12 text-center tracking-tight text-foreground">
+            Zonas populares en <span className="text-primary">Tenerife</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {popularLocations.map((location) => (
+              <Card
+                key={location.name}
+                className="p-6 hover:shadow-lg transition-all cursor-pointer hover:border-primary group"
+                onClick={() => {
+                  setSearchData({ ...searchData, location: location.name });
+                  handleSearch();
+                }}
+              >
+                <MapPin className="h-8 w-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="font-semibold mb-1">{location.name}</h3>
+                <p className="text-sm text-muted-foreground">{location.spots} plazas</p>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -356,7 +375,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-background text-white py-12">
+      <footer className="bg-footer-background text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

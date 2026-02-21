@@ -9,9 +9,6 @@ no se muestran los datos del propietario ni su rating en el parking detail (Solo
 No se pasa bien la hora de la reserva en el parking detail al booking process.
 No se puede borrar las reservas que tiene el usuario, y al dueño del garage que donde se ha reservado no se le muestra la reserva.
 
-
-PENDIENTE:
-
 No se puede editar la informacion desde el owner profile de los garajes o parking slots.
 
 
@@ -25,7 +22,8 @@ Precio al crear garaje no puede ser negativo
 
 Edicion de precio de garaje
 
-Hacer media de la review de todos los parkings del owner y mostrarlo en el perfil del owner.(A poder ser ponerlo como policy en la bd para que no esté preguntandolo todo el rato desde el front)
+PENDIENTE:
 
+Hacer media de la review de todos los parkings del owner y mostrarlo en el perfil del owner.(A poder ser ponerlo como policy en la bd para que no esté preguntandolo todo el rato desde el front)
 
 El como llegar de google maps

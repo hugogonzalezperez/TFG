@@ -15,6 +15,8 @@ export interface Booking {
   price_per_hour_at_booking: number;
   dynamic_multiplier_applied: number;
   status: BookingStatus;
+  vehicle_plate?: string;
+  vehicle_description?: string;
   created_at: string;
   updated_at: string;
 }

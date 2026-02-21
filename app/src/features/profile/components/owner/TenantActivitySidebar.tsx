@@ -22,7 +22,14 @@ export function TenantActivitySidebar({ bookings, isLoading, onCancel }: TenantA
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1 text-foreground">
                   <p className="font-medium text-sm mb-1">{booking.spot.garage.name} - {booking.spot.spot_number}</p>
-                  <p className="text-xs text-muted-foreground">{booking.renter?.name || 'Cliente'}</p>
+                  <div className="flex flex-col gap-0.5 mb-2">
+                    <p className="text-xs text-muted-foreground font-semibold">{booking.renter?.name || 'Cliente'}</p>
+                    {booking.vehicle_plate && (
+                      <p className="text-[10px] text-primary/80 font-mono bg-primary/5 px-1.5 py-0.5 rounded w-fit">
+                        {booking.vehicle_plate} — {booking.vehicle_description}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 {booking.status === 'active' ? (
                   <CheckCircle className="h-4 w-4 text-green-500" />

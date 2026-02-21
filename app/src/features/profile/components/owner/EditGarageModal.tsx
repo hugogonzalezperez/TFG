@@ -167,7 +167,10 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
                 <Input
                   type="number"
                   step="0.01"
-                  {...register('price', { required: 'El precio es obligatorio', min: 0 })}
+                  {...register('price', {
+                    required: 'El precio es obligatorio',
+                    min: { value: 0, message: 'el precio no puede ser negativo' }
+                  })}
                   placeholder="2.5"
                 />
                 {errors.price && <span className="text-xs text-red-500">{errors.price.message}</span>}

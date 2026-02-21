@@ -11,15 +11,19 @@
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  
+
   /* Parky Brand Colors */
-  --primary: #121db6; /* Azul principal - confianza */
+  --primary: #121db6;
+  /* Azul principal - confianza */
   --primary-foreground: #ffffff;
-  --secondary: #10B981; /* Verde - movilidad */
+  --secondary: #10B981;
+  /* Verde - movilidad */
   --secondary-foreground: #ffffff;
-  --accent: #F59E0B; /* Naranja - CTA */
+  --accent: #F59E0B;
+  /* Naranja - CTA */
   --accent-foreground: #ffffff;
-  
+
+  --footer-background: #111827;
   --muted: #F3F4F6;
   --muted-foreground: #6B7280;
   --destructive: #EF4444;
@@ -62,6 +66,7 @@
   --secondary-foreground: #111827;
   --accent: #FBBF24;
   --accent-foreground: #111827;
+  --footer-background: #111827;
   --muted: #374151;
   --muted-foreground: #9CA3AF;
   --destructive: #F87171;
@@ -106,6 +111,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-footer-background: var(--footer-background);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -204,4 +210,33 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+/* Animaciones para los blobs de fondo */
+@keyframes blob-bounce {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+.animate-blob {
+  animation: blob-bounce 7s infinite alternate ease-in-out;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }

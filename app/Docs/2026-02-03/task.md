@@ -22,8 +22,10 @@ Precio al crear garaje no puede ser negativo
 
 Edicion de precio de garaje
 
-PENDIENTE:
-
 Hacer media de la review de todos los parkings del owner y mostrarlo en el perfil del owner.(A poder ser ponerlo como policy en la bd para que no esté preguntandolo todo el rato desde el front)
 
+PENDIENTE:
+
 El como llegar de google maps
+
+Queda completar las reservas en el perfil del dueño del parking

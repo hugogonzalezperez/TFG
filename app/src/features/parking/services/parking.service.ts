@@ -12,6 +12,7 @@ interface GarageResponse extends GarageRow {
     owner: Pick<UserRow, 'id' | 'name' | 'avatar_url'> | null;
   })[];
   garage_images: Database['public']['Tables']['garage_images']['Row'][];
+  reviews: { rating: number }[];
 }
 
 export const parkingService = {
@@ -27,7 +28,8 @@ export const parkingService = {
           *,
           owner:users (id, name, avatar_url)
         ),
-        garage_images (*)
+        garage_images (*),
+        reviews (rating)
       `)
       .eq('is_active', true)
       .returns<GarageResponse[]>();
@@ -39,54 +41,107 @@ export const parkingService = {
 
     if (!data) return [];
 
-    return data.map((garage) => ({
-      id: garage.id,
-      name: garage.name,
-      address: garage.address,
-      city: garage.city,
-      lat: garage.lat,
-      lng: garage.lng,
-      is_active: garage.is_active || false,
-      is_verified: true, // TODO: Add to DB if needed
-      total_spots: garage.total_spots || 0,
-      owner_id: garage.owner_id,
-      rating: 4.8, // Fallback/Mock
-      reviews: 12, // Fallback/Mock
-      image: garage.garage_images?.find(img => img.is_main)?.image_url ||
-        garage.garage_images?.[0]?.image_url ||
-        'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400',
-      spots: garage.parking_spots.map((spot) => ({
-        id: spot.id,
-        garage_id: spot.garage_id,
-        name: `${garage.name} - ${spot.spot_number}`,
+    return data.map((garage) => {
+      // Calculate real rating
+      const reviews = garage.reviews || [];
+      const totalReviews = reviews.length;
+      const averageRating = totalReviews > 0
+        ? reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
+        : 0;
+
+      return {
+        id: garage.id,
+        name: garage.name,
         address: garage.address,
         city: garage.city,
-        base_price_per_hour: spot.base_price_per_hour,
-        current_price_per_hour: spot.current_price_per_hour,
         lat: garage.lat,
         lng: garage.lng,
-        is_active: spot.is_active || false,
+        is_active: garage.is_active || false,
         is_verified: true,
+        total_spots: garage.total_spots || 0,
+        owner_id: garage.owner_id,
+        rating: Number(averageRating.toFixed(1)),
+        reviews: totalReviews,
         image: garage.garage_images?.find(img => img.is_main)?.image_url ||
           garage.garage_images?.[0]?.image_url ||
-          'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
-        description: spot.description || undefined,
-        total_spots: 1,
-        spot_number: spot.spot_number,
-        type: (spot.type as Parking['type']) || 'Subterráneo',
-        owner: spot.owner
-          ? {
-            id: spot.owner.id,
-            name: spot.owner.name,
-            avatar: spot.owner.avatar_url || undefined,
-          }
-          : {
-            id: spot.owner_id,
-            name: 'Propietario',
-            avatar: undefined,
-          },
-      })),
-    }));
+          'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400',
+        images: garage.garage_images?.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map(img => img.image_url) || [],
+        spots: garage.parking_spots.map((spot) => ({
+          id: spot.id,
+          garage_id: spot.garage_id,
+          name: `${garage.name} - ${spot.spot_number}`,
+          address: garage.address,
+          city: garage.city,
+          base_price_per_hour: spot.base_price_per_hour,
+          current_price_per_hour: spot.current_price_per_hour,
+          lat: garage.lat,
+          lng: garage.lng,
+          is_active: spot.is_active || false,
+          is_verified: true,
+          image: garage.garage_images?.find(img => img.is_main)?.image_url ||
+            garage.garage_images?.[0]?.image_url ||
+            'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
+          description: spot.description || undefined,
+          total_spots: 1,
+          spot_number: spot.spot_number,
+          type: (spot.type as Parking['type']) || 'Subterráneo',
+          owner: spot.owner
+            ? {
+              id: spot.owner.id,
+              name: spot.owner.name,
+              avatar: spot.owner.avatar_url || undefined,
+            }
+            : {
+              id: spot.owner_id,
+              name: 'Propietario',
+              avatar: undefined,
+            },
+        })),
+      };
+    });
+  },
+
+  /**
+   * Obtiene las reseñas de un garaje específico
+   */
+  async getGarageReviews(garageId: string) {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        user:users (id, name, avatar_url)
+      `)
+      .eq('garage_id', garageId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  },
+
+  /**
+   * Envía una nueva reseña
+   */
+  async submitReview(params: {
+    garage_id: string;
+    user_id: string;
+    booking_id?: string;
+    rating: number;
+    comment: string;
+  }) {
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert({
+        garage_id: params.garage_id,
+        user_id: params.user_id,
+        booking_id: params.booking_id,
+        rating: params.rating,
+        comment: params.comment
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
   },
 
   /**
@@ -107,7 +162,8 @@ export const parkingService = {
         *,
         garage:garages (
           *,
-          garage_images (*)
+          garage_images (*),
+          reviews (rating)
         ),
         owner:users (id, name, avatar_url),
         parking_spot_images (*)
@@ -127,6 +183,13 @@ export const parkingService = {
     const garage = data.garage;
     const spot = data;
 
+    // Calculate real rating
+    const reviews = garage.reviews || [];
+    const totalReviews = reviews.length;
+    const averageRating = totalReviews > 0
+      ? reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / totalReviews
+      : 0;
+
     return {
       id: spot.id,
       garage_id: spot.garage_id,
@@ -135,6 +198,8 @@ export const parkingService = {
       city: garage.city,
       base_price_per_hour: spot.base_price_per_hour,
       current_price_per_hour: spot.current_price_per_hour,
+      rating: Number(averageRating.toFixed(1)),
+      reviews: totalReviews,
       lat: garage.lat,
       lng: garage.lng,
       is_active: spot.is_active || false,
@@ -333,25 +398,80 @@ export const parkingService = {
     await supabase.rpc('decrement_garage_spots', { garage_id_param: garageId });
   },
 
+  async updateGarage(garageId: string, updates: Partial<Garage>) {
+    const { data, error } = await supabase
+      .from('garages')
+      .update(updates)
+      .eq('id', garageId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateParkingSpot(spotId: string, updates: Partial<Parking>) {
+    const { data, error } = await supabase
+      .from('parking_spots')
+      .update(updates)
+      .eq('id', spotId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateGarageImages(garageId: string, images: string[]) {
+    // 1. Delete existing images
+    const { error: deleteError } = await supabase
+      .from('garage_images')
+      .delete()
+      .eq('garage_id', garageId);
+
+    if (deleteError) throw deleteError;
+
+    // 2. Insert new images
+    if (images.length > 0) {
+      await this.addGarageImages(garageId, images);
+    }
+  },
+
+  async updateParkingSpotImages(spotId: string, images: string[]) {
+    // 1. Delete existing images
+    const { error: deleteError } = await supabase
+      .from('parking_spot_images')
+      .delete()
+      .eq('parking_spot_id', spotId);
+
+    if (deleteError) throw deleteError;
+
+    // 2. Insert new images
+    if (images.length > 0) {
+      const imagesToInsert = images.map((url, index) => ({
+        parking_spot_id: spotId,
+        image_url: url,
+        display_order: index
+      }));
+
+      const { error: insertError } = await supabase
+        .from('parking_spot_images')
+        .insert(imagesToInsert);
+
+      if (insertError) throw insertError;
+    }
+  },
+
   async deleteGarage(garageId: string) {
     try {
-      console.log('--- INICIO BORRADO GARAJE ---');
-      console.log('ID:', garageId);
-
-      // Perform the deletion. 
-      // NOTE: For a professional production environment, images, spots, and reviews 
-      // should be handled by 'ON DELETE CASCADE' constraints in the database.
-      const { status, error } = await supabase
+      const { error } = await supabase
         .from('garages')
         .delete()
         .eq('id', garageId);
 
       if (error) {
-        console.error('Error de Supabase al borrar:', error);
         throw error;
       }
-
-      console.log('Status de borrado garaje:', status);
 
       // Verify if it was actually deleted (check for RLS or dependency blocks)
       const { data: exists } = await supabase
@@ -363,8 +483,6 @@ export const parkingService = {
       if (exists) {
         throw new Error('El garaje no pudo ser borrado. Verifica que eres el dueño y que no tenga reservas activas.');
       }
-
-      console.log('--- FIN BORRADO GARAJE (ÉXITO) ---');
     } catch (error) {
       console.error('Error en proceso de borrado:', error);
       throw error;

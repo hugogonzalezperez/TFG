@@ -8,7 +8,7 @@ import {
 } from '../../../ui/dialog';
 import { Button } from '../../../ui/button';
 import { Badge } from '../../../ui/badge';
-import { MapPin, Euro, Car, ArrowRight, Star } from 'lucide-react';
+import { MapPin, Euro, Car, ArrowRight } from 'lucide-react';
 import { cn } from '../../../shared/lib/cn';
 
 interface GarageDetailModalProps {

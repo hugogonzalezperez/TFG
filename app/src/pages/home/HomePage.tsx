@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Card, Button } from '../../ui';
 import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard, Menu, User, LogOut } from 'lucide-react';
 import { useFilters } from '../../features/parking';
@@ -9,8 +9,13 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { setDateTimeFilters } = useFilters();
+  const { setDateTimeFilters, resetFilters } = useFilters();
   const { logout, loading, authUser } = useAuth();
+
+  // Reset filters when entering home page to ensure fresh state
+  useEffect(() => {
+    resetFilters();
+  }, [resetFilters]);
 
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
@@ -204,10 +209,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
           <div className="text-center mb-12">
             <h1 className="text-4xl lg:text-6xl font-bold mb-4 text-foreground">
-              Encuentra aparcamiento
-              <span className="block text-primary mt-2">en cualquier lugar de Tenerife</span>
+              Encuentra <span className="text-primary">aparcamiento</span>
+              <span className="block mt-2">
+                en cualquier lugar de <span className="text-primary">Tenerife</span>
+              </span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-5xl mx-auto">
               Reserva plazas privadas hasta un 60% más baratas que los parkings públicos
             </p>
           </div>
@@ -281,7 +288,7 @@ export default function Home() {
             <Button
               onClick={handleSearch}
               disabled={isSearchDisabled}
-              className="w-full h-14 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg"
+              className="w-full h-14 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-muted font-bold text-lg"
             >
               <Search className="h-5 w-5 mr-2" />
               {isSearchDisabled ? 'Introduce una ubicación' : 'Buscar aparcamiento'}

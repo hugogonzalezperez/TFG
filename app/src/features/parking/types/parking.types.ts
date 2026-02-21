@@ -13,7 +13,9 @@ export interface Garage {
   is_verified: boolean;
   total_spots: number;
   owner_id: string;
+  description?: string;
   image?: string;
+  images?: string[];
   rating?: number;
   reviews?: number;
   spots?: Parking[];

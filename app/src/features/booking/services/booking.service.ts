@@ -74,7 +74,7 @@ export const bookingService = {
         total_price: estimation.total_price,
         price_per_hour_at_booking: estimation.base_price,
         dynamic_multiplier_applied: estimation.multiplier_applied,
-        status: 'pending' as BookingStatus
+        status: 'confirmed' as BookingStatus
       })
       .select()
       .single();
@@ -103,7 +103,8 @@ export const bookingService = {
               is_main
             )
           )
-        )
+        ),
+        reviews (id)
       `)
       .eq('renter_id', userId)
       .order('created_at', { ascending: false });
@@ -121,8 +122,48 @@ export const bookingService = {
         parkingName: garage.name,
         location: `${garage.address}, ${garage.city}`,
         spotNumber: b.spot.spot_number,
-        image: mainImage
+        image: mainImage,
+        rated: (b.reviews && b.reviews.length > 0) || false
       };
     });
+  },
+
+  /**
+   * Cancela una reserva
+   */
+  async cancelBooking(bookingId: string): Promise<void> {
+    const { error } = await supabase
+      .from('bookings')
+      .update({
+        status: 'cancelled',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', bookingId);
+
+    if (error) throw error;
+  },
+
+  /**
+   * Elimina una reserva (Hard Delete)
+   */
+  async deleteBooking(bookingId: string): Promise<void> {
+    const { error } = await supabase
+      .from('bookings')
+      .delete()
+      .eq('id', bookingId);
+
+    if (error) throw error;
+  },
+
+  /**
+   * Confirma una reserva (Pasar a status confirmed)
+   */
+  async confirmBooking(bookingId: string): Promise<void> {
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status: 'confirmed' })
+      .eq('id', bookingId);
+
+    if (error) throw error;
   }
 };

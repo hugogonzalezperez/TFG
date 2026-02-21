@@ -15,6 +15,7 @@ import { ParkingBookingCard } from './detail/ParkingBookingCard';
 
 // Hooks
 import { useParkingSpot } from '../hooks/useParkingSpot';
+import { useGarageReviews } from '../hooks/useGarageReviews';
 
 export function ParkingDetail() {
   const navigate = useNavigate();
@@ -22,27 +23,9 @@ export function ParkingDetail() {
 
   // Real data fetching with React Query
   const { data: parking, isLoading, error: queryError } = useParkingSpot(id);
+  const { data: realReviews = [], isLoading: reviewsLoading } = useGarageReviews(parking?.garage_id);
 
   const [isFavorite, setIsFavorite] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Mocked reviews for now (as the schema only has a reviews table but we might need a separate query)
-  const mockReviews = [
-    {
-      id: 1,
-      author: 'Carlos Ruiz',
-      rating: 5,
-      date: 'Hace 2 semanas',
-      comment: 'Excelente ubicación, muy cerca del centro. La plaza es amplia y el garaje está muy bien mantenido.',
-    },
-    {
-      id: 2,
-      author: 'Laura Martín',
-      rating: 5,
-      date: 'Hace 1 mes',
-      comment: 'Perfecta para aparcar cuando visitas Santa Cruz. María fue muy amable y el proceso super fácil.',
-    }
-  ];
 
   if (isLoading) return <AnimatedLoader message="Cargando detalles de la plaza..." />;
   if (queryError || !parking) return (
@@ -54,6 +37,18 @@ export function ParkingDetail() {
       <Button onClick={() => navigate('/map')} className="mt-4">Volver al mapa</Button>
     </div>
   );
+
+  const formattedReviews = realReviews.map((r: any) => ({
+    id: r.id,
+    author: r.user?.name || 'Usuario',
+    rating: r.rating,
+    date: new Date(r.created_at).toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }),
+    comment: r.comment || '',
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,8 +79,8 @@ export function ParkingDetail() {
           <div className="lg:col-span-2 space-y-8">
             <ParkingHeader
               name={parking.name}
-              rating={parking.rating || 4.8}
-              reviews={parking.reviews || 12}
+              rating={parking.rating}
+              reviews={parking.reviews}
               address={parking.address}
               city={parking.city}
               type={parking.type}
@@ -99,11 +94,13 @@ export function ParkingDetail() {
               rules={parking.rules}
             />
 
-            <ParkingReviews
-              rating={parking.rating || 4.8}
-              reviewsCount={parking.reviews || 12}
-              reviews={mockReviews}
-            />
+            {!reviewsLoading && (
+              <ParkingReviews
+                rating={parking.rating}
+                reviewsCount={parking.reviews}
+                reviews={formattedReviews}
+              />
+            )}
           </div>
 
           {/* Columna Lateral (Reserva) */}

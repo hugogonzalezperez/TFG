@@ -10,22 +10,61 @@ import { ProfileSidebar } from './user/ProfileSidebar';
 import { BookingHistory } from './user/BookingHistory';
 import { ProfileAccountSettings } from './user/ProfileAccountSettings';
 import { FavoritesList } from './user/FavoritesList';
+import { ReviewModal } from './user/ReviewModal';
 
 // Hooks
 import { useUserStats, useUserBookings } from '../hooks/useProfileData';
+import { bookingService } from '../../booking';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function UserProfile() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { authUser, updateProfile, logout, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('bookings');
+  const [reviewBooking, setReviewBooking] = useState<any>(null);
 
   // React Query hooks for real data
-  const { data: stats, isLoading: statsLoading } = useUserStats(authUser?.user?.id);
+  const { data: stats } = useUserStats(authUser?.user?.id);
   const { data: bookings = [], isLoading: bookingsLoading } = useUserBookings(authUser?.user?.id);
 
   if (authLoading || !authUser) {
     return <AnimatedLoader message="Cargando perfil..." />;
   }
+
+  const handleReviewSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['user-stats'] });
+    queryClient.invalidateQueries({ queryKey: ['user-bookings'] });
+    // Also invalidate garage specific queries if they exist
+    queryClient.invalidateQueries({ queryKey: ['garage-reviews'] });
+  };
+
+  const handleCancelBooking = async (bookingId: string) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar esta reserva permanentemente?')) return;
+
+    try {
+      await bookingService.deleteBooking(bookingId);
+      toast.success('Reserva eliminada correctamente');
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['user-bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['user-stats'] });
+    } catch (err: any) {
+      toast.error('Error al eliminar la reserva: ' + err.message);
+    }
+  };
+
+  const handleDeleteBooking = async (bookingId: string) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar esta reserva del historial?')) return;
+
+    try {
+      await bookingService.deleteBooking(bookingId);
+      toast.success('Reserva eliminada correctamente');
+      queryClient.invalidateQueries({ queryKey: ['user-bookings'] });
+    } catch (err: any) {
+      toast.error('Error al eliminar la reserva: ' + err.message);
+    }
+  };
 
   const userData = {
     id: authUser.user.id,
@@ -36,7 +75,7 @@ export function UserProfile() {
     memberSince: authUser.user.created_at
       ? new Date(authUser.user.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })
       : 'Recientemente',
-    rating: stats?.averageRating || 5.0,
+    rating: stats?.averageRating || 0.0,
     totalBookings: stats?.totalBookings || 0,
   };
 
@@ -64,7 +103,7 @@ export function UserProfile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <ProfileSidebar
+            < ProfileSidebar
               user={userData}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -76,7 +115,13 @@ export function UserProfile() {
           {/* Content Area */}
           <div className="lg:col-span-2">
             {activeTab === 'bookings' && (
-              <BookingHistory bookings={bookings} isLoading={bookingsLoading} />
+              <BookingHistory
+                bookings={bookings}
+                isLoading={bookingsLoading}
+                onCancel={handleCancelBooking}
+                onDelete={handleDeleteBooking}
+                onReview={setReviewBooking}
+              />
             )}
 
             {activeTab === 'favorites' && (
@@ -98,6 +143,14 @@ export function UserProfile() {
           </div>
         </div>
       </div>
+
+      {reviewBooking && (
+        <ReviewModal
+          booking={reviewBooking}
+          onClose={() => setReviewBooking(null)}
+          onSuccess={handleReviewSuccess}
+        />
+      )}
     </div>
   );
 }

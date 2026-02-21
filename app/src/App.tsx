@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FilterProvider } from './features/parking';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,9 +6,7 @@ import { AuthProvider, useAuth } from './features/auth';
 import { AnimatedLoader } from './shared/components/loaders';
 
 function AppContent() {
-  const { authUser, loading, initialized } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { initialized } = useAuth();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -17,21 +15,7 @@ function AppContent() {
     } else if (savedTheme === 'light') {
       document.documentElement.classList.remove('dark');
     }
-
-    if (initialized) {
-      if (authUser) {
-        if (['/login', '/signup'].includes(location.pathname)) {
-          navigate('/');
-        }
-      } else {
-        // Rutas públicas permitidas
-        const publicRoutes = ['/login', '/signup', '/auth/callback'];
-        if (!publicRoutes.includes(location.pathname)) {
-          navigate('/login');
-        }
-      }
-    }
-  }, [authUser, initialized, location.pathname, navigate]);
+  }, []);
 
   if (!initialized) {
     return <AnimatedLoader message="Iniciando aplicación..." />;

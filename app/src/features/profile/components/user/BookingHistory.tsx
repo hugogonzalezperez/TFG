@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Calendar, MapPin, Clock, Star } from 'lucide-react';
 import { Card, Badge, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
@@ -5,17 +6,60 @@ import { useNavigate } from 'react-router-dom';
 interface BookingHistoryProps {
   bookings: any[];
   isLoading: boolean;
+  onCancel?: (bookingId: string) => Promise<void>;
+  onDelete?: (bookingId: string) => Promise<void>;
+  onReview?: (booking: any) => void;
 }
 
-export function BookingHistory({ bookings, isLoading }: BookingHistoryProps) {
+export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onReview }: BookingHistoryProps) {
   const navigate = useNavigate();
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   if (isLoading) return <div className="space-y-4">
     {[1, 2].map(i => <Card key={i} className="p-6 h-40 animate-pulse bg-muted/50" />)}
   </div>;
 
-  const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active');
+  const handleCancel = async (id: string) => {
+    setCancellingId(id);
+    try {
+      if (onCancel) await onCancel(id);
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
+    try {
+      if (onDelete) await onDelete(id);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active' || b.status === 'pending');
   const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending': return 'Pendiente';
+      case 'confirmed': return 'Confirmada';
+      case 'active': return 'Activa';
+      case 'completed': return 'Completada';
+      case 'cancelled': return 'Cancelada';
+      default: return status;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-500/10 text-yellow-600 border-yellow-200';
+      case 'confirmed': return 'bg-green-500/10 text-green-600 border-green-200';
+      case 'active': return 'bg-green-500/10 text-green-600 border-green-200';
+      default: return 'bg-secondary text-white';
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -40,8 +84,8 @@ export function BookingHistory({ bookings, isLoading }: BookingHistoryProps) {
                           {booking.location}
                         </p>
                       </div>
-                      <Badge className="bg-secondary text-white">
-                        {booking.status === 'confirmed' ? 'Confirmada' : 'Activa'}
+                      <Badge className={getStatusColor(booking.status)}>
+                        {getStatusLabel(booking.status)}
                       </Badge>
                     </div>
                     <div className="space-y-2 text-sm mb-4">
@@ -64,8 +108,12 @@ export function BookingHistory({ bookings, isLoading }: BookingHistoryProps) {
                         <Button variant="outline" size="sm" onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}>
                           Ver plaza
                         </Button>
-                        <Button variant="outline" size="sm" className="text-destructive">
-                          Cancelar
+                        <Button
+                          className="bg-destructive/5 text-destructive border-destructive/20 hover:bg-destructive/10"
+                          onClick={() => handleCancel(booking.id)}
+                          disabled={cancellingId === booking.id || booking.status === 'active'}
+                        >
+                          {cancellingId === booking.id ? 'Cancelando...' : 'Cancelar'}
                         </Button>
                       </div>
                     </div>
@@ -95,8 +143,8 @@ export function BookingHistory({ bookings, isLoading }: BookingHistoryProps) {
                   <h3 className="font-semibold mb-1">{booking.parkingName}</h3>
                   <p className="text-sm text-muted-foreground">{booking.location}</p>
                 </div>
-                <Badge variant="outline">
-                  {booking.status === 'completed' ? 'Completada' : 'Cancelada'}
+                <Badge variant="outline" className={booking.status === 'completed' ? 'text-grey-600 bg-grey-50' : 'text-red-600 bg-red-50'}>
+                  {getStatusLabel(booking.status)}
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
@@ -105,11 +153,20 @@ export function BookingHistory({ bookings, isLoading }: BookingHistoryProps) {
                 <span>{Number(booking.total_price).toFixed(2)}€</span>
               </div>
               {!booking.rated && booking.status === 'completed' && (
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => onReview?.(booking)}>
                   <Star className="h-4 w-4" />
                   Valorar reserva
                 </Button>
               )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:bg-destructive/10 -ml-2 sm:ml-2 mt-2 sm:mt-0"
+                onClick={() => handleDelete(booking.id)}
+                disabled={deletingId === booking.id}
+              >
+                {deletingId === booking.id ? 'Borrando...' : 'Eliminar'}
+              </Button>
             </Card>
           ))}
         </div>

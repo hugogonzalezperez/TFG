@@ -4,6 +4,9 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { Button } from '../../../ui/button';
 import { useAuth } from '../../auth';
 import { AnimatedLoader } from '../../../shared/components/loaders';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { bookingService } from '../../booking/services/booking.service';
 
 // Sub-components
 import { OwnerStatsRow } from './owner/OwnerStatsRow';
@@ -20,9 +23,24 @@ export function OwnerProfile() {
   const [showAddSpot, setShowAddSpot] = useState(false);
 
   // React Query hooks
-  const { data: stats, isLoading: statsLoading } = useOwnerStats(authUser?.user?.id);
+  const { data: stats } = useOwnerStats(authUser?.user?.id);
   const { data: garages = [], isLoading: garagesLoading } = useOwnerGarages(authUser?.user?.id);
   const { data: bookings = [], isLoading: bookingsLoading } = useOwnerBookings(authUser?.user?.id);
+
+  const queryClient = useQueryClient();
+
+  const handleCancelBooking = async (bookingId: string) => {
+    if (!confirm('¿Seguro que quieres eliminar esta reserva permanentemente?')) return;
+
+    try {
+      await bookingService.deleteBooking(bookingId);
+      toast.success('Reserva eliminada');
+      queryClient.invalidateQueries({ queryKey: ['owner-bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['owner-stats'] });
+    } catch (err: any) {
+      toast.error('Error al eliminar: ' + err.message);
+    }
+  };
 
   if (authLoading || !authUser) {
     return <AnimatedLoader message="Cargando panel..." />;
@@ -32,7 +50,7 @@ export function OwnerProfile() {
     totalEarnings: stats?.totalEarnings || 0,
     monthlyEarnings: stats?.monthlyEarnings || 0,
     totalBookings: stats?.totalBookings || 0,
-    averageRating: stats?.averageRating || 4.8,
+    averageRating: stats?.averageRating || 0,
     activeSpots: stats?.activeSpots || 0,
   };
 
@@ -78,12 +96,20 @@ export function OwnerProfile() {
               <h2 className="text-2xl font-bold">Mis garajes</h2>
             </div>
 
-            <ManagedGarages garages={garages} isLoading={garagesLoading} />
+            <ManagedGarages
+              garages={garages}
+              isLoading={garagesLoading}
+              onAddGarage={() => setShowAddSpot(true)}
+            />
           </div>
 
           {/* Sidebar Column */}
           <div className="lg:col-span-1">
-            <TenantActivitySidebar bookings={bookings} isLoading={bookingsLoading} />
+            <TenantActivitySidebar
+              bookings={bookings}
+              isLoading={bookingsLoading}
+              onCancel={handleCancelBooking}
+            />
           </div>
         </div>
       </div>

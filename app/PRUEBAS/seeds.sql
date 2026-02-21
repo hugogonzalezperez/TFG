@@ -1,5 +1,4 @@
 -- Semillas para la base de datos Parky
--- Copia y pega esto en el SQL Editor de tu Dashboard de Supabase
 
 -- 1. Crear un usuario propietario (si no existe)
 -- Nota: Para que funcione correctamente con Supabase Auth, lo ideal es registrarse 

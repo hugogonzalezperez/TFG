@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
-import { Button } from '../../../ui/button';
 import { Camera, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface AvatarUploaderProps {
   userId: string;
-  currentAvatarUrl?: string;
   onUploadComplete: (url: string) => void;
   disabled?: boolean;
 }
 
-export function AvatarUploader({ userId, currentAvatarUrl, onUploadComplete, disabled }: AvatarUploaderProps) {
+export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {

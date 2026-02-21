@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
-import { Button } from '../../../ui/button';
-import { Camera, Loader2, X, Image as ImageIcon } from 'lucide-react';
+import { Camera, Loader2, X } from 'lucide-react';
 
 interface GarageImageUploaderProps {
   userId: string; // Needed for path organization

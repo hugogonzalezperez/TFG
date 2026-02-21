@@ -3,7 +3,7 @@
 // =====================================================
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabase, onAuthStateChange } from '../../../shared/lib/supabase';
+import { supabase } from '../../../shared/lib/supabase';
 import {
   registerWithEmail,
   loginWithEmail,

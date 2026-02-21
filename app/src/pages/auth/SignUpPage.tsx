@@ -3,7 +3,6 @@ import { Input, Label, Card, Button } from '../../ui';
 import { Car, Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
 import { Checkbox } from '../../ui';
 import { useAuth } from '../../features/auth';
-import { AnimatedLoader } from '../../shared/components/loaders';
 import { ErrorMessage } from '../../ui';
 
 import { useNavigate } from 'react-router-dom';

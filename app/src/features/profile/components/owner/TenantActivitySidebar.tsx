@@ -4,12 +4,13 @@ import { Card, Button } from '../../../../ui';
 interface TenantActivitySidebarProps {
   bookings: any[];
   isLoading: boolean;
+  onCancel?: (bookingId: string) => void;
 }
 
-export function TenantActivitySidebar({ bookings, isLoading }: TenantActivitySidebarProps) {
+export function TenantActivitySidebar({ bookings, isLoading, onCancel }: TenantActivitySidebarProps) {
   if (isLoading) return <Card className="p-6 h-64 animate-pulse bg-muted/50" />;
 
-  const upcomingBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active').slice(0, 5);
+  const upcomingBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active' || b.status === 'pending').slice(0, 5);
 
   return (
     <div className="space-y-4">
@@ -23,10 +24,17 @@ export function TenantActivitySidebar({ bookings, isLoading }: TenantActivitySid
                   <p className="font-medium text-sm mb-1">{booking.spot.garage.name} - {booking.spot.spot_number}</p>
                   <p className="text-xs text-muted-foreground">{booking.renter?.name || 'Cliente'}</p>
                 </div>
-                {booking.status === 'confirmed' ? (
+                {booking.status === 'active' ? (
                   <CheckCircle className="h-4 w-4 text-green-500" />
                 ) : (
-                  <AlertCircle className="h-4 w-4 text-blue-500" />
+                  <Button
+                    size="sm"
+                    className="h-7 text-xs text-destructive hover:bg-destructive/10 border-destructive/20"
+                    variant="outline"
+                    onClick={() => onCancel?.(booking.id)}
+                  >
+                    Cancelar
+                  </Button>
                 )}
               </div>
               <div className="text-[12px] space-y-1">

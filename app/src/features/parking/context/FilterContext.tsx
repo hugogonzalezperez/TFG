@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ParkingFilter } from '../types/parking.types';
 
 interface FilterContextType {

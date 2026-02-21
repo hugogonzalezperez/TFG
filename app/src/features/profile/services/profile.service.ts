@@ -1,10 +1,4 @@
 import { supabase } from '../../../shared/lib/supabase';
-import { Database } from '../../../types/database.types';
-
-type UserRow = Database['public']['Tables']['users']['Row'];
-type BookingRow = Database['public']['Tables']['bookings']['Row'];
-type GarageRow = Database['public']['Tables']['garages']['Row'];
-type ParkingSpotRow = Database['public']['Tables']['parking_spots']['Row'];
 
 export interface UserStats {
   totalBookings: number;
@@ -31,14 +25,22 @@ export const profileService = {
 
     if (bookingsError) throw bookingsError;
 
-    // Obtener rating promedio de las reseñas hechas POR este usuario o SOBRE este usuario?
-    // En este contexto, parece ser el rating del usuario como cliente si lo hubiera,
-    // pero usualmente mostramos el rating que ha recibido.
-    // Dado el esquema, las reseñas son sobre garajes.
+    // Check if user is also an owner to show their average rating
+    const { data: ownerGarages } = await supabase
+      .from('garages')
+      .select('id')
+      .eq('owner_id', userId)
+      .limit(1);
+
+    let averageRating = 5.0;
+    if (ownerGarages && ownerGarages.length > 0) {
+      const ownerStats = await this.getOwnerStats(userId);
+      averageRating = ownerStats.averageRating;
+    }
 
     return {
       totalBookings: count || 0,
-      averageRating: 5.0, // El usuario no recibe ratings directamente en este esquema
+      averageRating,
     };
   },
 
@@ -129,10 +131,11 @@ export const profileService = {
         renter:users!bookings_renter_id_fkey(name, email, avatar_url),
         spot:parking_spots!inner(
           spot_number,
+          owner_id,
           garage:garages!inner(name, owner_id)
         )
       `)
-      .eq('spot.garage.owner_id', ownerId)
+      .eq('spot.owner_id', ownerId)
       .order('created_at', { ascending: false });
 
     if (error) throw error;

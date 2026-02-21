@@ -201,7 +201,7 @@ export default function LoginPage() {
                 className="text-primary hover:underline font-medium"
                 disabled={isSubmitting || loading}
               >
-                Regístrate gratis
+                Regístrate
               </button>
             </p>
           </div>

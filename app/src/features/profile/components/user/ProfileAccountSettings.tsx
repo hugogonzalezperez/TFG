@@ -7,7 +7,7 @@ interface ProfileAccountSettingsProps {
     name: string;
     email: string;
     phone: string;
-    avatar_url: string;
+    avatar: string;
   };
   onSave: (data: any) => Promise<void>;
 }
@@ -40,7 +40,13 @@ export function ProfileAccountSettings({ initialData, onSave }: ProfileAccountSe
     setIsSaving(true);
     setError(null);
     try {
-      await onSave(formData);
+      // Map avatar back to avatar_url for backend if needed, or just pass as is if backend handles it
+      // Assuming backend expects avatar_url based on previous code
+      const payload = {
+        ...formData,
+        avatar_url: formData.avatar
+      };
+      await onSave(payload);
       setIsEditing(false);
     } catch (err: any) {
       setError(err.message || 'Error al guardar');
@@ -105,12 +111,12 @@ export function ProfileAccountSettings({ initialData, onSave }: ProfileAccountSe
 
           {isEditing && (
             <div className="space-y-2">
-              <Label htmlFor="avatar_url" className="flex items-center gap-2"><Camera className="h-4 w-4" /> URL del Avatar</Label>
+              <Label htmlFor="avatar" className="flex items-center gap-2"><Camera className="h-4 w-4" /> URL del Avatar</Label>
               <Input
-                id="avatar_url"
+                id="avatar"
                 type="url"
-                value={formData.avatar_url}
-                onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+                value={formData.avatar}
+                onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
                 placeholder="https://ejemplo.com/foto.jpg"
               />
             </div>

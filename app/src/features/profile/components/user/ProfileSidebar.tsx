@@ -43,7 +43,6 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
           </Avatar>
           <AvatarUploader
             userId={user.id}
-            currentAvatarUrl={user.avatar || ''}
             onUploadComplete={updateAvatar}
           />
         </div>

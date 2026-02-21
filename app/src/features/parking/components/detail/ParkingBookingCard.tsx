@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Clock, Zap, Shield } from 'lucide-react';
 import { Card, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,33 @@ interface ParkingBookingCardProps {
 
 export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
   const navigate = useNavigate();
+  // Initialize with current time and +4h default
+  const [entryDate, setEntryDate] = useState(() => {
+    const d = new Date();
+    d.setMinutes(Math.ceil(d.getMinutes() / 30) * 30);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d.toISOString().slice(0, 16); // format for datetime-local
+  });
+
+  const [exitDate, setExitDate] = useState(() => {
+    const d = new Date();
+    d.setMinutes(Math.ceil(d.getMinutes() / 30) * 30);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    d.setHours(d.getHours() + 4);
+    return d.toISOString().slice(0, 16);
+  });
+
+  const handleBooking = () => {
+    navigate(`/book/${parking.id}`, {
+      state: {
+        ...parking,
+        initialStartDate: new Date(entryDate),
+        initialEndDate: new Date(exitDate)
+      }
+    });
+  };
 
   return (
     <Card className="p-6 sticky top-24 shadow-xl">
@@ -31,6 +59,8 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
           </label>
           <input
             type="datetime-local"
+            value={entryDate}
+            onChange={(e) => setEntryDate(e.target.value)}
             className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -41,13 +71,15 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
           </label>
           <input
             type="datetime-local"
+            value={exitDate}
+            onChange={(e) => setExitDate(e.target.value)}
             className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
       </div>
 
       <Button
-        onClick={() => navigate(`/book/${parking.id}`, { state: parking })}
+        onClick={handleBooking}
         className="w-full h-12 bg-accent hover:bg-accent/90 text-white mb-4"
       >
         Reservar ahora

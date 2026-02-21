@@ -1,4 +1,4 @@
-import { Calendar, Clock, Euro, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Euro, CheckCircle } from 'lucide-react';
 import { Card, Button } from '../../../../ui';
 
 interface TenantActivitySidebarProps {

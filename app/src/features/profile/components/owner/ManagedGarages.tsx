@@ -1,8 +1,9 @@
 import { MapPin, Edit, Trash2, Plus } from 'lucide-react';
-import { Card, Badge, Button } from '../../../../ui';
+import { Card, Badge, Button, Switch } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { AddSpotToGarageModal } from './AddSpotToGarageModal';
 import { EditGarageModal } from './EditGarageModal';
 
@@ -16,6 +17,28 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
   const queryClient = useQueryClient();
   const [selectedGarageForSpot, setSelectedGarageForSpot] = useState<any>(null);
   const [editingItem, setEditingItem] = useState<{ garage: any; spot?: any } | null>(null);
+
+  const handleToggleGarageStatus = async (garageId: string, isActive: boolean) => {
+    try {
+      await parkingService.updateGarage(garageId, { is_active: isActive });
+      queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
+      toast.success(`Garaje ${isActive ? 'activado' : 'desactivado'} correctamente`);
+    } catch (err) {
+      console.error('Error al cambiar estado del garaje:', err);
+      toast.error('Error al cambiar el estado del garaje');
+    }
+  };
+
+  const handleToggleSpotStatus = async (spotId: string, isActive: boolean) => {
+    try {
+      await parkingService.updateParkingSpot(spotId, { is_active: isActive });
+      queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
+      toast.success(`Plaza ${isActive ? 'activada' : 'desactivada'} correctamente`);
+    } catch (err) {
+      console.error('Error al cambiar estado de la plaza:', err);
+      toast.error('Error al cambiar el estado de la plaza');
+    }
+  };
 
   const handleDeleteSpot = async (spotId: string, garageId: string) => {
     if (!confirm('¿Estás seguro de que quieres eliminar esta plaza?')) return;
@@ -90,13 +113,24 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
         <Card key={garage.id} className="overflow-hidden border-2 border-border/50">
           {/* Garage Header */}
           <div className="bg-muted/30 p-4 border-b border-border flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                {garage.name}
-              </h3>
-              <p className="text-sm text-muted-foreground flex items-center gap-1">
-                <MapPin className="h-3 w-3" /> {garage.address}, {garage.city}
-              </p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  {garage.name}
+                </h3>
+                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> {garage.address}, {garage.city}
+                </p>
+              </div>
+              <div className="flex flex-col items-center border-l border-border pl-4 hidden sm:flex">
+                <span className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
+                  {garage.is_active ? 'Activo' : 'Inactivo'}
+                </span>
+                <Switch
+                  checked={garage.is_active}
+                  onCheckedChange={(checked) => handleToggleGarageStatus(garage.id, checked)}
+                />
+              </div>
             </div>
             <div className="flex gap-2">
               <Badge variant="secondary">{garage.parking_spots?.length || 0} plazas</Badge>
@@ -134,47 +168,65 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                 {garage.parking_spots.map((spot: any) => (
                   <div
                     key={spot.id}
-                    className="flex items-center gap-4 p-3 border border-border rounded-xl bg-card hover:border-primary transition-colors cursor-pointer"
-                    onClick={() => setEditingItem({ garage, spot })}
+                    className="flex items-center gap-4 p-4 border border-border rounded-xl bg-card hover:border-primary/50 transition-all group relative"
                   >
-                    <div className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden">
+                    <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden border border-border">
                       <img
                         src={spot.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
                         alt={spot.spot_number}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     </div>
+
                     <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                        <span className="font-bold">Plaza {spot.spot_number}</span>
-                        <Badge className={spot.is_active ? 'bg-green-500/10 text-green-600 border-green-500/20' : 'bg-muted text-muted-foreground'}>
-                          {spot.is_active ? 'Activa' : 'Inactiva'}
-                        </Badge>
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <span className="font-bold text-lg">Plaza {spot.spot_number}</span>
+                          <span className="ml-2 text-sm text-primary font-semibold">{spot.current_price_per_hour}€/h</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col items-end">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Disponible</span>
+                            <Switch
+                              checked={spot.is_active}
+                              onCheckedChange={(checked) => handleToggleSpotStatus(spot.id, checked)}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-primary font-bold">{spot.current_price_per_hour}€/h</span>
-                        <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+
+                      <div className="flex items-center justify-between mt-3">
+                        <Badge
+                          variant={spot.is_active ? 'default' : 'secondary'}
+                          className={spot.is_active ? 'bg-green-500 hover:bg-green-600' : ''}
+                        >
+                          {spot.is_active ? 'ACTIVA' : 'INACTIVA'}
+                        </Badge>
+
+                        <div className="flex gap-1">
                           <Button
                             variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
+                            size="sm"
+                            className="h-8 gap-1.5 text-xs"
                             onClick={(e) => {
                               e.stopPropagation();
                               setEditingItem({ garage, spot });
                             }}
                           >
-                            <Edit className="h-3 w-3" />
+                            <Edit className="h-3.5 w-3.5" />
+                            Editar
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-destructive"
+                            className="h-8 w-8 text-destructive hover:bg-destructive/10"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleDeleteSpot(spot.id, garage.id);
                             }}
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>

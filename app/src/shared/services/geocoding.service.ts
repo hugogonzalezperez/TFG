@@ -34,15 +34,24 @@ export const geocodingService = {
     }
 
     try {
-      const response = await opencage.geocode({ key: API_KEY, q: address });
+      const response = await opencage.geocode({ 
+        key: API_KEY, 
+        q: address,
+        countrycode: 'es', // Restrict to Spain for better precision with "Calle X, Y"
+        language: 'es',
+        limit: 3 // Fetch top 3 to pick the best street-level match if needed 
+      });
 
       if (response.status.code === 200 && response.results.length > 0) {
-        const result = response.results[0];
+        // Find the most precise result (ideally, one with a house_number or road)
+        // If not found, fallback to the top result
+        const bestResult = response.results.find((r: any) => r.components && r.components.house_number) || response.results[0];
+
         const data: GeocodingResult = {
-          formatted: result.formatted,
-          lat: result.geometry.lat,
-          lng: result.geometry.lng,
-          components: result.components
+          formatted: bestResult.formatted,
+          lat: bestResult.geometry.lat,
+          lng: bestResult.geometry.lng,
+          components: bestResult.components
         };
 
         // Guardar en caché

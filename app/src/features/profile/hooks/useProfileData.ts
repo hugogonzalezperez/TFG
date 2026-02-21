@@ -15,6 +15,7 @@ export const useUserBookings = (userId: string | undefined) => {
     queryKey: ['user-bookings', userId],
     queryFn: () => bookingService.getUserBookings(userId!),
     enabled: !!userId,
+    refetchInterval: 10000, // Refresh every 10s
   });
 };
 
@@ -23,6 +24,7 @@ export const useOwnerStats = (ownerId: string | undefined) => {
     queryKey: ['owner-stats', ownerId],
     queryFn: () => profileService.getOwnerStats(ownerId!),
     enabled: !!ownerId,
+    refetchInterval: 30000, // Refresh every 30s
   });
 };
 
@@ -39,5 +41,6 @@ export const useOwnerBookings = (ownerId: string | undefined) => {
     queryKey: ['owner-bookings', ownerId],
     queryFn: () => profileService.getOwnerBookings(ownerId!),
     enabled: !!ownerId,
+    refetchInterval: 10000, // Refresh every 10s
   });
 };

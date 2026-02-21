@@ -8,6 +8,7 @@ import {
   DialogDescription,
 } from '../../../../ui/dialog';
 import { Button, Input, Textarea } from '../../../../ui';
+import { AddressSearch } from '../../../../ui/address-search';
 import { parkingService } from '../../../parking/services/parking.service';
 import { Garage, Parking } from '../../../parking/types/parking.types';
 import { GarageImageUploader } from '../GarageImageUploader';
@@ -26,13 +27,15 @@ interface FormData {
   description: string;
   address: string;
   city: string;
-  price?: number; // Spot specific
+  lat: number;
+  lng: number;
+  price?: number | string; // Spot specific
 }
 
 export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: EditGarageModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, reset, setValue, getValues, formState: { errors } } = useForm<FormData>();
   const isSpotEdit = !!spot;
 
   useEffect(() => {
@@ -44,6 +47,8 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           description: spot.description || '',
           address: garage.address, // Read-only context
           city: garage.city, // Read-only context
+          lat: garage.lat,
+          lng: garage.lng,
           price: spot.current_price_per_hour
         });
       } else {
@@ -53,18 +58,35 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           description: garage.description || '',
           address: garage.address,
           city: garage.city,
+          lat: garage.lat,
+          lng: garage.lng,
         });
       }
     }
   }, [isOpen, garage, spot, isSpotEdit, reset]);
+
+  const handleAddressSelect = (result: any) => {
+    const city = result.components?.city ||
+      result.components?.town ||
+      result.components?.village ||
+      result.components?.suburb ||
+      'Tenerife';
+
+    setValue('address', result.formatted, { shouldValidate: true });
+    setValue('city', city, { shouldValidate: true });
+    setValue('lat', result.lat);
+    setValue('lng', result.lng);
+  };
+
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
       if (isSpotEdit && spot) {
         await parkingService.updateParkingSpot(spot.id, {
+          spot_number: data.name,
           description: data.description,
-          current_price_per_hour: data.price,
+          current_price_per_hour: typeof data.price === 'string' ? parseFloat(data.price) : data.price,
         });
         await parkingService.updateParkingSpotImages(spot.id, images);
       } else {
@@ -73,6 +95,8 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           description: data.description,
           address: data.address,
           city: data.city,
+          lat: data.lat,
+          lng: data.lng,
         });
         await parkingService.updateGarageImages(garage.id, images);
       }
@@ -110,37 +134,44 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
                 {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Dirección</label>
-                  <Input
-                    {...register('address', { required: 'La dirección es obligatoria' })}
-                    placeholder="Calle Principal, 123"
+                  <AddressSearch
+                    onAddressSelect={handleAddressSelect}
+                    initialAddress={getValues('address')}
                   />
+                  {/* Campos ocultos para validación de RHF */}
+                  <input type="hidden" {...register('address', { required: 'La dirección es obligatoria' })} />
+                  <input type="hidden" {...register('city')} />
+                  <input type="hidden" {...register('lat')} />
+                  <input type="hidden" {...register('lng')} />
                   {errors.address && <span className="text-xs text-red-500">{errors.address.message}</span>}
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Ciudad</label>
-                  <Input
-                    {...register('city', { required: 'La ciudad es obligatoria' })}
-                    placeholder="Madrid"
-                  />
-                  {errors.city && <span className="text-xs text-red-500">{errors.city.message}</span>}
                 </div>
               </div>
             </>
           )}
 
           {isSpotEdit && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Precio por hora (€)</label>
-              <Input
-                type="number"
-                step="0.1"
-                {...register('price', { required: 'El precio es obligatorio', min: 0 })}
-                placeholder="2.5"
-              />
-              {errors.price && <span className="text-xs text-red-500">{errors.price.message}</span>}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Nombre de la plaza</label>
+                <Input
+                  {...register('name', { required: 'El nombre es obligatorio' })}
+                  placeholder="Ej: Plaza 1"
+                />
+                {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Precio por hora (€)</label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  {...register('price', { required: 'El precio es obligatorio', min: 0 })}
+                  placeholder="2.5"
+                />
+                {errors.price && <span className="text-xs text-red-500">{errors.price.message}</span>}
+              </div>
             </div>
           )}
 

@@ -16,6 +16,7 @@ export const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         foreground: "bg-foreground text-background hover:bg-foreground/90",
         exit: "border bg-background text-foreground hover:bg-background hover:text-destructive dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        select: "hover:bg-select-background hover:text-foreground",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

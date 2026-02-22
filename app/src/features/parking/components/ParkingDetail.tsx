@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Heart, Share2 } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, Car } from 'lucide-react';
 import { Button } from '../../../ui/button';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 import { ErrorMessage } from '../../../ui';
@@ -71,14 +71,30 @@ export function ParkingDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Sticky */}
       <div className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4 relative">
           <div className="flex items-center justify-between">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/map')}>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/map')} className="z-10">
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="flex gap-2">
+
+            {/* Logo Centrado */}
+            <div
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              aria-hidden="true"
+            >
+              <div
+                className="flex items-center gap-2 cursor-pointer pointer-events-auto group"
+                onClick={() => navigate('/')}
+              >
+                <div className="bg-primary p-1.5 rounded-lg group-hover:scale-105 transition-transform">
+                  <Car className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-bold tracking-tight text-foreground">Parky</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2 z-10">
               <Button
                 variant="ghost"
                 size="icon"

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import {
   Dialog,
@@ -101,10 +102,11 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
         await parkingService.updateGarageImages(garage.id, images);
       }
       onSuccess();
+      toast.success(isSpotEdit ? 'Plaza actualizada con éxito' : 'Garaje actualizado con éxito');
       onClose();
     } catch (error) {
       console.error('Error updating:', error);
-      alert('Error al actualizar. Por favor inténtalo de nuevo.');
+      toast.error('Error al actualizar. Por favor inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }

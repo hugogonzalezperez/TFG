@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
 import { Camera, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AvatarUploaderProps {
   userId: string;
@@ -19,13 +20,13 @@ export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUpl
 
       const file = event.target.files[0];
       if (!file.type.startsWith('image/')) {
-        alert('Por favor sube un archivo de imagen válido.');
+        toast.error('Por favor sube un archivo de imagen válido.');
         return;
       }
 
       // Limite de tamaño (ej: 2MB)
       if (file.size > 2 * 1024 * 1024) {
-        alert('La imagen no puede superar los 2MB.');
+        toast.error('La imagen no puede superar los 2MB.');
         return;
       }
 
@@ -54,7 +55,7 @@ export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUpl
 
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      alert('Error al subir la imagen: ' + error.message);
+      toast.error('Error al subir la imagen: ' + error.message);
     } finally {
       setIsUploading(false);
     }

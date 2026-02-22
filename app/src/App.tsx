@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { useEffect } from 'react';
 import { FilterProvider } from './features/parking';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -36,6 +37,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster position="top-center" richColors closeButton />
       <AuthProvider>
         <FilterProvider>
           <AppContent />

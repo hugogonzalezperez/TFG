@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../../auth';
 import { parkingService } from '../../../parking/services/parking.service';
+import { toast } from 'sonner';
 
 interface AddSpotFormProps {
   userId: string;
@@ -97,7 +98,7 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
       // Actualizamos el rol en el contexto de Auth
       await refreshUser();
 
-      alert(createSpot ? '¡Garaje y plaza publicados con éxito!' : '¡Garaje creado con éxito! Puedes añadir plazas después.');
+      toast.success(createSpot ? '¡Garaje y plaza publicados con éxito!' : '¡Garaje creado con éxito!');
       onCancel();
     } catch (err: any) {
       console.error('Error al publicar:', err);

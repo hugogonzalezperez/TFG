@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -51,7 +52,7 @@ export function AddSpotToGarageModal({ garage, isOpen, onClose }: AddSpotToGarag
         description: formData.description
       });
 
-      alert('¡Nueva plaza añadida con éxito!');
+      toast.success('¡Nueva plaza añadida con éxito!');
       onClose();
     } catch (err: any) {
       console.error('Error al añadir plaza:', err);

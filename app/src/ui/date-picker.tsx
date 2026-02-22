@@ -22,9 +22,9 @@ export function DatePicker({ date, onChange, placeholder = "Seleccionar fecha", 
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant="select"
           className={cn(
-            "w-full justify-start text-left font-normal h-12 px-4 border-border hover:bg-accent/5 hover:text-accent-foreground transition-all",
+            "w-full justify-start text-left font-normal h-12 px-4 border border-border hover:bg-foreground/5 hover:text-foreground transition-all",
             !date && "text-muted-foreground",
             className
           )}

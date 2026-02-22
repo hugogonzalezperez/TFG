@@ -1,5 +1,5 @@
 import { MapPin, Edit, Trash2, Plus } from 'lucide-react';
-import { Card, Badge, Button, Switch } from '../../../../ui';
+import { Card, Badge, Button, Switch, ConfirmationDialog } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -19,6 +19,13 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
   const queryClient = useQueryClient();
   const [selectedGarageForSpot, setSelectedGarageForSpot] = useState<any>(null);
   const [editingItem, setEditingItem] = useState<{ garage: any; spot?: any } | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    type: 'garage' | 'spot';
+    id: string;
+    name?: string;
+    garageId?: string;
+    ownerId?: string;
+  } | null>(null);
 
   const handleToggleGarageStatus = async (garageId: string, isActive: boolean) => {
     try {
@@ -43,21 +50,17 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
   };
 
   const handleDeleteSpot = async (spotId: string, garageId: string) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta plaza?')) return;
-
     try {
       await parkingService.deleteParkingSpot(spotId, garageId);
       queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
-      alert('Plaza eliminada correctamente');
+      toast.success('Plaza eliminada correctamente');
     } catch (err) {
       console.error('Error al eliminar plaza:', err);
-      alert('Error al eliminar la plaza');
+      toast.error('Error al eliminar la plaza');
     }
   };
 
-  const handleDeleteGarage = async (garageId: string, garageName: string, ownerId: string) => {
-    if (!confirm(`¿Estás seguro de que quieres eliminar el garaje "${garageName}"? Esta acción borrará todas sus plazas y fotos asociadas.`)) return;
-
+  const handleDeleteGarage = async (garageId: string, ownerId: string) => {
     try {
       await parkingService.deleteGarage(garageId);
 
@@ -67,13 +70,13 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
         queryClient.invalidateQueries({ queryKey: ['owner-stats', ownerId] })
       ]);
 
-      alert('Garaje eliminado correctamente');
+      toast.success('Garaje eliminado correctamente');
     } catch (err: any) {
       console.error('Error al eliminar garaje:', err);
       const message = err.message?.includes('violates foreign key constraint')
         ? 'No se puede eliminar el garaje porque tiene reservas activas o pasadas.'
         : 'Error al eliminar el garaje. Inténtalo de nuevo.';
-      alert(message);
+      toast.error(message);
     }
   };
 
@@ -150,7 +153,12 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                onClick={() => handleDeleteGarage(garage.id, garage.name, garage.owner_id)}
+                onClick={() => setDeleteConfirmation({
+                  type: 'garage',
+                  id: garage.id,
+                  name: garage.name,
+                  ownerId: garage.owner_id
+                })}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -220,7 +228,11 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                             className="h-8 w-8 text-destructive hover:bg-destructive/10"
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDeleteSpot(spot.id, garage.id);
+                              setDeleteConfirmation({
+                                type: 'spot',
+                                id: spot.id,
+                                garageId: garage.id
+                              });
                             }}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -258,6 +270,28 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
           }}
+        />
+      )}
+
+      {deleteConfirmation && (
+        <ConfirmationDialog
+          isOpen={!!deleteConfirmation}
+          onClose={() => setDeleteConfirmation(null)}
+          onConfirm={() => {
+            if (deleteConfirmation.type === 'garage') {
+              handleDeleteGarage(deleteConfirmation.id, deleteConfirmation.ownerId!);
+            } else {
+              handleDeleteSpot(deleteConfirmation.id, deleteConfirmation.garageId!);
+            }
+          }}
+          title={deleteConfirmation.type === 'garage' ? 'Eliminar Garaje' : 'Eliminar Plaza'}
+          description={
+            deleteConfirmation.type === 'garage'
+              ? `¿Estás seguro de que quieres eliminar el garaje "${deleteConfirmation.name}"? Esta acción borrará todas sus plazas y fotos asociadas.`
+              : '¿Estás seguro de que quieres eliminar esta plaza?'
+          }
+          confirmText="Eliminar"
+          variant="destructive"
         />
       )}
     </div>

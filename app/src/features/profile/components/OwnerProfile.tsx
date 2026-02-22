@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, LayoutDashboard, Building2, Calendar as CalendarIcon, Star, User, LogOut } from 'lucide-react';
-import { Button } from '../../../ui/button';
+import { Button, ConfirmationDialog } from '../../../ui';
 import { useAuth } from '../../auth';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 import { toast } from 'sonner';
@@ -25,6 +25,7 @@ export function OwnerProfile() {
   const { authUser, loading: authLoading, logout } = useAuth();
   const [showAddSpot, setShowAddSpot] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [confirmCancel, setConfirmCancel] = useState<string | null>(null);
 
   // React Query hooks
   const { data: stats } = useOwnerStats(authUser?.user?.id);
@@ -68,8 +69,6 @@ export function OwnerProfile() {
   }, [authUser?.user?.id, queryClient]);
 
   const handleCancelBooking = async (bookingId: string) => {
-    if (!confirm('¿Seguro que quieres eliminar esta reserva permanentemente?')) return;
-
     try {
       await bookingService.deleteBooking(bookingId);
       toast.success('Reserva eliminada');
@@ -234,7 +233,7 @@ export function OwnerProfile() {
             <OwnerBookingsTab
               bookings={bookings}
               isLoading={bookingsLoading}
-              onCancel={handleCancelBooking}
+              onCancel={(id) => setConfirmCancel(id)}
             />
           </TabsContent>
 
@@ -247,6 +246,20 @@ export function OwnerProfile() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+
+      {
+        confirmCancel && (
+          <ConfirmationDialog
+            isOpen={!!confirmCancel}
+            onClose={() => setConfirmCancel(null)}
+            onConfirm={() => handleCancelBooking(confirmCancel as string)}
+            title="Cancelar Reserva"
+            description="¿Seguro que quieres eliminar esta reserva permanentemente?"
+            confirmText="Eliminar"
+            variant="destructive"
+          />
+        )
+      }
+    </div >
   );
 }

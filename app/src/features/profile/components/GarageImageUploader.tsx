@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
 import { Camera, Loader2, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface GarageImageUploaderProps {
   userId: string; // Needed for path organization
@@ -29,7 +30,7 @@ export function GarageImageUploader({
 
       // Validaciones básicas
       if (currentImages.length + files.length > maxImages) {
-        alert(`Solo puedes tener un máximo de ${maxImages} fotos.`);
+        toast.error(`Solo puedes tener un máximo de ${maxImages} fotos.`);
         return;
       }
 
@@ -61,7 +62,7 @@ export function GarageImageUploader({
 
     } catch (error: any) {
       console.error('Error uploading images:', error);
-      alert('Error general en la subida.');
+      toast.error('Error general en la subida.');
     } finally {
       // Reset input value to allow selecting same files again if needed
       event.target.value = '';

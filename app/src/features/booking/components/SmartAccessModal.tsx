@@ -202,7 +202,7 @@ export function SmartAccessModal({ booking, onClose }: SmartAccessModalProps) {
               variant="outline"
               className={cn(
                 "h-16 text-sm md:text-base font-bold rounded-2xl transition-all shadow-lg active:scale-95 border-2",
-                !opened ? "opacity-50 cursor-not-allowed" : "hover:bg-accent border-destructive/20 hover:border-destructive text-destructive"
+                !opened ? "opacity-50 cursor-not-allowed" : "hover:bg-background border-destructive/20 hover:border-destructive text-destructive hover:text-destructive"
               )}
               onClick={handleCloseDoor}
               disabled={!opened}

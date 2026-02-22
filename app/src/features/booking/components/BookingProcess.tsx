@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../../../ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Car } from 'lucide-react';
 
 import { useBookingFlow } from '../hooks/useBookingFlow';
 import { BookingStepper } from './BookingStepper';
@@ -59,22 +59,40 @@ export function BookingProcess() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-border shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
+      <div className="bg-card border-b border-border shadow-sm sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-4 relative">
+          <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               size="icon"
               onClick={() =>
                 step > 1 ? setStep(step - 1) : navigate(`/parking/${parking.id}`, { state: parking })
               }
-              className="rounded-full"
+              className="rounded-full z-10"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold tracking-tight">Confirma y paga</h1>
+
+            {/* Logo Centrado */}
+            <div
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              aria-hidden="true"
+            >
+              <div
+                className="flex items-center gap-2 cursor-pointer pointer-events-auto group"
+                onClick={() => navigate('/')}
+              >
+                <div className="bg-primary p-1.5 rounded-lg group-hover:scale-105 transition-transform">
+                  <Car className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-bold tracking-tight text-foreground">Parky</span>
+              </div>
             </div>
+
+            <div className="z-10 hidden sm:block">
+              <h1 className="text-lg font-bold tracking-tight">Confirma y paga</h1>
+            </div>
+            <div className="sm:hidden w-10"></div> {/* Spacer for symmetry on mobile */}
           </div>
         </div>
       </div>

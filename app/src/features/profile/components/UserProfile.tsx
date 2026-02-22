@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '../../../ui/button';
+import { Button, ConfirmationDialog } from '../../../ui';
 import { useAuth } from '../../auth';
 import { AnimatedLoader } from '../../../shared/components/loaders';
 
@@ -24,6 +24,8 @@ export function UserProfile() {
   const { authUser, updateProfile, logout, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('bookings');
   const [reviewBooking, setReviewBooking] = useState<any>(null);
+  const [confirmCancel, setConfirmCancel] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   // React Query hooks for real data
   const { data: stats } = useUserStats(authUser?.user?.id);
@@ -41,8 +43,6 @@ export function UserProfile() {
   };
 
   const handleCancelBooking = async (bookingId: string) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta reserva permanentemente?')) return;
-
     try {
       await bookingService.deleteBooking(bookingId);
       toast.success('Reserva eliminada correctamente');
@@ -55,8 +55,6 @@ export function UserProfile() {
   };
 
   const handleDeleteBooking = async (bookingId: string) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta reserva del historial?')) return;
-
     try {
       await bookingService.deleteBooking(bookingId);
       toast.success('Reserva eliminada correctamente');
@@ -118,8 +116,8 @@ export function UserProfile() {
               <BookingHistory
                 bookings={bookings}
                 isLoading={bookingsLoading}
-                onCancel={handleCancelBooking}
-                onDelete={handleDeleteBooking}
+                onCancel={async (id) => setConfirmCancel(id)}
+                onDelete={async (id) => setConfirmDelete(id)}
                 onReview={setReviewBooking}
               />
             )}
@@ -149,6 +147,30 @@ export function UserProfile() {
           booking={reviewBooking}
           onClose={() => setReviewBooking(null)}
           onSuccess={handleReviewSuccess}
+        />
+      )}
+
+      {confirmCancel && (
+        <ConfirmationDialog
+          isOpen={!!confirmCancel}
+          onClose={() => setConfirmCancel(null)}
+          onConfirm={() => handleCancelBooking(confirmCancel)}
+          title="Cancelar Reserva"
+          description="¿Estás seguro de que quieres eliminar esta reserva permanentemente?"
+          confirmText="Eliminar"
+          variant="destructive"
+        />
+      )}
+
+      {confirmDelete && (
+        <ConfirmationDialog
+          isOpen={!!confirmDelete}
+          onClose={() => setConfirmDelete(null)}
+          onConfirm={() => handleDeleteBooking(confirmDelete)}
+          title="Eliminar del Historial"
+          description="¿Estás seguro de que quieres eliminar esta reserva del historial?"
+          confirmText="Eliminar"
+          variant="destructive"
         />
       )}
     </div>

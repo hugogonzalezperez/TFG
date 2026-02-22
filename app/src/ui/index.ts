@@ -5,6 +5,7 @@ export * from './label';
 export * from './card';
 export * from './checkbox';
 export * from './textarea';
+export * from './confirmation-dialog';
 export * from './badge';
 export * from './switch';
 export * from './avatar';

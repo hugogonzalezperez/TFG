@@ -4,6 +4,8 @@ import { useFilters } from '../context/FilterContext';
 import { useGarages } from '../hooks/useGarages';
 import { filterParkings } from '../utils/parkingFilters';
 import { geocodingService } from '../../../shared/services/geocoding.service';
+import { cn } from '../../../shared/lib/cn';
+import { useIsMobile } from '../../../shared/hooks/use-mobile';
 
 import { ParkingMap } from './ParkingMap';
 import { GarageDetailModal } from './GarageDetailModal';
@@ -20,6 +22,7 @@ import { Map as MapIcon, List } from 'lucide-react';
 export function MapView() {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const searchData = location.state;
 
   const { filters, setSearchQuery, setDateTimeFilters, setSelectedParkingId } = useFilters();
@@ -115,10 +118,10 @@ export function MapView() {
         onOpenFilters={() => setIsFilterDrawerOpen(true)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
-        {view === 'list' && <FilterSidebar />}
+      <div className="flex-1 flex overflow-hidden min-w-0">
+        {view === 'list' && !isMobile && <FilterSidebar />}
 
-        <div className="flex-1 relative">
+        <div className="flex-1 relative min-w-0">
           {view === 'map' ? (
             <div className="flex-1 relative h-full">
               <ParkingMap
@@ -131,10 +134,10 @@ export function MapView() {
               />
             </div>
           ) : (
-            <div className="w-full h-full overflow-y-auto p-4 sm:p-6 bg-muted/20">
-              <div className="max-w-4xl mx-auto">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold">
+            <div className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-muted/20">
+              <div className="w-full px-4 py-6 sm:px-6 max-w-4xl mx-auto pb-40 space-y-6">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xl font-extrabold tracking-tight">
                     {filteredGarages.length} garajes encontrados
                   </h2>
                 </div>
@@ -191,24 +194,32 @@ export function MapView() {
         )}
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden border-t border-border bg-card p-3 flex gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-        <Button
-          variant={view === 'map' ? 'default' : 'outline'}
+      {/* Mobile Navigation - Apple Maps style floating toggle */}
+      <div className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-1 rounded-full shadow-2xl">
+        <button
           onClick={() => setView('map')}
-          className="flex-1 gap-2 rounded-xl h-11"
+          className={cn(
+            "flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all",
+            view === 'map'
+              ? "bg-primary text-white shadow-lg"
+              : "text-muted-foreground hover:text-foreground"
+          )}
         >
           <MapIcon className="h-4 w-4" />
           Mapa
-        </Button>
-        <Button
-          variant={view === 'list' ? 'default' : 'outline'}
+        </button>
+        <button
           onClick={() => setView('list')}
-          className="flex-1 gap-2 rounded-xl h-11"
+          className={cn(
+            "flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all",
+            view === 'list'
+              ? "bg-primary text-white shadow-lg"
+              : "text-muted-foreground hover:text-foreground"
+          )}
         >
           <List className="h-4 w-4" />
           Lista
-        </Button>
+        </button>
       </div>
 
       <FilterDrawer isOpen={isFilterDrawerOpen} onClose={() => setIsFilterDrawerOpen(false)} />

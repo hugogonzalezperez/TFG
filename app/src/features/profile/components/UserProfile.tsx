@@ -87,16 +87,6 @@ export function UserProfile() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <div className="bg-card border-b border-border sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-2xl font-bold">Mi Perfil</h1>
-        </div>
-      </div>
-
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Sidebar */}

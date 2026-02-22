@@ -93,53 +93,27 @@ export function OwnerProfile() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <div className="bg-card border-b border-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold">Panel de Propietario</h1>
-            <p className="text-sm text-muted-foreground">Gestiona tus garajes y plazas</p>
+      {/* Page Title & Actions */}
+      <div className="bg-card border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold">Panel de Propietario</h1>
+              <p className="hidden sm:block text-sm text-muted-foreground">Gestiona tus garajes y plazas</p>
+            </div>
           </div>
-          {activeTab === 'garages' ? (
+
+          {activeTab === 'garages' && (
             <Button
               onClick={() => setShowAddSpot(true)}
-              className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-sm"
+              className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-sm h-10 px-4"
             >
               <Plus className="h-5 w-5" />
               <span className="hidden sm:inline">Nuevo garaje</span>
             </Button>
-          ) : (
-            <div className="hidden md:flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/profile')}
-                className="flex items-center space-x-2"
-              >
-                {authUser?.user?.avatar_url ? (
-                  <img
-                    src={authUser.user.avatar_url}
-                    alt={authUser.user.name}
-                    className="h-8 w-8 rounded-full object-cover border-2 border-primary"
-                  />
-                ) : (
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
-                    <User className="h-4 w-4 text-primary" />
-                  </div>
-                )}
-                <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
-              </Button>
-              <Button
-                variant="exit"
-                onClick={logout}
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Salir</span>
-              </Button>
-            </div>
           )}
         </div>
       </div>

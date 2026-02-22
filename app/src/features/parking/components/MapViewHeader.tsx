@@ -2,7 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { Search, ArrowLeft, Map as MapIcon, List } from 'lucide-react';
 import { Button } from '../../../ui/button';
 import { Input } from '../../../ui';
+import { cn } from '../../../shared/lib/cn';
 import { Filters } from './Filters';
+import { useIsMobile } from '../../../shared/hooks/use-mobile';
 
 interface MapViewHeaderProps {
   view: 'map' | 'list';
@@ -14,49 +16,52 @@ interface MapViewHeaderProps {
 
 export function MapViewHeader({ view, setView, onSearch, onOpenFilters, searchQuery }: MapViewHeaderProps) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   return (
-    <div className="bg-card border-b border-border p-4 shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center gap-4">
+    <div className="bg-card border-b border-border p-2 md:p-4 shadow-sm sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto flex items-center gap-2 md:gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => navigate('/')}
-          className="rounded-full"
+          className="rounded-full h-10 w-10 shrink-0"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
 
-        <div className="flex-1 flex items-center gap-2">
-          <div className="relative flex-1 max-w-2xl">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <div className="flex-1 flex items-center gap-1.5 md:gap-2 min-w-0">
+          <div className="relative flex-1 max-w-2xl min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
             <Input
-              placeholder="Buscar ubicación (calle, ciudad...)"
+              placeholder="¿Dónde aparcar?"
               value={searchQuery}
               onChange={(e) => onSearch(e.target.value)}
-              className="pl-10 h-10 sm:h-12 bg-muted/50 border-none focus-visible:ring-primary"
+              className="pl-9 md:pl-10 h-10 md:h-12 bg-muted/50 border-none focus-visible:ring-primary text-sm md:text-base"
             />
           </div>
-          {view === 'map' && (
-            <Filters onOpen={onOpenFilters} />
+          {(isMobile || view === 'map') && (
+            <div className="shrink-0 scale-90 md:scale-100 origin-right">
+              <Filters onOpen={onOpenFilters} />
+            </div>
           )}
         </div>
 
-        <div className="hidden md:flex gap-1 bg-muted p-1 rounded-lg">
+        <div className="hidden md:flex gap-1 bg-muted p-1 rounded-lg shrink-0">
           <Button
-            variant={view === 'map' ? 'foreground' : 'ghost'}
+            variant={view === 'map' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setView('map')}
-            className={`gap-2 ${view === 'map' ? 'shadow-sm' : ''}`}
+            className={cn("gap-2", view === 'map' && "shadow-sm")}
           >
             <MapIcon className="h-4 w-4" />
             Mapa
           </Button>
           <Button
-            variant={view === 'list' ? 'foreground' : 'ghost'}
+            variant={view === 'list' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setView('list')}
-            className={`gap-2 ${view === 'list' ? 'shadow-sm' : ''}`}
+            className={cn("gap-2", view === 'list' && "shadow-sm")}
           >
             <List className="h-4 w-4" />
             Lista

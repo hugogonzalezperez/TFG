@@ -1,8 +1,23 @@
-import { useState } from 'react';
-import { Button, Input, RangeSlider } from '../../../ui';
+import { useState, useEffect } from 'react';
+import {
+  Button,
+  Input,
+  RangeSlider,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
+} from '../../../ui';
 import { X } from 'lucide-react';
 import { useFilters } from '../context/FilterContext';
 import { ParkingFilter } from '../types/parking.types';
+import { useIsMobile } from '../../../shared/hooks/use-mobile';
+import { cn } from '../../../shared/lib/cn';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 interface FilterDrawerProps {
   isOpen: boolean;
@@ -10,10 +25,35 @@ interface FilterDrawerProps {
 }
 
 export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
+  const isMobile = useIsMobile();
   const { filters, setTypes, setAvailability, setPriceRange, setDateTimeFilters, resetFilters } = useFilters();
 
   // Estado temporal mientras el drawer está abierto
   const [tempFilters, setTempFilters] = useState<ParkingFilter>(filters);
+  const [hasChanged, setHasChanged] = useState(false);
+
+  // Sincronizar tempFilters con filters cuando se abre
+  useEffect(() => {
+    if (isOpen) {
+      setTempFilters(filters);
+      setHasChanged(false);
+    }
+  }, [isOpen, filters]);
+
+  // Aplicar filtros automáticamente al cerrar si han cambiado
+  useEffect(() => {
+    if (!isOpen && hasChanged) {
+      setTypes(tempFilters.types);
+      setAvailability(tempFilters.availability);
+      setPriceRange(tempFilters.priceRange);
+      setDateTimeFilters({
+        startDate: tempFilters.startDate,
+        startTime: tempFilters.startTime,
+        endDate: tempFilters.endDate,
+        endTime: tempFilters.endTime,
+      });
+    }
+  }, [isOpen, hasChanged, tempFilters, setTypes, setAvailability, setPriceRange, setDateTimeFilters]);
 
   const parkingTypes = ['Cubierta', 'Subterráneo', 'Al aire libre'];
 
@@ -25,6 +65,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       newTypes.add(type);
     }
     setTempFilters({ ...tempFilters, types: newTypes });
+    setHasChanged(true);
   };
 
   const handleAvailabilityToggle = () => {
@@ -32,6 +73,12 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       ...tempFilters,
       availability: tempFilters.availability === 'all' ? 'available' : 'all',
     });
+    setHasChanged(true);
+  };
+
+  const handlePriceChange = (min: number, max: number) => {
+    setTempFilters({ ...tempFilters, priceRange: [min, max] });
+    setHasChanged(true);
   };
 
   const handleApplyFilters = () => {
@@ -44,6 +91,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       endDate: tempFilters.endDate,
       endTime: tempFilters.endTime,
     });
+    setHasChanged(false); // Evitar que el useEffect de cierre lo vuelva a aplicar
     onClose();
   };
 
@@ -60,6 +108,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       endDate: '',
       endTime: '',
     });
+    setHasChanged(true);
   };
 
   const isFiltered =
@@ -72,175 +121,189 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
     tempFilters.endDate !== '' ||
     tempFilters.endTime !== '';
 
-  if (!isOpen) return null;
-
-  return (
-    <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/50 z-40 transition-opacity"
-        onClick={onClose}
-      />
-
-      {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 w-96 bg-card shadow-lg z-50 overflow-y-auto transform transition-transform">
-        {/* Header */}
-        <div className="sticky top-0 bg-card border-b border-border p-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Filtros</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-muted rounded-lg transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
+  const Content = (
+    <div className="flex flex-col h-full max-h-full overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0">
+        {/* Tipo de aparcamiento */}
+        <div className="space-y-4">
+          <label className="text-sm font-bold text-foreground uppercase tracking-wider">
+            Tipo de aparcamiento
+          </label>
+          <div className="grid grid-cols-1 gap-2">
+            {parkingTypes.map((type) => (
+              <label
+                key={type}
+                className={cn(
+                  "flex items-center gap-3 cursor-pointer p-3 rounded-xl border transition-all",
+                  tempFilters.types.has(type)
+                    ? "bg-primary/5 border-primary shadow-sm"
+                    : "bg-muted/30 border-transparent hover:bg-muted/50"
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={tempFilters.types.has(type)}
+                  onChange={() => handleTypeChange(type)}
+                  className="w-5 h-5 rounded-md cursor-pointer accent-primary border-muted"
+                />
+                <span className="text-sm font-medium text-foreground">{type}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Tipo de aparcamiento */}
-          <div className="space-y-3">
-            <label className="text-sm font-semibold text-foreground">
-              Tipo de aparcamiento
-            </label>
-            <div className="space-y-2">
-              {parkingTypes.map((type) => (
-                <label
-                  key={type}
-                  className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-accent/30 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={tempFilters.types.has(type)}
-                    onChange={() => handleTypeChange(type)}
-                    className="w-4 h-4 rounded cursor-pointer accent-primary"
-                  />
-                  <span className="text-sm text-foreground">{type}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+        {/* Disponibilidad */}
+        <div className="space-y-4">
+          <label className="text-sm font-bold text-foreground uppercase tracking-wider">
+            Disponibilidad
+          </label>
+          <label className={cn(
+            "flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all",
+            tempFilters.availability === 'available'
+              ? "bg-primary/5 border-primary shadow-sm"
+              : "bg-muted/30 border-transparent hover:bg-muted/50"
+          )}>
+            <input
+              type="checkbox"
+              checked={tempFilters.availability === 'available'}
+              onChange={handleAvailabilityToggle}
+              className="w-5 h-5 rounded-md cursor-pointer accent-primary"
+            />
+            <span className="text-sm font-medium text-foreground">Solo mostrar plazas disponibles</span>
+          </label>
+        </div>
 
-          {/* Disponibilidad */}
-          <div className="space-y-3">
-            <label className="text-sm font-semibold text-foreground">
-              Disponibilidad
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-accent/30 transition-colors">
-              <input
-                type="checkbox"
-                checked={tempFilters.availability === 'available'}
-                onChange={handleAvailabilityToggle}
-                className="w-4 h-4 rounded cursor-pointer accent-primary"
-              />
-              <span className="text-sm text-foreground">Solo disponibles</span>
-            </label>
-          </div>
-
-          {/* Rango de precio */}
-          <div className="space-y-4">
+        {/* Rango de precio */}
+        <div className="space-y-6">
+          <label className="text-sm font-bold text-foreground uppercase tracking-wider">
+            Presupuesto
+          </label>
+          <div className="px-2">
             <RangeSlider
               min={0}
               max={100}
               minValue={tempFilters.priceRange[0]}
               maxValue={tempFilters.priceRange[1]}
-              onMinChange={(value) => setTempFilters({ ...tempFilters, priceRange: [value, tempFilters.priceRange[1]] })}
-              onMaxChange={(value) => setTempFilters({ ...tempFilters, priceRange: [tempFilters.priceRange[0], value] })}
+              onMinChange={(value) => handlePriceChange(value, tempFilters.priceRange[1])}
+              onMaxChange={(value) => handlePriceChange(tempFilters.priceRange[0], value)}
               step={0.5}
-              label="Rango de precio (€/hora)"
               unit="€"
             />
           </div>
-
-          {/* Fecha y hora */}
-          <div className="space-y-4 pt-4 border-t border-border">
-            <h3 className="text-sm font-semibold text-foreground">Fechas y horarios</h3>
-
-            <div className="space-y-2">
-              <label className="text-xs text-muted-foreground block font-medium">Fecha de inicio</label>
-              <Input
-                type="date"
-                value={tempFilters.startDate}
-                onChange={(e) => setTempFilters({ ...tempFilters, startDate: e.target.value })}
-                min={new Date().toISOString().split('T')[0]}
-                className="h-10"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs text-muted-foreground block font-medium">Hora de inicio</label>
-              <Input
-                type="time"
-                value={tempFilters.startTime}
-                onChange={(e) => setTempFilters({ ...tempFilters, startTime: e.target.value })}
-                className="h-10"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs text-muted-foreground block font-medium">Fecha de fin</label>
-              <Input
-                type="date"
-                value={tempFilters.endDate}
-                onChange={(e) => setTempFilters({ ...tempFilters, endDate: e.target.value })}
-                min={new Date().toISOString().split('T')[0]}
-                className="h-10"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs text-muted-foreground block font-medium">Hora de fin</label>
-              <Input
-                type="time"
-                value={tempFilters.endTime}
-                onChange={(e) => setTempFilters({ ...tempFilters, endTime: e.target.value })}
-                className="h-10"
-              />
-            </div>
-          </div>
-
-          {/* Amenidades (placeholder) */}
-          <div className="space-y-3">
-            <label className="text-sm font-semibold text-foreground">
-              Amenidades
-            </label>
-            <div className="space-y-2 opacity-50">
-              {['Cubierto', 'CCTV', 'Cargador EV'].map((amenity) => (
-                <label
-                  key={amenity}
-                  className="flex items-center gap-3 cursor-not-allowed p-2 rounded"
-                >
-                  <input
-                    type="checkbox"
-                    disabled
-                    className="w-4 h-4 rounded cursor-not-allowed"
-                  />
-                  <span className="text-sm text-muted-foreground">{amenity}</span>
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground italic">Próximamente</p>
-          </div>
         </div>
 
-        {/* Footer con botones */}
-        <div className="sticky bottom-0 bg-card border-t border-border p-4 space-y-3">
-          {isFiltered && (
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleResetFilters}
-            >
-              Limpiar filtros
-            </Button>
-          )}
-          <Button
-            className="w-full"
-            onClick={handleApplyFilters}
-          >
-            Aplicar filtros
-          </Button>
+        {/* Fecha y hora */}
+        <div className="space-y-6 pt-6 border-t border-border">
+          <label className="text-sm font-bold text-foreground uppercase tracking-wider">
+            Fechas de reserva
+          </label>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground font-semibold">Entrada</label>
+                <Input
+                  type="date"
+                  value={tempFilters.startDate}
+                  onChange={(e) => {
+                    setTempFilters({ ...tempFilters, startDate: e.target.value });
+                    setHasChanged(true);
+                  }}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground font-semibold">Hora</label>
+                <Input
+                  type="time"
+                  value={tempFilters.startTime}
+                  onChange={(e) => {
+                    setTempFilters({ ...tempFilters, startTime: e.target.value });
+                    setHasChanged(true);
+                  }}
+                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground font-semibold">Salida</label>
+                <Input
+                  type="date"
+                  value={tempFilters.endDate}
+                  onChange={(e) => {
+                    setTempFilters({ ...tempFilters, endDate: e.target.value });
+                    setHasChanged(true);
+                  }}
+                  min={tempFilters.startDate || new Date().toISOString().split('T')[0]}
+                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground font-semibold">Hora</label>
+                <Input
+                  type="time"
+                  value={tempFilters.endTime}
+                  onChange={(e) => {
+                    setTempFilters({ ...tempFilters, endTime: e.target.value });
+                    setHasChanged(true);
+                  }}
+                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+
+      {/* Footer con botones - Visible siempre */}
+      <div className="bg-card border-t border-border p-4 space-y-3 pb-10 md:pb-6 flex-shrink-0">
+        <Button
+          className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-12 shadow-xl shadow-primary/20 rounded-xl"
+          onClick={handleApplyFilters}
+        >
+          {isFiltered ? 'Ver resultados' : 'Aplicar filtros'}
+        </Button>
+        {isFiltered && (
+          <Button
+            variant="ghost"
+            className="w-full text-muted-foreground hover:text-background h-10 text-xs"
+            onClick={handleResetFilters}
+          >
+            Restablecer todo
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <DrawerContent className="h-[90vh] flex flex-col">
+          <DrawerHeader className="border-b border-border text-center flex-shrink-0">
+            <DrawerTitle>Filtros</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex-1 min-h-0">
+            {Content}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent side="right" className="p-0 sm:max-w-md flex flex-col">
+        <SheetHeader className="p-6 border-b border-border flex-shrink-0">
+          <SheetTitle>Filtros de búsqueda</SheetTitle>
+        </SheetHeader>
+        <div className="flex-1 min-h-0">
+          {Content}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

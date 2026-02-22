@@ -113,7 +113,7 @@ export function ParkingDetail() {
 
       <ParkingGallery images={parking.images || [parking.image]} isVerified={parking.is_verified} />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 pb-32 md:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Columna Principal */}
           <div className="lg:col-span-2 space-y-8">
@@ -143,8 +143,13 @@ export function ParkingDetail() {
             )}
           </div>
 
-          {/* Columna Lateral (Reserva) */}
-          <div className="lg:col-span-1">
+          {/* Columna Lateral (Reserva) - En móvil se maneja via Drawer y un CTA flotante */}
+          <div className="hidden lg:block lg:col-span-1">
+            <ParkingBookingCard parking={parking} />
+          </div>
+
+          {/* En móvil, el ParkingBookingCard renderizará el CTA flotante y el Drawer */}
+          <div className="lg:hidden">
             <ParkingBookingCard parking={parking} />
           </div>
         </div>

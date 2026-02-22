@@ -8,11 +8,17 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  DatePicker
+  DatePicker,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
 } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
 import { Parking } from '../../types/parking.types';
 import { useSpotBookings } from '../../../booking/hooks/useSpotBookings';
+import { useIsMobile } from '../../../../shared/hooks/use-mobile';
+import { cn } from '../../../../shared/lib/cn';
 
 interface ParkingBookingCardProps {
   parking: Parking;
@@ -25,8 +31,10 @@ const getLocalISOString = (d: Date) => {
 
 export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { data: bookings = [] } = useSpotBookings(parking.id);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Initialize with current local time rounded up to nearest 15 mins
   const [entryDate, setEntryDate] = useState(() => {
@@ -111,24 +119,26 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
   const [entryDay, entryTime] = entryDate.split('T');
   const [exitDay, exitTime] = exitDate.split('T');
 
-  return (
-    <Card className="p-6 sticky top-24 shadow-xl">
+  const BookingForm = (
+    <div className="flex flex-col h-full">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-baseline gap-2">
           <span className="text-4xl font-bold text-primary">{parking.base_price_per_hour}€</span>
           <span className="text-muted-foreground">/hora</span>
         </div>
 
-        <button
-          onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
-          className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer group"
-        >
-          <Star className="h-5 w-5 fill-accent text-accent group-hover:scale-110 transition-transform" />
-          <span className="font-semibold text-foreground">{parking.rating || 'N/A'}</span>
-          <span className="text-sm text-muted-foreground underline-offset-4 group-hover:underline">
-            ({parking.reviews || 0} {parking.reviews === 1 ? 'valoración' : 'valoraciones'})
-          </span>
-        </button>
+        {!isMobile && (
+          <button
+            onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
+            className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer group"
+          >
+            <Star className="h-5 w-5 fill-accent text-accent group-hover:scale-110 transition-transform" />
+            <span className="font-semibold text-foreground">{parking.rating || 'N/A'}</span>
+            <span className="text-sm text-muted-foreground underline-offset-4 group-hover:underline">
+              ({parking.reviews || 0})
+            </span>
+          </button>
+        )}
       </div>
 
       {errorMsg && (
@@ -139,85 +149,87 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
       )}
 
       <div className="space-y-4 mb-6">
-        <div>
-          <label className="text-sm font-medium mb-2 flex items-center gap-2">
-            <Clock className="h-4 w-4 text-primary" />
-            Entrada (Mínimo 2h)
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="flex-[2] min-w-0">
-              <DatePicker
-                date={new Date(entryDay)}
-                onChange={(date) => {
-                  if (date) {
-                    const yyyy = date.getFullYear();
-                    const mm = String(date.getMonth() + 1).padStart(2, '0');
-                    const dd = String(date.getDate()).padStart(2, '0');
-                    setEntryDate(`${yyyy}-${mm}-${dd}T${entryTime}`);
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="text-sm font-medium mb-1.5 flex items-center gap-2">
+              <Clock className="h-4 w-4 text-primary" />
+              Entrada
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex-[2] min-w-0">
+                <DatePicker
+                  date={new Date(entryDay)}
+                  onChange={(date) => {
+                    if (date) {
+                      const yyyy = date.getFullYear();
+                      const mm = String(date.getMonth() + 1).padStart(2, '0');
+                      const dd = String(date.getDate()).padStart(2, '0');
+                      setEntryDate(`${yyyy}-${mm}-${dd}T${entryTime}`);
+                      setErrorMsg(null);
+                    }
+                  }}
+                  minDate={new Date()}
+                />
+              </div>
+              <div className="flex-[1] min-w-0">
+                <Select
+                  value={entryTime}
+                  onValueChange={(val) => {
+                    setEntryDate(`${entryDay}T${val}`);
                     setErrorMsg(null);
-                  }
-                }}
-                minDate={new Date()}
-              />
-            </div>
-            <div className="flex-[1] min-w-0">
-              <Select
-                value={entryTime}
-                onValueChange={(val) => {
-                  setEntryDate(`${entryDay}T${val}`);
-                  setErrorMsg(null);
-                }}
-              >
-                <SelectTrigger className="w-full h-12">
-                  <SelectValue placeholder="Hora" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeOptions.map(time => (
-                    <SelectItem key={`entry-${time}`} value={time}>{time}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  }}
+                >
+                  <SelectTrigger className="w-full h-10 md:h-12">
+                    <SelectValue placeholder="Hora" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map(time => (
+                      <SelectItem key={`entry-${time}`} value={time}>{time}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <label className="text-sm font-medium mb-2 flex items-center gap-2">
-            <Clock className="h-4 w-4 text-primary" />
-            Salida
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="flex-[2] min-w-0">
-              <DatePicker
-                date={new Date(exitDay)}
-                onChange={(date) => {
-                  if (date) {
-                    const yyyy = date.getFullYear();
-                    const mm = String(date.getMonth() + 1).padStart(2, '0');
-                    const dd = String(date.getDate()).padStart(2, '0');
-                    setExitDate(`${yyyy}-${mm}-${dd}T${exitTime}`);
+          <div>
+            <label className="text-sm font-medium mb-1.5 flex items-center gap-2">
+              <Clock className="h-4 w-4 text-primary" />
+              Salida
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex-[2] min-w-0">
+                <DatePicker
+                  date={new Date(exitDay)}
+                  onChange={(date) => {
+                    if (date) {
+                      const yyyy = date.getFullYear();
+                      const mm = String(date.getMonth() + 1).padStart(2, '0');
+                      const dd = String(date.getDate()).padStart(2, '0');
+                      setExitDate(`${yyyy}-${mm}-${dd}T${exitTime}`);
+                      setErrorMsg(null);
+                    }
+                  }}
+                  minDate={new Date(entryDay)}
+                />
+              </div>
+              <div className="flex-[1] min-w-0">
+                <Select
+                  value={exitTime}
+                  onValueChange={(val) => {
+                    setExitDate(`${exitDay}T${val}`);
                     setErrorMsg(null);
-                  }
-                }}
-                minDate={new Date(entryDay)}
-              />
-            </div>
-            <div className="flex-[1] min-w-0">
-              <Select
-                value={exitTime}
-                onValueChange={(val) => {
-                  setExitDate(`${exitDay}T${val}`);
-                  setErrorMsg(null);
-                }}
-              >
-                <SelectTrigger className="w-full h-12">
-                  <SelectValue placeholder="Hora" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeOptions.map(time => (
-                    <SelectItem key={`exit-${time}`} value={time}>{time}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  }}
+                >
+                  <SelectTrigger className="w-full h-10 md:h-12">
+                    <SelectValue placeholder="Hora" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map(time => (
+                      <SelectItem key={`exit-${time}`} value={time}>{time}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </div>
@@ -225,12 +237,16 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
 
       <Button
         onClick={handleBooking}
-        className="w-full h-12 bg-accent hover:bg-accent/90 text-white mb-4"
+        className="w-full h-11 md:h-12 bg-accent hover:bg-accent/90 text-white mb-4 shadow-lg shadow-accent/20"
       >
         Reservar ahora
       </Button>
 
-      <div className="border-t border-border pt-4 space-y-3 text-sm">
+      <div className="border-t border-border pt-4 space-y-2.5 text-sm">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Mínimo 2 horas de reserva</span>
+          <span className="font-medium text-xs bg-muted px-2 py-0.5 rounded">Obligatorio</span>
+        </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Estimación base ({validDuration.toFixed(1)}h)</span>
           <span className="font-semibold">{(parking.base_price_per_hour * validDuration).toFixed(2)}€</span>
@@ -247,12 +263,54 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-border">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Shield className="h-5 w-5 text-secondary" />
-          <span>Protección de reserva incluida</span>
+      {!isMobile && (
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <Shield className="h-5 w-5 text-secondary" />
+            <span>Protección de reserva incluida</span>
+          </div>
         </div>
-      </div>
+      )}
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <>
+        {/* Sticky Mobile CTA */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-card/80 backdrop-blur-lg border-t border-border flex items-center justify-between z-40 gap-4 transition-transform shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]">
+          <div className="flex flex-col">
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl font-bold text-primary">{parking.base_price_per_hour}€</span>
+              <span className="text-xs text-muted-foreground">/ h</span>
+            </div>
+          </div>
+          <Button
+            className="flex-1 h-11 bg-accent hover:bg-accent/90 text-white rounded-xl font-bold shadow-lg shadow-accent/20"
+            onClick={() => setIsDrawerOpen(true)}
+          >
+            Reservar
+          </Button>
+        </div>
+
+        {/* Mobile Booking Drawer */}
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerContent>
+            <DrawerHeader className="border-b border-border mb-4">
+              <DrawerTitle>Detalles de la reserva</DrawerTitle>
+            </DrawerHeader>
+            <div className="px-6 pb-10 overflow-y-auto max-h-[70vh]">
+              {BookingForm}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
+  return (
+    <Card className="p-6 sticky top-24 shadow-xl border-border/50">
+      {BookingForm}
     </Card>
   );
 }

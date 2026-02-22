@@ -1,5 +1,7 @@
 import { Star } from 'lucide-react';
 import { LocationLink } from '../../../../shared/components/LocationLink';
+import { cn } from '../../../../shared/lib/cn';
+import { useIsMobile } from '../../../../shared/hooks/use-mobile';
 
 interface ParkingHeaderProps {
   name: string;
@@ -11,9 +13,16 @@ interface ParkingHeaderProps {
 }
 
 export function ParkingHeader({ name, rating, reviews, address, city }: ParkingHeaderProps) {
+  const isMobile = useIsMobile();
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">{name}</h1>
+    <div className={cn("space-y-4", !isMobile && "space-y-0")}>
+      <h1 className={cn(
+        "tracking-tight text-foreground leading-tight",
+        isMobile ? "text-2xl font-extrabold" : "text-3xl font-bold mb-4"
+      )}>
+        {name}
+      </h1>
 
       <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
         <button

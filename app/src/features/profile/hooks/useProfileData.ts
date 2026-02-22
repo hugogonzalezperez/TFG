@@ -44,3 +44,10 @@ export const useOwnerBookings = (ownerId: string | undefined) => {
     refetchInterval: 10000, // Refresh every 10s
   });
 };
+export const useOwnerReviews = (ownerId: string | undefined) => {
+  return useQuery({
+    queryKey: ['owner-reviews', ownerId],
+    queryFn: () => profileService.getOwnerReviews(ownerId!),
+    enabled: !!ownerId,
+  });
+};

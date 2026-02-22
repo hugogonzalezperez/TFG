@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Card } from '../../../ui';
 import { format, addHours, startOfDay, parseISO, differenceInMinutes } from 'date-fns';
 import { ChevronDown, ChevronRight, ChevronLeft, Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '../../../ui/utils';
+import { cn } from '../../lib/cn';
 import { Button } from '../../../ui/button';
 
 export interface CalendarBooking {

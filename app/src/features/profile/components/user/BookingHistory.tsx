@@ -3,6 +3,7 @@ import { Calendar, MapPin, Clock, Star, History, Trash2, Car, Building2 } from '
 import { Card, Badge, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
 import { BookingTimeline, CalendarGarage } from '../../../../shared/components/calendar/BookingTimeline';
+import { LocationLink } from '../../../../shared/components/LocationLink';
 import { cn } from '../../../../shared/lib/cn';
 
 interface BookingHistoryProps {
@@ -147,10 +148,10 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                           <p className="text-[10px] text-muted-foreground font-mono bg-muted/50 px-1.5 py-0.5 rounded shrink-0">
                             {booking.spotNumber || 'N/A'}
                           </p>
-                          <p className="text-[10px] text-muted-foreground truncate flex items-center gap-1">
-                            <MapPin className="h-3 w-3 shrink-0" />
-                            <span className="truncate">{booking.location?.split(',')[0]}</span>
-                          </p>
+                          <LocationLink
+                            address={booking.location?.split(',')[0] || ''}
+                            className="text-[10px] [&>svg]:h-3 [&>svg]:w-3"
+                          />
                         </div>
                       </div>
                     </div>

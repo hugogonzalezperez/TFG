@@ -183,11 +183,23 @@ export const parkingService = {
     const garage = data.garage;
     const spot = data;
 
-    // Calculate real rating
+    // Calculate real garage rating
     const reviews = garage.reviews || [];
     const totalReviews = reviews.length;
     const averageRating = totalReviews > 0
       ? reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / totalReviews
+      : 0;
+
+    // Calculate owner's global rating
+    const ownerId = spot.owner_id;
+    const { data: ownerReviews } = await supabase
+      .from('reviews')
+      .select('rating, garage:garages!inner(owner_id)')
+      .eq('garage.owner_id', ownerId);
+
+    const ownerTotalReviews = ownerReviews?.length || 0;
+    const ownerAverageRating = ownerTotalReviews > 0
+      ? (ownerReviews?.reduce((acc, r) => acc + r.rating, 0) || 0) / ownerTotalReviews
       : 0;
 
     return {
@@ -226,11 +238,15 @@ export const parkingService = {
           id: spot.owner.id,
           name: spot.owner.name,
           avatar: spot.owner.avatar_url || undefined,
+          rating: Number(ownerAverageRating.toFixed(1)),
+          reviewCount: ownerTotalReviews
         }
         : {
           id: spot.owner_id,
           name: 'Propietario',
           avatar: undefined,
+          rating: Number(ownerAverageRating.toFixed(1)),
+          reviewCount: ownerTotalReviews
         },
       amenities: ['Vigilancia 24/7', 'Cámara de seguridad', 'WiFi', 'Carga eléctrica'], // Fallback/Mock
       rules: ['Altura máxima: 2.10m', 'Horario de acceso: 24 horas'], // Fallback/Mock

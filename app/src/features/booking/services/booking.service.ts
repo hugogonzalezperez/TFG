@@ -44,6 +44,24 @@ export const bookingService = {
   },
 
   /**
+   * Obtiene las reservas confirmadas/activas para una plaza específica en el futuro
+   */
+  async getSpotBookings(spotId: string): Promise<Booking[]> {
+    const now = new Date().toISOString();
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('parking_spot_id', spotId)
+      .in('status', ['confirmed', 'active'])
+      .gte('end_time', now) // Solo traemos las presentes o futuras
+      .order('start_time', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  /**
    * Crea una reserva completa
    */
   async createBooking(params: {

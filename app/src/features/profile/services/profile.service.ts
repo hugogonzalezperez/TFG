@@ -148,5 +148,23 @@ export const profileService = {
         spotNumber: spot?.spot_number || 'N/A'
       };
     });
+  },
+
+  /**
+   * Obtiene todas las valoraciones recibidas en los garajes de un propietario
+   */
+  async getOwnerReviews(ownerId: string): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        user:users!reviews_user_id_fkey(name, avatar_url),
+        garage:garages!inner(name, owner_id)
+      `)
+      .eq('garage.owner_id', ownerId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
   }
 };

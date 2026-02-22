@@ -24,7 +24,7 @@ export function ParkingOwnerCard({ owner }: ParkingOwnerCardProps) {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-accent text-accent" />
-                <span>{owner.rating || 'N/A'}</span>
+                <span>{owner.rating !== undefined ? owner.rating : 'N/A'}</span>
               </div>
               {owner.reviewCount && (
                 <>

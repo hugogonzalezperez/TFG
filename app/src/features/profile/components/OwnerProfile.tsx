@@ -8,15 +8,18 @@ import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { bookingService } from '../../booking/services/booking.service';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui/tabs';
+import { supabase } from '../../../shared/lib/supabase';
 
 // Sub-components
 import { OwnerDashboardTab } from './owner/OwnerDashboardTab';
 import { ManagedGarages } from './owner/ManagedGarages';
 import { AddSpotForm } from './owner/AddSpotForm';
+import { OwnerBookingsTab } from './owner/OwnerBookingsTab';
+import { OwnerReviewsTab } from './owner/OwnerReviewsTab';
 import { TenantActivitySidebar } from './owner/TenantActivitySidebar';
 
 // Hooks
-import { useOwnerStats, useOwnerGarages, useOwnerBookings } from '../hooks/useProfileData';
+import { useOwnerStats, useOwnerGarages, useOwnerBookings, useOwnerReviews } from '../hooks/useProfileData';
 
 export function OwnerProfile() {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export function OwnerProfile() {
   const { data: stats } = useOwnerStats(authUser?.user?.id);
   const { data: garages = [], isLoading: garagesLoading } = useOwnerGarages(authUser?.user?.id);
   const { data: bookings = [], isLoading: bookingsLoading } = useOwnerBookings(authUser?.user?.id);
+  const { data: reviews = [], isLoading: reviewsLoading } = useOwnerReviews(authUser?.user?.id);
 
   const queryClient = useQueryClient();
 
@@ -37,6 +41,32 @@ export function OwnerProfile() {
       setActiveTab('garages');
     }
   }, [garagesLoading, garages.length, activeTab]);
+
+  // Realtime subscription for bookings
+  useEffect(() => {
+    if (!authUser?.user?.id) return;
+
+    const channel = supabase
+      .channel('owner-bookings-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings'
+        },
+        () => {
+          // Invalidate both bookings and stats as they are related
+          queryClient.invalidateQueries({ queryKey: ['owner-bookings'] });
+          queryClient.invalidateQueries({ queryKey: ['owner-stats'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [authUser?.user?.id, queryClient]);
 
   const handleCancelBooking = async (bookingId: string) => {
     if (!confirm('¿Seguro que quieres eliminar esta reserva permanentemente?')) return;
@@ -202,20 +232,19 @@ export function OwnerProfile() {
           </TabsContent>
 
           <TabsContent value="bookings" className="m-0 focus-visible:outline-none">
-            <div className="bg-card rounded-xl border border-border p-8 text-center">
-              <TenantActivitySidebar
-                bookings={bookings}
-                isLoading={bookingsLoading}
-                onCancel={handleCancelBooking}
-              />
-            </div>
+            <OwnerBookingsTab
+              bookings={bookings}
+              isLoading={bookingsLoading}
+              onCancel={handleCancelBooking}
+            />
           </TabsContent>
 
           <TabsContent value="reviews" className="m-0 focus-visible:outline-none">
-            <div className="bg-card rounded-xl border border-border p-12 text-center text-muted-foreground">
-              <Star className="h-12 w-12 mx-auto mb-4 opacity-20" />
-              <p>Próximamente: Histórico detallado de valoraciones</p>
-            </div>
+            <OwnerReviewsTab
+              reviews={reviews}
+              isLoading={reviewsLoading}
+              totalGarages={garages.length}
+            />
           </TabsContent>
         </Tabs>
       </div>

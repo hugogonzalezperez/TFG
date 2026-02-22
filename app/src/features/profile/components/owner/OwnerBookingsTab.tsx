@@ -1,6 +1,7 @@
 import { Calendar, Clock, Euro, Mail, MessageSquare, Trash2, MapPin, Car } from 'lucide-react';
 import { Card, Button, Avatar, AvatarImage, AvatarFallback, Badge } from '../../../../ui';
 import { cn } from '../../../../shared/lib/cn';
+import { TabSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
 
 interface OwnerBookingsTabProps {
   bookings: any[];
@@ -33,7 +34,6 @@ const BookingCard = ({ booking, onCancel }: { booking: any, onCancel?: (id: stri
   const label = statusLabels[status] || status;
   const colorClass = statusColors[status] || "bg-muted text-muted-foreground border-border";
 
-  const isCompletedOrCancelled = status === 'completed' || status === 'cancelled';
   const isActiveOrConfirmed = status === 'active' || status === 'confirmed';
 
   // Time labels for display
@@ -153,13 +153,7 @@ const BookingCard = ({ booking, onCancel }: { booking: any, onCancel?: (id: stri
 
 export function OwnerBookingsTab({ bookings, isLoading, onCancel }: OwnerBookingsTabProps) {
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 w-full bg-muted/50 animate-pulse rounded-xl border border-border" />
-        ))}
-      </div>
-    );
+    return <TabSkeletonLoader />;
   }
 
   // Grouping logic strictly by status:

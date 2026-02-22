@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { AddSpotToGarageModal } from './AddSpotToGarageModal';
 import { EditGarageModal } from './EditGarageModal';
+import { GarageSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
+import { SpotFavoritesUsers } from './SpotFavoritesUsers';
 
 interface ManagedGaragesProps {
   garages: any[];
@@ -76,13 +78,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
   };
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2].map((i) => (
-          <Card key={i} className="p-6 h-32 animate-pulse bg-muted/50" />
-        ))}
-      </div>
-    );
+    return <GarageSkeletonLoader />;
   }
 
   if (garages.length === 0) {
@@ -172,7 +168,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                   >
                     <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden border border-border">
                       <img
-                        src={spot.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
+                        src={spot.parking_spot_images?.[0]?.image_url || garage.garage_images?.find((img: any) => img.is_main)?.image_url || garage.garage_images?.[0]?.image_url || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
                         alt={spot.spot_number}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
@@ -180,8 +176,9 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
 
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start mb-1">
-                        <div>
+                        <div className="flex items-center gap-2">
                           <span className="font-bold text-lg">Plaza {spot.spot_number}</span>
+                          <SpotFavoritesUsers spotId={spot.id} />
                           <span className="ml-2 text-sm text-primary font-semibold">{spot.current_price_per_hour}€/h</span>
                         </div>
                         <div className="flex items-center gap-3">

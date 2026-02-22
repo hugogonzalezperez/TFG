@@ -1,6 +1,7 @@
 import { Star, MessageSquare, Building2, Calendar } from 'lucide-react';
 import { Card, Avatar, AvatarImage, AvatarFallback, Badge } from '../../../../ui';
 import { cn } from '../../../../shared/lib/cn';
+import { TabSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
 
 interface OwnerReviewsTabProps {
   reviews: any[];
@@ -10,13 +11,7 @@ interface OwnerReviewsTabProps {
 
 export function OwnerReviewsTab({ reviews, isLoading, totalGarages }: OwnerReviewsTabProps) {
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-32 w-full bg-muted/50 animate-pulse rounded-2xl border border-border" />
-        ))}
-      </div>
-    );
+    return <TabSkeletonLoader />;
   }
 
   const averageRating = reviews.length > 0

@@ -1,64 +1,24 @@
-import { supabase } from '../../../shared/lib/supabase';
 import { Booking, BookingStatus, PricingRule } from '../types/booking.types';
 import { pricingService } from './pricing.service';
+import { bookingDal } from './booking.dal';
 
 export const bookingService = {
   /**
    * Obtiene las reglas de precio para una plaza específica
    */
   async getPricingRules(spotId: string): Promise<PricingRule[]> {
-    const { data, error } = await supabase
-      .from('pricing_rules')
-      .select('*')
-      .eq('parking_spot_id', spotId)
-      .eq('is_active', true);
-
-    if (error) throw error;
-    return data || [];
+    return await bookingDal.fetchPricingRules(spotId);
   },
 
   async checkAvailability(spotId: string, startTime: Date, endTime: Date): Promise<boolean> {
-    // Para el TFG: Margen de 30 minutos (0.5 horas)
-    const BUFFER_MS = 30 * 60 * 1000;
-
-    // Rango "sucio" que queremos proteger
-    const safeStart = new Date(startTime.getTime() - BUFFER_MS).toISOString();
-    const safeEnd = new Date(endTime.getTime() + BUFFER_MS).toISOString();
-
-    // Consultamos si hay reservas confirmadas que solapen con nuestro rango protegido
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('id')
-      .eq('parking_spot_id', spotId)
-      .in('status', ['confirmed', 'active'])
-      .or(`start_time.lt.${safeEnd},end_time.gt.${safeStart}`);
-
-    if (error) throw error;
-
-    // Si hay alguna reserva que empiece antes de nuestro fin+buffer 
-    // Y termine después de nuestro inicio-buffer, hay conflicto.
-    // Pero el query .or de arriba es un poco genérico. Hagamos el filtro fino:
-    const hasConflict = data.length > 0;
-
-    return !hasConflict;
+    return await bookingDal.checkAvailability(spotId, startTime, endTime);
   },
 
   /**
    * Obtiene las reservas confirmadas/activas para una plaza específica en el futuro
    */
   async getSpotBookings(spotId: string): Promise<Booking[]> {
-    const now = new Date().toISOString();
-
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('parking_spot_id', spotId)
-      .in('status', ['confirmed', 'active'])
-      .gte('end_time', now) // Solo traemos las presentes o futuras
-      .order('start_time', { ascending: true });
-
-    if (error) throw error;
-    return data || [];
+    return await bookingDal.fetchSpotBookings(spotId) as any;
   },
 
   /**
@@ -83,26 +43,21 @@ export const bookingService = {
     );
 
     // 2. Insertar reserva
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert({
-        parking_spot_id: params.spotId,
-        renter_id: params.userId,
-        start_time: params.startTime.toISOString(),
-        end_time: params.endTime.toISOString(),
-        total_hours: estimation.hours,
-        total_price: estimation.total_price,
-        price_per_hour_at_booking: estimation.base_price,
-        dynamic_multiplier_applied: estimation.multiplier_applied,
-        vehicle_plate: params.vehiclePlate,
-        vehicle_description: params.vehicleDescription,
-        status: 'confirmed' as BookingStatus
-      })
-      .select()
-      .single();
+    const data = await bookingDal.insertBooking({
+      spotId: params.spotId,
+      userId: params.userId,
+      startTime: params.startTime.toISOString(),
+      endTime: params.endTime.toISOString(),
+      totalHours: estimation.hours,
+      totalPrice: estimation.total_price,
+      basePriceStr: estimation.base_price,
+      multiplierApplied: estimation.multiplier_applied,
+      vehiclePlate: params.vehiclePlate,
+      vehicleDescription: params.vehicleDescription,
+      status: 'confirmed' as BookingStatus
+    });
 
-    if (error) throw error;
-    return data;
+    return data as any;
   },
 
   /**
@@ -110,44 +65,19 @@ export const bookingService = {
    */
   async getUserBookings(userId: string): Promise<any[]> {
     // Asegurar que las reservas pasadas se marquen como completadas (silencioso si falla)
-    try {
-      await supabase.rpc('complete_past_bookings');
-    } catch (e) {
-      console.warn('Error auto-completing bookings:', e);
-    }
+    await bookingDal.autoCompletePastBookings();
 
-    const { data, error } = await supabase
-      .from('bookings')
-      .select(`
-        *,
-        spot:parking_spots (
-          spot_number,
-          garage:garages (
-            id,
-            name,
-            address,
-            city,
-            images:garage_images (
-              image_url,
-              is_main
-            )
-          )
-        ),
-        reviews (id)
-      `)
-      .eq('renter_id', userId)
-      .order('created_at', { ascending: false });
+    const data = await bookingDal.fetchUserBookings(userId);
 
-    if (error) throw error;
-
-    return (data || []).map(b => {
+    return data.map(b => {
       // Supabase sometimes returns joins as arrays if the relationship isn't strictly 1:1 in the schema
       const spot = Array.isArray(b.spot) ? b.spot[0] : b.spot;
       const garage = spot?.garage ? (Array.isArray(spot.garage) ? spot.garage[0] : spot.garage) : null;
 
-      const mainImage = garage?.images?.find((img: any) => img.is_main)?.image_url
-        || garage?.images?.[0]?.image_url
-        || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
+      const spotImage = spot?.images?.[0]?.image_url;
+      const garageImage = garage?.images?.find((img: any) => img.is_main)?.image_url || garage?.images?.[0]?.image_url;
+
+      const mainImage = spotImage || garageImage || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
 
       const hasReview = Array.isArray(b.reviews) ? b.reviews.length > 0 : !!b.reviews;
 
@@ -167,38 +97,20 @@ export const bookingService = {
    * Cancela una reserva
    */
   async cancelBooking(bookingId: string): Promise<void> {
-    const { error } = await supabase
-      .from('bookings')
-      .update({
-        status: 'cancelled',
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', bookingId);
-
-    if (error) throw error;
+    await bookingDal.updateBookingStatus(bookingId, 'cancelled');
   },
 
   /**
    * Elimina una reserva (Hard Delete)
    */
   async deleteBooking(bookingId: string): Promise<void> {
-    const { error } = await supabase
-      .from('bookings')
-      .delete()
-      .eq('id', bookingId);
-
-    if (error) throw error;
+    await bookingDal.deleteBooking(bookingId);
   },
 
   /**
    * Confirma una reserva (Pasar a status confirmed)
    */
   async confirmBooking(bookingId: string): Promise<void> {
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status: 'confirmed' })
-      .eq('id', bookingId);
-
-    if (error) throw error;
+    await bookingDal.updateBookingStatus(bookingId, 'confirmed');
   }
 };

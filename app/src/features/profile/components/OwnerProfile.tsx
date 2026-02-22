@@ -16,7 +16,6 @@ import { ManagedGarages } from './owner/ManagedGarages';
 import { AddSpotForm } from './owner/AddSpotForm';
 import { OwnerBookingsTab } from './owner/OwnerBookingsTab';
 import { OwnerReviewsTab } from './owner/OwnerReviewsTab';
-import { TenantActivitySidebar } from './owner/TenantActivitySidebar';
 
 // Hooks
 import { useOwnerStats, useOwnerGarages, useOwnerBookings, useOwnerReviews } from '../hooks/useProfileData';

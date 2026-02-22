@@ -1,5 +1,4 @@
 import { Star } from 'lucide-react';
-import { Badge } from '../../../../ui';
 import { LocationLink } from '../../../../shared/components/LocationLink';
 
 interface ParkingHeaderProps {
@@ -11,11 +10,11 @@ interface ParkingHeaderProps {
   type?: string;
 }
 
-export function ParkingHeader({ name, rating, reviews, address, city, type }: ParkingHeaderProps) {
+export function ParkingHeader({ name, rating, reviews, address, city }: ParkingHeaderProps) {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4">{name}</h1>
-      
+
       <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
         <button
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}

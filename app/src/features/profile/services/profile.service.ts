@@ -1,4 +1,4 @@
-import { supabase } from '../../../shared/lib/supabase';
+import { profileDal } from './profile.dal';
 
 export interface UserStats {
   totalBookings: number;
@@ -18,29 +18,19 @@ export const profileService = {
    * Obtiene estadísticas básicas de un usuario (como inquilino)
    */
   async getUserStats(userId: string): Promise<UserStats> {
-    const { count, error: bookingsError } = await supabase
-      .from('bookings')
-      .select('*', { count: 'exact', head: true })
-      .eq('renter_id', userId)
-      .in('status', ['confirmed', 'active', 'pending']);
-
-    if (bookingsError) throw bookingsError;
+    const totalBookings = await profileDal.fetchUserBookingCount(userId);
 
     // Check if user is also an owner to show their average rating
-    const { data: ownerGarages } = await supabase
-      .from('garages')
-      .select('id')
-      .eq('owner_id', userId)
-      .limit(1);
+    const isOwner = await profileDal.checkUserIsOwner(userId);
 
     let averageRating = 5.0;
-    if (ownerGarages && ownerGarages.length > 0) {
+    if (isOwner) {
       const ownerStats = await this.getOwnerStats(userId);
       averageRating = ownerStats.averageRating;
     }
 
     return {
-      totalBookings: count || 0,
+      totalBookings,
       averageRating,
     };
   },
@@ -50,26 +40,13 @@ export const profileService = {
    */
   async getOwnerStats(ownerId: string): Promise<OwnerStats> {
     // 1. Obtener todas las reservas de sus plazas
-    const { data: bookings, error: bookingsError } = await supabase
-      .from('bookings')
-      .select('total_price, created_at, status, spot:parking_spots!inner(owner_id)')
-      .eq('spot.owner_id', ownerId)
-      .in('status', ['confirmed', 'active', 'completed']);
-
-    if (bookingsError) throw bookingsError;
+    const bookings = await profileDal.fetchOwnerBookingsForStats(ownerId);
 
     // 2. Obtener plazas activas
-    const { count: activeSpots, error: spotsError } = await supabase
-      .from('parking_spots')
-      .select('*', { count: 'exact', head: true })
-      .eq('owner_id', ownerId)
-      .eq('is_active', true);
-
-    if (spotsError) throw spotsError;
+    const activeSpots = await profileDal.fetchOwnerActiveSpotsCount(ownerId);
 
     // 3. Obtener rating real de sus garajes mediante RPC
-    const { data: avgRating, error: reviewsError } = await supabase
-      .rpc('get_owner_average_rating', { owner_uuid: ownerId });
+    const avgRating = await profileDal.fetchOwnerAverageRating(ownerId);
 
     // Calcular ingresos
     const now = new Date();
@@ -101,16 +78,7 @@ export const profileService = {
    * Obtiene todos los garajes (con sus plazas) de un propietario
    */
   async getOwnerGarages(ownerId: string): Promise<any[]> {
-    const { data, error } = await supabase
-      .from('garages')
-      .select(`
-        *,
-        parking_spots (*)
-      `)
-      .eq('owner_id', ownerId);
-
-    if (error) throw error;
-    return data || [];
+    return await profileDal.fetchOwnerGarages(ownerId);
   },
 
   /**
@@ -118,29 +86,12 @@ export const profileService = {
    */
   async getOwnerBookings(ownerId: string): Promise<any[]> {
     // Asegurar que las reservas pasadas se marquen como completadas (silencioso si falla)
-    try {
-      await supabase.rpc('complete_past_bookings');
-    } catch (e) {
-      console.warn('Error auto-completing bookings for owner:', e);
-    }
+    await profileDal.autoCompletePastBookings();
 
-    const { data, error } = await supabase
-      .from('bookings')
-      .select(`
-        *,
-        renter:users!bookings_renter_id_fkey(name, email, avatar_url),
-        spot:parking_spots!inner(
-          spot_number,
-          owner_id,
-          garage:garages!inner(name, owner_id)
-        )
-      `)
-      .eq('spot.owner_id', ownerId)
-      .order('created_at', { ascending: false });
+    const data = await profileDal.fetchOwnerBookings(ownerId);
 
-    if (error) throw error;
-    return (data || []).map(b => {
-      const spot = b.spot;
+    return data.map(b => {
+      const spot = b.spot as any;
       const garage = spot?.garage;
       return {
         ...b,
@@ -154,17 +105,6 @@ export const profileService = {
    * Obtiene todas las valoraciones recibidas en los garajes de un propietario
    */
   async getOwnerReviews(ownerId: string): Promise<any[]> {
-    const { data, error } = await supabase
-      .from('reviews')
-      .select(`
-        *,
-        user:users!reviews_user_id_fkey(name, avatar_url),
-        garage:garages!inner(name, owner_id)
-      `)
-      .eq('garage.owner_id', ownerId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    return data || [];
+    return await profileDal.fetchOwnerReviews(ownerId);
   }
 };

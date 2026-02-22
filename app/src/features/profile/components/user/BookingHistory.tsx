@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
-import { Calendar, MapPin, Clock, Star, History, Trash2, Car, Building2 } from 'lucide-react';
+import { useState } from 'react';
+import { Clock, Star, History, Trash2, Building2, Lock } from 'lucide-react';
 import { Card, Badge, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
-import { BookingTimeline, CalendarGarage } from '../../../../shared/components/calendar/BookingTimeline';
 import { LocationLink } from '../../../../shared/components/LocationLink';
 import { cn } from '../../../../shared/lib/cn';
+import { SmartAccessModal } from '../../../booking/components/SmartAccessModal';
+import { TabSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
 
 interface BookingHistoryProps {
   bookings: any[];
@@ -18,52 +19,11 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
   const navigate = useNavigate();
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [viewDate, setViewDate] = useState(new Date());
-
+  const [smartAccessBooking, setSmartAccessBooking] = useState<any>(null);
   const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active' || b.status === 'pending');
   const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
 
-  const timelineData = useMemo(() => {
-    // Group active bookings by garage for the timeline
-    const garagesMap = new Map<string, CalendarGarage>();
-
-    activeBookings.forEach(b => {
-      const garageId = b.garage_id || 'unknown';
-      const garageName = b.parkingName?.split(' - ')[0] || 'Garaje';
-
-      if (!garagesMap.has(garageId)) {
-        garagesMap.set(garageId, {
-          id: garageId,
-          name: garageName,
-          spots: []
-        });
-      }
-
-      const garage = garagesMap.get(garageId)!;
-      const spotName = b.parkingName?.split(' - ')[1] || 'Plaza';
-
-      // For user view, we'll just put all their bookings for that garage in "their" row
-      let spot = garage.spots.find(s => s.name === spotName);
-      if (!spot) {
-        spot = { id: b.parking_spot_id, name: spotName, bookings: [] };
-        garage.spots.push(spot);
-      }
-
-      spot.bookings.push({
-        id: b.id,
-        startTime: b.start_time,
-        endTime: b.end_time,
-        title: 'Tu reserva',
-        status: b.status
-      });
-    });
-
-    return Array.from(garagesMap.values());
-  }, [activeBookings]);
-
-  if (isLoading) return <div className="space-y-4">
-    {[1, 2].map(i => <Card key={i} className="p-6 h-40 animate-pulse bg-muted/50" />)}
-  </div>;
+  if (isLoading) return <TabSkeletonLoader />;
 
   const handleCancel = async (id: string) => {
     setCancellingId(id);
@@ -123,18 +83,21 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                 <div className="col-span-3 text-center">Fechas y Horas</div>
                 <div className="col-span-1 text-center">Importe</div>
                 <div className="col-span-2 text-center">Estado</div>
-                <div className="col-span-2 text-right pr-5">Acción</div>
+                <div className="col-span-2 text-right pr-5">Acciones</div>
               </div>
               {activeBookings.map((booking) => {
                 const startDate = new Date(booking.start_time);
                 const endDate = new Date(booking.end_time);
                 return (
                   <div key={booking.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 px-5 py-3 items-center hover:bg-muted/5 transition-colors">
-                    {/* Garage & Spot Info */}
                     <div className="col-span-4 flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary flex-shrink-0 cursor-pointer hover:bg-primary/10 transition-colors"
+                      <div className="w-10 h-10 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary flex-shrink-0 cursor-pointer overflow-hidden group hover:opacity-80 transition-opacity"
                         onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}>
-                        <Building2 className="h-5 w-5" />
+                        {booking.image ? (
+                          <img src={booking.image} alt={booking.parkingName} className="w-full h-full object-cover" />
+                        ) : (
+                          <Building2 className="h-5 w-5" />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <h4
@@ -182,6 +145,16 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
 
                     {/* Actions */}
                     <div className="col-span-2 flex justify-end gap-1">
+                      {booking.status === 'active' && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="h-8 text-xs px-2.5 bg-blue-600 hover:bg-blue-700"
+                          onClick={() => setSmartAccessBooking(booking)}
+                        >
+                          <Lock className="h-4 w-4" />
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
@@ -191,9 +164,9 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                         Ver
                       </Button>
                       <Button
-                        variant="exit"
+                        variant="outline"
                         size="icon"
-                        className="h-8 w-8 text-destructive hover:opacity-50"
+                        className="h-8 w-8 text-destructive hover:bg-destructive/10"
                         onClick={() => handleCancel(booking.id)}
                         disabled={cancellingId === booking.id || booking.status === 'active'}
                       >
@@ -269,6 +242,13 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
           )}
         </div>
       </section>
+
+      {smartAccessBooking && (
+        <SmartAccessModal
+          booking={smartAccessBooking}
+          onClose={() => setSmartAccessBooking(null)}
+        />
+      )}
     </div>
   );
 }

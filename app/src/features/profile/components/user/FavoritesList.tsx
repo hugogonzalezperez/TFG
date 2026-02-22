@@ -1,32 +1,49 @@
-import { Star } from 'lucide-react';
+import { Star, MapPin } from 'lucide-react';
 import { Card, Button } from '../../../../ui';
+import { useAuth } from '../../../auth';
+import { useUserFavorites } from '../../hooks/useFavorites';
+import { useNavigate } from 'react-router-dom';
 
 export function FavoritesList() {
-  // Mocked for now as requested
-  const favoriteSpots = [
-    { id: 1, name: 'Plaza Centro', location: 'Santa Cruz', price: 2.5, rating: 4.8 },
-    { id: 2, name: 'Garaje Privado Marina', location: 'Santa Cruz', price: 3.0, rating: 4.9 },
-  ];
+  const navigate = useNavigate();
+  const { authUser } = useAuth();
+  const { data: favoriteSpots = [], isLoading } = useUserFavorites(authUser?.user?.id);
 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Mis favoritos</h2>
-      {favoriteSpots.length > 0 ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {favoriteSpots.map((spot) => (
-            <Card key={spot.id} className="p-4 hover:shadow-lg transition-shadow">
-              <h3 className="font-semibold mb-2">{spot.name}</h3>
-              <p className="text-sm text-muted-foreground mb-3">{spot.location}</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-accent text-accent" />
-                  <span className="font-semibold">{spot.rating}</span>
+          {[1, 2].map((i) => (
+            <Card key={i} className="p-4 h-48 animate-pulse bg-muted/50" />
+          ))}
+        </div>
+      ) : favoriteSpots.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {favoriteSpots.map((spot: any) => (
+            <Card key={spot.id} className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer flex flex-col" onClick={() => navigate(`/parking/${spot.parking_spot_id}`)}>
+              <div className="h-40 w-full overflow-hidden relative">
+                <img src={spot.image} alt={spot.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+                  <span className="text-xs font-bold">{spot.rating > 0 ? spot.rating : 'Nuevo'}</span>
                 </div>
-                <span className="text-lg font-bold text-primary">{spot.price}€/h</span>
               </div>
-              <Button className="w-full mt-4 bg-primary hover:bg-primary/90">
-                Reservar ahora
-              </Button>
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className="font-bold text-lg leading-tight mb-1">{spot.name}</h3>
+                <p className="text-xs text-muted-foreground flex items-center gap-1 mb-3">
+                  <MapPin className="h-3 w-3" /> {spot.location}
+                </p>
+                <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
+                  <span className="text-xl font-black text-primary">{spot.price}€<span className="text-sm font-medium text-muted-foreground">/h</span></span>
+                  <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/parking/${spot.parking_spot_id}`);
+                  }}>
+                    Reservar
+                  </Button>
+                </div>
+              </div>
             </Card>
           ))}
         </div>

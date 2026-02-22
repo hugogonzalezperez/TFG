@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Clock, Zap, Shield, AlertTriangle, Star } from 'lucide-react';
+import { Clock, Shield, AlertTriangle, Star } from 'lucide-react';
 import {
   Card,
   Button,
@@ -45,10 +45,6 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
     d.setHours(d.getHours() + 4);
     return getLocalISOString(d);
   });
-
-  const getMinDate = () => {
-    return getLocalISOString(new Date()).split('T')[0];
-  };
 
   const timeOptions = useMemo(() => {
     const options = [];

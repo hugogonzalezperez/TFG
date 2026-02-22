@@ -1,43 +1,12 @@
-import { supabase } from '../../../shared/lib/supabase';
 import { Parking, Garage } from '../types/parking.types';
-import { Database } from '../../../types/database.types';
-
-type GarageRow = Database['public']['Tables']['garages']['Row'];
-type ParkingSpotRow = Database['public']['Tables']['parking_spots']['Row'];
-type UserRow = Database['public']['Tables']['users']['Row'];
-
-// Type for the join query result
-interface GarageResponse extends GarageRow {
-  parking_spots: (ParkingSpotRow & {
-    owner: Pick<UserRow, 'id' | 'name' | 'avatar_url'> | null;
-  })[];
-  garage_images: Database['public']['Tables']['garage_images']['Row'][];
-  reviews: { rating: number }[];
-}
+import { parkingDal } from './parking.dal';
 
 export const parkingService = {
   /**
    * Obtiene todos los garajes que tienen al menos una plaza activa
    */
   async getGaragesWithSpots(): Promise<Garage[]> {
-    const { data, error } = await supabase
-      .from('garages')
-      .select(`
-        *,
-        parking_spots (
-          *,
-          owner:users (id, name, avatar_url)
-        ),
-        garage_images (*),
-        reviews (rating)
-      `)
-      .eq('is_active', true)
-      .returns<GarageResponse[]>();
-
-    if (error) {
-      console.error('Error fetching garages:', error);
-      throw error;
-    }
+    const data = await parkingDal.fetchGaragesWithSpots();
 
     if (!data) return [];
 
@@ -78,7 +47,8 @@ export const parkingService = {
           lng: garage.lng,
           is_active: spot.is_active || false,
           is_verified: true,
-          image: garage.garage_images?.find(img => img.is_main)?.image_url ||
+          image: spot.parking_spot_images?.[0]?.image_url ||
+            garage.garage_images?.find(img => img.is_main)?.image_url ||
             garage.garage_images?.[0]?.image_url ||
             'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
           description: spot.description || undefined,
@@ -105,17 +75,7 @@ export const parkingService = {
    * Obtiene las reseñas de un garaje específico
    */
   async getGarageReviews(garageId: string) {
-    const { data, error } = await supabase
-      .from('reviews')
-      .select(`
-        *,
-        user:users (id, name, avatar_url)
-      `)
-      .eq('garage_id', garageId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    return data;
+    return await parkingDal.fetchGarageReviews(garageId);
   },
 
   /**
@@ -128,20 +88,7 @@ export const parkingService = {
     rating: number;
     comment: string;
   }) {
-    const { data, error } = await supabase
-      .from('reviews')
-      .insert({
-        garage_id: params.garage_id,
-        user_id: params.user_id,
-        booking_id: params.booking_id,
-        rating: params.rating,
-        comment: params.comment
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return await parkingDal.insertReview(params);
   },
 
   /**
@@ -156,31 +103,13 @@ export const parkingService = {
    * Obtiene un parking spot específico por su ID
    */
   async getParkingSpotById(id: string): Promise<Parking> {
-    const { data, error } = await supabase
-      .from('parking_spots')
-      .select(`
-        *,
-        garage:garages (
-          *,
-          garage_images (*),
-          reviews (rating)
-        ),
-        owner:users (id, name, avatar_url),
-        parking_spot_images (*)
-      `)
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching parking spot:', error);
-      throw error;
-    }
+    const data = await parkingDal.fetchParkingSpotById(id);
 
     if (!data) {
       throw new Error('Parking spot not found');
     }
 
-    const garage = data.garage;
+    const garage = data.garage as any;
     const spot = data;
 
     // Calculate real garage rating
@@ -192,10 +121,7 @@ export const parkingService = {
 
     // Calculate owner's global rating
     const ownerId = spot.owner_id;
-    const { data: ownerReviews } = await supabase
-      .from('reviews')
-      .select('rating, garage:garages!inner(owner_id)')
-      .eq('garage.owner_id', ownerId);
+    const ownerReviews = await parkingDal.fetchOwnerReviews(ownerId);
 
     const ownerTotalReviews = ownerReviews?.length || 0;
     const ownerAverageRating = ownerTotalReviews > 0
@@ -217,13 +143,13 @@ export const parkingService = {
       is_active: spot.is_active || false,
       is_verified: true,
       image: spot.parking_spot_images?.[0]?.image_url ||
-        spot.garage?.garage_images?.find((img: any) => img.is_main)?.image_url ||
-        spot.garage?.garage_images?.[0]?.image_url ||
+        garage?.garage_images?.find((img: any) => img.is_main)?.image_url ||
+        garage?.garage_images?.[0]?.image_url ||
         'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
       images: spot.parking_spot_images?.length > 0
         ? spot.parking_spot_images.map((img: any) => img.image_url)
-        : (spot.garage?.garage_images?.length > 0
-          ? spot.garage.garage_images.map((img: any) => img.image_url)
+        : (garage?.garage_images?.length > 0
+          ? garage.garage_images.map((img: any) => img.image_url)
           : [
             'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400',
             'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400'
@@ -235,9 +161,9 @@ export const parkingService = {
       type: (spot.type as Parking['type']) || 'Subterráneo',
       owner: spot.owner
         ? {
-          id: spot.owner.id,
-          name: spot.owner.name,
-          avatar: spot.owner.avatar_url || undefined,
+          id: (spot.owner as any).id,
+          name: (spot.owner as any).name,
+          avatar: (spot.owner as any).avatar_url || undefined,
           rating: Number(ownerAverageRating.toFixed(1)),
           reviewCount: ownerTotalReviews
         }
@@ -265,24 +191,7 @@ export const parkingService = {
     lng: number;
     description?: string;
   }) {
-    const { data: garage, error } = await supabase
-      .from('garages')
-      .insert({
-        owner_id: data.owner_id,
-        name: data.name,
-        address: data.address,
-        city: data.city,
-        lat: data.lat,
-        lng: data.lng,
-        total_spots: 0,
-        is_active: true,
-        description: data.description
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return garage;
+    return await parkingDal.insertGarage(data);
   },
 
   /**
@@ -297,39 +206,11 @@ export const parkingService = {
     type: string;
     images?: string[];
   }) {
-    const { data: spot, error: spotError } = await supabase
-      .from('parking_spots')
-      .insert({
-        garage_id: data.garage_id,
-        owner_id: data.owner_id,
-        spot_number: data.spot_number,
-        base_price_per_hour: data.price,
-        current_price_per_hour: data.price,
-        description: data.description,
-        is_active: true,
-        type: data.type
-      })
-      .select()
-      .single();
-
-    if (spotError) throw spotError;
-
-    // Incrementar el contador de plazas del garaje
-    await supabase.rpc('increment_garage_spots', { garage_id_param: data.garage_id });
+    const spot = await parkingDal.insertParkingSpot(data);
 
     // Imágenes de la plaza si existen
     if (data.images && data.images.length > 0) {
-      const imagesToInsert = data.images.map((url, index) => ({
-        parking_spot_id: spot.id,
-        image_url: url,
-        display_order: index
-      }));
-
-      const { error: imagesError } = await supabase
-        .from('parking_spot_images')
-        .insert(imagesToInsert);
-
-      if (imagesError) throw imagesError;
+      await parkingDal.insertParkingSpotImages(spot.id, data.images);
     }
 
     return spot;
@@ -339,23 +220,11 @@ export const parkingService = {
    * Sube o asocia imágenes a un garaje
    */
   async addGarageImages(garageId: string, images: string[]) {
-    const imagesToInsert = images.map((url, index) => ({
-      garage_id: garageId,
-      image_url: url,
-      is_main: index === 0,
-      display_order: index
-    }));
-
-    const { error } = await supabase
-      .from('garage_images')
-      .insert(imagesToInsert);
-
-    if (error) throw error;
+    return await parkingDal.insertGarageImages(garageId, images);
   },
 
   /**
    * Crea un nuevo garaje junto con su primera plaza y opcionalmente imágenes.
-   * (Mantenido por compatibilidad y conveniencia)
    */
   async createGarageWithSpot(data: {
     owner_id: string;
@@ -391,7 +260,7 @@ export const parkingService = {
       description: data.description
     });
 
-    // 3. Imágenes del garaje (usamos las mismas para el garaje por ahora)
+    // 3. Imágenes del garaje
     if (data.images && data.images.length > 0) {
       await this.addGarageImages(garage.id, data.images);
     }
@@ -403,105 +272,38 @@ export const parkingService = {
    * Eliminar una plaza
    */
   async deleteParkingSpot(spotId: string, garageId: string) {
-    const { error } = await supabase
-      .from('parking_spots')
-      .delete()
-      .eq('id', spotId);
-
-    if (error) throw error;
-
-    // Decrementar contador
-    await supabase.rpc('decrement_garage_spots', { garage_id_param: garageId });
+    return await parkingDal.deleteParkingSpot(spotId, garageId);
   },
 
   async updateGarage(garageId: string, updates: Partial<Garage>) {
-    const { data, error } = await supabase
-      .from('garages')
-      .update(updates)
-      .eq('id', garageId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return await parkingDal.updateGarage(garageId, updates);
   },
 
   async updateParkingSpot(spotId: string, updates: Partial<Parking>) {
-    const { data, error } = await supabase
-      .from('parking_spots')
-      .update(updates)
-      .eq('id', spotId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return await parkingDal.updateParkingSpot(spotId, updates as any);
   },
 
   async updateGarageImages(garageId: string, images: string[]) {
     // 1. Delete existing images
-    const { error: deleteError } = await supabase
-      .from('garage_images')
-      .delete()
-      .eq('garage_id', garageId);
-
-    if (deleteError) throw deleteError;
+    await parkingDal.deleteGarageImages(garageId);
 
     // 2. Insert new images
     if (images.length > 0) {
-      await this.addGarageImages(garageId, images);
+      await parkingDal.insertGarageImages(garageId, images);
     }
   },
 
   async updateParkingSpotImages(spotId: string, images: string[]) {
     // 1. Delete existing images
-    const { error: deleteError } = await supabase
-      .from('parking_spot_images')
-      .delete()
-      .eq('parking_spot_id', spotId);
-
-    if (deleteError) throw deleteError;
+    await parkingDal.deleteParkingSpotImages(spotId);
 
     // 2. Insert new images
     if (images.length > 0) {
-      const imagesToInsert = images.map((url, index) => ({
-        parking_spot_id: spotId,
-        image_url: url,
-        display_order: index
-      }));
-
-      const { error: insertError } = await supabase
-        .from('parking_spot_images')
-        .insert(imagesToInsert);
-
-      if (insertError) throw insertError;
+      await parkingDal.insertParkingSpotImages(spotId, images);
     }
   },
 
   async deleteGarage(garageId: string) {
-    try {
-      const { error } = await supabase
-        .from('garages')
-        .delete()
-        .eq('id', garageId);
-
-      if (error) {
-        throw error;
-      }
-
-      // Verify if it was actually deleted (check for RLS or dependency blocks)
-      const { data: exists } = await supabase
-        .from('garages')
-        .select('id')
-        .eq('id', garageId)
-        .maybeSingle();
-
-      if (exists) {
-        throw new Error('El garaje no pudo ser borrado. Verifica que eres el dueño y que no tenga reservas activas.');
-      }
-    } catch (error) {
-      console.error('Error en proceso de borrado:', error);
-      throw error;
-    }
+    return await parkingDal.deleteGarage(garageId);
   }
 };

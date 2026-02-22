@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2 } from 'lucide-react';
 import { Button } from '../../../ui/button';
@@ -16,6 +15,9 @@ import { ParkingBookingCard } from './detail/ParkingBookingCard';
 // Hooks
 import { useParkingSpot } from '../hooks/useParkingSpot';
 import { useGarageReviews } from '../hooks/useGarageReviews';
+import { useIsFavorite, useToggleFavorite } from '../../profile/hooks/useFavorites';
+import { useAuth } from '../../auth';
+import { toast } from 'sonner';
 
 export function ParkingDetail() {
   const navigate = useNavigate();
@@ -25,7 +27,24 @@ export function ParkingDetail() {
   const { data: parking, isLoading, error: queryError } = useParkingSpot(id);
   const { data: realReviews = [], isLoading: reviewsLoading } = useGarageReviews(parking?.garage_id);
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { authUser } = useAuth();
+  const { data: isFavorite, isLoading: isFavLoading } = useIsFavorite(authUser?.user?.id, parking?.id);
+  const toggleFavoriteMutation = useToggleFavorite();
+
+  const handleToggleFavorite = () => {
+    if (!authUser) {
+      toast.error('Debes iniciar sesión para añadir a favoritos');
+      return;
+    }
+    if (parking) {
+      toggleFavoriteMutation.mutate({
+        userId: authUser.user.id,
+        spotId: parking.id,
+        isCurrentlyFavorite: !!isFavorite
+      });
+      toast.success(isFavorite ? 'Eliminado de favoritos' : 'Añadido a favoritos');
+    }
+  };
 
   if (isLoading) return <AnimatedLoader message="Cargando detalles de la plaza..." />;
   if (queryError || !parking) return (
@@ -60,7 +79,12 @@ export function ParkingDetail() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" onClick={() => setIsFavorite(!isFavorite)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleToggleFavorite}
+                disabled={isFavLoading || toggleFavoriteMutation.isPending}
+              >
                 <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
               </Button>
               <Button variant="ghost" size="icon">

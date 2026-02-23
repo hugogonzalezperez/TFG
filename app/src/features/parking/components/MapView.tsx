@@ -170,7 +170,7 @@ export function MapView() {
                 <div
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
-                  className="absolute bottom-12 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
+                  className="absolute bottom-16 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
                 >
                   {filteredGarages.map((garage) => (
                     <GarageCard
@@ -247,7 +247,7 @@ export function MapView() {
       </div>
 
       {/* Mobile Navigation - Apple Maps style floating toggle */}
-      <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-0.5 rounded-full shadow-2xl scale-[1] sm:scale-100">
+      <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-0.5 rounded-full shadow-2xl scale-[1] sm:scale-100">
         <button
           onClick={() => setView('map')}
           className={cn(

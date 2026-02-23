@@ -1,5 +1,5 @@
-import { Star } from 'lucide-react';
-import { Card, Avatar, Button } from '../../../../ui';
+import { Star, MessageSquare } from 'lucide-react';
+import { Card, Avatar, Button, EmptyState } from '../../../../ui';
 
 interface Review {
   id: number;
@@ -29,37 +29,48 @@ export function ParkingReviews({ rating, reviewsCount, reviews = [] }: ParkingRe
       </div>
 
       <div className="space-y-6">
-        {reviews.map((review) => (
-          <Card key={review.id} className="p-6">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-12 w-12">
-                <div className="bg-primary/10 w-full h-full flex items-center justify-center text-primary font-semibold">
-                  {review.author.charAt(0)}
+        {reviews.length > 0 ? (
+          <>
+            {reviews.map((review) => (
+              <Card key={review.id} className="p-6">
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-12 w-12">
+                    <div className="bg-primary/10 w-full h-full flex items-center justify-center text-primary font-semibold">
+                      {review.author.charAt(0)}
+                    </div>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold">{review.author}</h4>
+                      <span className="text-sm text-muted-foreground">{review.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1 mb-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${i < review.rating ? 'fill-accent text-accent' : 'text-muted-foreground'}`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground">{review.comment}</p>
+                  </div>
                 </div>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-semibold">{review.author}</h4>
-                  <span className="text-sm text-muted-foreground">{review.date}</span>
-                </div>
-                <div className="flex items-center gap-1 mb-2">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${i < review.rating ? 'fill-accent text-accent' : 'text-muted-foreground'}`}
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground">{review.comment}</p>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+              </Card>
+            ))}
 
-      <Button variant="outline" className="w-full mt-6">
-        Ver todas las valoraciones
-      </Button>
+            <Button variant="outline" className="w-full mt-6">
+              Ver todas las valoraciones
+            </Button>
+          </>
+        ) : (
+          <EmptyState
+            icon={MessageSquare}
+            title="Aún no hay valoraciones"
+            description="Sé el primero en reservar esta plaza y cuéntanos tu experiencia."
+            className="bg-transparent border-none py-8"
+          />
+        )}
+      </div>
     </div>
   );
 }

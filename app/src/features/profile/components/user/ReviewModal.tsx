@@ -63,6 +63,7 @@ export function ReviewModal({ booking, onClose, onSuccess }: ReviewModalProps) {
               src={booking.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
               alt={booking.parkingName}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </Avatar>
           <h3 className="text-2xl font-bold text-center pt-6">{booking.parkingName}</h3>

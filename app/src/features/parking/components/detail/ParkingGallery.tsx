@@ -39,6 +39,7 @@ export function ParkingGallery({ images, isVerified }: ParkingGalleryProps) {
                 src={img}
                 alt={`Imagen ${index + 1}`}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           ))}

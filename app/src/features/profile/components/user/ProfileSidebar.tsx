@@ -35,7 +35,7 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
           <div className="relative inline-block lg:mb-4">
             <Avatar className="h-16 w-16 lg:h-24 lg:w-24 border-2 border-background shadow-sm">
               {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="object-cover w-full h-full" />
+                <img src={user.avatar} alt={user.name} className="object-cover w-full h-full" loading="lazy" />
               ) : (
                 <div className="w-full h-full bg-primary/10 flex items-center justify-center">
                   <User className="h-8 w-8 lg:h-12 lg:w-12 text-primary" />

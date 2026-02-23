@@ -21,7 +21,7 @@ export function ParkingOwnerCard({ owner }: ParkingOwnerCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <img src={owner.avatar} alt={owner.name} />
+              <img src={owner.avatar} alt={owner.name} loading="lazy" />
             </Avatar>
             <div>
               <h3 className="font-semibold text-lg">{owner.name}</h3>
@@ -56,7 +56,7 @@ export function ParkingOwnerCard({ owner }: ParkingOwnerCardProps) {
       <div className="flex items-center gap-5">
         <div className="relative">
           <Avatar className="h-16 w-16 border-2 border-background shadow-md border-primary">
-            <img src={owner.avatar} alt={owner.name} className="object-cover" />
+            <img src={owner.avatar} alt={owner.name} className="object-cover" loading="lazy" />
           </Avatar>
         </div>
 

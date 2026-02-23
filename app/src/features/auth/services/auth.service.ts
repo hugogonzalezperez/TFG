@@ -12,6 +12,22 @@ import {
   UserRoleType,
   AuthResponse,
 } from '../types/auth.types';
+import { generateSessionId } from '../utils/session';
+
+/**
+ * Helper para actualizar el session_id en la base de datos
+ */
+const updateDBSessionId = async (userId: string, sessionId: string) => {
+  try {
+    await supabase
+      .from('users')
+      .update({ current_session_id: sessionId })
+      .eq('id', userId);
+  } catch (e) {
+    console.warn('Error syncing session ID with DB:', e);
+  }
+};
+
 
 // =====================================================
 // REGISTRO DE USUARIO
@@ -49,19 +65,12 @@ export const registerWithEmail = async ({
   if (!authData.user) throw new Error('No se pudo crear el usuario');
 
   // Generar session_id para el autologin tras registro
-  const sessionId = crypto.randomUUID();
+  const sessionId = generateSessionId();
   localStorage.setItem('parky_session_id', sessionId);
 
   // Intentar actualizar el session_id en nuestra tabla (el Trigger ya la habrá creado)
   if (authData.user.id) {
-    try {
-      await supabase
-        .from('users')
-        .update({ current_session_id: sessionId })
-        .eq('id', authData.user.id);
-    } catch (e) {
-      console.warn('Could not update session_id during registration, might be too fast for trigger:', e);
-    }
+    await updateDBSessionId(authData.user.id, sessionId);
   }
 
   return {
@@ -101,7 +110,7 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
     }
 
     // 1.5 Generar identificador de sesión único
-    const sessionId = crypto.randomUUID();
+    const sessionId = generateSessionId();
     localStorage.setItem('parky_session_id', sessionId);
 
     // 2. Actualizar nuestra tabla con el nuevo session_id
@@ -241,15 +250,12 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
       .single();
 
     // Generar identificador de sesión único para OAuth
-    const sessionId = crypto.randomUUID();
+    const sessionId = generateSessionId();
     localStorage.setItem('parky_session_id', sessionId);
 
     if (existingUser) {
       // Actualizar session_id para usuario existente
-      await supabase
-        .from('users')
-        .update({ current_session_id: sessionId })
-        .eq('id', existingUser.id);
+      await updateDBSessionId(existingUser.id, sessionId);
 
       // Usuario existe, verificar si tiene este proveedor
       const { data: existingProvider } = await supabase

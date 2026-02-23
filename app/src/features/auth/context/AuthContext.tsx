@@ -14,6 +14,7 @@ import {
   updateUserProfile,
   changePassword,
 } from '../services/auth.service';
+import { generateSessionId } from '../utils/session';
 import type { AuthUser, RegisterRequest, LoginRequest, User } from '../types/auth.types';
 
 // =====================================================
@@ -180,7 +181,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         let localSessionId = localStorage.getItem('parky_session_id');
         if (!localSessionId) {
           // Si no tenemos ID local pero sí sesión (ej. reabrir navegador), generamos uno
-          localSessionId = crypto.randomUUID();
+          localSessionId = generateSessionId();
           localStorage.setItem('parky_session_id', localSessionId);
         }
 

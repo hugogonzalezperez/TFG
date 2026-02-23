@@ -131,7 +131,12 @@ export function Header() {
                 <div className="mt-4 pt-4 border-t border-border">
                   <Button
                     variant="exit"
-                    onClick={logout}
+                    onClick={async () => {
+                      await logout();
+                      localStorage.clear(); // Limpiar todo por si acaso
+                      sessionStorage.clear();
+                      window.location.href = '/login';
+                    }}
                     className="w-full h-11 text-base justify-center text-destructive bg-destructive/5 hover:bg-destructive hover:text-white rounded-xl transition-all font-bold"
                   >
                     <LogOut className="h-5 w-5" />

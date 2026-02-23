@@ -114,7 +114,7 @@ export function AddSpotToGarageModal({ garage, isOpen, onClose }: AddSpotToGarag
                 disabled={isLoading}
               >
                 <option>Cubierta</option>
-                <option>Subterránea</option>
+                <option>Subterráneo</option>
                 <option>Al aire libre</option>
               </select>
             </div>

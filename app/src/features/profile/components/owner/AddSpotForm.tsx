@@ -239,7 +239,7 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
                 <Label>Tipo de plaza</Label>
                 <select className="w-full h-10 px-3 py-2 border border-border rounded-lg bg-background" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
                   <option>Cubierta</option>
-                  <option>Subterránea</option>
+                  <option>Subterráneo</option>
                   <option>Al aire libre</option>
                 </select>
               </div>

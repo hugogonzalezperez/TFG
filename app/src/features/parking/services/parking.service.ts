@@ -56,7 +56,7 @@ export const parkingService = {
           description: spot.description || undefined,
           total_spots: 1,
           spot_number: spot.spot_number,
-          type: (spot.type as Parking['type']) || 'Subterráneo',
+          type: (spot.type === 'Subterránea' ? 'Subterráneo' : spot.type as Parking['type']) || 'Subterráneo',
           bookings: spot.bookings || [],
           owner: spot.owner
             ? {
@@ -162,7 +162,7 @@ export const parkingService = {
       description: spot.description || undefined,
       total_spots: 1,
       spot_number: spot.spot_number,
-      type: (spot.type as Parking['type']) || 'Subterráneo',
+      type: (spot.type === 'Subterránea' ? 'Subterráneo' : spot.type as Parking['type']) || 'Subterráneo',
       bookings: spot.bookings || [],
       owner: spot.owner
         ? {

@@ -116,3 +116,8 @@ Ejecutar npm run lint para asegurar consistencia.
 Verificación Manual
 Validar flujo de reserva con fechas solapadas para confirmar el fix de disponibilidad.
 Verificar que al borrar un garaje, no quedan registros huérfanos en garage_images.
+
+
+
+Poner la fecha cuando se actualice el date picker de entrada actualizar al mismo dia el de salida.
+Poner los mismos date picker en el home que los de detalles del parking.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFilters } from '../context/FilterContext';
 import { useGarages } from '../hooks/useGarages';
@@ -14,7 +14,7 @@ import { GarageCard } from './GarageCard';
 import { FilterDrawer } from './FilterDrawer';
 import { FilterSidebar } from './FilterSidebar';
 import { AnimatedLoader } from '../../../shared/components/loaders';
-import { ErrorMessage } from '../../../ui';
+import { ErrorMessage, Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '../../../ui';
 import { Garage, Parking } from '../types/parking.types';
 import { Button } from '../../../ui/button';
 import { Map as MapIcon, List } from 'lucide-react';
@@ -32,6 +32,8 @@ export function MapView() {
   const [selectedGarage, setSelectedGarage] = useState<Garage | null>(null);
   const [hoveredGarageId, setHoveredGarageId] = useState<string | null>(null);
   const [isGarageModalOpen, setIsGarageModalOpen] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   // Map state
   const [mapCenter, setMapCenter] = useState<[number, number]>([28.4682, -16.2546]);
@@ -82,7 +84,37 @@ export function MapView() {
 
   const handleGarageClick = (garage: Garage) => {
     setSelectedGarage(garage);
-    setIsGarageModalOpen(true);
+    setMapCenter([garage.lat, garage.lng]);
+    setMapZoom(16);
+
+    if (isMobile && view === 'map') {
+      // En móvil, hacemos scroll al elemento en el carrusel
+      const index = filteredGarages.findIndex(g => g.id === garage.id);
+      if (index !== -1 && carouselRef.current) {
+        const cardWidth = 292; // 280px w + 12px gap approx
+        carouselRef.current.scrollTo({
+          left: index * cardWidth,
+          behavior: 'smooth'
+        });
+      }
+    } else if (!isMobile) {
+      setIsGarageModalOpen(true);
+    }
+  };
+
+  // Sincronizar carrusel -> mapa
+  const handleCarouselScroll = () => {
+    if (!carouselRef.current || !isMobile || view !== 'map') return;
+
+    const scrollLeft = carouselRef.current.scrollLeft;
+    const cardWidth = 292;
+    const index = Math.round(scrollLeft / cardWidth);
+
+    if (filteredGarages[index] && filteredGarages[index].id !== selectedGarage?.id) {
+      const g = filteredGarages[index];
+      setSelectedGarage(g);
+      setMapCenter([g.lat, g.lng]);
+    }
   };
 
   const handleSpotSelect = (spot: Parking) => {
@@ -132,6 +164,26 @@ export function MapView() {
                 center={mapCenter}
                 zoom={mapZoom}
               />
+
+              {/* Mobile Carousel - Estilo Airbnb */}
+              {isMobile && filteredGarages.length > 0 && (
+                <div
+                  ref={carouselRef}
+                  onScroll={handleCarouselScroll}
+                  className="absolute bottom-24 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
+                >
+                  {filteredGarages.map((garage) => (
+                    <GarageCard
+                      key={garage.id}
+                      garage={garage}
+                      filteredSpots={filteredSpots.filter((s) => s.id === garage.id || s.garage_id === garage.id)}
+                      isSelected={selectedGarage?.id === garage.id}
+                      onSelect={handleGarageClick}
+                      variant="carousel"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <div className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-muted/20">
@@ -223,6 +275,28 @@ export function MapView() {
       </div>
 
       <FilterDrawer isOpen={isFilterDrawerOpen} onClose={() => setIsFilterDrawerOpen(false)} />
+
+      {/* Bottom Sheet for Mobile Map */}
+      <Drawer open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
+        <DrawerContent className="pb-8">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Detalles del garaje</DrawerTitle>
+          </DrawerHeader>
+          {selectedGarage && (
+            <div className="px-4">
+              <GarageCard
+                garage={selectedGarage}
+                filteredSpots={garageFilteredSpots}
+                onSelect={() => {
+                  setIsBottomSheetOpen(false);
+                  setIsGarageModalOpen(true);
+                }}
+                variant="full"
+              />
+            </div>
+          )}
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

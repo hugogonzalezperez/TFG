@@ -12,6 +12,7 @@ export interface Garage {
   is_active: boolean;
   is_verified: boolean;
   total_spots: number;
+  postal_code?: string;
   owner_id: string;
   description?: string;
   image?: string;
@@ -30,6 +31,7 @@ export interface Parking {
   city: string;
   base_price_per_hour: number;
   current_price_per_hour: number;
+  postal_code?: string;
   rating?: number;
   reviews?: number;
   distance?: number;

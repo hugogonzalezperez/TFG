@@ -10,7 +10,7 @@ interface GarageCardProps {
   isSelected?: boolean;
   onSelect: (garage: Garage) => void;
   onHover?: (garageId: string | null) => void;
-  variant?: 'full' | 'compact';
+  variant?: 'full' | 'compact' | 'carousel';
 }
 
 export function GarageCard({
@@ -32,6 +32,56 @@ export function GarageCard({
     return `${min.toFixed(2)} - ${max.toFixed(2)}€`;
   };
 
+  if (variant === 'carousel') {
+    return (
+      <div
+        className={cn(
+          "snap-center w-[280px] sm:w-[320px] shrink-0 p-3 bg-card rounded-2xl border-2 transition-all shadow-xl",
+          isSelected ? 'border-primary ring-2 ring-primary/20 scale-[1.02]' : 'border-transparent'
+        )}
+        onClick={() => onSelect(garage)}
+      >
+        <div className="flex gap-3">
+          <div className="w-20 h-20 bg-muted rounded-xl flex-shrink-0 overflow-hidden relative">
+            {garage.image || garage.spots?.[0]?.image ? (
+              <img
+                src={garage.image || garage.spots?.[0]?.image}
+                alt={garage.name}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <MapIcon className="w-8 h-8 opacity-20" />
+            )}
+            <div className="absolute top-1 left-1">
+              <Badge className="bg-primary/95 text-[8px] h-4 px-1 border-none font-bold">
+                {getPriceRange(filteredSpots)}
+              </Badge>
+            </div>
+          </div>
+          <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+            <div>
+              <h3 className="font-bold text-sm truncate leading-tight mb-1">{garage.name}</h3>
+              <div className="flex items-center gap-1 text-[10px] text-muted-foreground truncate">
+                <MapPin className="h-3 w-3 shrink-0" />
+                <span className="truncate">{garage.city}</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <Star className="h-2.5 w-2.5 fill-accent text-accent" />
+                <span className="text-[10px] font-bold">{garage.rating || '4.5'}</span>
+              </div>
+              <Badge variant="secondary" className="text-[9px] h-4 px-1 font-bold">
+                {filteredSpots.length} LIBRES
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (variant === 'compact') {
     return (
       <div
@@ -50,6 +100,7 @@ export function GarageCard({
                 src={garage.image || garage.spots?.[0]?.image}
                 alt={garage.name}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             ) : (
               <MapIcon className="w-8 h-8 opacity-20" />
@@ -90,6 +141,7 @@ export function GarageCard({
               src={garage.image || garage.spots?.[0]?.image}
               alt={garage.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           ) : (
             <MapIcon className="w-8 h-8 sm:w-10 sm:h-10 opacity-20" />

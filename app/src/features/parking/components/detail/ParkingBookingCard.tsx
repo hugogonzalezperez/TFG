@@ -164,7 +164,12 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
                       const yyyy = date.getFullYear();
                       const mm = String(date.getMonth() + 1).padStart(2, '0');
                       const dd = String(date.getDate()).padStart(2, '0');
-                      setEntryDate(`${yyyy}-${mm}-${dd}T${entryTime}`);
+                      const newDay = `${yyyy}-${mm}-${dd}`;
+                      setEntryDate(`${newDay}T${entryTime}`);
+                      // Sync exit date to the same day (keep exit time)
+                      if (newDay > exitDay) {
+                        setExitDate(`${newDay}T${exitTime}`);
+                      }
                       setErrorMsg(null);
                     }
                   }}

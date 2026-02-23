@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Input, Card, Button } from '../../ui';
+import { useState, useEffect, useMemo } from 'react';
+import { Input, Card, Button, DatePicker, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../ui';
 import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard, User, LogOut } from 'lucide-react';
 import { useFilters } from '../../features/parking';
 import { useAuth } from '../../features/auth';
@@ -19,10 +19,21 @@ export default function Home() {
 
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
-    date: '',
-    startTime: '',
-    endTime: '',
+    startTime: '09:00',
+    endTime: '13:00',
   });
+  const [entryDate, setEntryDate] = useState<Date | undefined>(undefined);
+  const [exitDate, setExitDate] = useState<Date | undefined>(undefined);
+
+  const timeOptions = useMemo(() => {
+    const options = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        options.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+      }
+    }
+    return options;
+  }, []);
 
 
   // Mostrar skeleton mientras se cargan los datos del usuario
@@ -34,25 +45,18 @@ export default function Home() {
   const isSearchDisabled = !searchData.location.trim();
 
   const handleSearch = () => {
-    // Si hay datos de fecha/hora, los guardamos en el contexto
-    if (searchData.date && searchData.startTime && searchData.endTime) {
+    const datePart = entryDate ? entryDate.toISOString().split('T')[0] : '';
+    const exitDatePart = exitDate ? exitDate.toISOString().split('T')[0] : datePart;
+    if (datePart && searchData.startTime && searchData.endTime) {
       setDateTimeFilters({
-        startDate: searchData.date,
+        startDate: datePart,
         startTime: searchData.startTime,
-        endDate: searchData.date,
+        endDate: exitDatePart,
         endTime: searchData.endTime,
       });
     } else {
-      // Si no hay fechas, limpiamos filtros temporales previos para mostrar todo
-      setDateTimeFilters({
-        startDate: '',
-        startTime: '',
-        endDate: '',
-        endTime: '',
-      });
+      setDateTimeFilters({ startDate: '', startTime: '', endDate: '', endTime: '' });
     }
-
-    // Navigate to map
     navigate('/map', { state: searchData });
   };
 
@@ -113,9 +117,10 @@ export default function Home() {
           {/* Search Card */}
           <Card className="max-w-5xl mx-auto p-1 md:p-2 shadow-[0_10px_40px_rgba(18,29,182,0.1)] md:shadow-[0_20px_50px_rgba(18,29,182,0.15)] rounded-2xl md:rounded-3xl border-0 bg-card/80 backdrop-blur-xl">
             <div className="p-5 md:p-8 lg:p-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
+                {/* Ubicación */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-medium flex items-center text-muted-foreground">
+                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5 mr-2 text-primary" />
                     Ubicación
                   </label>
@@ -123,56 +128,67 @@ export default function Home() {
                     placeholder="¿Dónde aparcar?"
                     value={searchData.location}
                     onChange={(e) => setSearchData({ ...searchData, location: e.target.value })}
-                    className="h-11 md:h-12 bg-muted/50 border-none rounded-xl"
+                    className="h-14 bg-muted/50 border-none rounded-xl text-base px-4"
                   />
                 </div>
 
+                {/* Entrada */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-medium flex items-center text-muted-foreground">
+                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5 mr-2 text-primary" />
-                    Fecha
-                  </label>
-                  <Input
-                    type="date"
-                    value={searchData.date}
-                    onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="h-11 md:h-12 bg-muted/50 border-none rounded-xl"
-                  />
-                </div>
-
-                <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-medium flex items-center text-muted-foreground">
-                    <Clock className="h-3.5 w-3.5 mr-2 text-primary" />
                     Entrada
                   </label>
-                  <Input
-                    type="time"
-                    step="600"
-                    value={searchData.startTime}
-                    onChange={(e) => setSearchData({ ...searchData, startTime: e.target.value })}
-                    className="h-11 md:h-12 bg-muted/50 border-none rounded-xl"
-                  />
+                  <div className="flex gap-2">
+                    <div className="flex-[5]">
+                      <DatePicker
+                        date={entryDate}
+                        onChange={(date) => {
+                          setEntryDate(date);
+                          if (date && (!exitDate || exitDate < date)) {
+                            setExitDate(date);
+                          }
+                        }}
+                        placeholder="Fecha entrada"
+                        minDate={new Date()}
+                        className="h-14 bg-muted/50 border-none rounded-xl text-base"
+                      />
+                    </div>
+                    <div className="flex-[3]">
+                      <Select value={searchData.startTime} onValueChange={(val) => setSearchData(p => ({ ...p, startTime: val }))}>
+                        <SelectTrigger className="h-14 bg-muted/50 border-none rounded-xl text-base font-medium">
+                          <SelectValue placeholder="Hora" />
+                        </SelectTrigger>
+                        <SelectContent>{timeOptions.map(t => <SelectItem key={`si-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
 
+                {/* Salida */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-medium flex items-center text-muted-foreground">
+                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
                     <Clock className="h-3.5 w-3.5 mr-2 text-primary" />
                     Salida
                   </label>
-                  <Input
-                    type="time"
-                    step="600"
-                    value={searchData.endTime}
-                    onChange={(e) => {
-                      if (searchData.startTime && e.target.value < searchData.startTime) {
-                        return;
-                      }
-                      setSearchData({ ...searchData, endTime: e.target.value });
-                    }}
-                    min={searchData.startTime || '00:00'}
-                    className="h-11 md:h-12 bg-muted/50 border-none rounded-xl"
-                  />
+                  <div className="flex gap-2">
+                    <div className="flex-[5]">
+                      <DatePicker
+                        date={exitDate}
+                        onChange={setExitDate}
+                        placeholder="Fecha salida"
+                        minDate={entryDate || new Date()}
+                        className="h-14 bg-muted/50 border-none rounded-xl text-base"
+                      />
+                    </div>
+                    <div className="flex-[3]">
+                      <Select value={searchData.endTime} onValueChange={(val) => setSearchData(p => ({ ...p, endTime: val }))}>
+                        <SelectTrigger className="h-14 bg-muted/50 border-none rounded-xl text-base font-medium">
+                          <SelectValue placeholder="Hora" />
+                        </SelectTrigger>
+                        <SelectContent>{timeOptions.map(t => <SelectItem key={`so-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
               </div>
 

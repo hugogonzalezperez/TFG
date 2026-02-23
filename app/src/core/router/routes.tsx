@@ -1,16 +1,16 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../../App';
-import {
-  HomePage,
-  LoginPage,
-  SignUpPage,
-  MapViewPage,
-  ParkingDetailPage,
-  BookingPage,
-  UserProfilePage,
-  OwnerProfilePage,
-  AuthCallbackPage
-} from '../../pages';
+
+const HomePage = lazy(() => import('../../pages/home/HomePage'));
+const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
+const SignUpPage = lazy(() => import('../../pages/auth/SignUpPage'));
+const MapViewPage = lazy(() => import('../../pages/parking/MapViewPage').then(m => ({ default: m.MapViewPage })));
+const ParkingDetailPage = lazy(() => import('../../pages/parking/ParkingDetailPage').then(m => ({ default: m.ParkingDetailPage })));
+const BookingPage = lazy(() => import('../../pages/booking/BookingPage').then(m => ({ default: m.BookingPage })));
+const UserProfilePage = lazy(() => import('../../pages/profile/UserProfilePage').then(m => ({ default: m.UserProfilePage })));
+const OwnerProfilePage = lazy(() => import('../../pages/profile/OwnerProfilePage').then(m => ({ default: m.OwnerProfilePage })));
+const AuthCallbackPage = lazy(() => import('../../pages/auth/AuthCallbackPage').then(m => ({ default: m.AuthCallbackPage })));
 import { MainLayout } from '../../shared/components/layout/MainLayout';
 
 import { ProtectedRoute } from '../../shared/components/auth/ProtectedRoute';

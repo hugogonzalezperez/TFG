@@ -78,7 +78,20 @@ export const profileService = {
    * Obtiene todos los garajes (con sus plazas) de un propietario
    */
   async getOwnerGarages(ownerId: string): Promise<any[]> {
-    return await profileDal.fetchOwnerGarages(ownerId);
+    const data = await profileDal.fetchOwnerGarages(ownerId);
+
+    return data.map(garage => ({
+      ...garage,
+      // Mapear imágenes del garaje
+      images: garage.garage_images?.sort((a: any, b: any) => (a.display_order || 0) - (b.display_order || 0))
+        .map((img: any) => img.image_url) || [],
+      // Mapear imágenes de cada plaza
+      parking_spots: garage.parking_spots?.map((spot: any) => ({
+        ...spot,
+        images: spot.parking_spot_images?.sort((a: any, b: any) => (a.display_order || 0) - (b.display_order || 0))
+          .map((img: any) => img.image_url) || []
+      }))
+    }));
   },
 
   /**

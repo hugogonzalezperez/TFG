@@ -129,3 +129,10 @@ npm add -D vite-plugin-pwa
 4.  **Si te sobra tiempo**: Investiga **React Native con Expo**. Puedes compartir la carpeta `src/services` y `src/hooks` entre ambos proyectos usando un **Monorepo** (con Turborepo o simplemente carpetas hermanas).
 
 **¿Te gustaría que empezáramos adaptando algún componente específico (como el Header o el mapa) a móvil ahora mismo?**
+
+
+El proyecto usa una arquitectura Features-based, lo cual es un punto muy positivo para la memoria del TFG. Está preparado para ser escalable y fácil de mantener.
+
+TIP
+
+Mi recomendación: Si quieres "sorprender" al tribunal, el siguiente paso debería ser la Navegación Móvil (Bottom Bar) y el Refactor de las tarjetas del Historial de Reservas del usuario.

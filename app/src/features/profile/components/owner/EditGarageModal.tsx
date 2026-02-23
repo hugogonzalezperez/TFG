@@ -13,7 +13,8 @@ import { AddressSearch } from '../../../../ui/address-search';
 import { parkingService } from '../../../parking/services/parking.service';
 import { Garage, Parking } from '../../../parking/types/parking.types';
 import { GarageImageUploader } from '../GarageImageUploader';
-import { Loader2 } from 'lucide-react';
+import { LocationPicker } from '../../../../shared/components/map/LocationPicker';
+import { Loader2, Map, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface EditGarageModalProps {
   garage: Garage;
@@ -30,14 +31,19 @@ interface FormData {
   city: string;
   lat: number;
   lng: number;
+  postal_code: string;
   price?: number | string; // Spot specific
 }
 
 export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: EditGarageModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const { register, handleSubmit, reset, setValue, getValues, formState: { errors } } = useForm<FormData>();
+  const [showMap, setShowMap] = useState(false);
+  const { register, handleSubmit, reset, setValue, getValues, watch, formState: { errors } } = useForm<FormData>();
   const isSpotEdit = !!spot;
+
+  const watchLat = watch('lat');
+  const watchLng = watch('lng');
 
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +56,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           city: garage.city, // Read-only context
           lat: garage.lat,
           lng: garage.lng,
+          postal_code: garage.postal_code || '',
           price: spot.current_price_per_hour
         });
       } else {
@@ -61,6 +68,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           city: garage.city,
           lat: garage.lat,
           lng: garage.lng,
+          postal_code: garage.postal_code || '',
         });
       }
     }
@@ -75,6 +83,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
 
     setValue('address', result.formatted, { shouldValidate: true });
     setValue('city', city, { shouldValidate: true });
+    setValue('postal_code', result.components?.postcode || '', { shouldValidate: true });
     setValue('lat', result.lat);
     setValue('lng', result.lng);
   };
@@ -96,6 +105,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           description: data.description,
           address: data.address,
           city: data.city,
+          postal_code: data.postal_code,
           lat: data.lat,
           lng: data.lng,
         });
@@ -114,7 +124,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isSpotEdit ? 'Editar Plaza' : 'Editar Garaje'}</DialogTitle>
           <DialogDescription>
@@ -145,10 +155,72 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
                   />
                   {/* Campos ocultos para validación de RHF */}
                   <input type="hidden" {...register('address', { required: 'La dirección es obligatoria' })} />
-                  <input type="hidden" {...register('city')} />
                   <input type="hidden" {...register('lat')} />
                   <input type="hidden" {...register('lng')} />
                   {errors.address && <span className="text-xs text-red-500">{errors.address.message}</span>}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium flex items-center gap-2">
+                      <Map className="h-4 w-4 text-primary" />
+                      Ubicación en el mapa
+                    </label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs gap-1"
+                      onClick={() => setShowMap(!showMap)}
+                    >
+                      {showMap ? (
+                        <>Ocultar mapa <ChevronUp className="h-3 w-3" /></>
+                      ) : (
+                        <>Ajustar posición <ChevronDown className="h-3 w-3" /></>
+                      )}
+                    </Button>
+                  </div>
+
+                  {showMap && (
+                    <div className="animate-in slide-in-from-top-2 duration-300">
+                      <LocationPicker
+                        lat={watchLat || 0}
+                        lng={watchLng || 0}
+                        onChange={(lat, lng) => {
+                          setValue('lat', lat);
+                          setValue('lng', lng);
+                        }}
+                        onAddressUpdate={(result) => {
+                          const city = result.components?.city ||
+                            result.components?.town ||
+                            result.components?.village ||
+                            result.components?.suburb ||
+                            'Tenerife';
+                          setValue('address', result.formatted, { shouldValidate: true });
+                          setValue('city', city, { shouldValidate: true });
+                          setValue('postal_code', result.components?.postcode || getValues('postal_code'), { shouldValidate: true });
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Ciudad</label>
+                    <Input
+                      {...register('city', { required: 'La ciudad es obligatoria' })}
+                      placeholder="Ej: Santa Cruz"
+                    />
+                    {errors.city && <span className="text-xs text-red-500">{errors.city.message}</span>}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Código Postal</label>
+                    <Input
+                      {...register('postal_code')}
+                      placeholder="38001"
+                    />
+                  </div>
                 </div>
               </div>
             </>
@@ -190,11 +262,15 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Fotos</label>
+            <label className="text-sm font-medium">
+              {isSpotEdit ? 'Fotos de la plaza (máx. 5)' : 'Foto del garaje'}
+            </label>
             <GarageImageUploader
               userId={garage.owner_id}
+              garageId={isSpotEdit ? spot?.id : garage.id}
               currentImages={images}
               onImagesChange={setImages}
+              maxImages={isSpotEdit ? 5 : 1}
             />
           </div>
 

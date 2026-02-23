@@ -1,5 +1,5 @@
-import { Star, MapPin } from 'lucide-react';
-import { Card, Button } from '../../../../ui';
+import { Star, MapPin, Heart } from 'lucide-react';
+import { Card, Button, EmptyState, GarageCardSkeleton } from '../../../../ui';
 import { useAuth } from '../../../auth';
 import { useUserFavorites } from '../../hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
@@ -14,8 +14,8 @@ export function FavoritesList() {
       <h2 className="text-2xl font-bold mb-4">Mis favoritos</h2>
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <Card key={i} className="p-4 h-48 animate-pulse bg-muted/50" />
+          {[1, 2, 3, 4].map((i) => (
+            <GarageCardSkeleton key={i} />
           ))}
         </div>
       ) : favoriteSpots.length > 0 ? (
@@ -23,7 +23,7 @@ export function FavoritesList() {
           {favoriteSpots.map((spot: any) => (
             <Card key={spot.id} className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer flex flex-col" onClick={() => navigate(`/parking/${spot.parking_spot_id}`)}>
               <div className="h-40 w-full overflow-hidden relative">
-                <img src={spot.image} alt={spot.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={spot.image} alt={spot.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                 <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
                   <Star className="h-3.5 w-3.5 fill-accent text-accent" />
                   <span className="text-xs font-bold">{spot.rating > 0 ? spot.rating : 'Nuevo'}</span>
@@ -48,10 +48,13 @@ export function FavoritesList() {
           ))}
         </div>
       ) : (
-        <Card className="p-12 text-center">
-          <Star className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">Aún no tienes favoritos</p>
-        </Card>
+        <EmptyState
+          icon={Heart}
+          title="Aún no tienes favoritos"
+          description="Añade los garajes que más te gusten a tu lista de favoritos para tenerlos siempre a mano."
+          actionLabel="Explorar mapa"
+          onAction={() => navigate('/map')}
+        />
       )}
     </div>
   );

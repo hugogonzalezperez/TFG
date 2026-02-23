@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Clock, Star, History, Trash2, Building2, Lock } from 'lucide-react';
+import { Clock, Star, History, Trash2, Building2, Lock, Eye } from 'lucide-react';
 import { Card, Badge, Button } from '../../../../ui';
 import { useNavigate } from 'react-router-dom';
 import { LocationLink } from '../../../../shared/components/LocationLink';
 import { cn } from '../../../../shared/lib/cn';
 import { SmartAccessModal } from '../../../booking/components/SmartAccessModal';
-import { TabSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
+import { BookingCardSkeleton, PastBookingCardSkeleton, EmptyState } from '../../../../ui';
 
 interface BookingHistoryProps {
   bookings: any[];
@@ -23,7 +23,19 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
   const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active' || b.status === 'pending');
   const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
 
-  if (isLoading) return <TabSkeletonLoader />;
+  if (isLoading) return (
+    <div className="space-y-12 py-5">
+      <div className="space-y-4">
+        <div className="h-8 w-64 bg-muted animate-pulse rounded-lg" />
+        <BookingCardSkeleton />
+      </div>
+      <div className="space-y-4">
+        <div className="h-8 w-64 bg-muted animate-pulse rounded-lg" />
+        <PastBookingCardSkeleton />
+        <PastBookingCardSkeleton />
+      </div>
+    </div>
+  );
 
   const handleCancel = async (id: string) => {
     setCancellingId(id);
@@ -94,7 +106,7 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                       <div className="w-10 h-10 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary flex-shrink-0 cursor-pointer overflow-hidden group hover:opacity-80 transition-opacity"
                         onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}>
                         {booking.image ? (
-                          <img src={booking.image} alt={booking.parkingName} className="w-full h-full object-cover" />
+                          <img src={booking.image} alt={booking.parkingName} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
                           <Building2 className="h-5 w-5" />
                         )}
@@ -120,53 +132,64 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                     </div>
 
                     {/* Dates */}
-                    <div className="col-span-3 text-center">
-                      <p className="text-sm font-semibold text-foreground">
-                        {startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })} — {endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
-                        {startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {endDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+                    <div className="col-span-3 text-left md:text-center mt-2 md:mt-0 flex flex-row md:flex-col items-center md:items-center justify-between md:justify-center">
+                      <div className="md:w-full">
+                        <p className="text-sm font-semibold text-foreground">
+                          {startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })} — {endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                          {startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {endDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+
+                      {/* Amount (Moved next to dates on mobile) */}
+                      <div className="md:hidden text-right">
+                        <p className="text-base font-bold text-foreground">
+                          {Number(booking.total_price).toFixed(2)}<span className="text-xs">€</span>
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Amount */}
-                    <div className="col-span-1 text-center">
+                    {/* Amount (Desktop) */}
+                    <div className="col-span-1 text-center hidden md:block">
                       <p className="text-base font-bold text-foreground">
                         {Number(booking.total_price).toFixed(2)}<span className="text-xs">€</span>
                       </p>
                     </div>
 
-                    {/* Status */}
-                    <div className="col-span-2 flex justify-center">
+                    {/* Status (Mobile Top Right, Desktop Col-2) */}
+                    <div className="col-span-2 flex md:justify-center absolute top-3 right-5 md:relative md:top-0 md:right-0">
                       <Badge className={cn("text-[10px] px-2 py-0.5 h-auto leading-none uppercase font-bold", getStatusColor(booking.status))} variant="outline">
                         {getStatusLabel(booking.status)}
                       </Badge>
                     </div>
 
                     {/* Actions */}
-                    <div className="col-span-2 flex justify-end gap-1">
+                    <div className="col-span-2 flex md:justify-end gap-2 mt-2 md:mt-0 w-full md:w-auto">
                       {booking.status === 'active' && (
                         <Button
                           variant="default"
                           size="sm"
-                          className="h-8 text-xs px-2.5 bg-blue-600 hover:bg-blue-700"
+                          className="flex-1 md:flex-none h-9 md:h-8 text-xs px-2.5 bg-blue-600 hover:bg-blue-700"
                           onClick={() => setSmartAccessBooking(booking)}
                         >
-                          <Lock className="h-4 w-4" />
+                          <Lock className="h-4 w-4 mr-1 md:mr-0" />
+                          <span className="md:hidden">Abrir garaje</span>
                         </Button>
                       )}
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-8 text-xs px-2.5"
+                        className="flex-1 md:flex-none h-9 md:h-8 text-xs px-2.5"
                         onClick={() => navigate(`/parking/${booking.parking_spot_id}`)}
                       >
-                        Ver
+                        <Eye className="h-4 w-4 mr-1 md:mr-0" />
+                        <span className="md:hidden">Ver detalles</span>
                       </Button>
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                        className="h-9 w-9 md:h-8 md:w-8 shrink-0 text-destructive hover:bg-destructive/10"
                         onClick={() => handleCancel(booking.id)}
                         disabled={cancellingId === booking.id || booking.status === 'active'}
                       >
@@ -179,9 +202,14 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
             </div>
           </Card>
         ) : (
-          <div className="py-12 text-center text-muted-foreground">
-            <p>No hay reservas activas en este momento.</p>
-          </div>
+          <EmptyState
+            icon={Clock}
+            title="No tienes reservas activas"
+            description="Tus reservas confirmadas y próximas aparecerán aquí. ¡Busca una plaza para empezar!"
+            actionLabel="Buscar parking"
+            onAction={() => navigate('/map')}
+            className="p-8"
+          />
         )}
       </section>
 
@@ -196,28 +224,28 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
           {pastBookings.length > 0 ? (
             pastBookings.map((booking) => (
               <Card key={booking.id} className="p-4 border border-border/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded bg-muted flex items-center justify-center text-muted-foreground">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-4">
+                    <div className="w-12 h-12 rounded bg-muted flex shrink-0 items-center justify-center text-muted-foreground">
                       <Clock className="h-6 w-6 opacity-20" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-sm">{booking.parkingName}</h3>
-                      <div className="flex items-center gap-3 mt-1 text-[11px] text-muted-foreground">
-                        <span>{new Date(booking.start_time).toLocaleDateString('es-ES')}</span>
-                        <span>•</span>
-                        <span className="font-bold">{Number(booking.total_price).toFixed(2)}€</span>
-                        <span>•</span>
-                        <Badge variant="outline" className="h-4 text-[9px] uppercase">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm truncate">{booking.parkingName}</h3>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[11px] text-muted-foreground">
+                        <span className="shrink-0">{new Date(booking.start_time).toLocaleDateString('es-ES')}</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="font-bold shrink-0">{Number(booking.total_price).toFixed(2)}€</span>
+                        <span className="hidden sm:inline">•</span>
+                        <Badge variant="outline" className="h-4 text-[9px] uppercase shrink-0 mt-1 sm:mt-0">
                           {getStatusLabel(booking.status)}
                         </Badge>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 sm:shrink-0 sm:w-auto w-full">
                     {!booking.rated && booking.status === 'completed' && (
-                      <Button variant="outline" size="sm" className="h-8 text-xs gap-1" onClick={() => onReview?.(booking)}>
+                      <Button variant="outline" size="sm" className="h-9 sm:h-8 text-xs gap-1 flex-1 sm:flex-none" onClick={() => onReview?.(booking)}>
                         <Star className="h-3 w-3" />
                         Valorar
                       </Button>
@@ -225,7 +253,7 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                     <Button
                       variant="exit"
                       size="icon"
-                      className="h-8 w-8 text-destructive hover:opacity-50"
+                      className="h-9 w-9 sm:h-8 sm:w-8 shrink-0 text-destructive hover:opacity-50"
                       onClick={() => handleDelete(booking.id)}
                       disabled={deletingId === booking.id}
                     >
@@ -236,9 +264,12 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
               </Card>
             ))
           ) : (
-            <p className="text-center py-8 text-muted-foreground text-sm italic">
-              No tienes reservas pasadas.
-            </p>
+            <EmptyState
+              icon={History}
+              title="Historial vacío"
+              description="Aquí aparecerán tus reservas pasadas y completadas."
+              className="p-6 border-none bg-transparent"
+            />
           )}
         </div>
       </section>

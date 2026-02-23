@@ -130,6 +130,7 @@ export const parkingDal = {
     city: string;
     lat: number;
     lng: number;
+    postal_code?: string | null;
     description?: string;
   }) {
     const { data: garage, error } = await supabase
@@ -141,6 +142,7 @@ export const parkingDal = {
         city: data.city,
         lat: data.lat,
         lng: data.lng,
+        postal_code: data.postal_code,
         total_spots: 0,
         is_active: true,
         description: data.description

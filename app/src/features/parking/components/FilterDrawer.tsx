@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Input,
@@ -10,7 +10,13 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
-  SheetTitle
+  SheetTitle,
+  DatePicker,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
 } from '../../../ui';
 import { X } from 'lucide-react';
 import { useFilters } from '../context/FilterContext';
@@ -27,6 +33,14 @@ interface FilterDrawerProps {
 export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
   const isMobile = useIsMobile();
   const { filters, setTypes, setAvailability, setPriceRange, setDateTimeFilters, resetFilters } = useFilters();
+
+  const timeOptions = useMemo(() => {
+    const opts = [];
+    for (let h = 0; h < 24; h++)
+      for (let m = 0; m < 60; m += 15)
+        opts.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+    return opts;
+  }, []);
 
   // Estado temporal mientras el drawer está abierto
   const [tempFilters, setTempFilters] = useState<ParkingFilter>(filters);
@@ -193,65 +207,79 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
         </div>
 
         {/* Fecha y hora */}
-        <div className="space-y-6 pt-6 border-t border-border">
+        <div className="space-y-5 pt-6 border-t border-border">
           <label className="text-sm font-bold text-foreground uppercase tracking-wider">
             Fechas de reserva
           </label>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-xs text-muted-foreground font-semibold">Entrada</label>
-                <Input
-                  type="date"
-                  value={tempFilters.startDate}
-                  onChange={(e) => {
-                    setTempFilters({ ...tempFilters, startDate: e.target.value });
+          {/* Entrada */}
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground font-semibold">Entrada</label>
+            <div className="flex gap-2">
+              <div className="flex-[3]">
+                <DatePicker
+                  date={tempFilters.startDate ? new Date(tempFilters.startDate) : undefined}
+                  onChange={(date) => {
+                    const val = date ? date.toISOString().split('T')[0] : '';
+                    const updated = { ...tempFilters, startDate: val };
+                    // Auto-sync exit date
+                    if (date && tempFilters.endDate && new Date(tempFilters.endDate) < date) {
+                      updated.endDate = val;
+                    }
+                    setTempFilters(updated);
                     setHasChanged(true);
                   }}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                  minDate={new Date()}
+                  placeholder="Fecha entrada"
+                  className="h-11 bg-muted/20 border-muted rounded-lg"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs text-muted-foreground font-semibold">Hora</label>
-                <Input
-                  type="time"
+              <div className="flex-[2]">
+                <Select
                   value={tempFilters.startTime}
-                  onChange={(e) => {
-                    setTempFilters({ ...tempFilters, startTime: e.target.value });
+                  onValueChange={(val) => {
+                    setTempFilters({ ...tempFilters, startTime: val });
                     setHasChanged(true);
                   }}
-                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
-                />
+                >
+                  <SelectTrigger className="h-11 bg-muted/20 border-muted rounded-lg">
+                    <SelectValue placeholder="Hora" />
+                  </SelectTrigger>
+                  <SelectContent>{timeOptions.map(t => <SelectItem key={`sf-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
+                </Select>
               </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-xs text-muted-foreground font-semibold">Salida</label>
-                <Input
-                  type="date"
-                  value={tempFilters.endDate}
-                  onChange={(e) => {
-                    setTempFilters({ ...tempFilters, endDate: e.target.value });
+          {/* Salida */}
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground font-semibold">Salida</label>
+            <div className="flex gap-2">
+              <div className="flex-[3]">
+                <DatePicker
+                  date={tempFilters.endDate ? new Date(tempFilters.endDate) : undefined}
+                  onChange={(date) => {
+                    setTempFilters({ ...tempFilters, endDate: date ? date.toISOString().split('T')[0] : '' });
                     setHasChanged(true);
                   }}
-                  min={tempFilters.startDate || new Date().toISOString().split('T')[0]}
-                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
+                  minDate={tempFilters.startDate ? new Date(tempFilters.startDate) : new Date()}
+                  placeholder="Fecha salida"
+                  className="h-11 bg-muted/20 border-muted rounded-lg"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs text-muted-foreground font-semibold">Hora</label>
-                <Input
-                  type="time"
+              <div className="flex-[2]">
+                <Select
                   value={tempFilters.endTime}
-                  onChange={(e) => {
-                    setTempFilters({ ...tempFilters, endTime: e.target.value });
+                  onValueChange={(val) => {
+                    setTempFilters({ ...tempFilters, endTime: val });
                     setHasChanged(true);
                   }}
-                  className="h-11 bg-muted/20 border-muted focus:border-primary rounded-lg text-sm"
-                />
+                >
+                  <SelectTrigger className="h-11 bg-muted/20 border-muted rounded-lg">
+                    <SelectValue placeholder="Hora" />
+                  </SelectTrigger>
+                  <SelectContent>{timeOptions.map(t => <SelectItem key={`ef-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
+                </Select>
               </div>
             </div>
           </div>

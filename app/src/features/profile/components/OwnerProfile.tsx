@@ -94,69 +94,72 @@ export function OwnerProfile() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Page Title & Actions */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+      <div className="bg-card border-b border-border sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-3 md:py-4 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="shrink-0 h-9 w-9">
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold">Panel de Propietario</h1>
-              <p className="hidden sm:block text-sm text-muted-foreground">Gestiona tus garajes y plazas</p>
+            <div className="min-w-0">
+              <h1 className="text-lg md:text-2xl font-bold truncate">Panel de Propietario</h1>
+              <p className="hidden md:block text-sm text-muted-foreground">Gestiona tus garajes y plazas</p>
             </div>
           </div>
 
           {activeTab === 'garages' && (
             <Button
               onClick={() => setShowAddSpot(true)}
-              className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-sm h-10 px-4"
+              className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-md h-9 md:h-10 px-3 md:px-5 shrink-0 rounded-full md:rounded-xl"
             >
-              <Plus className="h-5 w-5" />
-              <span className="hidden sm:inline">Nuevo garaje</span>
+              <Plus className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm font-bold uppercase tracking-tight">Registrar Garaje</span>
             </Button>
           )}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <div className="flex justify-center">
-            <TabsList className="bg-card border border-border p-1.5 gap-2 h-auto shadow-md rounded-2xl">
-              {(garages.length > 0 || garagesLoading) && (
+      <div className="max-w-7xl mx-auto px-4 py-4 md:py-8">
+        <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab} className="space-y-6 md:space-y-8">
+          <div className="relative -mx-4 px-4">
+            {/* Scroll Indicators/Fade */}
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none sm:hidden" />
+
+            <div className="overflow-x-auto scrollbar-hide py-1">
+              <TabsList className="bg-card border border-border p-1 gap-1 h-auto shadow-md rounded-2xl flex-nowrap w-max sm:w-auto mx-auto">
                 <TabsTrigger
                   value="dashboard"
-                  className="gap-2 px-6 py-2.5 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-base font-semibold"
+                  className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
                 >
-                  <LayoutDashboard className="h-5 w-5" />
-                  Dashboard
+                  <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" />
+                  Resumen
                 </TabsTrigger>
-              )}
-              <TabsTrigger
-                value="garages"
-                className="gap-2 px-6 py-2.5 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-base font-semibold"
-              >
-                <Building2 className="h-5 w-5" />
-                Mis Garajes
-              </TabsTrigger>
-              {(garages.length > 0 || garagesLoading) && (
-                <>
-                  <TabsTrigger
-                    value="bookings"
-                    className="gap-2 px-6 py-2.5 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-base font-semibold"
-                  >
-                    <CalendarIcon className="h-5 w-5" />
-                    Reservas
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="reviews"
-                    className="gap-2 px-6 py-2.5 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-base font-semibold"
-                  >
-                    <Star className="h-5 w-5" />
-                    Valoraciones
-                  </TabsTrigger>
-                </>
-              )}
-            </TabsList>
+                <TabsTrigger
+                  value="garages"
+                  className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
+                >
+                  <Building2 className="h-4 w-4 md:h-5 md:w-5" />
+                  Mis Garajes
+                </TabsTrigger>
+                {(garages.length > 0 || garagesLoading) && (
+                  <>
+                    <TabsTrigger
+                      value="bookings"
+                      className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
+                    >
+                      <CalendarIcon className="h-4 w-4 md:h-5 md:w-5" />
+                      Reservas
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="reviews"
+                      className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
+                    >
+                      <Star className="h-4 w-4 md:h-5 md:w-5" />
+                      Valoraciones
+                    </TabsTrigger>
+                  </>
+                )}
+              </TabsList>
+            </div>
           </div>
 
           <TabsContent value="dashboard" className="m-0 focus-visible:outline-none">
@@ -168,7 +171,7 @@ export function OwnerProfile() {
           </TabsContent>
 
           <TabsContent value="garages" className="m-0 focus-visible:outline-none">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               <div className="lg:col-span-2">
                 {showAddSpot && (
                   <AddSpotForm
@@ -182,7 +185,7 @@ export function OwnerProfile() {
                   onAddGarage={() => setShowAddSpot(true)}
                 />
               </div>
-              <div className="lg:col-span-1">
+              <div className="hidden lg:block lg:col-span-1">
                 <div className="bg-card rounded-xl border border-border p-6 sticky top-24">
                   <h3 className="font-bold mb-4">Resumen de Actividad</h3>
                   <p className="text-sm text-muted-foreground mb-6">

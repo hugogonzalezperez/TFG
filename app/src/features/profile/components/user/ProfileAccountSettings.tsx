@@ -57,19 +57,19 @@ export function ProfileAccountSettings({ initialData, onSave }: ProfileAccountSe
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Configuración de perfil</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <h2 className="text-xl sm:text-2xl font-bold">Configuración de perfil</h2>
         {!isEditing ? (
-          <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">
+          <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2 self-start sm:self-auto">
             <Edit className="h-4 w-4" /> Editar
           </Button>
         ) : (
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSaving}>
+          <div className="flex gap-2 self-start sm:self-auto w-full sm:w-auto">
+            <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSaving} className="flex-1 sm:flex-none">
               <X className="h-4 w-4 mr-2" /> Cancelar
             </Button>
-            <Button onClick={handleSave} disabled={isSaving} className="bg-secondary hover:bg-secondary/90">
-              <Check className="h-4 w-4 mr-2" /> {isSaving ? 'Guardando...' : 'Guardar'}
+            <Button onClick={handleSave} disabled={isSaving} className="bg-secondary hover:bg-secondary/90 flex-1 sm:flex-none">
+              <Check className="h-4 w-4 mr-2" /> {isSaving ? 'Guardar...' : 'Guardar'}
             </Button>
           </div>
         )}

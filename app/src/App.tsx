@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { FilterProvider } from './features/parking';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './features/auth';
@@ -22,7 +22,11 @@ function AppContent() {
     return <AnimatedLoader message="Iniciando aplicación..." />;
   }
 
-  return <Outlet />;
+  return (
+    <Suspense fallback={<AnimatedLoader message="Cargando..." />}>
+      <Outlet />
+    </Suspense>
+  );
 }
 
 export default function App() {

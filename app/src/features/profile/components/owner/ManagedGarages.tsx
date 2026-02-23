@@ -1,12 +1,11 @@
-import { MapPin, Edit, Trash2, Plus } from 'lucide-react';
-import { Card, Badge, Button, Switch, ConfirmationDialog } from '../../../../ui';
+import { MapPin, Edit, Trash2, Plus, Building2 } from 'lucide-react';
+import { Card, Badge, Button, Switch, ConfirmationDialog, EmptyState, GarageCardSkeleton } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { AddSpotToGarageModal } from './AddSpotToGarageModal';
 import { EditGarageModal } from './EditGarageModal';
-import { GarageSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
 import { SpotFavoritesUsers } from './SpotFavoritesUsers';
 
 interface ManagedGaragesProps {
@@ -81,174 +80,205 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
   };
 
   if (isLoading) {
-    return <GarageSkeletonLoader />;
+    return (
+      <div className="space-y-6">
+        <GarageCardSkeleton />
+        <GarageCardSkeleton />
+      </div>
+    );
   }
 
   if (garages.length === 0) {
     return (
-      <Card className="p-12 text-center border-dashed border-2">
-        <div className="max-w-[300px] mx-auto space-y-4">
-          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-            <Plus className="h-6 w-6" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold">Sin garajes registrados</h3>
-            <p className="text-sm text-muted-foreground mt-1 mb-4">
-              Todavía no has registrado ningún garaje. ¡Empieza ahora para ganar dinero alquilando tus plazas!
-            </p>
-            {onAddGarage && (
-              <Button onClick={onAddGarage} className="bg-primary hover:bg-primary/90">
-                Registrar primer garaje
-              </Button>
-            )}
-          </div>
-        </div>
-      </Card>
+      <EmptyState
+        icon={Building2}
+        title="Sin garajes registrados"
+        description="Todavía no has registrado ningún garaje. ¡Empieza ahora para ganar dinero alquilando tus plazas!"
+        actionLabel="Registrar primer garaje"
+        onAction={onAddGarage}
+      />
     );
   }
   return (
     <div className="space-y-6">
-      {garages.map((garage) => (
-        <Card key={garage.id} className="overflow-hidden border-2 border-border/50">
-          {/* Garage Header */}
-          <div className="bg-muted/30 p-4 border-b border-border flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div>
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  {garage.name}
-                </h3>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <MapPin className="h-3 w-3" /> {garage.address}, {garage.city}
-                </p>
-              </div>
-              <div className="flex flex-col items-center border-l border-border pl-4 hidden sm:flex">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
-                  {garage.is_active ? 'Activo' : 'Inactivo'}
-                </span>
-                <Switch
-                  checked={garage.is_active}
-                  onCheckedChange={(checked) => handleToggleGarageStatus(garage.id, checked)}
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Badge variant="secondary">{garage.parking_spots?.length || 0} plazas</Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1 h-8"
-                onClick={() => setSelectedGarageForSpot(garage)}
-              >
-                <Plus className="h-3.5 w-3.5" /> Añadir plaza
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setEditingItem({ garage })}
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                onClick={() => setDeleteConfirmation({
-                  type: 'garage',
-                  id: garage.id,
-                  name: garage.name,
-                  ownerId: garage.owner_id
-                })}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+      {garages.map((garage) => {
+        const garageImage = garage.images?.[0] ||
+          garage.garage_images?.find((img: any) => img.is_main)?.image_url ||
+          garage.garage_images?.[0]?.image_url || null;
 
-          {/* Spots List */}
-          <div className="p-4 space-y-4">
-            {garage.parking_spots && garage.parking_spots.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {garage.parking_spots.map((spot: any) => (
-                  <div
-                    key={spot.id}
-                    className="flex items-center gap-4 p-4 border border-border rounded-xl bg-card hover:border-primary/50 transition-all group relative"
-                  >
-                    <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center text-muted-foreground overflow-hidden border border-border">
-                      <img
-                        src={spot.parking_spot_images?.[0]?.image_url || garage.garage_images?.find((img: any) => img.is_main)?.image_url || garage.garage_images?.[0]?.image_url || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
-                        alt={spot.spot_number}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
+        return (
+          <Card key={garage.id} className="overflow-hidden border border-border/50">
+            {/* Garage Header */}
+            <div className="p-4 border-b border-border flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                {/* Garage Photo */}
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden flex-shrink-0 border border-border bg-muted">
+                  {garageImage ? (
+                    <img
+                      src={garageImage}
+                      alt={garage.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <MapPin className="h-6 w-6" />
                     </div>
+                  )}
+                </div>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start mb-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-lg">Plaza {spot.spot_number}</span>
-                          <SpotFavoritesUsers spotId={spot.id} />
-                          <span className="ml-2 text-sm text-primary font-semibold">{spot.current_price_per_hour}€/h</span>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base md:text-lg font-bold truncate">{garage.name}</h3>
+                    <Switch
+                      checked={garage.is_active}
+                      onCheckedChange={(checked) => handleToggleGarageStatus(garage.id, checked)}
+                      className="scale-90"
+                    />
+                  </div>
+                  <p className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1 truncate font-medium">
+                    <MapPin className="h-3 w-3 flex-shrink-0" /> {garage.address}
+                  </p>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-between sm:justify-end gap-1.5 flex-shrink-0 pt-3 sm:pt-0 border-t sm:border-0 border-border/30">
+                <div className="sm:hidden">
+                  <Badge variant="secondary" className="text-[10px] font-bold px-2 py-0">
+                    {garage.parking_spots?.length || 0} PLAZAS
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Badge variant="secondary" className="hidden sm:inline-flex">
+                    {garage.parking_spots?.length || 0} plazas
+                  </Badge>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 h-8 md:h-9 text-[10px] md:text-xs font-bold px-2 md:px-4 border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-primary"
+                    onClick={() => setSelectedGarageForSpot(garage)}
+                  >
+                    <Plus className="h-3.5 w-3.5" /> <span>Añadir plaza</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 md:h-9 md:w-9"
+                    onClick={() => setEditingItem({ garage })}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 md:h-9 md:w-9 text-destructive hover:bg-destructive/10"
+                    onClick={() => setDeleteConfirmation({
+                      type: 'garage',
+                      id: garage.id,
+                      name: garage.name,
+                      ownerId: garage.owner_id
+                    })}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Spots List */}
+            <div className="p-3 space-y-2">
+              {garage.parking_spots && garage.parking_spots.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {garage.parking_spots.map((spot: any) => {
+                    const spotImage = spot.images?.[0] ||
+                      spot.parking_spot_images?.[0]?.image_url ||
+                      garageImage ||
+                      'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
+
+                    return (
+                      <div
+                        key={spot.id}
+                        className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 border border-border rounded-xl bg-card/50 hover:border-primary/30 transition-all group"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex-shrink-0 overflow-hidden border border-border shadow-sm">
+                            <img
+                              src={spotImage}
+                              alt={spot.spot_number}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-0.5 sm:mb-1">
+                              <div className="flex items-center gap-1.5 md:gap-2">
+                                <span className="font-bold text-[14px] md:text-base">Plaza {spot.spot_number}</span>
+                                <SpotFavoritesUsers spotId={spot.id} />
+                              </div>
+                              <Switch
+                                checked={spot.is_active}
+                                onCheckedChange={(checked) => handleToggleSpotStatus(spot.id, checked)}
+                                className="sm:hidden scale-75"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-primary">{spot.current_price_per_hour}€/h</span>
+                              <Badge
+                                variant={spot.is_active ? 'default' : 'secondary'}
+                                className={`text-[9px] font-black px-1.5 py-0 leading-tight ${spot.is_active ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                              >
+                                {spot.is_active ? 'ACTIVA' : 'INACTIVA'}
+                              </Badge>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <div className="flex flex-col items-end">
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Disponible</span>
+
+                        <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-0 border-border/30">
+                          <div className="hidden sm:block">
                             <Switch
                               checked={spot.is_active}
                               onCheckedChange={(checked) => handleToggleSpotStatus(spot.id, checked)}
-                              onClick={(e) => e.stopPropagation()}
+                              className="scale-90"
                             />
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-3">
-                        <Badge
-                          variant={spot.is_active ? 'default' : 'secondary'}
-                          className={spot.is_active ? 'bg-green-500 hover:bg-green-600' : ''}
-                        >
-                          {spot.is_active ? 'ACTIVA' : 'INACTIVA'}
-                        </Badge>
-
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1.5 text-xs"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingItem({ garage, spot });
-                            }}
-                          >
-                            <Edit className="h-3.5 w-3.5" />
-                            Editar
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDeleteConfirmation({
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 md:h-9 gap-1.5 text-xs font-semibold px-2 md:px-3 hover:bg-primary/5"
+                              onClick={() => setEditingItem({ garage, spot })}
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                              <span className="md:inline">Editar</span>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 md:h-9 md:w-9 text-destructive hover:bg-destructive/10"
+                              onClick={() => setDeleteConfirmation({
                                 type: 'spot',
                                 id: spot.id,
                                 garageId: garage.id
-                              });
-                            }}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                              })}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground italic">No hay plazas registradas en este garaje.</p>
-            )}
-          </div>
-        </Card>
-      ))}
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic py-2">No hay plazas registradas en este garaje.</p>
+              )}
+            </div>
+          </Card>
+        );
+      })}
 
       {selectedGarageForSpot && (
         <AddSpotToGarageModal

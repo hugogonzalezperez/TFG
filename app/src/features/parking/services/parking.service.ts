@@ -23,8 +23,9 @@ export const parkingService = {
         name: garage.name,
         address: garage.address,
         city: garage.city,
-        lat: garage.lat,
-        lng: garage.lng,
+        postal_code: garage.postal_code || undefined,
+        lat: Number(garage.lat),
+        lng: Number(garage.lng),
         is_active: garage.is_active || false,
         is_verified: true,
         total_spots: garage.total_spots || 0,
@@ -41,10 +42,11 @@ export const parkingService = {
           name: `${garage.name} - ${spot.spot_number}`,
           address: garage.address,
           city: garage.city,
+          postal_code: garage.postal_code || undefined,
           base_price_per_hour: spot.base_price_per_hour,
           current_price_per_hour: spot.current_price_per_hour,
-          lat: garage.lat,
-          lng: garage.lng,
+          lat: Number(garage.lat),
+          lng: Number(garage.lng),
           is_active: spot.is_active || false,
           is_verified: true,
           image: spot.parking_spot_images?.[0]?.image_url ||
@@ -134,12 +136,13 @@ export const parkingService = {
       name: `${garage.name} - ${spot.spot_number}`,
       address: garage.address,
       city: garage.city,
+      postal_code: garage.postal_code || undefined,
       base_price_per_hour: spot.base_price_per_hour,
       current_price_per_hour: spot.current_price_per_hour,
       rating: Number(averageRating.toFixed(1)),
       reviews: totalReviews,
-      lat: garage.lat,
-      lng: garage.lng,
+      lat: Number(garage.lat),
+      lng: Number(garage.lng),
       is_active: spot.is_active || false,
       is_verified: true,
       image: spot.parking_spot_images?.[0]?.image_url ||
@@ -187,6 +190,7 @@ export const parkingService = {
     name: string;
     address: string;
     city: string;
+    postal_code?: string;
     lat: number;
     lng: number;
     description?: string;
@@ -231,13 +235,15 @@ export const parkingService = {
     name: string;
     address: string;
     city: string;
+    postal_code?: string;
     lat: number;
     lng: number;
     price: number;
     type: string;
     spot_number?: string;
     description?: string;
-    images?: string[];
+    images?: string[];        // Spot images
+    garageImages?: string[]; // Garage image (max 1)
   }) {
     // 1. Crear el garaje
     const garage = await this.createGarage({
@@ -245,6 +251,7 @@ export const parkingService = {
       name: data.name,
       address: data.address,
       city: data.city,
+      postal_code: data.postal_code,
       lat: data.lat,
       lng: data.lng,
       description: data.description
@@ -261,7 +268,10 @@ export const parkingService = {
     });
 
     // 3. Imágenes del garaje
-    if (data.images && data.images.length > 0) {
+    if (data.garageImages && data.garageImages.length > 0) {
+      await this.addGarageImages(garage.id, data.garageImages);
+    } else if (data.images && data.images.length > 0) {
+      // Back-compat: if only images is provided and no garageImages, treat as garage images
       await this.addGarageImages(garage.id, data.images);
     }
 

@@ -1,11 +1,14 @@
-import { Calendar, Clock, Shield, Check, Lock, Zap } from 'lucide-react';
+import { Calendar, Clock, Shield, Check, Lock, Zap, Map as MapIcon } from 'lucide-react';
 import { Card, Badge } from '../../../ui';
 import { BookingEstimation } from '../types/booking.types';
 
 interface BookingSummaryProps {
   parking: {
     name: string;
-    location?: string;
+    address?: string;
+    city?: string;
+    image?: string;
+    images?: string[];
     base_price_per_hour: number;
   };
   estimation: BookingEstimation | null;
@@ -16,22 +19,29 @@ interface BookingSummaryProps {
 }
 
 export function BookingSummary({ parking, estimation, bookingDates }: BookingSummaryProps) {
-  return (
-    <Card className="p-6 sticky top-4">
-      <h3 className="font-semibold mb-4">Resumen de reserva</h3>
+  const imageUrl = parking.image || parking.images?.[0];
 
-      <div className="border border-border rounded-lg p-4 mb-4">
+  return (
+    <Card className="p-5 sm:p-6 lg:sticky lg:top-24">
+      <h3 className="font-semibold mb-4 text-base sm:text-lg">Resumen de reserva</h3>
+
+      <div className="border border-border rounded-xl p-3 sm:p-4 mb-4 bg-muted/20">
         <div className="flex gap-3 mb-3">
-          <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJraW5nJTIwZ2FyYWdlJTIwbW9kZXJufGVufDF8fHx8MTc2NzY0NTU0M3ww&ixlib=rb-4.1.0&q=80&w=400"
-              alt={parking.name}
-              className="w-full h-full object-cover"
-            />
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt={parking.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                loading="lazy"
+              />
+            ) : (
+              <MapIcon className="h-6 w-6 sm:h-8 sm:w-8 opacity-20" />
+            )}
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="font-semibold mb-1 truncate">{parking.name}</h4>
-            <p className="text-sm text-muted-foreground truncate">{parking.location}</p>
+          <div className="flex-1 min-w-0 flex flex-col justify-center">
+            <h4 className="font-bold text-sm sm:text-base leading-tight mb-1 truncate">{parking.name}</h4>
+            <p className="text-xs sm:text-sm text-muted-foreground truncate">{parking.address}, {parking.city}</p>
           </div>
         </div>
         <Badge variant="outline" className="bg-secondary/10 text-secondary border-secondary/20">

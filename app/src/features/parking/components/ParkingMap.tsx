@@ -1,56 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import L from 'leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
-
-// Función para obtener el color primario actual
-function getPrimaryColor(): string {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue('--primary')
-    .trim()
-}
-
-// Función para crear el icono con un color específico
-function createParkingPinIcon(color: string) {
-  return L.divIcon({
-    className: '',
-    html: `
-      <svg
-        width="36"
-        height="36"
-        viewBox="0 0 24 24"
-        fill="${color}"
-        xmlns="http://www.w3.org/2000/svg"
-        style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));"
-      >
-        <path d="M12 2C7.58 2 4 5.58 4 10c0 4.5 8 12 8 12s8-7.5 8-12c0-4.42-3.58-8-8-8zm0 12a4 4 0 110-8 4 4 0 010 8z"/>
-      </svg>
-    `,
-    iconSize: [36, 36],
-    iconAnchor: [36, 36],
-  })
-}
-
-// Función para crear el icono con color alternativo para marcadores seleccionados
-function createSelectedParkingPinIcon(color: string) {
-  return L.divIcon({
-    className: '',
-    html: `
-      <svg
-        width="44"
-        height="44"
-        viewBox="0 0 24 24"
-        fill="${color}"
-        xmlns="http://www.w3.org/2000/svg"
-        style="filter: drop-shadow(0 4px 12px rgba(0,0,0,0.35));"
-      >
-        <path d="M12 2C7.58 2 4 5.58 4 10c0 4.5 8 12 8 12s8-7.5 8-12c0-4.42-3.58-8-8-8zm0 12a4 4 0 110-8 4 4 0 010 8z"/>
-      </svg>
-    `,
-    iconSize: [44, 44],
-    iconAnchor: [44, 44],
-  })
-}
+import { getPrimaryColor, getAccentColor, createParkingPinIcon, createSelectedParkingPinIcon } from '../utils/mapUtils'
+import { LocateFixed } from 'lucide-react'
 
 interface ParkingMapProps {
   garages: any[];
@@ -70,6 +22,42 @@ function MapController({ center, zoom }: { center: [number, number]; zoom: numbe
   return null;
 }
 
+// Botón "Mi ubicación" que vive dentro del contexto del mapa
+function LocateButton({ onLocate }: { onLocate: (pos: [number, number]) => void }) {
+  const map = useMap();
+  const [isLocating, setIsLocating] = useState(false);
+
+  const handleLocate = () => {
+    if (!navigator.geolocation) return;
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        map.flyTo(coords, 16, { animate: true, duration: 1.2 });
+        onLocate(coords);
+        setIsLocating(false);
+      },
+      () => setIsLocating(false),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  return (
+    <div className="leaflet-top leaflet-right" style={{ zIndex: 1000, pointerEvents: 'auto' }}>
+      <div className="leaflet-control mt-4 mr-4">
+        <button
+          onClick={handleLocate}
+          disabled={isLocating}
+          title="Mi ubicación"
+          className="flex items-center justify-center w-10 h-10 bg-card border border-border rounded-xl shadow-lg hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-60"
+        >
+          <LocateFixed className={`h-5 w-5 ${isLocating ? 'animate-pulse text-primary' : ''}`} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function ParkingMap({
   garages = [],
   onGarageClick,
@@ -79,22 +67,33 @@ export function ParkingMap({
   zoom = 14
 }: ParkingMapProps) {
   const [primaryColor, setPrimaryColor] = useState<string>(getPrimaryColor())
+  const [accentColor, setAccentColor] = useState<string>(getAccentColor())
   const [parkingPinIcon, setParkingPinIcon] = useState(createParkingPinIcon(primaryColor))
-  const [selectedParkingPinIcon, setSelectedParkingPinIcon] = useState(createSelectedParkingPinIcon(primaryColor))
+  const [selectedParkingPinIcon, setSelectedParkingPinIcon] = useState(createSelectedParkingPinIcon(accentColor))
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     const initialColor = getPrimaryColor()
+    const initialAccent = getAccentColor()
     setPrimaryColor(initialColor)
+    setAccentColor(initialAccent)
     setParkingPinIcon(createParkingPinIcon(initialColor))
-    setSelectedParkingPinIcon(createSelectedParkingPinIcon(initialColor))
+    setSelectedParkingPinIcon(createSelectedParkingPinIcon(initialAccent))
+
     let lastColor = initialColor
+    let lastAccent = initialAccent
+
     const observer = new MutationObserver(() => {
       const newColor = getPrimaryColor()
-      if (newColor !== lastColor) {
+      const newAccent = getAccentColor()
+
+      if (newColor !== lastColor || newAccent !== lastAccent) {
         lastColor = newColor
+        lastAccent = newAccent
         setPrimaryColor(newColor)
+        setAccentColor(newAccent)
         setParkingPinIcon(createParkingPinIcon(newColor))
-        setSelectedParkingPinIcon(createSelectedParkingPinIcon(newColor))
+        setSelectedParkingPinIcon(createSelectedParkingPinIcon(newAccent))
       }
     })
     observer.observe(document.head, { childList: true, subtree: true })
@@ -113,6 +112,16 @@ export function ParkingMap({
       />
 
       <MapController center={center} zoom={zoom} />
+      <LocateButton onLocate={setUserPosition} />
+
+      {/* Punto azul — posición del usuario */}
+      {userPosition && (
+        <CircleMarker
+          center={userPosition}
+          radius={10}
+          pathOptions={{ color: '#2563EB', fillColor: '#3B82F6', fillOpacity: 0.9, weight: 2 }}
+        />
+      )}
 
       {garages.map((garage: any) => {
         const isSelected = garage.id === selectedGarageId || garage.id === hoveredGarageId;
@@ -126,8 +135,6 @@ export function ParkingMap({
               click: () => onGarageClick(garage)
             }}
           >
-            {/* Popup opcional, ya que al hacer click abrimos el modal. 
-               Podemos dejarlo como "tooltip" informativo rápido */}
             <Popup>
               <div className="p-2 min-w-[150px] text-center">
                 <p className="font-bold text-sm">{garage.name}</p>

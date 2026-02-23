@@ -1,5 +1,6 @@
 import { DollarSign, TrendingUp, Calendar, Star, MapPin } from 'lucide-react';
 import { Card } from '../../../../ui';
+import { cn } from '../../../../shared/lib/cn';
 
 interface OwnerStatsRowProps {
   stats: {
@@ -21,16 +22,23 @@ export function OwnerStatsRow({ stats }: OwnerStatsRowProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
       {cards.map((card, i) => {
         const Icon = card.icon;
+        const isLast = i === cards.length - 1;
         return (
-          <Card key={i} className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">{card.label}</span>
-              <Icon className={`h-5 w-5 ${card.color}`} />
+          <Card key={i} className={cn(
+            "p-3 sm:p-6 transition-all hover:shadow-md",
+            isLast && "col-span-2 lg:col-span-1"
+          )}>
+            <div className="flex items-center justify-between mb-1 sm:mb-2">
+              <span className="text-[10px] sm:text-sm text-muted-foreground font-medium uppercase tracking-wider">{card.label}</span>
+              <Icon className={cn("h-4 w-4 sm:h-5 sm:w-5", card.color)} />
             </div>
-            <p className={`text-3xl font-bold ${card.color === 'text-foreground' ? '' : card.color}`}>
+            <p className={cn(
+              "text-lg sm:text-3xl font-bold truncate",
+              card.color === 'text-foreground' ? '' : card.color
+            )}>
               {card.value}
             </p>
           </Card>

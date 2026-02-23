@@ -219,11 +219,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setAuthUser(userRes);
 
-      // 5. Comprobar Session ID Único si estamos autenticados
+      // 5. Gestión Robusta de Session ID Único
       if (userRes) {
-        if (!checkSessionOwnership(userRes.user.current_session_id)) {
-          // console.warn('ID de sesión no coincide al cargar. Expulsando.');
-          logout();
+        const dbSessionId = userRes.user.current_session_id;
+        const localSessionId = localStorage.getItem('parky_session_id');
+
+        if (dbSessionId) {
+          if (!localSessionId) {
+            // Caso 1: Refresco o nueva pestaña en el mismo navegador. Adoptamos el ID de la DB.
+            localStorage.setItem('parky_session_id', dbSessionId);
+          } else if (localSessionId !== dbSessionId) {
+            // Caso 2: Mismatch real. Alguien más tomó el control.
+            logout();
+          }
+        } else if (localSessionId) {
+          // Caso 3: DB no tiene ID pero nosotros sí. Sincronizamos.
+          try {
+            await supabase.from('users').update({ current_session_id: localSessionId }).eq('id', userRes.user.id);
+          } catch (e) {
+            console.warn('Error syncing session to DB:', e);
+          }
         }
       }
     } catch (error) {

@@ -57,6 +57,7 @@
 .dark {
   --background: #111827;
   --foreground: #F9FAFB;
+  --grid-pattern: radial-gradient(circle, #000 1px, transparent 1px);
   --card: #1F2937;
   --card-foreground: #F9FAFB;
   --select-background: #1F2937;

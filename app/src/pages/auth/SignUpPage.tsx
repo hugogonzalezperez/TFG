@@ -143,6 +143,7 @@ export default function SignUpPage() {
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="name"
+                name="name"
                 type="text"
                 placeholder="Juan"
                 value={formData.name}
@@ -160,6 +161,7 @@ export default function SignUpPage() {
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="surname"
+                name="surname"
                 type="text"
                 placeholder="Pérez"
                 value={formData.surname}
@@ -177,6 +179,7 @@ export default function SignUpPage() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="tu@email.com"
                 value={formData.email}
@@ -194,6 +197,7 @@ export default function SignUpPage() {
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="phone"
+                name="phone"
                 type="tel"
                 placeholder="+34 600 000 000"
                 value={formData.phone}
@@ -210,6 +214,7 @@ export default function SignUpPage() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="password"
+                name="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Mínimo 8 caracteres"
                 value={formData.password}
@@ -240,6 +245,7 @@ export default function SignUpPage() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 id="confirmPassword"
+                name="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Repite tu contraseña"
                 value={formData.confirmPassword}

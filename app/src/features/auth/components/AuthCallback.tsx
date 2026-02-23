@@ -17,8 +17,10 @@ export function AuthCallback() {
         if (sessionError) throw sessionError;
 
         if (data.session?.user) {
-          // Esperar un poco para que se cree el perfil
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Importamos el servicio para procesar el callback (incluye gestión de session_id)
+          const { handleOAuthCallback } = await import('../services/auth.service');
+          await handleOAuthCallback();
+
           // Redirigir a home
           navigate('/');
         } else {

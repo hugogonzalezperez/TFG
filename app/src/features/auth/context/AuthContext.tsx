@@ -92,8 +92,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (!authUser?.user.id) return;
 
+    // console.log('Iniciando vigilancia de sesión para:', authUser.user.id);
+
+    // Canal único por usuario para evitar ruido
     const channel = supabase
-      .channel(`realtime:users:session:${authUser.user.id}`)
+      .channel(`session_guard_${authUser.user.id}`)
       .on(
         'postgres_changes',
         {
@@ -103,23 +106,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
           filter: `id=eq.${authUser.user.id}`,
         },
         async (payload: any) => {
+          // console.log('Cambio de sesión detectado en DB:', payload.new.current_session_id);
+
           const newSessionId = payload.new.current_session_id;
           const localSessionId = localStorage.getItem('parky_session_id');
 
-          // Si el ID cambia y tenemos uno local pero son distintos -> Expulsión
+          // Si el ID de la base de datos es distinto al que tenemos guardado localmente...
           if (newSessionId && localSessionId && newSessionId !== localSessionId) {
+            // console.warn('¡Sesión expirada! Mismatch detectado.');
+
+            // Notificamos al usuario antes de expulsar
             const { toast } = await import('sonner');
-            toast.error('Se ha iniciado sesión en otro dispositivo. Cerrando sesión actual por seguridad.', {
-              duration: 5000,
-              position: 'top-center'
+            toast.error('Sesión caducada', {
+              description: 'Se ha iniciado sesión desde otro dispositivo. Serás desconectado por seguridad.',
+              duration: 8000,
             });
-            await logout();
+
+            // Esperar un poco para que lea el mensaje y luego logout
+            setTimeout(async () => {
+              await logout();
+              window.location.href = '/login'; // Forzamos recarga
+            }, 2000);
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        // console.log('Estado de la suscripción de sesión:', status);
+      });
 
     return () => {
+      // console.log('Limpiando vigilancia de sesión');
       supabase.removeChannel(channel);
     };
   }, [authUser?.user.id]);
@@ -147,17 +163,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       // 4. Llamamos al servicio (con el sistema de reintentos por si el Trigger es lento)
-      let user = null;
+      let userRes = null;
       let retries = 0;
-      while (!user && retries < 3) {
-        user = await getCurrentUserWithRoles(idToLoad);
-        if (!user && retries < 2) {
+      while (!userRes && retries < 3) {
+        userRes = await getCurrentUserWithRoles(idToLoad);
+        if (!userRes && retries < 2) {
           await new Promise(res => setTimeout(res, 500)); // Espera 0.5s
         }
         retries++;
       }
 
-      setAuthUser(user);
+      setAuthUser(userRes);
+
+      // 5. Sincronizar Session ID Único si estamos autenticados
+      if (userRes) {
+        let localSessionId = localStorage.getItem('parky_session_id');
+        if (!localSessionId) {
+          // Si no tenemos ID local pero sí sesión (ej. reabrir navegador), generamos uno
+          localSessionId = crypto.randomUUID();
+          localStorage.setItem('parky_session_id', localSessionId);
+        }
+
+        // Actualizamos siempre la DB al cargar para marcar "estoy aquí" 
+        // y echar a posibles sesiones antiguas que no se enteraron
+        try {
+          await supabase
+            .from('users')
+            .update({ current_session_id: localSessionId })
+            .eq('id', userRes.user.id);
+        } catch (e) {
+          console.warn('Error syncing session ID on load:', e);
+        }
+      }
     } catch (error) {
       console.error('Error loading user:', error);
       setAuthUser(null);

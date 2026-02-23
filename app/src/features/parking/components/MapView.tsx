@@ -91,7 +91,7 @@ export function MapView() {
       // En móvil, hacemos scroll al elemento en el carrusel
       const index = filteredGarages.findIndex(g => g.id === garage.id);
       if (index !== -1 && carouselRef.current) {
-        const cardWidth = 292; // 280px w + 12px gap approx
+        const cardWidth = 262; // 250px w + 12px gap
         carouselRef.current.scrollTo({
           left: index * cardWidth,
           behavior: 'smooth'
@@ -107,7 +107,7 @@ export function MapView() {
     if (!carouselRef.current || !isMobile || view !== 'map') return;
 
     const scrollLeft = carouselRef.current.scrollLeft;
-    const cardWidth = 292;
+    const cardWidth = 262;
     const index = Math.round(scrollLeft / cardWidth);
 
     if (filteredGarages[index] && filteredGarages[index].id !== selectedGarage?.id) {
@@ -170,7 +170,7 @@ export function MapView() {
                 <div
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
-                  className="absolute bottom-24 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
+                  className="absolute bottom-12 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
                 >
                   {filteredGarages.map((garage) => (
                     <GarageCard
@@ -247,29 +247,29 @@ export function MapView() {
       </div>
 
       {/* Mobile Navigation - Apple Maps style floating toggle */}
-      <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-0.5 rounded-full shadow-2xl scale-90 sm:scale-100">
+      <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-0.5 rounded-full shadow-2xl scale-[1] sm:scale-100">
         <button
           onClick={() => setView('map')}
           className={cn(
-            "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
+            "flex items-center gap-2 px-6 py-1.5 rounded-full text-sm font-semibold transition-all",
             view === 'map'
               ? "bg-primary text-white shadow-lg"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <MapIcon className="h-3.5 w-3.5" />
+          <MapIcon className="h-4 w-4" />
           Mapa
         </button>
         <button
           onClick={() => setView('list')}
           className={cn(
-            "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
+            "flex items-center gap-2 px-6 py-1.5 rounded-full text-sm font-semibold transition-all",
             view === 'list'
               ? "bg-primary text-white shadow-lg"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <List className="h-3.5 w-3.5" />
+          <List className="h-4 w-4" />
           Lista
         </button>
       </div>

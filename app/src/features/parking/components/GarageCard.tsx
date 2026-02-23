@@ -36,13 +36,13 @@ export function GarageCard({
     return (
       <div
         className={cn(
-          "snap-center w-[280px] sm:w-[320px] shrink-0 p-3 bg-card rounded-2xl border-2 transition-all shadow-xl",
+          "snap-center w-[250px] shrink-0 p-3 bg-card rounded-2xl border-2 transition-all shadow-xl",
           isSelected ? 'border-primary ring-2 ring-primary/20 scale-[1.02]' : 'border-transparent'
         )}
         onClick={() => onSelect(garage)}
       >
         <div className="flex gap-3">
-          <div className="w-20 h-20 bg-muted rounded-xl flex-shrink-0 overflow-hidden relative">
+          <div className="w-14 h-14 bg-muted rounded-lg flex-shrink-0 overflow-hidden relative">
             {garage.image || garage.spots?.[0]?.image ? (
               <img
                 src={garage.image || garage.spots?.[0]?.image}

@@ -85,6 +85,46 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   /**
+   * Vigilancia de Session ID Único (Realtime)
+   * Si cambia el session_id en la base de datos y no coincide con el nuestro,
+   * significa que se ha iniciado sesión en otro sitio.
+   */
+  useEffect(() => {
+    if (!authUser?.user.id) return;
+
+    const channel = supabase
+      .channel(`realtime:users:session:${authUser.user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'users',
+          filter: `id=eq.${authUser.user.id}`,
+        },
+        async (payload: any) => {
+          const newSessionId = payload.new.current_session_id;
+          const localSessionId = localStorage.getItem('parky_session_id');
+
+          // Si el ID cambia y tenemos uno local pero son distintos -> Expulsión
+          if (newSessionId && localSessionId && newSessionId !== localSessionId) {
+            const { toast } = await import('sonner');
+            toast.error('Se ha iniciado sesión en otro dispositivo. Cerrando sesión actual por seguridad.', {
+              duration: 5000,
+              position: 'top-center'
+            });
+            await logout();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [authUser?.user.id]);
+
+  /**
    * Cargar usuario actual con roles
    */
   const loadUser = async (userId?: string) => {

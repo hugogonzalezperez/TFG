@@ -48,9 +48,31 @@ export const registerWithEmail = async ({
 
   if (!authData.user) throw new Error('No se pudo crear el usuario');
 
+  // Generar session_id para el autologin tras registro
+  const sessionId = crypto.randomUUID();
+  localStorage.setItem('parky_session_id', sessionId);
+
+  // Intentar actualizar el session_id en nuestra tabla (el Trigger ya la habrá creado)
+  if (authData.user.id) {
+    try {
+      await supabase
+        .from('users')
+        .update({ current_session_id: sessionId })
+        .eq('id', authData.user.id);
+    } catch (e) {
+      console.warn('Could not update session_id during registration, might be too fast for trigger:', e);
+    }
+  }
+
   return {
     user: authData.user as any,
-    session: authData.session,
+    session: authData.session
+      ? {
+        access_token: authData.session.access_token,
+        refresh_token: authData.session.refresh_token,
+        expires_at: authData.session.expires_at || 0,
+      }
+      : undefined,
   };
 };
 
@@ -78,11 +100,16 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
       throw new Error('Error al iniciar sesión');
     }
 
-    // 2. Obtener datos del usuario de nuestra tabla
+    // 1.5 Generar identificador de sesión único
+    const sessionId = crypto.randomUUID();
+    localStorage.setItem('parky_session_id', sessionId);
+
+    // 2. Actualizar nuestra tabla con el nuevo session_id
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('*')
+      .update({ current_session_id: sessionId })
       .eq('id', authData.user.id)
+      .select()
       .single();
 
     if (userError || !user) {
@@ -213,7 +240,17 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
       .eq('id', authUser.id)
       .single();
 
+    // Generar identificador de sesión único para OAuth
+    const sessionId = crypto.randomUUID();
+    localStorage.setItem('parky_session_id', sessionId);
+
     if (existingUser) {
+      // Actualizar session_id para usuario existente
+      await supabase
+        .from('users')
+        .update({ current_session_id: sessionId })
+        .eq('id', existingUser.id);
+
       // Usuario existe, verificar si tiene este proveedor
       const { data: existingProvider } = await supabase
         .from('auth_providers')
@@ -243,6 +280,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
         name: authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario',
         avatar_url: authUser.user_metadata.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario'}`,
         is_active: true,
+        current_session_id: sessionId
       })
       .select()
       .single();
@@ -289,6 +327,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 export const logout = async (): Promise<void> => {
   try {
     const { error } = await supabase.auth.signOut();
+    localStorage.removeItem('parky_session_id');
     if (error) {
       throw error;
     }

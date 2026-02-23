@@ -118,6 +118,10 @@ export function GarageCard({
             </div>
             <div className="flex items-center justify-between">
               <span className="font-bold text-primary text-sm">{getPriceRange(filteredSpots)}/h</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[13px] font-bold">{garage.rating || 'N/A'}</span>
+                <Star className="h-4 w-4 fill-accent text-accent" />
+              </div>
             </div>
           </div>
         </div>

@@ -219,7 +219,7 @@ export function MapView() {
 
         {/* Desktop Sidebar (Map View) */}
         {view === 'map' && (
-          <div className="hidden lg:block w-96 border-l border-border bg-card overflow-y-auto shadow-xl z-10">
+          <div className="hidden lg:block w-120 border-l border-border bg-card overflow-y-auto shadow-xl z-10">
             <div className="p-4 border-b border-border sticky top-0 bg-card z-20 backdrop-blur-sm bg-card/90">
               <h2 className="font-bold text-lg">{filteredGarages.length} resultados</h2>
               <p className="text-sm text-muted-foreground">en esta zona</p>

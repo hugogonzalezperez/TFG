@@ -16,7 +16,6 @@ export interface User {
   phone?: string;
   avatar_url?: string;
   is_active: boolean;
-  current_session_id?: string;
   created_at: string;
   updated_at: string;
 }

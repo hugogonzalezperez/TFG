@@ -14,7 +14,6 @@ import {
   updateUserProfile,
   changePassword,
 } from '../services/auth.service';
-import { generateSessionId } from '../utils/session';
 import type { AuthUser, RegisterRequest, LoginRequest, User } from '../types/auth.types';
 
 // =====================================================
@@ -85,105 +84,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // =====================================================
-  // ACCIONES DE SESIÓN
-  // =====================================================
-
-  /**
-   * Cerrar sesión (Reforzado para Móvil/Privado)
-   */
-  const logout = async () => {
-    try {
-      setLoading(true);
-      localStorage.removeItem('parky_session_id');
-      try {
-        await authLogout();
-      } catch (err) {
-        console.warn('SignOut API falló o tardó demasiado, continuando con limpieza local:', err);
-      }
-      setAuthUser(null);
-      window.location.href = '/login';
-    } catch (error: any) {
-      console.error('Error crítico en logout:', error);
-      setAuthUser(null);
-      window.location.href = '/login';
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Refrescar datos del usuario actual e iniciar comprobación de sesión
-   */
-  const refreshUser = async () => {
-    if (authUser?.user.id) {
-      await loadUser(authUser.user.id);
-    } else {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        await loadUser(session.user.id);
-      }
-    }
-  };
-
-  /**
-   * Comprobar si somos los dueños de la sesión actual en DB
-   */
-  const checkSessionOwnership = (dbSessionId: string | null | undefined) => {
-    const localSessionId = localStorage.getItem('parky_session_id');
-    if (dbSessionId && localSessionId && dbSessionId !== localSessionId) {
-      // console.warn('¡Mismatch detectado en comprobación activa!');
-      return false;
-    }
-    return true;
-  };
-
-  // =====================================================
-  // VIGILANCIA DE SESIÓN
-  // =====================================================
-
-  useEffect(() => {
-    if (!authUser?.user.id) return;
-
-    const channel = supabase
-      .channel(`session_guard_${authUser.user.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'users',
-          filter: `id=eq.${authUser.user.id}`,
-        },
-        async (payload: any) => {
-          if (!checkSessionOwnership(payload.new.current_session_id)) {
-            const { toast } = await import('sonner');
-            toast.error('Sesión caducada', {
-              description: 'Se ha iniciado sesión desde otro dispositivo.',
-              duration: 8000,
-            });
-            setTimeout(logout, 1500);
-          }
-        }
-      )
-      .subscribe();
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        refreshUser();
-      }
-    };
-    window.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
-
-    return () => {
-      supabase.removeChannel(channel);
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleVisibilityChange);
-    };
-  }, [authUser?.user.id, logout]);
-  // Añadido logout a deps para seguridad
-
   /**
    * Cargar usuario actual con roles
    */
@@ -218,29 +118,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       setAuthUser(userRes);
-
-      // 5. Gestión Robusta de Session ID Único
-      if (userRes) {
-        const dbSessionId = userRes.user.current_session_id;
-        const localSessionId = localStorage.getItem('parky_session_id');
-
-        if (dbSessionId) {
-          if (!localSessionId) {
-            // Caso 1: Refresco o nueva pestaña en el mismo navegador. Adoptamos el ID de la DB.
-            localStorage.setItem('parky_session_id', dbSessionId);
-          } else if (localSessionId !== dbSessionId) {
-            // Caso 2: Mismatch real. Alguien más tomó el control.
-            logout();
-          }
-        } else if (localSessionId) {
-          // Caso 3: DB no tiene ID pero nosotros sí. Sincronizamos.
-          try {
-            await supabase.from('users').update({ current_session_id: localSessionId }).eq('id', userRes.user.id);
-          } catch (e) {
-            console.warn('Error syncing session to DB:', e);
-          }
-        }
-      }
     } catch (error) {
       console.error('Error loading user:', error);
       setAuthUser(null);
@@ -250,33 +127,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // =====================================================
   /**
-   * Refrescar datos del usuario actual (Obsoleto, usar la de arriba)
+   * Refrescar datos del usuario actual
    */
+  const refreshUser = async () => {
+    if (authUser?.user.id) {
+      await loadUser(authUser.user.id);
+    }
+  };
 
+  // =====================================================
   // MÉTODOS DE AUTENTICACIÓN
   // =====================================================
 
   /**
    * Registrar nuevo usuario
    */
-  // En AuthContext.tsx
   const register = async (data: RegisterRequest) => {
     try {
       setLoading(true);
-      const response = await registerWithEmail(data);
-
-      // IMPORTANTE: Asegurarnos de que tenemos el ID antes de cargar el usuario
-      if (response.user && response.user.id) {
-        await loadUser(response.user.id);
-      } else {
-        console.error("No se recibió el ID del usuario tras el registro");
-        setLoading(false);
-      }
-    } catch (error) {
+      await registerWithEmail(data);
+      await loadUser();
+    } catch (error: any) {
+      console.error('Error in register:', error);
+      throw new Error(error.message || 'Error al completar el registro');
+    } finally {
       setLoading(false);
-      throw error;
     }
   };
 
@@ -326,6 +202,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  /**
+   * Cerrar sesión
+   */
+  const logout = async () => {
+    try {
+      setLoading(true);
+      await authLogout();
+      setAuthUser(null);
+    } catch (error: any) {
+      console.error('Error in logout:', error);
+      throw new Error(error.message || 'Error al cerrar sesión');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // =====================================================
   // MÉTODOS DE PERFIL

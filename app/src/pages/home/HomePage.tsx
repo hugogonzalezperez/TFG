@@ -104,7 +104,7 @@ export default function Home() {
           <div className="absolute top-[20%] right-[10%] w-[40%] md:w-[25%] h-[30%] md:h-[35%] bg-accent/5 rounded-full blur-[60px] md:blur-[80px] animate-blob animation-delay-4000"></div>
 
           {/* Grid pattern overlay */}
-          <div className="absolute inset-0 bg-grid-pattern [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
+          <div className="absolute inset-0 bg-[url('https://parallel.report/assets/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 lg:py-24">

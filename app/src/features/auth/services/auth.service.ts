@@ -12,22 +12,6 @@ import {
   UserRoleType,
   AuthResponse,
 } from '../types/auth.types';
-import { generateSessionId } from '../utils/session';
-
-/**
- * Helper para actualizar el session_id en la base de datos
- */
-const updateDBSessionId = async (userId: string, sessionId: string) => {
-  try {
-    await supabase
-      .from('users')
-      .update({ current_session_id: sessionId })
-      .eq('id', userId);
-  } catch (e) {
-    console.warn('Error syncing session ID with DB:', e);
-  }
-};
-
 
 // =====================================================
 // REGISTRO DE USUARIO
@@ -63,15 +47,6 @@ export const registerWithEmail = async ({
   }
 
   if (!authData.user) throw new Error('No se pudo crear el usuario');
-
-  // Generar session_id para el autologin tras registro
-  const sessionId = generateSessionId();
-  localStorage.setItem('parky_session_id', sessionId);
-
-  // Intentar actualizar el session_id en nuestra tabla (el Trigger ya la habrá creado)
-  if (authData.user.id) {
-    await updateDBSessionId(authData.user.id, sessionId);
-  }
 
   return {
     user: authData.user as any,
@@ -109,20 +84,15 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
       throw new Error('Error al iniciar sesión');
     }
 
-    // 1.5 Generar identificador de sesión único
-    const sessionId = generateSessionId();
-    localStorage.setItem('parky_session_id', sessionId);
-
-    // 2. Actualizar nuestra tabla con el nuevo session_id
+    // 2. Actualizar nuestra tabla
     const { data: user, error: userError } = await supabase
       .from('users')
-      .update({ current_session_id: sessionId })
-      .eq('id', authData.user.id)
       .select()
+      .eq('id', authData.user.id)
       .single();
 
     if (userError || !user) {
-      // Si no existe en nuestra tabla, crearlo
+      // Si no existe en nuestra tabla, crearlo (normalmente lo hace el trigger, pero por seguridad)
       const { data: newUser, error: createError } = await supabase
         .from('users')
         .insert({
@@ -249,14 +219,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
       .eq('id', authUser.id)
       .single();
 
-    // Generar identificador de sesión único para OAuth
-    const sessionId = generateSessionId();
-    localStorage.setItem('parky_session_id', sessionId);
-
     if (existingUser) {
-      // Actualizar session_id para usuario existente
-      await updateDBSessionId(existingUser.id, sessionId);
-
       // Usuario existe, verificar si tiene este proveedor
       const { data: existingProvider } = await supabase
         .from('auth_providers')
@@ -286,7 +249,6 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
         name: authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario',
         avatar_url: authUser.user_metadata.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario'}`,
         is_active: true,
-        current_session_id: sessionId
       })
       .select()
       .single();
@@ -333,7 +295,6 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 export const logout = async (): Promise<void> => {
   try {
     const { error } = await supabase.auth.signOut();
-    localStorage.removeItem('parky_session_id');
     if (error) {
       throw error;
     }
@@ -361,7 +322,7 @@ export const getCurrentUserWithRoles = async (userId: string): Promise<AuthUser 
     // Especificamos los campos exactos en lugar de '*' para evitar el 406
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, name, phone, avatar_url, is_active, created_at, current_session_id')
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .eq('id', userId)
       .maybeSingle(); // Usamos maybeSingle en lugar de single para evitar errores si no existe
 

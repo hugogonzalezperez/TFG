@@ -17,7 +17,7 @@ export function AuthCallback() {
         if (sessionError) throw sessionError;
 
         if (data.session?.user) {
-          // Importamos el servicio para procesar el callback (incluye gestión de session_id)
+          // Importamos el servicio para procesar el callback de OAuth
           const { handleOAuthCallback } = await import('../services/auth.service');
           await handleOAuthCallback();
 

@@ -124,7 +124,14 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
 
       setBookingComplete(true);
     } catch (err: any) {
-      setError(err.message || 'Error al procesar la reserva');
+      console.error('Booking confirmation error:', err);
+
+      // Handle the custom database trigger error message
+      if (err.message?.includes('solapamiento') || err.message?.includes('ya ha sido reservada')) {
+        setError('¡Vaya! Alguien se te ha adelantado. Esta plaza ya no está disponible para el horario seleccionado.');
+      } else {
+        setError(err.message || 'Error al procesar la reserva. Por favor, inténtalo de nuevo.');
+      }
     } finally {
       setLoading(false);
     }

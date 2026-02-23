@@ -48,15 +48,18 @@ export function MapView() {
 
   useEffect(() => {
     if (!initialDataLoaded) {
-      if (searchData?.date) {
+      if (searchData?.startDate) {
         setDateTimeFilters({
-          startDate: searchData.date,
+          startDate: searchData.startDate,
           startTime: searchData.startTime || '',
-          endDate: searchData.date,
+          endDate: searchData.endDate || searchData.startDate,
           endTime: searchData.endTime || '',
         });
       }
-      if (searchData?.location) handleGeocode(searchData.location);
+      if (searchData?.location) {
+        handleGeocode(searchData.location);
+        setSearchQuery(searchData.location);
+      }
       setInitialDataLoaded(true);
     }
   }, [searchData, initialDataLoaded, setDateTimeFilters]);

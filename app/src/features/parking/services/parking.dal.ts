@@ -12,6 +12,12 @@ export interface GarageResponse extends GarageRow {
   parking_spots: (ParkingSpotRow & {
     owner: Pick<UserRow, 'id' | 'name' | 'avatar_url'> | null;
     parking_spot_images?: Database['public']['Tables']['parking_spot_images']['Row'][];
+    bookings?: {
+      id: string;
+      start_time: string;
+      end_time: string;
+      status: string;
+    }[];
   })[];
   garage_images: Database['public']['Tables']['garage_images']['Row'][];
   reviews: { rating: number }[];
@@ -29,13 +35,24 @@ export const parkingDal = {
         parking_spots (
           *,
           owner:users (id, name, avatar_url),
-          parking_spot_images (*)
+          parking_spot_images (*),
+          bookings (id, start_time, end_time, status)
         ),
         garage_images (*),
         reviews (rating)
       `)
       .eq('is_active', true)
       .returns<GarageResponse[]>();
+
+    if (data) {
+      data.forEach(garage => {
+        garage.parking_spots.forEach(spot => {
+          if (spot.bookings) {
+            spot.bookings = spot.bookings.filter(b => ['confirmed', 'active'].includes(b.status));
+          }
+        });
+      });
+    }
 
     if (error) throw error;
     return data || [];
@@ -98,7 +115,8 @@ export const parkingDal = {
           reviews (rating)
         ),
         owner:users (id, name, avatar_url),
-        parking_spot_images (*)
+        parking_spot_images (*),
+        bookings (id, start_time, end_time, status)
       `)
       .eq('id', id)
       .single();

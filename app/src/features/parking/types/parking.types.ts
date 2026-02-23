@@ -53,6 +53,12 @@ export interface Parking {
   };
   amenities?: string[];
   rules?: string[];
+  bookings?: {
+    id: string;
+    start_time: string;
+    end_time: string;
+    status: string;
+  }[];
 }
 
 export interface ParkingFilter {

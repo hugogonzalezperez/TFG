@@ -19,8 +19,8 @@ export default function Home() {
 
   const [searchData, setSearchData] = useState({
     location: 'Santa Cruz de Tenerife',
-    startTime: '09:00',
-    endTime: '13:00',
+    startTime: '',
+    endTime: '',
   });
   const [entryDate, setEntryDate] = useState<Date | undefined>(undefined);
   const [exitDate, setExitDate] = useState<Date | undefined>(undefined);
@@ -57,7 +57,13 @@ export default function Home() {
     } else {
       setDateTimeFilters({ startDate: '', startTime: '', endDate: '', endTime: '' });
     }
-    navigate('/map', { state: searchData });
+    navigate('/map', {
+      state: {
+        ...searchData,
+        startDate: datePart,
+        endDate: exitDatePart
+      }
+    });
   };
 
   const popularLocations = [

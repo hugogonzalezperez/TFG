@@ -361,7 +361,7 @@ export const getCurrentUserWithRoles = async (userId: string): Promise<AuthUser 
     // Especificamos los campos exactos en lugar de '*' para evitar el 406
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, name, phone, avatar_url, is_active, created_at')
+      .select('id, email, name, phone, avatar_url, is_active, created_at, current_session_id')
       .eq('id', userId)
       .maybeSingle(); // Usamos maybeSingle en lugar de single para evitar errores si no existe
 

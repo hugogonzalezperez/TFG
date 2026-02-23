@@ -85,17 +85,66 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
 
+  // =====================================================
+  // ACCIONES DE SESIÓN
+  // =====================================================
+
   /**
-   * Vigilancia de Session ID Único (Realtime)
-   * Si cambia el session_id en la base de datos y no coincide con el nuestro,
-   * significa que se ha iniciado sesión en otro sitio.
+   * Cerrar sesión (Reforzado para Móvil/Privado)
    */
+  const logout = async () => {
+    try {
+      setLoading(true);
+      localStorage.removeItem('parky_session_id');
+      try {
+        await authLogout();
+      } catch (err) {
+        console.warn('SignOut API falló o tardó demasiado, continuando con limpieza local:', err);
+      }
+      setAuthUser(null);
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error('Error crítico en logout:', error);
+      setAuthUser(null);
+      window.location.href = '/login';
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Refrescar datos del usuario actual e iniciar comprobación de sesión
+   */
+  const refreshUser = async () => {
+    if (authUser?.user.id) {
+      await loadUser(authUser.user.id);
+    } else {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await loadUser(session.user.id);
+      }
+    }
+  };
+
+  /**
+   * Comprobar si somos los dueños de la sesión actual en DB
+   */
+  const checkSessionOwnership = (dbSessionId: string | null | undefined) => {
+    const localSessionId = localStorage.getItem('parky_session_id');
+    if (dbSessionId && localSessionId && dbSessionId !== localSessionId) {
+      // console.warn('¡Mismatch detectado en comprobación activa!');
+      return false;
+    }
+    return true;
+  };
+
+  // =====================================================
+  // VIGILANCIA DE SESIÓN
+  // =====================================================
+
   useEffect(() => {
     if (!authUser?.user.id) return;
 
-    // console.log('Iniciando vigilancia de sesión para:', authUser.user.id);
-
-    // Canal único por usuario para evitar ruido
     const channel = supabase
       .channel(`session_guard_${authUser.user.id}`)
       .on(
@@ -107,39 +156,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
           filter: `id=eq.${authUser.user.id}`,
         },
         async (payload: any) => {
-          // console.log('Cambio de sesión detectado en DB:', payload.new.current_session_id);
-
-          const newSessionId = payload.new.current_session_id;
-          const localSessionId = localStorage.getItem('parky_session_id');
-
-          // Si el ID de la base de datos es distinto al que tenemos guardado localmente...
-          if (newSessionId && localSessionId && newSessionId !== localSessionId) {
-            // console.warn('¡Sesión expirada! Mismatch detectado.');
-
-            // Notificamos al usuario antes de expulsar
+          if (!checkSessionOwnership(payload.new.current_session_id)) {
             const { toast } = await import('sonner');
             toast.error('Sesión caducada', {
-              description: 'Se ha iniciado sesión desde otro dispositivo. Serás desconectado por seguridad.',
+              description: 'Se ha iniciado sesión desde otro dispositivo.',
               duration: 8000,
             });
-
-            // Esperar un poco para que lea el mensaje y luego logout
-            setTimeout(async () => {
-              await logout();
-              window.location.href = '/login'; // Forzamos recarga
-            }, 2000);
+            setTimeout(logout, 1500);
           }
         }
       )
-      .subscribe((status) => {
-        // console.log('Estado de la suscripción de sesión:', status);
-      });
+      .subscribe();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshUser();
+      }
+    };
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
 
     return () => {
-      // console.log('Limpiando vigilancia de sesión');
       supabase.removeChannel(channel);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
     };
-  }, [authUser?.user.id]);
+  }, [authUser?.user.id, logout]);
+  // Añadido logout a deps para seguridad
 
   /**
    * Cargar usuario actual con roles
@@ -176,24 +219,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setAuthUser(userRes);
 
-      // 5. Sincronizar Session ID Único si estamos autenticados
+      // 5. Comprobar Session ID Único si estamos autenticados
       if (userRes) {
-        let localSessionId = localStorage.getItem('parky_session_id');
-        if (!localSessionId) {
-          // Si no tenemos ID local pero sí sesión (ej. reabrir navegador), generamos uno
-          localSessionId = generateSessionId();
-          localStorage.setItem('parky_session_id', localSessionId);
-        }
-
-        // Actualizamos siempre la DB al cargar para marcar "estoy aquí" 
-        // y echar a posibles sesiones antiguas que no se enteraron
-        try {
-          await supabase
-            .from('users')
-            .update({ current_session_id: localSessionId })
-            .eq('id', userRes.user.id);
-        } catch (e) {
-          console.warn('Error syncing session ID on load:', e);
+        if (!checkSessionOwnership(userRes.user.current_session_id)) {
+          // console.warn('ID de sesión no coincide al cargar. Expulsando.');
+          logout();
         }
       }
     } catch (error) {
@@ -207,13 +237,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // =====================================================
   /**
-   * Refrescar datos del usuario actual
+   * Refrescar datos del usuario actual (Obsoleto, usar la de arriba)
    */
-  const refreshUser = async () => {
-    if (authUser?.user.id) {
-      await loadUser(authUser.user.id);
-    }
-  };
 
   // MÉTODOS DE AUTENTICACIÓN
   // =====================================================
@@ -286,21 +311,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  /**
-   * Cerrar sesión
-   */
-  const logout = async () => {
-    try {
-      setLoading(true);
-      await authLogout();
-      setAuthUser(null);
-    } catch (error: any) {
-      console.error('Error in logout:', error);
-      throw new Error(error.message || 'Error al cerrar sesión');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // =====================================================
   // MÉTODOS DE PERFIL

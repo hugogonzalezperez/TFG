@@ -28,9 +28,9 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
   ];
 
   return (
-    <Card className="p-4 lg:p-6 mb-6 lg:mb-0">
+    <Card className="p-4 lg:p-6 mb-6 lg:mb-0 gap-0">
       {/* Avatar and basic info */}
-      <div className="flex flex-col lg:text-center items-center lg:mb-6 mb-4">
+      <div className="flex flex-col lg:text-center items-center lg:mb-6 mb-2">
         <div className="flex items-center gap-4 lg:flex-col lg:gap-0">
           <div className="relative inline-block lg:mb-4">
             <Avatar className="h-16 w-16 lg:h-24 lg:w-24 border-2 border-background shadow-sm">
@@ -89,13 +89,13 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
         })}
       </nav>
 
-      <div className="hidden lg:block mt-6 pt-6 border-t border-border">
+      <div className="lg:mt-6 lg:pt-6 mt-3 pt-3 border-t border-border flex justify-center">
         <Button
-          variant="outline"
-          className="w-full gap-2 text-destructive hover:bg-destructive/10"
+          variant="exit"
+          className="w-full sm:20 px-8 lg:px-8 lg:h-10 lg:text-base gap-2 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white border-destructive/20 transition-all font-bold"
           onClick={logout}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-6 w-6" />
           Cerrar sesión
         </Button>
       </div>

@@ -87,8 +87,8 @@ export function UserProfile() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
             < ProfileSidebar
@@ -101,7 +101,7 @@ export function UserProfile() {
           </div>
 
           {/* Content Area */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {activeTab === 'bookings' && (
               <BookingHistory
                 bookings={bookings}

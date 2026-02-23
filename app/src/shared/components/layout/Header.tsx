@@ -79,7 +79,7 @@ export function Header() {
             <Button
               variant="exit"
               onClick={logout}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 h-10 px-6 text-base font-bold"
             >
               <LogOut className="h-5 w-5" />
               <span>Salir</span>
@@ -94,45 +94,47 @@ export function Header() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-xs h-full flex flex-col p-6 right-0 left-auto translate-x-0 data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right">
-                <DialogHeader className="flex flex-row items-center justify-between">
-                  <DialogTitle className="text-left">Menú</DialogTitle>
+              <DialogContent className="w-full max-w-none h-auto flex flex-col p-6 top-0 left-0 translate-x-0 translate-y-0 border-t-0 rounded-b-[2.5rem] shadow-2xl data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top duration-300">
+                <DialogHeader className="flex flex-row items-center justify-between mb-2">
+                  <DialogTitle className="text-left">Menú Principal</DialogTitle>
                 </DialogHeader>
 
-                <div className="flex-1 flex flex-col py-6 space-y-4">
+                <div className="flex flex-col py-2 space-y-2">
                   {/* User info in mobile */}
-                  <div className="flex items-center gap-3 px-2 py-3 bg-muted/50 rounded-xl mb-4">
-                    <UserAvatar size="h-12 w-12" />
-                    <div>
-                      <p className="font-semibold">{authUser?.user?.name || 'Usuario'}</p>
-                      <p className="text-xs text-muted-foreground truncate max-w-[180px]">{authUser?.user?.email}</p>
+                  <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-2xl mb-2">
+                    <UserAvatar size="h-10 w-10" />
+                    <div className="min-w-0">
+                      <p className="font-bold text-sm leading-tight">{authUser?.user?.name || 'Usuario'}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">{authUser?.user?.email}</p>
                     </div>
                   </div>
 
-                  {navigation.map((item) => (
+                  <div className="grid grid-cols-1 gap-1">
+                    {navigation.map((item) => (
+                      <button
+                        key={item.name}
+                        onClick={() => handleNavigate(item.href)}
+                        className="flex items-center w-full px-4 py-2.5 text-base font-semibold hover:bg-muted rounded-xl transition-colors"
+                      >
+                        {item.name}
+                      </button>
+                    ))}
                     <button
-                      key={item.name}
-                      onClick={() => handleNavigate(item.href)}
-                      className="flex items-center w-full px-4 py-3 text-lg font-medium hover:bg-muted rounded-xl transition-colors"
+                      onClick={() => handleNavigate('/profile')}
+                      className="flex items-center w-full px-4 py-2.5 text-base font-semibold hover:bg-muted rounded-xl transition-colors"
                     >
-                      {item.name}
+                      Mi Perfil
                     </button>
-                  ))}
-                  <button
-                    onClick={() => handleNavigate('/profile')}
-                    className="flex items-center w-full px-4 py-3 text-lg font-medium hover:bg-muted rounded-xl transition-colors"
-                  >
-                    Mi Perfil
-                  </button>
+                  </div>
                 </div>
 
-                <div className="pt-6 border-t border-border">
+                <div className="mt-4 pt-4 border-t border-border">
                   <Button
                     variant="exit"
                     onClick={logout}
-                    className="w-full h-12 text-lg justify-start"
+                    className="w-full h-11 text-base justify-center text-destructive bg-destructive/5 hover:bg-destructive hover:text-white rounded-xl transition-all font-bold"
                   >
-                    <LogOut className="h-5 w-5 mr-3" />
+                    <LogOut className="h-5 w-5" />
                     Cerrar sesión
                   </Button>
                 </div>

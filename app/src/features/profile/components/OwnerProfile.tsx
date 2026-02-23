@@ -106,15 +106,27 @@ export function OwnerProfile() {
             </div>
           </div>
 
-          {activeTab === 'garages' && (
+          <div className="flex items-center gap-2">
+            {activeTab === 'garages' && (
+              <Button
+                onClick={() => setShowAddSpot(true)}
+                className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-md h-9 md:h-10 px-3 md:px-5 shrink-0 rounded-full md:rounded-xl"
+              >
+                <Plus className="h-4 w-4 md:h-5 md:w-5" />
+                <span className="hidden md:inline text-xs md:text-sm font-bold uppercase tracking-tight">Registrar Garaje</span>
+              </Button>
+            )}
+
             <Button
-              onClick={() => setShowAddSpot(true)}
-              className="gap-2 bg-accent hover:bg-accent/90 text-white shadow-md h-9 md:h-10 px-3 md:px-5 shrink-0 rounded-full md:rounded-xl"
+              variant="exit"
+              onClick={logout}
+              className="h-9 w-9 md:h-10 md:w-auto md:px-4 gap-2 text-destructive bg-destructive/5 hover:bg-destructive hover:text-white border-destructive/10 rounded-full md:rounded-xl"
+              title="Cerrar sesión"
             >
-              <Plus className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="text-xs md:text-sm font-bold uppercase tracking-tight">Registrar Garaje</span>
+              <LogOut className="h-4 w-4" />
+              <span className="hidden md:inline font-bold">Cerrar sesión</span>
             </Button>
-          )}
+          </div>
         </div>
       </div>
 

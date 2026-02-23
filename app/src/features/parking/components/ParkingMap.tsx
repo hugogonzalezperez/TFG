@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
 import { getPrimaryColor, getAccentColor, createParkingPinIcon, createSelectedParkingPinIcon } from '../utils/mapUtils'
 import { LocateFixed } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface ParkingMapProps {
   garages: any[];
@@ -30,15 +31,36 @@ function LocateButton({ onLocate }: { onLocate: (pos: [number, number]) => void 
   const handleLocate = () => {
     if (!navigator.geolocation) return;
     setIsLocating(true);
+    const toastId = toast.loading('Buscando tu ubicación...');
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-        map.flyTo(coords, 16, { animate: true, duration: 1.2 });
+        map.flyTo(coords, 16, { animate: true, duration: 1.5 });
         onLocate(coords);
         setIsLocating(false);
+        toast.dismiss(toastId);
+        toast.success('Ubicación encontrada');
       },
-      () => setIsLocating(false),
-      { enableHighAccuracy: true, timeout: 8000 }
+      (error) => {
+        setIsLocating(false);
+        toast.dismiss(toastId);
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            toast.error('Permiso de ubicación denegado. Por favor, actívalo en tu navegador.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            toast.error('Información de ubicación no disponible. Asegúrate de tener el GPS activo.');
+            break;
+          case error.TIMEOUT:
+            toast.error('Tiempo de espera agotado al buscar tu ubicación. Reinténtalo.');
+            break;
+          default:
+            toast.error('No se pudo obtener tu ubicación.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   };
 

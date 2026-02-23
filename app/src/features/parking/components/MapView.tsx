@@ -170,7 +170,7 @@ export function MapView() {
                 <div
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
-                  className="absolute bottom-16 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
+                  className="absolute bottom-20 left-0 right-0 z-20 flex gap-3 px-6 overflow-x-auto snap-x scroll-smooth no-scrollbar pb-4"
                 >
                   {filteredGarages.map((garage) => (
                     <GarageCard

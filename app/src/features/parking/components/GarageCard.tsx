@@ -37,7 +37,7 @@ export function GarageCard({
       <div
         className={cn(
           "snap-center w-[250px] shrink-0 p-3 bg-card rounded-2xl border-2 transition-all shadow-xl",
-          isSelected ? 'border-primary ring-2 ring-primary/20 scale-[1.02]' : 'border-transparent'
+          isSelected ? 'border-accent ring-2 ring-primary/20 scale-[1.02]' : 'border-transparent'
         )}
         onClick={() => onSelect(garage)}
       >

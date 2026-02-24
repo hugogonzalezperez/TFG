@@ -86,21 +86,27 @@ export function MapView() {
   }, [allGarages, filteredSpots]);
 
   const handleGarageClick = (garage: Garage) => {
+    const isAlreadySelected = selectedGarage?.id === garage.id;
+
     setSelectedGarage(garage);
     setMapCenter([garage.lat, garage.lng]);
     setMapZoom(16);
 
-    if (isMobile && view === 'map') {
-      // En móvil, hacemos scroll al elemento en el carrusel
-      const index = filteredGarages.findIndex(g => g.id === garage.id);
-      if (index !== -1 && carouselRef.current) {
-        const cardWidth = 262; // 250px w + 12px gap
-        carouselRef.current.scrollTo({
-          left: index * cardWidth,
-          behavior: 'smooth'
-        });
+    if (isMobile) {
+      if (view === 'list' || isAlreadySelected) {
+        setIsGarageModalOpen(true);
+      } else {
+        // En móvil, hacemos scroll al elemento en el carrusel
+        const index = filteredGarages.findIndex(g => g.id === garage.id);
+        if (index !== -1 && carouselRef.current) {
+          const cardWidth = 262; // 250px w + 12px gap
+          carouselRef.current.scrollTo({
+            left: index * cardWidth,
+            behavior: 'smooth'
+          });
+        }
       }
-    } else if (!isMobile) {
+    } else {
       setIsGarageModalOpen(true);
     }
   };

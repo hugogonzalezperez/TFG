@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Toaster } from 'sonner';
 import { useEffect, Suspense } from 'react';
 import { FilterProvider } from './features/parking';
@@ -42,6 +43,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" richColors closeButton />
+      <SpeedInsights />
       <AuthProvider>
         <FilterProvider>
           <AppContent />

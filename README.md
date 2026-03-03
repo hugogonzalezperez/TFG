@@ -1,373 +1,132 @@
-# 🅿️ Parky - Marketplace de Aparcamiento
+# 🅿️ Parky - Marketplace de Gestión de Aparcamientos (TFG)
 
-Aplicación web moderna para buscar, reservar y gestionar plazas de aparcamiento en Tenerife.
+## 1. Introducción y Objetivo del Proyecto
+Este proyecto representa el Trabajo de Fin de Grado (TFG) de **Parky**, una solución integral para la gestión y reserva de plazas de aparcamiento en entornos urbanos (enfocado inicialmente en Tenerife).
 
-## 🚀 Inicio Rápido
+El objetivo principal es democratizar el acceso a plazas de parking privadas, permitiendo que propietarios de garajes puedan rentabilizar sus espacios infrautilizados mientras que los conductores encuentran opciones de aparcamiento seguras, económicas y reservables en tiempo real.
 
-### Requisitos Previos
-- Node.js 18+ (npm incluido)
+## 2. Alcance del Sistema y Problemática
+### Problemática
+- **Escasez de aparcamiento:** Dificultad extrema para encontrar plazas en cascos históricos y zonas comerciales.
+- **Plazas privadas vacías:** Muchos garajes privados permanecen vacíos durante gran parte del día sin generar beneficio.
+- **Inseguridad y falta de previsión:** Los conductores a menudo desconocen si habrá sitio disponible en su destino.
 
-### Instalación
+### Alcance
+Parky resuelve esto mediante una plataforma bilateral:
+- **Para el Conductor (Renter):** Búsqueda en mapa, filtros por precio/tipo, reserva inmediata y gestión de accesos.
+- **Para el Propietario (Owner):** Alta de garajes y plazas, gestión de disponibilidad, monitorización de ingresos y control de reseñas.
 
-1. **Clonar o descargar el proyecto**
-```bash
-cd /home/hugo/TFG/app
-```
+## 3. Tecnologías Utilizadas
+La elección del stack tecnológico se basa en la necesidad de rapidez de desarrollo (Time-to-Market), escalabilidad y robustez:
 
-2. **Instalar dependencias**
-```bash
-npm i
-```
+- **Frontend:**
+  - **React 18 & Vite:** Para una interfaz de usuario reactiva y una experiencia de desarrollo ultra rápida.
+  - **TypeScript:** Garantiza la integridad de los datos y facilita el mantenimiento a largo plazo mediante tipado estático.
+  - **Tailwind CSS:** Sistema de diseño basado en utilidades para una estética moderna y responsive.
+  - **Radix UI:** Primitivas de componentes accesibles para asegurar que la aplicación sea usable por todos.
+  - **React Query:** Gestión eficiente del estado asíncrono y caché de datos de la API.
 
-3. **Arrancar servidor de desarrollo**
-```bash
-npm run dev
-```
-El servidor estará disponible en `http://localhost:3001/` (o el puerto disponible siguiente)
+- **Backend (BaaS):**
+  - **Supabase:** Plataforma Backend-as-a-Service que proporciona autenticación, base de datos PostgreSQL en tiempo real y almacenamiento de archivos.
 
-4. **Compilar para producción**
-```bash
-npm run build
-```
-La compilación se guardará en `app/build/`
+- **Mapas y Localización:**
+  - **Leaflet & React Leaflet:** Visualización de mapas interactivos.
+  - **OpenCage API:** Geocodificación para convertir direcciones en coordenadas.
 
----
+## 4. Arquitectura General
+El sistema sigue una arquitectura de **Single Page Application (SPA)** conectada a un **Backend as a Service (Supabase)**.
 
-## � Documentación y Recursos
+- **Frontend:** Organizado bajo una arquitectura basada en **Features**, donde cada módulo funcional (auth, parking, booking, profile) encapsula sus propios componentes, lógica (services), tipos y hooks.
+- **Backend:** Supabase gestiona la persistencia de datos y la autenticación. La lógica de negocio crítica reside en funciones de base de datos (PL/pgSQL) y disparadores (Triggers) para asegurar la integridad de los datos independientemente del cliente.
+- **Seguridad:** Implementación de **Row Level Security (RLS)** en PostgreSQL, asegurando que cada usuario solo pueda acceder o modificar sus propios datos o aquellos que le correspondan por su rol.
 
-### 🎯 Para Elegir Qué Hacer Primero
-- **[LEARNING_PATH.md](./app/Docs/LEARNING_PATH.md)** - Plan de aprendizaje con opciones por dificultad
-- **[NEXT_STEPS.md](./app/Docs/NEXT_STEPS.md)** - 5 niveles de mejoras (desde personalización hasta API real)
-
-### 🧪 Para Verificar que Todo Funciona
-- **[TESTING.md](./app/Docs/TESTING.md)** - Checklist de pruebas de navegación paso a paso
-
-### ⚡ Para Cambios Rápidos
-- **[QUICK_REFERENCE.md](./app/Docs/QUICK_REFERENCE.md)** - Qué archivo editar para cada tarea común
-
-### 📊 Para Entender el Proyecto
-- **[PROJECT_STATUS.md](./app/Docs/PROJECT_STATUS.md)** - Estado técnico detallado
-- **[GETTING_STARTED.md](./app/Docs/GETTING_STARTED.md)** - Resumen ejecutivo del proyecto
-
-### 🛠️ Para Crear Componentes
-- **[src/components/README.md](./app/src/components/README.md)** - Guía detallada de estructura y creación
-
----
-
-## �📁 Estructura del Proyecto
-
-```
+## 5. Estructura del Proyecto
+```text
 app/
 ├── src/
-│   ├── components/          # Componentes React (UI + Features)
-│   │   ├── ui/              # Componentes primitivos reutilizables
-│   │   ├── features/        # Componentes con lógica compleja
-│   │   ├── common/          # Componentes globales (reservado)
-│   │   ├── layout/          # Layouts de página (reservado)
-│   │   └── README.md        # 📖 Guía detallada de componentes
-│   │
-│   ├── pages/               # Páginas principales (rutas)
-│   │   ├── Home.tsx
-│   │   ├── Login.tsx
-│   │   └── SignUp.tsx
-│   │
-│   ├── styles/              # Estilos globales
-│   │   └── globals.css
-│   │
-│   ├── App.tsx              # Componente raíz con enrutamiento
-│   ├── main.tsx             # Punto de entrada
-│   └── index.css            # Estilos globales
-│
-├── index.html               # HTML base
-├── vite.config.ts           # Configuración de Vite
-├── package.json             # Dependencias y scripts
-└── README.md                # Este archivo
+│   ├── core/                # Configuración base (enrutador, temas)
+│   ├── features/            # Módulos funcionales principales (Lógica de Negocio)
+│   │   ├── auth/            # Gestión de identidad y sesiones
+│   │   ├── booking/         # Flujo de reservas y accesos
+│   │   ├── parking/         # Gestión de garajes, plazas y mapas
+│   │   └── profile/         # Perfiles de usuario y propietario
+│   ├── shared/              # Componentes, librerías y utilidades compartidas
+│   │   ├── components/      # UI base (Botones, Cards, Layouts)
+│   │   ├── lib/             # Clientes de APIs externas (Supabase, Leaflet)
+│   │   └── hooks/           # Hooks personalizados globales
+│   ├── pages/               # Vistas de alto nivel conectadas al router
+│   ├── styles/              # Definiciones CSS globales y variables de tema
+│   └── types/               # Definiciones de tipos globales de TypeScript
+├── PRUEBAS/                 # Scripts de base de datos y utilidades de seeding
+└── public/                  # Activos estáticos
 ```
 
-### 📖 Leer la Guía de Componentes
+## 6. Componentes Principales e Interacción
+- **MapView:** Componente central que integra el mapa interactivo con el listado de parkings. Filtra dinámicamente según la posición del mapa y los parámetros del usuario.
+- **ParkingDetail:** Vista detallada que consume datos de geolocalización, imágenes del garaje y valoraciones de otros usuarios.
+- **BookingProcess:** Un flujo paso a paso que gestiona la selección de fechas, validación de disponibilidad y confirmación del pago.
+- **OwnerDashboard:** (Dentro de Profile) Interfaz para que los propietarios gestionen sus activos, vean estadísticas de uso y controlen los accesos.
 
-Para entender cómo crear nuevos componentes y páginas, **lee este archivo primero:**
+## 7. Gestión del Estado y Comunicación
+- **React Context:** Se utiliza para estados globales persistentes como la **Autenticación (AuthContext)** y los **Filtros de Búsqueda (FilterProvider)**.
+- **React Query:** Maneja la sincronización de datos con Supabase. Permite invalidar cachés automáticamente cuando se realiza una reserva o se actualiza un perfil, manteniendo la UI siempre fresca.
+- **React Router (v7):** Gestiona la navegación declarativa y la protección de rutas mediante componentes de orden superior (ProtectedRoute).
 
-👉 **[`src/components/README.md`](./app/src/components/README.md)**
+## 8. Diseño de la Base de Datos
+El modelo de datos es relacional (PostgreSQL) y consta de las siguientes entidades principales:
 
-En ese archivo encontrarás:
-- ✅ Explicación detallada de cada carpeta
-- ✅ Cómo crear componentes UI (primitivos)
-- ✅ Cómo crear componentes Feature (con lógica)
-- ✅ Cómo crear nuevas páginas
-- ✅ Convenciones de código
-- ✅ Checklist antes de hacer commit
+- **users:** Perfiles de usuario extendidos de Supabase Auth.
+- **garages:** Entidad principal de los activos de un propietario (dirección, coordenadas, metadatos).
+- **parking_spots:** Plazas individuales dentro de un garaje, con precios y tipos específicos.
+- **bookings:** Registro de transacciones entre usuarios y plazas, incluyendo horarios y estados (pendiente, activo, completado).
+- **reviews:** Sistema de valoraciones vinculado a reservas finalizadas para garantizar la veracidad.
+- **booking_access_logs:** Registro de seguridad de entradas y salidas de los vehículos.
+
+### Lógica Automática (SQL)
+Se han implementado funciones PL/pgSQL para tareas críticas:
+- `complete_past_bookings()`: Automatiza la limpieza y actualización de estados de reservas.
+- `promote_to_owner_on_garage_insert()`: Trigger que asigna automáticamente el rol de propietario al crear un garaje.
+- `handle_new_user()`: Sincronización automática entre Supabase Auth y la tabla de perfiles públicos.
+
+## 9. Configuración e Instalación
+### Requisitos
+- Node.js 18+
+- Una cuenta en Supabase (opcional para desarrollo básico, obligatorio para funcionalidad completa).
+
+### Pasos
+1. ** Clonar el repositorio** (ya realizado en local).
+2. **Instalar dependencias:**
+   ```bash
+   cd app
+   npm install
+   ```
+3. **Configurar variables de entorno:**
+   Crea un archivo `.env.local` en la carpeta `app/` con las credenciales de Supabase:
+   ```env
+   VITE_SUPABASE_URL=tu_url_de_supabase
+   VITE_SUPABASE_ANON_KEY=tu_clave_anon_de_supabase
+   ```
+4. **Ejecutar en desarrollo:**
+   ```bash
+   npm run dev
+   ```
+   La aplicación estará disponible en `http://localhost:5173` o `http://localhost:3000`.
+
+## 10. Decisiones de Diseño y Futuras Mejoras
+### Decisiones Clave
+- **Mobile-First:** El diseño prioriza el uso en dispositivos móviles, ya que es el escenario más común al buscar parking.
+- **BaaS (Supabase):** Se eligió para reducir el overhead de gestión de servidores y centrar el esfuerzo en la lógica de negocio y experiencia del usuario.
+
+### Limitaciones Conocidas
+- La pasarela de pago (Stripe) está integrada estructuralmente en la DB pero requiere configuración de webhooks para producción.
+- El sistema de navegación GPS es externo (enlaza a Google Maps/Waze).
+
+### Mejoras Futuras
+- **Integración con Hardware:** Sensores IoT para detección de presencia física en las plazas.
+- **IA de Precios Dinámicos:** Algoritmo que ajuste el `current_price_per_hour` basándose en la demanda local y eventos.
+- **App Nativa:** Migración a React Native compartiendo la lógica de los servicios actuales.
 
 ---
-
-## 🎨 Tecnologías Utilizadas
-
-### Frontend
-- **React 18** - Librería UI
-- **TypeScript** - Type safety
-- **Vite** - Bundler rápido
-- **Tailwind CSS** - Estilos utilitarios
-
-### Componentes UI
-- **Radix UI** - Componentes sin estilos accesibles
-- **class-variance-authority** - Manejo de variantes CSS
-- **lucide-react** - Iconos SVG
-- **Tailwind Merge** - Merge inteligente de clases
-
-### Librerías Adicionales
-- **react-hook-form** - Manejo de formularios
-- **sonner** - Notificaciones (toasts)
-- **recharts** - Gráficos
-- **embla-carousel** - Carruseles
-
----
-
-## 📜 Scripts Disponibles
-
-| Script | Descripción |
-|--------|-------------|
-| `npm run dev` | Inicia servidor de desarrollo |
-| `npm run build` | Compila para producción |
-
----
-
-## 🚀 Flujo de Desarrollo
-
-### 1. Crear un Componente UI Nuevo
-```bash
-# Crear archivo en src/components/ui/
-# Ejemplo: src/components/ui/my-component.tsx
-
-# Luego, exportarlo en src/components/ui/index.ts
-# export * from './my-component';
-```
-
-### 2. Crear un Componente Feature Nuevo
-```bash
-# Crear archivo en src/components/features/
-# Ejemplo: src/components/features/MyFeature.tsx
-
-# Usar componentes del ui/ dentro de él
-import { Button, Card, Input } from '../ui';
-```
-
-### 3. Crear una Nueva Página
-```bash
-# Crear archivo en src/pages/
-# Ejemplo: src/pages/MyPage.tsx
-
-# Registrar en src/App.tsx en el switch del renderPage()
-```
-
-Para instrucciones **paso a paso detalladas**, consulta [`src/components/README.md`](./app/src/components/README.md).
-
----
-
-## 🎯 Estructura de Componentes (Resumen Rápido)
-
-### Carpeta `ui/` - Componentes Primitivos
-Bloques básicos SIN lógica de negocio, altamente reutilizables.
-
-**Ejemplos:** Button, Input, Card, Badge, Checkbox, etc.
-
-```tsx
-import { Button, Input, Card } from '../components/ui';
-
-<Button variant="primary">Click</Button>
-<Input type="email" placeholder="..." />
-<Card><p>Contenido</p></Card>
-```
-
-### Carpeta `features/` - Componentes Complejos
-Componentes CON lógica de negocio específica.
-
-**Ejemplos:** BookingProcess, MapView, ParkingDetail, UserProfile, OwnerProfile
-
-```tsx
-import { BookingProcess } from '../components/features/BookingProcess';
-
-<BookingProcess onNavigate={handleNav} parkingData={data} />
-```
-
----
-
-## 🐛 Troubleshooting
-
-### El proyecto no compila
-```bash
-# 1. Verifica que las importaciones sean correctas
-npm run build
-
-# 2. Limpia node_modules
-rm -rf node_modules package-lock.json
-npm i
-
-# 3. Reinicia el servidor de desarrollo
-npm run dev
-```
-
-### Puerto 3000 en uso
-El servidor Vite intenta automáticamente otro puerto (ej: 3001). Si quieres especificar:
-```bash
-npm run dev -- --port 5173
-```
-
-### Errores de TypeScript
-```bash
-# Verifica que TypeScript esté correcto:
-npm run build
-```
-
----
-
-## 📝 Convenciones Importantes
-
-### Nombres de Archivos
-- **`ui/` componentes:** minúsculas con guiones (`my-button.tsx`)
-- **`features/` componentes:** PascalCase (`BookingProcess.tsx`)
-- **Páginas:** PascalCase (`Home.tsx`)
-
-### Importaciones Relativas
-- Desde páginas a componentes: `import { Button } from '../components/ui';`
-- Desde features a ui: `import { Button } from '../ui';`
-- Desde ui a utils: `import { cn } from './utils';`
-
-### Props y TypeScript
-```tsx
-interface MyComponentProps {
-  // Datos
-  title: string;
-  
-  // Callbacks
-  onNavigate: (page: string) => void;
-  onSelect?: (id: number) => void;
-  
-  // Opcionales
-  disabled?: boolean;
-  className?: string;
-}
-```
-
----
-
-## 🎓 Ejemplos Completos
-
-### Crear un Componente UI Nuevo: Contador
-
-```tsx
-// src/components/ui/counter.tsx
-import * as React from "react";
-import { Button } from "./button";
-import { cn } from "./utils";
-
-interface CounterProps extends React.HTMLAttributes<HTMLDivElement> {
-  initialValue?: number;
-  onValueChange?: (value: number) => void;
-}
-
-export function Counter({
-  initialValue = 0,
-  onValueChange,
-  className,
-  ...props
-}: CounterProps) {
-  const [count, setCount] = React.useState(initialValue);
-
-  const handleIncrement = () => {
-    const newValue = count + 1;
-    setCount(newValue);
-    onValueChange?.(newValue);
-  };
-
-  const handleDecrement = () => {
-    const newValue = count - 1;
-    setCount(newValue);
-    onValueChange?.(newValue);
-  };
-
-  return (
-    <div className={cn("flex items-center gap-2", className)} {...props}>
-      <Button variant="outline" onClick={handleDecrement}>-</Button>
-      <span className="w-8 text-center font-semibold">{count}</span>
-      <Button variant="outline" onClick={handleIncrement}>+</Button>
-    </div>
-  );
-}
-```
-
-Luego exportar en `src/components/ui/index.ts`:
-```typescript
-export * from './counter';
-```
-
-### Crear un Feature Component: Stock de Plazas
-
-```tsx
-// src/components/features/ParkingStock.tsx
-import { useState } from 'react';
-import { Card, Badge, Counter } from '../ui';
-
-interface ParkingStockProps {
-  parkingId: number;
-  initialSpots: number;
-  onReserve: (parkingId: number, spots: number) => void;
-}
-
-export function ParkingStock({
-  parkingId,
-  initialSpots,
-  onReserve,
-}: ParkingStockProps) {
-  const [spotsToReserve, setSpotsToReserve] = useState(1);
-
-  return (
-    <Card className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">Plazas disponibles</h3>
-        <Badge>{initialSpots}</Badge>
-      </div>
-
-      <Counter
-        initialValue={1}
-        onValueChange={setSpotsToReserve}
-      />
-
-      <button
-        onClick={() => onReserve(parkingId, spotsToReserve)}
-        className="mt-4 w-full bg-primary text-white px-4 py-2 rounded-md"
-      >
-        Reservar {spotsToReserve} {spotsToReserve === 1 ? 'plaza' : 'plazas'}
-      </button>
-    </Card>
-  );
-}
-```
-
----
-
-## 🔐 Próximas Mejoras
-
-- [ ] **Tests Unitarios** - Agregar vitest para componentes `ui/`
-- [ ] **Storybook** - Documentación visual de componentes
-- [ ] **API Integration** - Conectar con backend real
-- [ ] **State Management** - Implementar Zustand/Redux si es necesario
-- [ ] **CI/CD** - GitHub Actions para testing automático
-- [ ] **E2E Tests** - Playwright para pruebas de flujo completo
-
----
-
-## 📞 Ayuda y Contacto
-
-Para dudas sobre la estructura o cómo agregar componentes, **revisa primero** [`src/components/README.md`](./app/src/components/README.md).
-
----
-
-## 📄 Licencia
-
-Proyecto privado. Todos los derechos reservados.
-
----
-
-**¡Listo para empezar a desarrollar!** 🎉
-
-Recuerda: **Orden, claridad y escalabilidad** son las claves. 🚀
+**Desarrollado como Trabajo de Fin de Grado.**
+Autor: Hugo González Pérez
+Año: 2026

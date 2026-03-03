@@ -137,4 +137,4 @@ Se han implementado funciones PL/pgSQL para tareas críticas:
 ## 11. Créditos
 **Desarrollado como Trabajo de Fin de Grado.**
 Autor: **Hugo González Pérez**
-Año: 2026
+Año: 2026 

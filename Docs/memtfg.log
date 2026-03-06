@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.3)  3 MAR 2026 21:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.6)  6 MAR 2026 13:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/root/TFG/Docs/memtfg.tex
-(/root/TFG/Docs/memtfg.tex
+**/home/hugo/TFG/Docs/memtfg.tex
+(/home/hugo/TFG/Docs/memtfg.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
 (/usr/share/texlive/texmf-dist/tex/latex/koma-script/scrbook.cls
@@ -145,7 +145,7 @@ Package: iftex 2022/02/03 v1.0f TeX engine tests
 Package: babel 2024/01/07 v24.1 The Babel package
 \babel@savecnt=\count197
 \U@D=\dimen141
-\l@unhyphenated=\language89
+\l@unhyphenated=\language12
  (/usr/share/texlive/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count198
@@ -628,7 +628,7 @@ Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 \bibhang=\skip76
 \blx@bcfin=\read3
 \blx@bcfout=\write3
-\blx@langwohyphens=\language90
+\blx@langwohyphens=\language13
 \c@mincomprange=\count344
 \c@maxcomprange=\count345
 \c@mincompwidth=\count346
@@ -1563,10 +1563,10 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ]
 Package epstopdf Info: Source file: <images/licenses/by-nc-nd.eu.eps>
-(epstopdf)                    date: 2025-09-10 12:35:10
+(epstopdf)                    date: 2026-03-06 08:53:47
 (epstopdf)                    size: 69200 bytes
 (epstopdf)             Output file: <images/licenses/by-nc-nd.eu-eps-converted-to.pdf>
-(epstopdf)                    date: 2026-03-03 19:52:05
+(epstopdf)                    date: 2026-03-06 08:53:47
 (epstopdf)                    size: 7531 bytes
 (epstopdf)             Command: <repstopdf --outfile=images/licenses/by-nc-nd.eu-eps-converted-to.pdf images/licenses/by-nc-nd.eu.eps>
 (epstopdf)             \includegraphics on input line 289.
@@ -1632,11 +1632,6 @@ Package tocbasic Info: Using my definition of `\numberline' on input line 23.
 Package tocbasic Info: Using my definition of `\numberline' on input line 24.
 Package tocbasic Info: Using my definition of `\numberline' on input line 25.
 Package tocbasic Info: Using my definition of `\numberline' on input line 26.
-Package tocbasic Info: Using my definition of `\numberline' on input line 27.
-Package tocbasic Info: Using my definition of `\numberline' on input line 28.
-Package tocbasic Info: Using my definition of `\numberline' on input line 29.
-Package tocbasic Info: Using my definition of `\numberline' on input line 30.
-Package tocbasic Info: Using my definition of `\numberline' on input line 31.
 )
 \tf@toc=\write6
 \openout6 = `memtfg.toc'.
@@ -1702,79 +1697,80 @@ l.341 \mainmatter
 
 ] (./01-introducción.tex
 chapter 1.
-LaTeX Font Info:    Trying to load font information for T1+SourceCodePro-TLF on input line 8.
-(/usr/share/texlive/texmf-dist/tex/latex/sourcecodepro/T1SourceCodePro-TLF.fd
-File: T1SourceCodePro-TLF.fd 2018/02/18 (autoinst) Font definitions for T1/SourceCodePro-TLF.
-)
-LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
-(Font)              scaled to size 10.20007pt on input line 8.
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `SourceCodePro-TLF' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 16.
- (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 6.
+
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.43 \end{enumerate}
-                     [1
+l.19 E
+      n primer lugar, desde la perspectiva de la \textbf{sostenibilidad y pr... [1
 
 
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/sourcecodepro/a_lutrty.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
-<images/figura_1.png, id=148, 513.41812pt x 496.10344pt>
-File: images/figura_1.png Graphic file (type png)
-<use images/figura_1.png>
-Package pdftex.def Info: images/figura_1.png  used on input line 51.
-(pdftex.def)             Requested size: 386.95897pt x 373.91615pt.
- [2 <./images/figura_1.png>]) (./02-capítulo2.tex [3] [4]
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}]
+<images/horas_perdidas.png, id=139, 642.4pt x 642.4pt>
+File: images/horas_perdidas.png Graphic file (type png)
+<use images/horas_perdidas.png>
+Package pdftex.def Info: images/horas_perdidas.png  used on input line 29.
+(pdftex.def)             Requested size: 164.45515pt x 164.45187pt.
+<images/ciclo_parky.png, id=140, 642.4pt x 642.4pt>
+File: images/ciclo_parky.png Graphic file (type png)
+<use images/ciclo_parky.png>
+Package pdftex.def Info: images/ciclo_parky.png  used on input line 36.
+(pdftex.def)             Requested size: 164.45515pt x 164.45187pt.
+) (./02-capítulo2.tex [2 <./images/horas_perdidas.png (PNG copy)> <./images/ciclo_parky.png>]
 chapter 2.
+
+LaTeX Warning: Reference `fig:introducción' on page 3 undefined on input line 6.
+
 Package epstopdf Info: Source file: <images/licenses/by-nd.eps>
-(epstopdf)                    date: 2025-09-10 12:35:10
+(epstopdf)                    date: 2026-03-06 08:53:47
 (epstopdf)                    size: 63577 bytes
 (epstopdf)             Output file: <images/licenses/by-nd-eps-converted-to.pdf>
-(epstopdf)                    date: 2026-03-03 19:52:06
+(epstopdf)                    date: 2026-03-06 08:53:47
 (epstopdf)                    size: 5962 bytes
 (epstopdf)             Command: <repstopdf --outfile=images/licenses/by-nd-eps-converted-to.pdf images/licenses/by-nd.eps>
 (epstopdf)             \includegraphics on input line 13.
 Package epstopdf Info: Output file is already uptodate.
-<images/licenses/by-nd-eps-converted-to.pdf, id=182, 121.45375pt x 43.16125pt>
+<images/licenses/by-nd-eps-converted-to.pdf, id=151, 121.45375pt x 43.16125pt>
 File: images/licenses/by-nd-eps-converted-to.pdf Graphic file (type pdf)
 <use images/licenses/by-nd-eps-converted-to.pdf>
 Package pdftex.def Info: images/licenses/by-nd-eps-converted-to.pdf  used on input line 13.
 (pdftex.def)             Requested size: 241.84843pt x 85.9462pt.
-[5
+
+Package lipsum Warning: Unknown language 'latin'. Hyphenation patterns for
+(lipsum)                'spanish' will be used instead.
+
+[3
 
 
- <./images/licenses/by-nd-eps-converted-to.pdf>]) (./03-capítulo3.tex [6]
+ <./images/licenses/by-nd-eps-converted-to.pdf>]) (./03-capítulo3.tex [4]
 chapter 3.
-) (./04-capítulo4.tex [7
+) (./04-capítulo4.tex [5
 
 
-] [8]
+] [6]
 chapter 4.
-) (./05-conclusiones.tex [9
+) (./05-conclusiones.tex [7
 
 
 ]
 chapter 5.
-) (./06-conclusions.tex [10
+) (./06-conclusions.tex [8
 
 
 ]
 chapter 6.
-) (./07-presupuesto.tex [11
+) (./07-presupuesto.tex [9
 
 
 ]
 chapter 7.
-) (./0A-apéndice1.tex [12
+) (./0A-apéndice1.tex [10
 
 
-] [13]
+] [11]
 chapter A.
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
@@ -1783,25 +1779,35 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
+LaTeX Font Info:    Trying to load font information for T1+SourceCodePro-TLF on input line 9.
+ (/usr/share/texlive/texmf-dist/tex/latex/sourcecodepro/T1SourceCodePro-TLF.fd
+File: T1SourceCodePro-TLF.fd 2018/02/18 (autoinst) Font definitions for T1/SourceCodePro-TLF.
+)
+LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
+(Font)              scaled to size 10.20007pt on input line 9.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `SourceCodePro-TLF' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 (Font)              scaled to size 8.50006pt on input line 9.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
 (Font)              scaled to size 8.50006pt on input line 10.
- [14
+ [12
 
 
-]
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/sourcecodepro/a_lutrty.enc}]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 76.
 \c@algpx@indentEndPage-0=\count533
 \c@algpx@indentEndPage-1=\count534
 \c@algpx@indentEndPage-2=\count535
 \c@algpx@indentEndCoordIndex-0=\count536
-) (./0B-apéndice2.tex [15{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}]
+) (./0B-apéndice2.tex [13{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
 chapter B.
-) [16
+) [14
 
 
-] [17
+] [15
 
 
 
@@ -1815,6 +1821,10 @@ LaTeX Info: Redefining \% on input line 14.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `memtfg.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 Package logreq Info: Writing requests to 'memtfg.run.xml'.
@@ -1822,18 +1832,18 @@ Package logreq Info: Writing requests to 'memtfg.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 46946 strings out of 474222
- 938239 string characters out of 5748734
+ 46977 strings out of 476047
+ 938330 string characters out of 5792076
  1963975 words of memory out of 5000000
- 68190 multiletter control sequences out of 15000+600000
- 655187 words of font info for 190 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 108i,11n,117p,10929b,2144s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss12.pfb></usr/share/texmf/fonts/type1/public/lm/lmss17.pfb></usr/share/texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsso12.pfb></usr/share/texmf/fonts/type1/public/lm/lmsso17.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on memtfg.pdf (26 pages, 391091 bytes).
+ 67948 multiletter control sequences out of 15000+600000
+ 669962 words of font info for 219 fonts, out of 8000000 for 9000
+ 85 hyphenation exceptions out of 8191
+ 108i,11n,117p,10934b,2144s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss12.pfb></usr/share/texmf/fonts/type1/public/lm/lmss17.pfb></usr/share/texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsso12.pfb></usr/share/texmf/fonts/type1/public/lm/lmsso17.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
+Output written on memtfg.pdf (24 pages, 1102356 bytes).
 PDF statistics:
- 461 PDF objects out of 1000 (max. 8388607)
- 395 compressed objects within 4 object streams
- 97 named destinations out of 1000 (max. 500000)
- 61201 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 415 PDF objects out of 1000 (max. 8388607)
+ 348 compressed objects within 4 object streams
+ 88 named destinations out of 1000 (max. 500000)
+ 67310 words of extra memory for PDF output out of 74296 (max. 10000000)
 

@@ -89,6 +89,9 @@
             "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
             "cap:sync": "vite build && npx cap sync",
             "cap:android": "npx cap open android",
-            "cap:live": "npx cap run android --livereload --external"
+            "cap:live": "npx cap run android --livereload --external",
+            "docs:build": "cd Docs && latexmk -pdf memtfg.tex",
+            "docs:watch": "cd Docs && latexmk -pvc -pdf memtfg.tex",
+            "docs:clean": "cd Docs && latexmk -c"
       }
 }

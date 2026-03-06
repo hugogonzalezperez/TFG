@@ -1,0 +1,36 @@
+Guía para el Capítulo 1: Introducción
+Basado en el análisis de los TFGs de ejemplo, el Capítulo 1 suele seguir una estructura muy definida que sirve para "vender" la relevancia de tu proyecto. Aquí tienes la propuesta para Parky.
+
+Estructura Recomendada
+1.1. Motivación
+Aquí debes explicar por qué empezaste este proyecto.
+
+Temas: El caos del tráfico, la pérdida de tiempo buscando aparcamiento en Santa Cruz o La Laguna, y cómo las plazas privadas vacías son un recurso desperdiciado.
+Tono: Empático pero profesional.
+1.2. Justificación
+Aquí aportas datos técnicos o sociales.
+
+Temas: Auge de la economía colaborativa (menciona a Airbnb o BlaBlaCar como referentes), sostenibilidad urbana (menos coches dando vueltas = menos CO2).
+Elemento Visual: Una Figura con datos estadísticos (p.ej., tiempo medio perdido buscando parking) ayuda mucho.
+1.3. Estado del Arte (Competencia)
+Analiza qué existe ya y por qué Parky es diferente.
+
+Temas: Apps como EasyPark o Telpark (que suelen ser para parkings públicos/zona azul) vs. soluciones P2P.
+Elemento Visual: Una Tabla comparativa. Columnas: Características (Reserva P2P, Mapas, Pago integrado), Filas: Competidor 1, Competidor 2, Parky.
+1.4. Objetivos
+Define qué vas a hacer exactamente.
+
+Objetivo General: Desarrollar un marketplace P2P para la gestión de aparcamientos.
+Objetivos Específicos:
+Implementar un sistema de autenticación seguro.
+Desarrollar un mapa interactivo para localización de plazas.
+Gestionar el flujo de reservas y pagos.
+1.5. Estructura de la Memoria
+Un breve párrafo por cada capítulo siguiente (Capítulo 2: Tecnologías, Capítulo 3: Diseño, etc.).
+
+Elementos Clave a Incluir
+Imágenes:
+Gráficos de tendencias (puedes buscar datos del INE o del Cabildo).
+Diagramas conceptuales de cómo funciona la economía colaborativa en tu app.
+Tablas: Obligatoria en el "Estado del Arte" para comparar Parky con la competencia.
+Notas al pie (\footnote): Úsalas para definir términos técnicos la primera vez que aparecen (p.ej., P2P, BaaS, Marketplace).

@@ -19,69 +19,6 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
-    \entry{overleaf_biblatex}{online}{}
-      \name{author}{1}{}{%
-        {{hash=80d685e90fa23d7996a66e45aa2d24ad}{%
-           family={Overleaf},
-           familyi={O\bibinitperiod}}}%
-      }
-      \strng{namehash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \strng{fullhash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \strng{bibnamehash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \strng{authorbibnamehash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \strng{authornamehash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \strng{authorfullhash}{80d685e90fa23d7996a66e45aa2d24ad}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Bibliography management with biblatex}
-      \field{urlday}{18}
-      \field{urlmonth}{7}
-      \field{urlyear}{2024}
-      \field{year}{2024}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex
-      \endverb
-      \verb{url}
-      \verb https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex
-      \endverb
-    \endentry
-    \entry{examplegithub}{online}{}
-      \name{author}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
-           family={Doe},
-           familyi={D\bibinitperiod},
-           given={John},
-           giveni={J\bibinitperiod}}}%
-      }
-      \list{organization}{1}{%
-        {GitHub}%
-      }
-      \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Repositorio de Ejemplo}
-      \field{urlday}{1}
-      \field{urlmonth}{5}
-      \field{urlyear}{2023}
-      \field{year}{2022}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://github.com/johndoe/example-repo
-      \endverb
-      \verb{url}
-      \verb https://github.com/johndoe/example-repo
-      \endverb
-    \endentry
     \entry{examplearticle}{article}{}
       \name{author}{1}{}{%
         {{hash=055f6811649a97bc3a36ff4b2581f441}{%
@@ -96,8 +33,8 @@
       \strng{authorbibnamehash}{055f6811649a97bc3a36ff4b2581f441}
       \strng{authornamehash}{055f6811649a97bc3a36ff4b2581f441}
       \strng{authorfullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Revista Ejemplo}
@@ -109,35 +46,6 @@
       \range{pages}{23}
       \verb{doi}
       \verb 10.1234/rev-ejemplo.2021.015
-      \endverb
-    \endentry
-    \entry{ulllibguide}{online}{}
-      \name{author}{1}{}{%
-        {{hash=0745a88e8da3f2c05f15228af08e44fb}{%
-           family={{Universidad de La Laguna}},
-           familyi={U\bibinitperiod}}}%
-      }
-      \strng{namehash}{0745a88e8da3f2c05f15228af08e44fb}
-      \strng{fullhash}{0745a88e8da3f2c05f15228af08e44fb}
-      \strng{bibnamehash}{0745a88e8da3f2c05f15228af08e44fb}
-      \strng{authorbibnamehash}{0745a88e8da3f2c05f15228af08e44fb}
-      \strng{authornamehash}{0745a88e8da3f2c05f15228af08e44fb}
-      \strng{authorfullhash}{0745a88e8da3f2c05f15228af08e44fb}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Guía de Estilo para Elaborar Trabajos Fin de Grado y Fin de Máster}
-      \field{urlday}{21}
-      \field{urlmonth}{5}
-      \field{urlyear}{2024}
-      \field{year}{2023}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://ull-es.libguides.com/c.php?g=674761&p=4808121
-      \endverb
-      \verb{url}
-      \verb https://ull-es.libguides.com/c.php?g=674761&p=4808121
       \endverb
     \endentry
   \enddatalist

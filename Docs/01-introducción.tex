@@ -1,83 +1,44 @@
 \chapter{Introducción}
 \label{ch:introducción}
 
-Cualquier capítulo puede tener múltiples apartados, como el \autoref{sec:lista_de_items} o el \autoref{sec:enumeraciones} de este mismo capítulo.
+\section{Definición del problema}
 
-También está el \autoref{sec:primera_sección} del \autoref{ch:capítulo-dos} que tiene la \autoref{fig:otra}.
+No es una novedad que el crecimiento del \textit{parque móvil}\footnote{\textbf{Parque móvil}:El  hace referencia al conjunto total de vehículos registrados y en circulación en una determinada región o país.} y el auge del turismo en las Islas Canarias y sobre todo en Tenerife han provocado que encontrar aparcamiento en prácticamente cualquier lugar sea algo desesperante. En las zonas de alta densidad, como puede ser el \textit{(área metropolitana)}\footnote{\textbf{Área metropolitana}:En el contexto de Tenerife, hace referencia principalmente a los municipios de Santa Cruz de Tenerife y San Cristóbal de La Laguna, que concentran una gran parte de la población y actividad económica de la isla.}, el problema es aún más acentuado, donde tanto residentes como visitantes diariamente sufren un desequilibrio crítico entre oferta y demanda de espacio urbano.
 
-Se puede utilizar \verb|\indent| o \verb|\noindent| al principio de un párrafo para añadir o eliminar la sangría en el párrafo, respectivamente.
+En muchas vías de Tenerife, este problema se convierte en una desgracia continua y que va a más cada día. Cualquier conductor que transite por la zona que hay entre Santa Cruz de Tenerife y San Cristóbal de La Laguna puede verse atrapado en atascos que, en trayectos de apenas diez kilómetros, agotan la paciencia y degradan significativamente la calidad de vida. Sin embargo, el problema no reside únicamente en la congestión de vías principales como la \textit{(TF-5)}\footnote{\textbf{TF-5}:Es la principal autopista del norte de Tenerife, que conecta Santa Cruz de Tenerife con el área metropolitana y los municipios del norte de la isla.}, sino en la dificultad añadida de encontrar un hueco libre al llegar al destino. De hecho, se estima que hasta un 30\% del tráfico urbano en horas punta está compuesto por vehículos que circulan en bucle buscando estacionamiento, lo que contribuye innecesariamente a la contaminación acústica y a las emisiones de gases de efecto invernadero \textit{(GEI)}\footnote{\textbf{GEI}:Los gases de efecto invernadero (GEI) son aquellos que contribuyen al calentamiento global al retener el calor en la atmósfera, como el dióxido de carbono (CO$_2$).}.
 
-\section{Listas de elementos}
-\label{sec:lista_de_items}
+Es irónico y paradójico el hecho de que, mientras cientos de conductores pierden muchísimo tiempo y gasolina en la búsqueda ineficiente de plazas de aparcamiento, haya numerosas de estas que, ya sea por jornadas laborales o incluso por periodos vacacionales, permanezcan vacías durante gran parte del día o incluso días completos. Este desaprovechamiento de un recurso tan valioso cuando estás frustrado por aparcar pone a la vista una clara ineficiencia en la gestión del espacio disponible.
 
-Esta es la lista de elementos del \autoref{sec:lista_de_items}:
+Es por ello que, a partir de este gran contraste, nace la motivación de Parky y su principal objetivo: Explorar cómo se puede conectar a los propietarios de estas plazas privadas poco usadas con conductores que requieren estacionar su vehículo, facilitando por medio de \textit{(tecnologías digitales)}\footnote{\textbf{Tecnologías digitales}:En este contexto se refiere a plataformas digitales y aplicaciones web o móviles que permiten conectar usuarios y gestionar servicios en línea.} una gestión más inteligente y eficiente de los recursos urbanos existentes. 
 
-\begin{itemize}
-    \item Item 1
-    \begin{itemize}
-        \item Item 1
-        \item Item 2
-        \item Item 3
-        \item Item 4
-    \end{itemize}
-    
-    \item Item 2
-    \item Item 3
-    \item Item 4
-\end{itemize}
+\section{Justificación}
+\label{sec:justificación}
 
-\section{Enumeraciones}
-\label{sec:enumeraciones}
+La implementación de \textbf{Parky} se justifica mediante la convergencia de tres ejes críticos en el contexto urbano actual, integrando factores normativos, socioeconómicos y tecnológicos.
 
-Esto es una lista enumerada, que puede estar relacionada con la \autoref{fig:introducción}:
+En primer lugar, desde la perspectiva de la \textbf{sostenibilidad y presión regulatoria}, el proyecto responde a la obligatoriedad de implementar Zonas de Bajas Emisiones \textit{(ZBE)}\footnote{\textbf{ZBE}: áreas delimitadas donde se restringe el acceso a los vehículos más contaminantes para mejorar la calidad del aire.} en municipios de más de 50.000 habitantes, como es el caso de Santa Cruz de Tenerife y San Cristóbal de La Laguna. Una parte sustancial del tráfico urbano es generado exclusivamente por la búsqueda de estacionamiento. Facilitar una plataforma P2P permite una transición hacia una movilidad más ordenada, reduciendo significativamente las emisiones de gases contaminantes y el ruido en el centro de las ciudades, alineándose así con los objetivos de las denominadas \textit{Smart Cities}\footnote{\textbf{Smart Cities}: es un entorno urbano que utiliza tecnologías avanzadas, como el Internet de las Cosas (IoT), la inteligencia artificial (IA), el big data y las TIC (Tecnologías de la Información y Comunicación), para mejorar la calidad de vida de sus habitantes, optimizar la gestión de recursos y promover el desarrollo sostenible.}.
 
-\begin{enumerate}
-    \item Item 1
-    \begin{enumerate}
-        \item Item 1
-        \item Item 2
-        \item Item 3
-    \end{enumerate}
-    \item Item 2
-    \item Item 3
-\end{enumerate}
+En segundo lugar, se destaca la \textbf{eficiencia social y económica} impulsada por el auge de la economía colaborativa. Este sector no es solo una tendencia social, sino un mercado en plena expansión con una tasa de crecimiento anual compuesta (CAGR) proyectada del 14,22\% hasta el año 2030. En un entorno de inflación creciente, la monetización de activos inactivos cobra una relevancia especial; \textbf{Parky} permite a los propietarios obtener ingresos recurrentes de entre 150 € y 300 € mensuales por una plaza infrautilizada, mientras que ofrece al conductor un ahorro drástico frente a las tarifas de rotación comercial (ver \autoref{fig:horas_p}). El tiempo, como recurso no renovable, se convierte en el principal ahorro para el ciudadano.
 
-\section{Figuras y tablas}
+Por último, la \textbf{viabilidad tecnológica} de la propuesta es indiscutible. La madurez actual de las infraestructuras de datos en tiempo real y las pasarelas de pago seguras permiten transformar un proceso históricamente manual y opaco en un flujo de uso transparente y eficiente. Esta optimización, comparada con el modelo tradicional de búsqueda aleatoria, se detalla en la \autoref{fig:ciclo}, demostrando cómo la tecnología actúa como el puente necesario para resolver una ineficiencia logística que ha degradado la calidad de vida urbana durante décadas.
 
-En la \autoref{fig:introducción} se puede ver una figura de ejemplo. Las tablas, las figuras y los algoritmos (ver el \autoref{sec:algoritmo-zzz}) son flotantes. Esto quiere decir que \LaTeX{} los intentará ubicar en el mejor lugar posible al componer el documento, intentando respetar ciertas reglas tipográficas. Como este lugar puede ser diferente a la posición que realmente ocupan en el texto, \textbf{es importante referenciar en el texto todas las figuras y las tablas}, en los diferentes puntos donde se hable de ellas.
-
-\begin{figure}[htbp]
+\begin{figure}[H]
    \centering
-   \includegraphics[width=0.8\linewidth]{images/figura_1}
-   \caption{Ejemplo de figura.}
-   \label{fig:introducción}
+   \begin{subfigure}[b]{0.34\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{images/horas_perdidas}
+      \caption{Horas anuales perdidas.}
+      \label{fig:horas_p}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.34\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{images/ciclo_parky}
+      \caption{Ciclo Tradicional vs Parky.}
+      \label{fig:ciclo}
+   \end{subfigure}
+   \hfill
+   
+   \caption{Impacto de la problemática del aparcamiento (a) y propuesta de optimización mediante Parky (b).}
+   \label{fig:problematica_visual}
 \end{figure}
-
-La \autoref{tbl:presupuesto} en el \autoref{ch:presupuesto} es un ejemplo de tabla hecha con el paquete \verb|tabularx|.
-
-Al crear tablas, figuras u otros elementos flotantes es aconsejable indicar siempre los especificadores de ubicación \verb|[htbp]|, tal y como se hace en los ejemplos de esta plantilla. De esta forma \LaTeX{} intentará primero ponerlos en el lugar; si no puede, intentará ponerlos en la parte superior o inferior de la misma página y, en caso extremo, los pondrá en páginas especiales que solo contienen flotantes.
-
-No es buena idea usar especificadores como \verb|[!h]| o \verb|[H]| para forzar una ubicación determinada. El motivo es que eso impide a \LaTeX{} buscar la mejor forma de componer el documento, pudiendo dar como resultado páginas que se ven muy raras --por ejemplo, dejando muchos huecos libres entre el texto--.
-Solo se deben utilizar estos especificadores cuando es absolutamente necesario, como ocurre en el \autoref{ch:presupuesto}, donde interesa que las tablas del presupuesto aparezca juntas, en la posición preestablecida.
-
-\section{Código y algoritmos}
-
-En el \autoref{ch:apéndice-uno} se pueden observar varios ejemplos de entornos para describir algoritmos y código.
-
-\section{Citas}
-
-Las referencias bibliográficas se deben indicar en el archivo \texttt{referencias.bib}, en formato Biblatex \cite{overleaf_biblatex}, y se citan en el texto. Las referencias no citadas no aparecerán en el apartado de la bibliografía.
-
-Las citas pueden ser \emph{en línea} con el texto, como en \cite{examplegithub}, o entre paréntesis \parencite{examplearticle}. Sin embargo, no hay diferencia entre ambos tipos cuando se usa el estilo de cita numérico, que es el estilo por defecto en esta plantilla. Para apreciar la diferencia es necesario activar un estilo de cita como APA.
-
-Las reglas para citar descritas en la guía de la ULL \cite{ulllibguide} permiten citar cualquier cosa: artículos de investigación, libros, entradas de la Wikipedia, blogs, vídeos de Youtube o repositorios de GitHub, entre otros. 
-
-En el \autoref{ch:capítulo-cuatro} se puede ver otro tipo de cita, usando el paquete \texttt{csquotes}, donde se traslada de forma literal una porción del texto original al documento.
- 
-\section{Otra sección...}
-
-\lipsum[1]
-
-\subsection{Con subsección...}
-
-\lipsum[2]

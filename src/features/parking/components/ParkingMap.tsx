@@ -3,6 +3,8 @@ import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
 import { getPrimaryColor, getAccentColor, createParkingPinIcon, createSelectedParkingPinIcon } from '../utils/mapUtils'
 import { LocateFixed } from 'lucide-react'
+import { isNative } from '@/mobile'
+import { Geolocation } from '@capacitor/geolocation'
 import { toast } from 'sonner'
 
 interface ParkingMapProps {
@@ -28,40 +30,58 @@ function LocateButton({ onLocate }: { onLocate: (pos: [number, number]) => void 
   const map = useMap();
   const [isLocating, setIsLocating] = useState(false);
 
-  const handleLocate = () => {
-    if (!navigator.geolocation) return;
+  const handleLocate = async () => {
     setIsLocating(true);
     const toastId = toast.loading('Buscando tu ubicación...');
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-        map.flyTo(coords, 16, { animate: true, duration: 1.5 });
-        onLocate(coords);
-        setIsLocating(false);
-        toast.dismiss(toastId);
-        toast.success('Ubicación encontrada');
-      },
-      (error) => {
-        setIsLocating(false);
-        toast.dismiss(toastId);
+    try {
+      let coords: [number, number];
 
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            toast.error('Permiso de ubicación denegado. Por favor, actívalo en tu navegador.');
-            break;
-          case error.POSITION_UNAVAILABLE:
-            toast.error('Información de ubicación no disponible. Asegúrate de tener el GPS activo.');
-            break;
-          case error.TIMEOUT:
-            toast.error('Tiempo de espera agotado al buscar tu ubicación. Reinténtalo.');
-            break;
-          default:
-            toast.error('No se pudo obtener tu ubicación.');
+      if (isNative()) {
+        // Native Capacitor Geolocation
+        const permissions = await Geolocation.checkPermissions();
+        if (permissions.location !== 'granted') {
+          const request = await Geolocation.requestPermissions();
+          if (request.location !== 'granted') {
+            throw new Error('PERMISSION_DENIED');
+          }
         }
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    );
+
+        const position = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 15000
+        });
+        coords = [position.coords.latitude, position.coords.longitude];
+      } else {
+        // Web Geolocation
+        if (!navigator.geolocation) throw new Error('NOT_SUPPORTED');
+
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+          });
+        });
+        coords = [position.coords.latitude, position.coords.longitude];
+      }
+
+      map.flyTo(coords, 16, { animate: true, duration: 1.5 });
+      onLocate(coords);
+      toast.success('Ubicación encontrada');
+    } catch (error: any) {
+      console.error('Location error:', error);
+      if (error === 'PERMISSION_DENIED' || error.code === 1) {
+        toast.error('Permiso de ubicación denegado. Por favor, actívalo en los ajustes de tu móvil.');
+      } else if (error === 'NOT_SUPPORTED') {
+        toast.error('Geolocalización no soportada en este navegador.');
+      } else {
+        toast.error('No se pudo obtener tu ubicación. Asegúrate de tener el GPS activo.');
+      }
+    } finally {
+      setIsLocating(false);
+      toast.dismiss(toastId);
+    }
   };
 
   return (

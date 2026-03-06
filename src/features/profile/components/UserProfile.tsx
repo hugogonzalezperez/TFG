@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ConfirmationDialog } from '../../../ui';
 import { useAuth } from '../../auth';
 import { AnimatedLoader } from '../../../shared/components/loaders';
@@ -18,8 +19,16 @@ import { useQueryClient } from '@tanstack/react-query';
 
 export function UserProfile() {
   const queryClient = useQueryClient();
+  const location = useLocation();
   const { authUser, updateProfile, logout, loading: authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState('bookings');
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'bookings');
+
+  // Update tab if location state changes (for bottom navbar navigation)
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
   const [reviewBooking, setReviewBooking] = useState<any>(null);
   const [confirmCancel, setConfirmCancel] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);

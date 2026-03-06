@@ -4,6 +4,7 @@ import { Car, MapPin, Calendar, Clock, Search, Star, Shield, CreditCard } from '
 import { useFilters } from '../../features/parking';
 import { useAuth } from '../../features/auth';
 import { HomeSkeleton } from '../../shared/components/loaders';
+import { isNative } from '@/mobile';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -107,7 +108,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[url('https://parallel.report/assets/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 lg:py-24">
+        <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${isNative() ? 'py-4' : 'py-10 md:py-16 lg:py-24'}`}>
           <div className="text-center mb-10 md:mb-16">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-6 text-foreground tracking-tight leading-[1.1]">
               Encuentra <span className="text-primary">aparcamiento</span>

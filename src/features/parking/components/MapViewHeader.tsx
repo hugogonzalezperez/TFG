@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Search, ArrowLeft, Map as MapIcon, List } from 'lucide-react';
+import { isNative } from '@/mobile';
 import { Button } from '../../../ui/button';
 import { Input } from '../../../ui';
 import { cn } from '../../../shared/lib/cn';
@@ -19,7 +20,7 @@ export function MapViewHeader({ view, setView, onSearch, onOpenFilters, searchQu
   const isMobile = useIsMobile();
 
   return (
-    <div className="bg-card border-b border-border p-2 md:p-4 shadow-sm sticky top-0 z-40">
+    <div className={`bg-card border-b border-border p-2 md:p-4 shadow-sm sticky top-0 z-40 ${isNative() ? 'pt-[env(safe-area-inset-top)]' : ''}`}>
       <div className="max-w-7xl mx-auto flex items-center gap-2 md:gap-4">
         <Button
           variant="ghost"

@@ -1,14 +1,14 @@
 # Fdb version 4
-["biber memtfg"] 1772800274.35961 "memtfg.bcf" "memtfg.bbl" "memtfg" 1772802543.51705 0
-  "memtfg.bcf" 1772802543.278 107165 133bdc9d30e4802a832ac7b97d6d2a9e "pdflatex"
+["biber memtfg"] 1772800274.35961 "memtfg.bcf" "memtfg.bbl" "memtfg" 1773046271.96782 0
+  "memtfg.bcf" 1773046271.75517 107165 133bdc9d30e4802a832ac7b97d6d2a9e "pdflatex"
   "referencias.bib" 1772787227.88871 1250 9a14be138d28a94de9559ba9c23ebdf0 ""
   (generated)
   "memtfg.bbl"
   "memtfg.blg"
   (rewritten before read)
-["pdflatex"] 1772802538.88006 "/home/hugo/TFG/Docs/memtfg.tex" "memtfg.pdf" "memtfg" 1772802543.51754 0
+["pdflatex"] 1773046267.75687 "/home/hugo/TFG/Docs/memtfg.tex" "memtfg.pdf" "memtfg" 1773046271.96814 0
   "/etc/texmf/web2c/texmf.cnf" 1772788214.53875 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/hugo/TFG/Docs/memtfg.tex" 1772800269.08811 14363 33c2f0f9a6a442c95e88c45e7ba3c59b ""
+  "/home/hugo/TFG/Docs/memtfg.tex" 1773045585.88499 14365 3f46fbfd1de374d99e82faf9129ead5b ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/sourcecodepro/a_lutrty.enc" 1558300257 2905 926f570532f1104044846d18d8d97080 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/sourcecodepro/SourceCodePro-Bold-tlf-t1--base.tfm" 1558300257 1300 bbc722b4be3f6c547a0906e2bd232fb8 ""
@@ -300,7 +300,7 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1772788806.39872 5349216 bf3a80e68d946c7acd95ff030fd9bb63 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1772788871 6852493 183f6754ff3935f383faf4403961bd44 ""
-  "01-introducción.tex" 1772802538.53801 6648 0ff2feffa5f8eafa6d6b5e83c676381f ""
+  "01-introducción.tex" 1773046267.50517 6856 5591ad80c39c95ae93681570d50900d9 ""
   "02-capítulo2.tex" 1772787227.88871 731 2e075f5d017b7073ed9a4c587ab8456b ""
   "03-capítulo3.tex" 1772787227.88871 396 f0f57c6980a19d23309f7ebae1dfd235 ""
   "04-capítulo4.tex" 1772787227.88871 580 ef37d5e163ac20c199cf4aad8da63908 ""
@@ -314,14 +314,14 @@
   "images/licenses/by-nc-nd.eu.eps" 1772787227.88871 69200 748ea699400753f21d5be217ac36e0f5 ""
   "images/licenses/by-nd.eps" 1772787227.88871 63577 81cc50b974e9c7dddfff3e1e83bd20f0 ""
   "images/logos/escuela-ingenieria-tecnologia-original.pdf" 1772787227.88871 14093 68ca699acbd7089dca36ed426e07a70b ""
-  "memtfg.aux" 1772802543.268 20516 37acdafe0afc186538aa7508a1b00394 "pdflatex"
+  "memtfg.aux" 1773046271.74517 20518 645d020f07cf894eab95912714dcc2c9 "pdflatex"
   "memtfg.bbl" 1772800275.93812 1655 62d850a6d0d4f481583e334469ddbf3f "biber memtfg"
-  "memtfg.lof" 1772802543.288 544 0c4dff26dee0d0a5346788467f47c651 "pdflatex"
-  "memtfg.lot" 1772802543.288 591 25ace0e056db5a08e3f09fa007282c20 "pdflatex"
-  "memtfg.out" 1772802541.368 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "memtfg.run.xml" 1772802543.288 2361 3af801e513f975e537742a614ef38cb5 "pdflatex"
-  "memtfg.tex" 1772800269.08811 14363 33c2f0f9a6a442c95e88c45e7ba3c59b ""
-  "memtfg.toc" 1772802543.288 2323 44ce043844f21079e6d539cf9804b889 "pdflatex"
+  "memtfg.lof" 1773046271.75517 544 d64664051ea0bc8a3191638a49904734 "pdflatex"
+  "memtfg.lot" 1773046271.75517 591 76e7f38a2fcb441d611cf9b5a1d55d21 "pdflatex"
+  "memtfg.out" 1773046270.05518 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "memtfg.run.xml" 1773046271.75517 2361 3af801e513f975e537742a614ef38cb5 "pdflatex"
+  "memtfg.tex" 1773045585.88499 14365 3f46fbfd1de374d99e82faf9129ead5b ""
+  "memtfg.toc" 1773046271.75517 2324 e7ef93406b53173589bd73201e50fcd6 "pdflatex"
   "settings/listings.tex" 1772787227.88871 6043 009de0d62aff431257a1544ba2a7940a ""
   (generated)
   "memtfg.aux"

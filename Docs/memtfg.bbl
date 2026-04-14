@@ -19,6 +19,622 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
+    \entry{justpark2023}{online}{}
+      \name{author}{1}{}{%
+        {{hash=ce908e07fd6d97912bd6e2cfd82475bc}{%
+           family={{JustPark Parking Ltd.}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {JustPark Parking Ltd.}%
+      }
+      \strng{namehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{fullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{bibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorbibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authornamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorfullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{About JustPark}
+      \field{urlday}{20}
+      \field{urlmonth}{11}
+      \field{urlyear}{2024}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.justpark.com/about/
+      \endverb
+      \verb{url}
+      \verb https://www.justpark.com/about/
+      \endverb
+    \endentry
+    \entry{spothero2023}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6e8aefee1118fd76be884f09073a63b5}{%
+           family={{SpotHero Inc.}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {SpotHero Inc.}%
+      }
+      \strng{namehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{fullhash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{bibnamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authorbibnamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authornamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authorfullhash}{6e8aefee1118fd76be884f09073a63b5}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{SpotHero: Park Smarter}
+      \field{urlday}{20}
+      \field{urlmonth}{11}
+      \field{urlyear}{2024}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://spothero.com/about
+      \endverb
+      \verb{url}
+      \verb https://spothero.com/about
+      \endverb
+    \endentry
+    \entry{dgt2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=53eff05403813827997e6bec6db95adc}{%
+           family={{20minutos.es}},
+           familyi={2\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {20minutos.es}%
+      }
+      \strng{namehash}{53eff05403813827997e6bec6db95adc}
+      \strng{fullhash}{53eff05403813827997e6bec6db95adc}
+      \strng{bibnamehash}{53eff05403813827997e6bec6db95adc}
+      \strng{authorbibnamehash}{53eff05403813827997e6bec6db95adc}
+      \strng{authornamehash}{53eff05403813827997e6bec6db95adc}
+      \strng{authorfullhash}{53eff05403813827997e6bec6db95adc}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{La DGT confirma que nunca ha habido más vehículos matriculados en España}
+      \field{urlday}{14}
+      \field{urlmonth}{4}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.20minutos.es/motor/actualidad/dgt-confirma-nunca-ha-habido-mas-vehiculos-matriculados-espana_6954697_0.html
+      \endverb
+      \verb{url}
+      \verb https://www.20minutos.es/motor/actualidad/dgt-confirma-nunca-ha-habido-mas-vehiculos-matriculados-espana_6954697_0.html
+      \endverb
+    \endentry
+    \entry{inrix2022}{online}{}
+      \name{author}{1}{}{%
+        {{hash=72d5cdf31180d8042e26c0151fe55d70}{%
+           family={{INRIX Inc.}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {INRIX Inc.}%
+      }
+      \strng{namehash}{72d5cdf31180d8042e26c0151fe55d70}
+      \strng{fullhash}{72d5cdf31180d8042e26c0151fe55d70}
+      \strng{bibnamehash}{72d5cdf31180d8042e26c0151fe55d70}
+      \strng{authorbibnamehash}{72d5cdf31180d8042e26c0151fe55d70}
+      \strng{authornamehash}{72d5cdf31180d8042e26c0151fe55d70}
+      \strng{authorfullhash}{72d5cdf31180d8042e26c0151fe55d70}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{INRIX 2022 Global Traffic Scorecard}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://inrix.com/scorecard/
+      \endverb
+      \verb{url}
+      \verb https://inrix.com/scorecard/
+      \endverb
+    \endentry
+    \entry{istac2023}{online}{}
+      \name{author}{1}{}{%
+        {{hash=e41c166257d985f34456243a26a3c591}{%
+           family={{Instituto Canario de Estadística}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Gobierno de Canarias}%
+      }
+      \strng{namehash}{e41c166257d985f34456243a26a3c591}
+      \strng{fullhash}{e41c166257d985f34456243a26a3c591}
+      \strng{bibnamehash}{e41c166257d985f34456243a26a3c591}
+      \strng{authorbibnamehash}{e41c166257d985f34456243a26a3c591}
+      \strng{authornamehash}{e41c166257d985f34456243a26a3c591}
+      \strng{authorfullhash}{e41c166257d985f34456243a26a3c591}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Estadística del Parque de Vehículos de Canarias 2023}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.gobiernodecanarias.org/istac/
+      \endverb
+      \verb{url}
+      \verb https://www.gobiernodecanarias.org/istac/
+      \endverb
+    \endentry
+    \entry{ley72021}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=ffcaa79a49ffccd02ea8bab3b4f0e047}{%
+           family={{Jefatura del Estado}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \strng{fullhash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \strng{bibnamehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \strng{authorbibnamehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \strng{authornamehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \strng{authorfullhash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Boletín Oficial del Estado}
+      \field{number}{121}
+      \field{title}{Ley 7/2021, de 20 de mayo, de cambio climático y transición energética}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.boe.es/eli/es/l/2021/05/20/7
+      \endverb
+      \verb{url}
+      \verb https://www.boe.es/eli/es/l/2021/05/20/7
+      \endverb
+    \endentry
+    \entry{typescript2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b9a8b868588ad4bc6b36c29936e26423}{%
+           family={{Microsoft Corporation}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Microsoft Corporation}%
+      }
+      \strng{namehash}{b9a8b868588ad4bc6b36c29936e26423}
+      \strng{fullhash}{b9a8b868588ad4bc6b36c29936e26423}
+      \strng{bibnamehash}{b9a8b868588ad4bc6b36c29936e26423}
+      \strng{authorbibnamehash}{b9a8b868588ad4bc6b36c29936e26423}
+      \strng{authornamehash}{b9a8b868588ad4bc6b36c29936e26423}
+      \strng{authorfullhash}{b9a8b868588ad4bc6b36c29936e26423}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{TypeScript: JavaScript with syntax for types}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.typescriptlang.org
+      \endverb
+      \verb{url}
+      \verb https://www.typescriptlang.org
+      \endverb
+    \endentry
+    \entry{react2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=350a86b0327152e3a50596538f38a5db}{%
+           family={{Meta Platforms, Inc.}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Meta Platforms, Inc.}%
+      }
+      \strng{namehash}{350a86b0327152e3a50596538f38a5db}
+      \strng{fullhash}{350a86b0327152e3a50596538f38a5db}
+      \strng{bibnamehash}{350a86b0327152e3a50596538f38a5db}
+      \strng{authorbibnamehash}{350a86b0327152e3a50596538f38a5db}
+      \strng{authornamehash}{350a86b0327152e3a50596538f38a5db}
+      \strng{authorfullhash}{350a86b0327152e3a50596538f38a5db}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{React -- The library for web and native user interfaces}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://react.dev
+      \endverb
+      \verb{url}
+      \verb https://react.dev
+      \endverb
+    \endentry
+    \entry{vitejs2024}{online}{}
+      \name{author}{2}{}{%
+        {{hash=c181205d8e6010f589e6c498afe0fe11}{%
+           family={You},
+           familyi={Y\bibinitperiod},
+           given={Evan},
+           giveni={E\bibinitperiod}}}%
+        {{hash=da8d88ece546832ef85a3e2a2d0fa09e}{%
+           family={{Vite Contributors}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Vite Contributors}%
+      }
+      \strng{namehash}{36ce3903e54aec753443ad8d5d33d331}
+      \strng{fullhash}{36ce3903e54aec753443ad8d5d33d331}
+      \strng{bibnamehash}{36ce3903e54aec753443ad8d5d33d331}
+      \strng{authorbibnamehash}{36ce3903e54aec753443ad8d5d33d331}
+      \strng{authornamehash}{36ce3903e54aec753443ad8d5d33d331}
+      \strng{authorfullhash}{36ce3903e54aec753443ad8d5d33d331}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Vite -- Next Generation Frontend Tooling}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://vitejs.dev
+      \endverb
+      \verb{url}
+      \verb https://vitejs.dev
+      \endverb
+    \endentry
+    \entry{reactrouter2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=58694698dd312a1623ad711ecc0d38bb}{%
+           family={{Remix Software, Inc.}},
+           familyi={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Remix Software, Inc.}%
+      }
+      \strng{namehash}{58694698dd312a1623ad711ecc0d38bb}
+      \strng{fullhash}{58694698dd312a1623ad711ecc0d38bb}
+      \strng{bibnamehash}{58694698dd312a1623ad711ecc0d38bb}
+      \strng{authorbibnamehash}{58694698dd312a1623ad711ecc0d38bb}
+      \strng{authornamehash}{58694698dd312a1623ad711ecc0d38bb}
+      \strng{authorfullhash}{58694698dd312a1623ad711ecc0d38bb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{React Router -- Declarative routing for React}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://reactrouter.com
+      \endverb
+      \verb{url}
+      \verb https://reactrouter.com
+      \endverb
+    \endentry
+    \entry{tanstack_query2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=9dd55379b93ec80f16ff6253eb004a35}{%
+           family={{TanStack}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {TanStack}%
+      }
+      \strng{namehash}{9dd55379b93ec80f16ff6253eb004a35}
+      \strng{fullhash}{9dd55379b93ec80f16ff6253eb004a35}
+      \strng{bibnamehash}{9dd55379b93ec80f16ff6253eb004a35}
+      \strng{authorbibnamehash}{9dd55379b93ec80f16ff6253eb004a35}
+      \strng{authornamehash}{9dd55379b93ec80f16ff6253eb004a35}
+      \strng{authorfullhash}{9dd55379b93ec80f16ff6253eb004a35}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{TanStack Query -- Powerful asynchronous state management for TypeScript/JavaScript}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://tanstack.com/query
+      \endverb
+      \verb{url}
+      \verb https://tanstack.com/query
+      \endverb
+    \endentry
+    \entry{tailwindcss2024}{online}{}
+      \name{author}{2}{}{%
+        {{hash=82d399ca2d4eaf122321c8b59c00ec1c}{%
+           family={Wathan},
+           familyi={W\bibinitperiod},
+           given={Adam},
+           giveni={A\bibinitperiod}}}%
+        {{hash=2f67c966accba2f76b600153899d46a8}{%
+           family={{Tailwind Labs, Inc.}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Tailwind Labs, Inc.}%
+      }
+      \strng{namehash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \strng{fullhash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \strng{bibnamehash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \strng{authorbibnamehash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \strng{authornamehash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \strng{authorfullhash}{7fb0243b687f6d117243b4970b7fc5ef}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Tailwind CSS -- A utility-first CSS framework}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://tailwindcss.com
+      \endverb
+      \verb{url}
+      \verb https://tailwindcss.com
+      \endverb
+    \endentry
+    \entry{leafletjs2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=5394be402511a06b16521a9b58b8acbf}{%
+           family={Agafonkin},
+           familyi={A\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{5394be402511a06b16521a9b58b8acbf}
+      \strng{fullhash}{5394be402511a06b16521a9b58b8acbf}
+      \strng{bibnamehash}{5394be402511a06b16521a9b58b8acbf}
+      \strng{authorbibnamehash}{5394be402511a06b16521a9b58b8acbf}
+      \strng{authornamehash}{5394be402511a06b16521a9b58b8acbf}
+      \strng{authorfullhash}{5394be402511a06b16521a9b58b8acbf}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Leaflet -- an open-source JavaScript library for mobile-friendly interactive maps}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://leafletjs.com
+      \endverb
+      \verb{url}
+      \verb https://leafletjs.com
+      \endverb
+    \endentry
+    \entry{openstreetmap2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=813861b5e679b1cea6e8539acb78a079}{%
+           family={{OpenStreetMap Foundation}},
+           familyi={O\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {OpenStreetMap Foundation}%
+      }
+      \strng{namehash}{813861b5e679b1cea6e8539acb78a079}
+      \strng{fullhash}{813861b5e679b1cea6e8539acb78a079}
+      \strng{bibnamehash}{813861b5e679b1cea6e8539acb78a079}
+      \strng{authorbibnamehash}{813861b5e679b1cea6e8539acb78a079}
+      \strng{authornamehash}{813861b5e679b1cea6e8539acb78a079}
+      \strng{authorfullhash}{813861b5e679b1cea6e8539acb78a079}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{OpenStreetMap}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.openstreetmap.org
+      \endverb
+      \verb{url}
+      \verb https://www.openstreetmap.org
+      \endverb
+    \endentry
+    \entry{opencage2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6a44da09c6b8d9c881e414a3f534d8cb}{%
+           family={{OpenCage GmbH}},
+           familyi={O\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {OpenCage GmbH}%
+      }
+      \strng{namehash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \strng{fullhash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \strng{bibnamehash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \strng{authorbibnamehash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \strng{authornamehash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \strng{authorfullhash}{6a44da09c6b8d9c881e414a3f534d8cb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{OpenCage Geocoding API}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://opencagedata.com
+      \endverb
+      \verb{url}
+      \verb https://opencagedata.com
+      \endverb
+    \endentry
+    \entry{supabase2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=f36245a6095b9ca9596d1cd4ae764144}{%
+           family={{Supabase, Inc.}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Supabase, Inc.}%
+      }
+      \strng{namehash}{f36245a6095b9ca9596d1cd4ae764144}
+      \strng{fullhash}{f36245a6095b9ca9596d1cd4ae764144}
+      \strng{bibnamehash}{f36245a6095b9ca9596d1cd4ae764144}
+      \strng{authorbibnamehash}{f36245a6095b9ca9596d1cd4ae764144}
+      \strng{authornamehash}{f36245a6095b9ca9596d1cd4ae764144}
+      \strng{authorfullhash}{f36245a6095b9ca9596d1cd4ae764144}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Supabase -- The Open Source Firebase Alternative}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://supabase.com
+      \endverb
+      \verb{url}
+      \verb https://supabase.com
+      \endverb
+    \endentry
+    \entry{stripe_connect2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=f4e3fabc55d11a5d2532c6cb097ae0ff}{%
+           family={{Stripe, Inc.}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Stripe, Inc.}%
+      }
+      \strng{namehash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \strng{fullhash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \strng{bibnamehash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \strng{authorbibnamehash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \strng{authornamehash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \strng{authorfullhash}{f4e3fabc55d11a5d2532c6cb097ae0ff}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Stripe Connect -- Payments infrastructure for platforms and marketplaces}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://stripe.com/connect
+      \endverb
+      \verb{url}
+      \verb https://stripe.com/connect
+      \endverb
+    \endentry
+    \entry{vercel2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b611823488786b851b24fb05d8ab927d}{%
+           family={{Vercel, Inc.}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Vercel, Inc.}%
+      }
+      \strng{namehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{fullhash}{b611823488786b851b24fb05d8ab927d}
+      \strng{bibnamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authorbibnamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authornamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authorfullhash}{b611823488786b851b24fb05d8ab927d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Vercel -- Build and deploy the best web experiences with the frontend cloud}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://vercel.com
+      \endverb
+      \verb{url}
+      \verb https://vercel.com
+      \endverb
+    \endentry
+    \entry{capacitor2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=0b2ad34f958fd517d7fa35bf515dd625}{%
+           family={{Ionic, Inc.}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Ionic, Inc.}%
+      }
+      \strng{namehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{fullhash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{bibnamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authorbibnamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authornamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authorfullhash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Capacitor -- Cross-platform native runtime for web apps}
+      \field{urlday}{10}
+      \field{urlmonth}{10}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://capacitorjs.com
+      \endverb
+      \verb{url}
+      \verb https://capacitorjs.com
+      \endverb
+    \endentry
     \entry{examplearticle}{article}{}
       \name{author}{1}{}{%
         {{hash=055f6811649a97bc3a36ff4b2581f441}{%
@@ -33,8 +649,8 @@
       \strng{authorbibnamehash}{055f6811649a97bc3a36ff4b2581f441}
       \strng{authornamehash}{055f6811649a97bc3a36ff4b2581f441}
       \strng{authorfullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Revista Ejemplo}

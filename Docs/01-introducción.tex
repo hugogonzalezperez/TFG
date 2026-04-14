@@ -42,3 +42,229 @@ Por último, la \textbf{viabilidad tecnológica} de la propuesta es indiscutible
    \caption{Impacto de la problemática del aparcamiento (a) y propuesta de optimización mediante Parky (b).}
    \label{fig:problematica_visual}
 \end{figure}
+
+\section{Estado del arte}
+\label{sec:estado-del-arte}
+
+Antes de diseñar cualquier sistema, conviene entender bien qué existe ya.
+En el ámbito del aparcamiento urbano asistido por tecnología hay dos
+categorías bien diferenciadas que conviene no confundir: las plataformas
+de gestión de zona regulada y las plataformas de reserva entre particulares.
+Parky pertenece a la segunda categoría, que en España tiene poca
+representación y ninguna implantación en Canarias.
+
+\subsection{Aplicaciones de zona regulada}
+
+Las aplicaciones de zona regulada digitalizan el pago de plazas en
+superficie gestionadas por el municipio. El conductor localiza su zona,
+introduce la matrícula y paga sin necesidad de un parquímetro físico.
+
+\textbf{EasyPark} opera en más de 4.000 ciudades de 25 países y es el
+referente del sector. Su modelo depende de convenios con los ayuntamientos;
+sin ese acuerdo, la plataforma no puede operar. \textbf{Telpark}, la
+alternativa desarrollada por Telefónica en España, sigue la misma lógica
+B2G\footnote{\textbf{B2G} (\textit{Business to Government}): modelo de relación
+comercial entre una empresa privada y una administración pública. En este contexto,
+las plataformas de zona regulada operan bajo contratos con los ayuntamientos, lo
+que condiciona su expansión al ritmo de la licitación pública.} e integra
+municipios como Madrid, Málaga o Alicante.
+
+Ninguna de las dos permite alquilar o reservar una plaza de titularidad
+privada. Operan en el espacio público regulado, no en el privado.
+
+\subsection{Plataformas de reserva en aparcamientos comerciales}
+
+Un segundo grupo conecta a conductores con aparcamientos privados ya
+existentes: parkings de centros comerciales, hoteles o edificios de
+oficinas que venden capacidad ociosa. \textbf{Parclick} es el mayor
+operador de este segmento en España, con más de 1.600 instalaciones
+listadas en 2024. \textbf{ElParking} y \textbf{Parkimeter} operan en la
+misma línea con menor cobertura.
+
+El denominador común es que el inventario lo forman instalaciones
+profesionales con gestión propia, no plazas de particulares. En Canarias,
+la cobertura de estas tres plataformas es marginal: Parclick lista menos
+de diez instalaciones en Santa Cruz de Tenerife, todas en el casco
+comercial.
+
+\subsection{Plataformas P2P de referencia internacional}
+
+El modelo más cercano a Parky es el de \textbf{JustPark} \cite{justpark2023} en el Reino
+Unido. Fundada en 2006, permite a cualquier particular publicar su plaza
+de garaje, entrada de casa o patio privado como oferta alquilable.
+Actualmente cuenta con más de 50.000 espacios listados y diez millones
+de usuarios registrados. Su trayectoria demuestra
+que el modelo P2P de aparcamiento funciona cuando hay masa crítica.
+
+En Estados Unidos, \textbf{SpotHero} \cite{spothero2023} opera un modelo similar con enfoque
+en grandes ciudades. Ninguna de las dos plataformas
+opera en España ni contempla la fiscalidad canaria.
+
+\subsection{Análisis comparativo}
+
+La \autoref{tab:competidores} resume las características principales de
+cada plataforma frente a Parky.
+
+El análisis deja dos ausencias concretas en el mercado español: no existe
+ninguna plataforma P2P de aparcamiento entre particulares con presencia
+en las Islas Canarias, y ninguna de las plataformas revisadas integra un
+sistema de acceso físico digital vinculado a la reserva. JustPark es el
+referente conceptualmente más próximo, pero opera exclusivamente en el
+mercado anglosajón y su modelo no contempla la fiscalidad canaria ni la
+gestión del IGIC\footnote{\textbf{IGIC} (Impuesto General Indirecto Canario):
+tributo indirecto propio de las Islas Canarias que sustituye funcionalmente al IVA
+peninsular. Su tipo general es del 7\% y el reducido del 3\%. Cualquier actividad
+económica de prestación de servicios en territorio canario queda sujeta a este
+impuesto, incluyendo el alquiler de plazas de aparcamiento entre particulares.}.
+
+Parky cubre ese espacio: una plataforma P2P diseñada para el área
+metropolitana de Tenerife, con acceso digital integrado y adaptada al
+marco fiscal canario.
+
+\begin{table}[H]
+\centering
+\caption{Comparativa de plataformas de aparcamiento}
+\label{tab:competidores}
+\begin{tabularx}{\textwidth}{lCCCCCC}
+    \toprule
+    \textbf{Plataforma} & \textbf{P2P} & \textbf{Mapa}
+    & \textbf{Pago integrado} & \textbf{App nativa}
+    & \textbf{Acceso digital} & \textbf{Canarias} \\
+    \midrule
+    EasyPark      & No  & Sí  & Sí  & Sí  & No  & No \\
+    Telpark       & No  & Sí  & Sí  & Sí  & No  & No \\
+    Parclick      & No  & Sí  & Sí  & Sí  & No  & Parcial \\
+    ElParking     & No  & Sí  & Sí  & Sí  & No  & No \\
+    JustPark (UK) & Sí  & Sí  & Sí  & Sí  & Parcial & No \\
+    \textbf{Parky} & \textbf{Sí} & \textbf{Sí} & \textbf{Sí}
+                   & \textbf{Sí} & \textbf{Sí} & \textbf{Sí} \\
+    \bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tendencias del mercado}
+\label{sec:tendencias-mercado}
+
+El problema del aparcamiento no es anecdótico ni local. Hay datos que lo
+cuantifican con precisión, y esos datos ayudan a calibrar tanto la magnitud
+de la ineficiencia como el tamaño de la oportunidad que Parky trata de resolver.
+
+\subsection{El mercado de aparcamiento en España}
+
+España tiene uno de los parques vehiculares más densos de Europa. La Dirección
+General de Tráfico (DGT)~\cite{dgt2026} registra más de 35 millones de vehículos
+matriculados en 2022, lo que equivale a aproximadamente 657 vehículos por cada
+1.000 habitantes, solo comparable con Italia y Alemania entre los grandes países
+de la Unión Europea.
+
+Ese volumen tiene un coste real en tiempo. El informe anual de movilidad urbana
+de INRIX~\cite{inrix2022} estima que los conductores españoles dedican una media
+de 24 horas al año exclusivamente a buscar aparcamiento. En las grandes ciudades
+la cifra sube: Madrid y Barcelona se sitúan entre las diez capitales europeas con
+mayor tiempo de búsqueda. El coste económico asociado, contabilizando combustible,
+tiempo y productividad, supera los 1.200 euros por conductor y año en entornos
+urbanos densos.
+
+Los precios del aparcamiento regulado varían según la ciudad y la zona. En Santa
+Cruz de Tenerife, la tarifa de zona azul oscila entre 0,60 y 1,20~€/hora. En
+Madrid (zona A) el precio alcanza los 2,55~€/hora, y en Barcelona sube hasta
+los 2,75~€/hora en zona de máxima demanda. El aparcamiento en parking comercial
+se sitúa entre 15 y 35~€/día en los centros urbanos de las capitales
+peninsulares~\cite{dgt2026}.
+
+\begin{table}[H]
+\centering
+\caption{Comparativa de tarifas de aparcamiento regulado por ciudad y zona.}
+\label{tab:tarifas-regulado}
+\begin{tabularx}{\textwidth}{X X c X}
+    \toprule
+    \textbf{Ciudad} & \textbf{Zona} & \textbf{Tarifa (€/hora)} & \textbf{Fuente} \\
+    \midrule
+    Santa Cruz de Tenerife & Zona azul & 0,60--1,20 & Ayto. Santa Cruz \\
+    Madrid & Zona A (SER) & 2,55 & EMT / Ayto. Madrid \\
+    Madrid & Zona B (SER) & 1,75 & EMT / Ayto. Madrid \\
+    Barcelona & Zona 1 (àrea verda) & 2,75 & BSM / Ajto. Barcelona \\
+    Barcelona & Zona 2 & 1,40 & BSM / Ajto. Barcelona \\
+    \bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{El mercado en Canarias y el área metropolitana de Tenerife}
+
+Canarias presenta una situación particular. La insularidad limita las alternativas
+de transporte público y convierte al vehículo privado en la opción dominante para
+la mayoría de desplazamientos. El Instituto Canario de
+Estadística~\cite{istac2023} registra en Tenerife más de 420.000 vehículos
+matriculados en 2023, con una tasa de motorización que supera los 700 vehículos
+por cada 1.000 habitantes en algunos municipios del área metropolitana,
+por encima de la media nacional.
+
+La presión sobre el aparcamiento en Santa Cruz de Tenerife y San Cristóbal de
+La Laguna se explica por la combinación de tres factores: alta densidad residencial
+en el casco histórico, escasa oferta de aparcamientos públicos subterráneos y
+concentración de actividad comercial y universitaria. Solo la Universidad de La
+Laguna, con más de 20.000 estudiantes matriculados, genera una demanda diaria de
+aparcamiento que el entorno inmediato no puede absorber.
+
+A ello se añade la presión normativa. La Ley 7/2021, de cambio climático y
+transición energética~\cite{ley72021}, obliga a los municipios de más de 50.000
+habitantes a implantar Zonas de Bajas Emisiones~\footnote{La Ley 7/2021 establece
+la obligatoriedad de las ZBE con carácter vinculante. Santa Cruz de Tenerife
+(aprox. 210.000 hab.) y San Cristóbal de La Laguna (aprox. 160.000 hab.) quedan
+dentro de su ámbito de aplicación. La restricción de acceso vehicular no elimina
+la necesidad de aparcar: la desplaza hacia la periferia, donde la oferta de plazas
+privadas infrautilizadas es mayor.} antes del 1 de enero de 2023.
+
+% [INSERTAR GRÁFICO 1.1: Evolución del parque de vehículos en Tenerife 2018--2023]
+
+\subsection{Disponibilidad y precios en el modelo P2P}
+
+El precio de alquiler mensual de una plaza de garaje privada en el área
+metropolitana de Tenerife oscila entre 50 y 120~€/mes según ubicación y
+características. Frente a los 15-35~€/día de un parking comercial de rotación,
+incluso la tarifa mensual más alta resulta competitiva para un conductor que
+necesita aparcar a diario.
+
+Para el propietario, el cálculo también es favorable. Una plaza que genera
+80~€/mes suma 960~€ anuales por un activo que de otro modo permanece vacío.
+La plataforma JustPark~\cite{justpark2023} documenta que sus propietarios en el
+Reino Unido obtienen entre 1.600 y 3.000 libras anuales por espacio publicado.
+Extrapolando al mercado canario, el rango estimado se situaría entre 1.000 y
+2.500~€ anuales, dependiendo de la localización y la frecuencia de uso.
+
+La restricción principal del modelo P2P no es de precio, sino de oferta
+organizada. No existe en Canarias ninguna plataforma que agregue esas plazas
+dispersas, las haga visibles en un mapa y gestione la reserva y el pago de
+forma automática. Esa ausencia es exactamente el espacio que Parky ocupa.
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+\subsection*{Objetivo general}
+
+Diseñar y desarrollar un prototipo funcional de \textit{marketplace} P2P
+para el alquiler de plazas de aparcamiento privadas en el área
+metropolitana de Tenerife, que conecte a propietarios de garajes
+infrautilizados con conductores que necesitan estacionar, y que resuelva
+de forma integrada la gestión de reservas, el acceso físico al garaje y
+el flujo de pagos entre particulares.
+
+\subsection*{Objetivos específicos}
+
+\begin{enumerate}
+
+    \item[\textbf{OE1.}] Implementar un sistema de autenticación empíricamente seguro y de control de acceso basado en roles (RBAC) que permita distinguir la lógica de permisos entre usuarios arrendatarios, propietarios y administradores, con soporte integrado para inicio de sesión abierto (OAuth).
+
+    \item[\textbf{OE2.}] Desarrollar la interfaz de aplicación (\textit{Single Page Application}) enfocada en la experiencia móvil (\textit{Mobile-First}), que incluya búsqueda sobre un mapa interactivo, filtros bidireccionales en tiempo real y rutinas de geocodificación para el registro de nuevas plazas.
+
+    \item[\textbf{OE3.}] Garantizar la privacidad, el entorno \textit{multitenant} y el aislamiento de datos entre los usuarios mediante la definición de políticas de seguridad a nivel de fila (\textit{Row Level Security} - RLS) forzadas directamente en el esquema relacional de la base de datos PostgreSQL.
+
+    \item[\textbf{OE4.}] Implementar un flujo concurrente de reservas que garantice la prevención de solapamientos horarios, asegurando la integridad de las transacciones a través de la programación de \textit{triggers} y procedimientos en base de datos (PL/pgSQL), manteniendo esta lógica agnóstica al lado del cliente.
+
+    \item[\textbf{OE5.}] Modelar la arquitectura frontend y la Experiencia de Usuario (UX/UI) del flujo de checkout, diseñando la integración visual del desglose de cobros tipo \textit{Marketplace} (ej. simulación de Stripe Connect). Esto incluye proyectar cómo el usuario percibe la separación de la tarifa base, la comisión de la plataforma y el cálculo automático del IGIC correspondiente a la jurisdicción canaria.
+
+    \item[\textbf{OE6.}] Integrar rutinas a nivel de sistema para la transición de estados temporales en reservas, además de habilitar las piezas lógicas de un sistema de control de acceso físico integrado con un esquema de valoraciones bidireccionales para incentivar la confianza dentro del sistema \textit{Peer-to-Peer}.
+
+    \item[\textbf{OE7.}] Desplegar la aplicación simultáneamente como un cliente web optimizado y como aplicación móvil, utilizando una arquitectura base compartida en TypeScript y metodologías de unificación de código.
+
+\end{enumerate}

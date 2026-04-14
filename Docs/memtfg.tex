@@ -15,7 +15,8 @@
 % \renewcommand\linenumberfont{\normalfont\tiny\sffamily\color{gray}}
 
 \usepackage[spanish,es-nolists,es-tabla,es-noindentfirst]{babel}
-\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=teal,
+            urlcolor=teal, filecolor=teal]{hyperref}
 
 \renewcommand{\listtablename}{Índice de tablas}    
 \renewcommand{\listfigurename}{Índice de figuras}
@@ -300,10 +301,24 @@ En este sentido, las plataformas digitales que se sustentan en la economía cola
 
 Por ello, en el presente Trabajo de Fin de Grado se propone el desarrollo de un prototipo de aplicación Full Stack para el alquiler de plazas de aparcamiento privadas. La plataforma operará como un marketplace que conectará a propietarios de plazas (casas particulares o comunidades) con conductores que requieran estacionar su vehículo, facilitando la gestión de reservas y la disponibilidad de los aparcamientos.
 
-Desde el aspecto técnico, para implementar el sistema se ha usado una tecnología que busca ser eficiente y escalable. Se utilizaron React y Vite para crear la parte de frontend y Supabase como servicio de backend. Se destaca la integración de Row Level Security (RLS) para garantizar la integridad y privacidad de los datos, así como el uso de Leaflet para la visualización de mapas interactivos. El resultado final es una solución robusta y accesible que optimiza el aprovechamiento del espacio urbano existente.
+Desde el aspecto técnico, el sistema se ha desarrollado con React~18 y
+Vite como plataforma \textit{frontend}, TypeScript con modo estricto y
+Tailwind CSS para el diseño de interfaz. El \textit{backend} se sustenta
+en Supabase, un servicio gestionado que proporciona base de datos
+PostgreSQL, autenticación con OAuth social y almacenamiento de ficheros.
+La seguridad de los datos se garantiza mediante políticas de
+\textit{Row Level Security} (RLS) y \textit{triggers} PL/pgSQL que
+aseguran la integridad de las reservas a nivel de base de datos. La
+visualización cartográfica se implementa con Leaflet. El sistema incluye
+un motor de precios dinámicos configurable, un módulo de acceso físico
+digital (\textit{SmartAccess}) vinculado al estado de cada reserva, y una
+arquitectura de pagos P2P mediante Stripe Connect que contempla la
+gestión del IGIC canario. La aplicación se despliega simultáneamente como
+\textit{Single Page Application} en Vercel y como aplicación Android
+nativa mediante Capacitor.
 
 \begin{keywords}[Palabras clave]
-Marketplace, P2P, aparcamiento, react, vite, supabase, economía colaborativa, reservas.
+Marketplace, P2P, aparcamiento, React, Vite, Supabase, Stripe Connect, Capacitor, economía colaborativa, reservas, Row Level Security.
 \end{keywords}
 \end{abstract}
 
@@ -318,10 +333,22 @@ In this sense, digital platforms that are based on the sharing economy have beco
 
 For this reason, in the present Final Degree Project the development of a Full Stack prototype application for the rental of private parking spaces is proposed. The platform will operate as a marketplace that will connect parking space owners (private homes or residential communities) with drivers who need to park their vehicles, facilitating the management of reservations and the availability of parking spaces.
 
-From a technical perspective, to implement the system a technology stack focused on efficiency and scalability has been used. React and Vite were used to create the frontend and Supabase as the backend service. The integration of Row Level Security (RLS) is highlighted to guarantee the integrity and privacy of the data, as well as the use of Leaflet for the visualization of interactive maps. The final result is a robust and accessible solution that optimizes the use of the existing urban space.
+From a technical perspective, the system was built with React~18 and
+Vite as the frontend platform, TypeScript in strict mode, and Tailwind
+CSS for interface design. The backend relies on Supabase, a managed
+service providing PostgreSQL, social OAuth authentication, and file
+storage. Data security is enforced through Row Level Security (RLS)
+policies and PL/pgSQL triggers that guarantee booking integrity at the
+database level. Map visualisation is handled by Leaflet. The system
+includes a configurable dynamic pricing engine, a digital physical
+access module (\textit{SmartAccess}) linked to booking status, and a
+P2P payment architecture via Stripe Connect that handles the Canary
+Islands IGIC tax. The application is deployed simultaneously as a
+Single Page Application on Vercel and as a native Android application
+via Capacitor.
 
 \begin{keywords}
-Marketplace, P2P, parking, React, Vite, Supabase, sharing economy, reservations.
+Marketplace, P2P, parking, React, Vite, Supabase, Stripe Connect, Capacitor, sharing economy, reservations, Row Level Security.
 \end{keywords}
 \end{abstract}
 
@@ -344,6 +371,8 @@ Marketplace, P2P, parking, React, Vite, Supabase, sharing economy, reservations.
 \input{02-capítulo2}
 \input{03-capítulo3}
 \input{04-capítulo4}
+\input{05-implementacion}
+\input{06-pruebas}
 \input{05-conclusiones}
 \input{06-conclusions}
 \input{07-presupuesto}

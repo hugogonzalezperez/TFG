@@ -1,14 +1,14 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'memtfg.blg'
-[54] biber:340> INFO - === Tue Apr 14, 2026, 00:49:38
-[67] Biber.pm:419> INFO - Reading 'memtfg.bcf'
-[111] Biber.pm:979> INFO - Found 20 citekeys in bib section 0
-[120] Biber.pm:4419> INFO - Processing section 0
-[128] Biber.pm:4610> INFO - Looking for bibtex file 'referencias.bib' for section 0
-[129] bibtex.pm:1713> INFO - LaTeX decoding ...
-[142] bibtex.pm:1519> INFO - Found BibTeX data source 'referencias.bib'
-[2130] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[2130] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'variable = shifted' with 'variable = non-ignorable'
-[2130] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'es-ES'
-[2142] bbl.pm:660> INFO - Writing 'memtfg.bbl' with encoding 'UTF-8'
-[2148] bbl.pm:763> INFO - Output to memtfg.bbl
+[56] biber:340> INFO - === Wed Apr 15, 2026, 00:03:08
+[66] Biber.pm:419> INFO - Reading 'memtfg.bcf'
+[119] Biber.pm:979> INFO - Found 29 citekeys in bib section 0
+[127] Biber.pm:4419> INFO - Processing section 0
+[134] Biber.pm:4610> INFO - Looking for bibtex file 'referencias.bib' for section 0
+[136] bibtex.pm:1713> INFO - LaTeX decoding ...
+[156] bibtex.pm:1519> INFO - Found BibTeX data source 'referencias.bib'
+[265] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[266] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'variable = shifted' with 'variable = non-ignorable'
+[266] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'es-ES'
+[279] bbl.pm:660> INFO - Writing 'memtfg.bbl' with encoding 'UTF-8'
+[286] bbl.pm:763> INFO - Output to memtfg.bbl

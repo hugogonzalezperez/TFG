@@ -1,16 +1,205 @@
 \chapter{Metodología y análisis de requisitos}
 \label{ch:metodologia}
 
-Los capítulos intermedios sirven para cubrir los siguientes aspectos: antecedentes, problemática o estado del arte, objetivos, fases y desarrollo del proyecto.
+% ============================================================
+\section{Metodología de desarrollo}
+\label{sec:metodologia}
 
-\section{Primera sección de este capítulo}
+La construcción de un sistema de software moderno requiere una metodología que estandarice el ciclo de vida del desarrollo. Para la concepción de \textit{Parky}, se descartaron aproximaciones tradicionales en cascada (\textit{Waterfall}) debido a la incertidumbre inherente al dominio funcional durante las primeras fases de diseño. 
 
-\lipsum[-2]
+En lugar de definir unos requisitos inmutables por adelantado, el proyecto adopta \textbf{Scrum}~\cite{scrum2020}, un marco de trabajo fundamentado en los pilares de la inspección, la transparencia y la adaptación de la \textit{metodología ágil}. El uso del enfoque ágil facilita enormemente las correcciones de rumbo, la incorporación agresiva de nuevas librerías al ecosistema (como \textit{Stripe Connect}) o la supresión técnica de rutas innecesarias sin destruir el esqueleto del proyecto.
 
-\section{Segundo apartado de este capítulo}
+\subsection{Adaptación iterativa para desarrollo unipersonal}
+\label{subsec:adaptacion-agil}
 
-\lipsum[3]
+Scrum presupone la existencia de un equipo compuesto por diferentes roles (\textit{Product Owner}, \textit{Scrum Master} y desarrolladores), lo cual resulta inviable en un Trabajo de Fin de Grado desarrollado de manera completamente individual. Por consiguiente, se ha ejecutado una adaptación minimalista, donde convergen todos los roles en una única persona.
 
-\section{Tercer apartado de este capítulo}
+El trabajo se ha organizado de manera estricta siguiendo un paradigma iterativo:
+\begin{enumerate}
+    \item \textbf{Pila del producto (\textit{Product Backlog}):} Los requisitos y funcionalidades, organizados como un inventario ordenado por niveles de prioridad de alto nivel en un tablero digital \textit{Kanban} mediante el uso de \textit{GitHub Projects}.
+    \item \textbf{Sprints modulares:} Itereaciones limitadas a dos semanas, enfocadas exclusivamente a un único módulo de alto nivel (por ejemplo: Sprints dedicados exhaustivamente al sistema de Auth y a la creación de bases de datos antes de enlazar la interfaz móvil).
+    \item \textbf{Retrospectiva continua:} Revisiones pragmáticas previas a cambiar de \textit{Sprint} orientadas a limpiar y refactorizar componentes y revisar vulnerabilidades incrustadas en las APIs, evaluando qué impedimentos relantizan artificialmente el transito funcional de los módulos del proyecto.
+\end{enumerate}
 
-\lipsum[4]
+\subsection{Planificación temporal operativa}
+\label{subsec:gantt}
+
+El cronograma del proyecto quedó segmentado temáticamente para maximizar la cobertura global, comenzando con una fuerte base sobre la gestión de sesiones abstractas y extendiéndose al entorno del GPS nativo.
+
+\begin{table}[htbp]
+\centering
+\caption{Cronograma simplificado del desarrollo de infraestructura de Parky.}
+\label{tab:cronograma-fases}
+\begin{tabularx}{\textwidth}{l*{5}{C}}
+\toprule
+\textbf{Módulos de Desarrollo} & \textbf{Mes 1} & \textbf{Mes 2} & \textbf{Mes 3} & \textbf{Mes 4} \\
+\midrule
+\rowcolor{gray!10} Planitud e Identidad UI (Figma/Taiwlind) & $\blacksquare$ & & & \\
+Identidades: Auth y Base de Datos (Supabase) & $\blacksquare$ & $\blacksquare$ & & \\
+\rowcolor{gray!10} Lógica núcleo: Mapa y Plazas & & $\blacksquare$ & $\blacksquare$ & \\
+Lógica núcleo: Sistema de Reservas y Notificaciones & & & $\blacksquare$ & $\blacksquare$ \\
+\rowcolor{gray!10} P2P: Integración Fiscal y Stripe & & & & $\blacksquare$ \\
+Despliegue Multiplataforma (Vercel y Capacitor) & & & & $\blacksquare$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Actores del sistema}
+\label{sec:actores}
+
+La delimitación de los perfiles que interactúan con una misma plataforma acota significativamente las fronteras y los permisos funcionales permitidos. A diferencia de las infraestructuras genéricas horizontales (como un foro o una red social tradicional de mensajería), en \textit{Parky} existe una dicotomía estricta de responsabilidades entre la oferta privada (arrendadores poseedores del bien material) y la demanda esporádica (arrendatarios usuarios de infraestructuras rodadas). Cada perfil accede únicamente a su propio grupo de información autorizado vía \textit{Row Level Security} sobre la entidad de `Profiles` abstracta.
+
+\begin{table}[htbp]
+\centering
+\caption{Identificación de Actores que interactúan directamente en la topología de la plataforma.}
+\label{tab:actores-principales}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Actor identificado} & \textbf{Descripción, propósito y alcance en el sistema} \\
+\midrule
+\rowcolor{gray!5}
+\textbf{Arrendador} & Propietario legal que publica los excedentes de garajes, decidiendo de manera vinculante precio e inventarios. Cuenta con el privilegio para alta de nuevas plazas con adjuntos visuales, edición, administración contable de su estado e intercepción/aceptación directa sobre todas las reservas entrantes en el tiempo para sus activos. Cobra indirectamente a través del balance derivado en \textit{Stripe Connect}. \\
+\\
+\textbf{Arrendatario} & Conductor o usuario estático que precisa alquilar un segmento temporal en un garaje específico. Su ámbito computacional es la carga visual del mapa vectorial para el filtrado espacial y visualización de recursos libres, petición directa, emisión de pagos de tarjeta blindados, y emisión posterior de una valoración obligatoria sujeta en base al activo reservado. \\
+\\
+\rowcolor{gray!5}
+\textbf{Administrador} & Represente directo del sistema corporativo de mantenimiento. Actor silencioso fuera del código nativo cliente, y el cual orquesta permisos globales visuales, suspensión directa de identidades y administración global de cuotas y depuración de la Base de Datos mediante el uso privado abstracto del portal RLS nativo incrustado en el \textit{dashboard} de Supabase. \\
+\\
+\textbf{Sistema} & Componente inanimado automático. Conformado tecnológicamente como el consorcio orquestado que vincula la computación invisible: procesa transacciones (Stripe), geocodifica (OpenCage) y autentifica identidades (OAuth) emitiendo notificaciones estáticas mediante base de datos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Requisitos funcionales}
+\label{sec:requisitos_funcionales}
+
+Los requisitos funcionales detallan las operaciones explícitas que el sistema informático debe ser capaz de procesar sin alterar su comportamiento estándar. Para estructurarlo armónicamente, se han categorizado ateniéndonos a los ejes troncales de los perfiles y espacios de negocio previstos arquitectónicamente.
+
+\subsection{Módulo de Autenticación e Identidad}
+\begin{itemize}
+    \item \textbf{RF-01 (Registro e inicio multiplataforma):} El sistema debe permitir el alza y login unificado a través de validación semántica delegada (OAuth2 por Google) y un canal nativo (Email y contraseña).
+    \item \textbf{RF-02 (Acaparamiento de rol):} Inmediatamente posterior al primer login temporal en la plataforma, el sistema debe derivar la vista hasta forzar la selección binaria e intransitiva en base de datos del perfil comercial principal (\textit{Arrendador} o \textit{Arrendatario}).
+\end{itemize}
+
+\subsection{Módulo de Gestión Espacial (Plazas)}
+\begin{itemize}
+    \item \textbf{RF-03 (Publicación y edición contable):} El arrendador autenticado ostentará potestad única para dar de alta sus propios activos, debiendo acompañarlos de variables obligatorias como geoposición precisa, descripción textual, importe fraccionado mínimo y adjuntos fotográficos. Del mismo modo podrá alterarlos o darlos de baja lógicamente.
+    \item \textbf{RF-04 (Filtrado cartográfico dinámico):} El sistema ofrecerá una capa visual interactiva usando renderizado de \textit{Leaflet} incrustado, devolviendo y filtrando \textit{markers} (plazas) cuyo estado sea libre y converja asimétricamente en el polígono visualizado por la cámara del dispositivo móvil.
+\end{itemize}
+
+\subsection{Módulo de Reservas Transaccionales}
+\begin{itemize}
+    \item \textbf{RF-05 (Emisión de solapa temporal):} El usuario arrendatario dispondrá de una vista de petición con campos de inicio y finalización por fechas solapables.
+    \item \textbf{RF-06 (Ciclo de vida intermedio):} Transversalmente, el sistema dictaminará una serie de barreras para la integridad del objeto de reserva: \texttt{pendiente $\rightarrow$ confirmada $\rightarrow$ en curso $\rightarrow$ completada $\rightarrow$ cancelada}.
+    \item \textbf{RF-07 (Confirmación arbitratia):} Toda reserva generada caerá en la bandeja del arrendador en estado \texttt{pendiente}, requiriendo obligatoriamente un control por acción manual por su parte para habilitar tecnológicamente el desembolso e inicio de cobro.
+\end{itemize}
+
+\subsection{Módulo de Transacciones Contables (Pagos)}
+\begin{itemize}
+    \item \textbf{RF-08 (Pasarela blindada):} Tras la aceptación semántica, la plataforma actuará la reserva interina en estado confirmatorio y enrutará los fondos a la pasarela opaca gestionada por \textit{Stripe}. La comisión matemática impuesta por la plataforma se retiene automáticamente antes del desembolso al proveedor.
+    \item \textbf{RF-09 (Resiliencia de reembolsos):} El sistema revertirá íntegramente las transacciones si el evento es anulado formalmente antes del periodo ventana o ante caídas generalizadas de red forzadas, actuando directamente contra el API bancaria.
+\end{itemize}
+
+\subsection{Módulos Auxiliares de Calibración}
+\begin{itemize}
+    \item \textbf{RF-10 (Valoración póstuma):} Para evitar engaños y fomentar la confianza, los usuarios podrán valorar paramétricamente mediante un ranking ordinal (1 a 5 estrellas) un activo únicamente si validan que la transacción ha sido formalmente completada por ambas partes.
+    \item \textbf{RF-11 (Alarma activa proveedor):} El sistema generará activamente una notificación inter-proceso para alertar a un arrendador desconectado cada vez que converja una nueva petición síncrona en sus activos listados. 
+    \item \textbf{RF-12 (Alarma reactiva cliente):} Idénticamente para la otra perspectiva, los arrendatarios serán alertados visualmente del éxito o rotundo declive provocado tras confirmar/rechazar su bloque de tiempo reservable.
+\end{itemize}
+
+% ============================================================
+\section{Requisitos no funcionales}
+\label{sec:requisitos_no_funcionales}
+
+Los requisitos no funcionales moldean estructuralmente cómo la base de operaciones aborda la calidad interna, condicionando restricciones de velocidad, escalabilidad e inyección continua de código. Para Parky se abordan en base a la estandarización paralela para ingenierías de software formales.
+
+\begin{table}[htbp]
+\centering
+\caption{Delimitación estricta de las variables y requerimientos no funcionales de la aplicación.}
+\label{tab:rnf}
+\begin{tabularx}{\textwidth}{l|X}
+\toprule
+\textbf{Categoría Crítica} & \textbf{Requisito explorable y restricciones asociadas} \\
+\midrule
+\rowcolor{gray!5}
+\textbf{Rendimiento} & Puesto que la interacción es a través de redes a menudo inestables, el tiempo de renderizado de la topología web matriz (antes de hidratar y ejecutar lógica local) no sobrepasará un tiempo teórico de 3 segundos bajo una conectividad 4G de latencia media. \\
+\\
+\textbf{Seguridad} & La barrera arquitectónica para consultar una base de datos en clientes web/móviles requiere ineludiblemente la creación de políticas SQL de filtrado (\textit{Row Level Security}) en Supabase e intercepción asíncrona por JSON Web Tokens en cada capa. \\
+\\
+\rowcolor{gray!5}
+\textbf{Usabilidad} & A nivel de percepción y contrastes, la interfaz heredará la librería \textit{Tailwind CSS} garantizando estricta responsividad escalar en anchos variables pasando las validaciones de contraste W3C bajo la categoría estándar WCAG 2.1 de nivel AA para la inclusión de usuarios monocromáticos. \\
+\\
+\textbf{Portabilidad técnica} & Dado que se programa una arquitectura desacoplada React (SPA), este paquete tiene obligatoriamente que operar con la envoltura asíncrona de Capacitor para conformar aplicaciones compiladas nativas aptas y publicables para clientes tanto del entorno \textit{Apple iOS} como de \textit{Android}. \\
+\\
+\rowcolor{gray!5}
+\textbf{Disponibilidad} & Los proveedores infraestructurales seleccionados en la comparativa (Vercel Node para los \textit{assets} y Supabase PostgreSQL para la computación) exigen formalmente un Acuerdo de Nivel de Servicio mínimo del 99,5\% de \textit{uptime}. \\
+\\
+\textbf{Escalabilidad horizontal} & Al desvincularse Parky temporalmente de infraestructuras cerradas tipo VPS por una nube tipo Serverless, la demanda abrupta de clientes se apacigua replicando instancias computacionales por \textit{Edge Functions} subyacentes, aislando del estrés al código primario programado que se publicará. \\
+\\
+\rowcolor{gray!5}
+\textbf{Mantenibilidad} & El desarrollo sigue estándares rigurosos. Todo parámetro, variable y función queda incursionado con \textit{TypeScript Strict} asegurando retrocompatibilidad, minimizando fuertemente la incursión de \textit{Undefined Types} en el entorno de ejecución final del programa. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Modelo de casos de uso}
+\label{sec:casos_de_uso}
+
+El sistema global se disecciona de manera analítica para representar gráficamente las interacciones abstractas de los usuarios sobre la entidad invisible (el sistema). En la topología ilustrada (\autoref{fig:casos_de_uso_uml}), queda latente la partición de las capacidades atadas al grupo de pertenencia de la identidad analizada en el entorno. 
+
+\begin{figure}[htbp]
+    \centering
+    % TODO: Reemplazar el Typescript_logo por la imagen final UML que tú generes con Draw.io (es decir, usar images/assets/casos_de_uso.png)
+    \includegraphics[width=0.85\textwidth]{images/assets/Typescript_logo.png} 
+    \caption{Diagrama de Casos de Uso General intersecando la dependencia cliente/entorno.}
+    \label{fig:casos_de_uso_uml}
+\end{figure}
+
+Del esquema de dependencias genéricas se pueden entrelazar las operaciones de negocio más voluminosas e interceptables por el producto en fase de producción e ingeniería de software.
+
+\begin{table}[htbp]
+\centering
+\caption{CU-02: Publicar plaza de garaje temporal.}
+\label{tab:cu-02}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre & CU-02: Publicar plaza de garaje \\ \hline
+Actor principal & Arrendador \\ \hline
+Precondiciones & El actor debe encontrarse correctamente identificado en el sistema (JWT activo) y su perfil primario fijado formalmente como Arrendador. \\ \hline
+Postcondiciones & La nueva plaza quedará inscrita de forma persistente como registro público asimilable lógicamente, emitiéndose un refresco automático en todo cliente móvil en la geozona de la plaza. \\ \hline
+Flujo principal & 
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] El arrendador accede formalmente al tablero lateral de sus activos.
+\item[2.] Completa un formulario de alta iterativo cediendo datos técnicos y adjuntos.
+\item[3.] Verifica la \textit{chincheta} paraxial geoposicional para enmarcar su latitud/longitud real en la edificación.
+\item[4.] Confirma su inserción ejecutando una mutación GraphQL a la API.
+\item[5.] El sistema notifica asimétricamente la subida exitosa.
+\end{itemize} \\ \hline
+Flujo alternativo & Si los campos referidos al precio están corrompidos matemáticamente o la subida de los \textit{Buckets} fotográficos aborta prematuramente, el núcleo asume pánico bloqueando el registro a Base de Datos y reflejando una alarma modal roja en el origen \textit{frontend}. \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{CU-04: Realizar reserva y depósito transaccional.}
+\label{tab:cu-04}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre & CU-04: Realizar reserva y pago \\ \hline
+Actor principal & Arrendatario \\ \hline
+Precondiciones & El actor identificable debe poseer acceso asíncrono y los metadatos visuales de la plaza interceptada perimetralmente asimilados. \\ \hline
+Postcondiciones & La entidad contable pasa al limbo bajo estado \texttt{pendiente} a expensas puramente de la réplica asimétrica del arrendador, imposibilitándose a otros sobreescribir la brecha cronometrada. \\ \hline
+Flujo principal & 
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] El arrendatario clica el activo libre desde su interfaz virtual.
+\item[2.] Diligencia obligatoria del selector de periodos por minutos/horas exactas.
+\item[3.] El sistema valida criptográficamente solapamientos (triggers SQL en caliente).
+\item[4.] Se levanta la terminal asíncrona de Stripe forzando al cobro preventivo.
+\item[5.] Retorno en bucle y validación definitiva confirmando a ambos perfiles involucrados en los buzones nativos.
+\end{itemize} \\ \hline
+Flujo alternativo & Si la tarjeta sufre retención severa bancaria o la plaza fue capturada paralelamente por un nodo esclavo ajeno durante el \textit{lag} estético, remite la inyección contable e informa con una barrera temporal. \\ \hline
+\end{tabularx}
+\end{table}

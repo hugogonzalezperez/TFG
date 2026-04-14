@@ -2382,10 +2382,20 @@
     <bcf:citekey order="16" intorder="1">openstreetmap2024</bcf:citekey>
     <bcf:citekey order="17" intorder="1">opencage2024</bcf:citekey>
     <bcf:citekey order="18" intorder="1">supabase2024</bcf:citekey>
-    <bcf:citekey order="19" intorder="1">stripe_connect2024</bcf:citekey>
-    <bcf:citekey order="20" intorder="1">vercel2024</bcf:citekey>
-    <bcf:citekey order="21" intorder="1">capacitor2024</bcf:citekey>
-    <bcf:citekey order="22" intorder="1">examplearticle</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">postgresql2024</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">mongodb2024</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">git2024</bcf:citekey>
+    <bcf:citekey order="22" intorder="1">github2024</bcf:citekey>
+    <bcf:citekey order="23" intorder="1">figma2024</bcf:citekey>
+    <bcf:citekey order="24" intorder="1">eslint2024</bcf:citekey>
+    <bcf:citekey order="25" intorder="1">vercel2024</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">onecom2024</bcf:citekey>
+    <bcf:citekey order="27" intorder="1">capacitor2024</bcf:citekey>
+    <bcf:citekey order="34" intorder="1">supabase2024</bcf:citekey>
+    <bcf:citekey order="35" intorder="1">firebase2024</bcf:citekey>
+    <bcf:citekey order="36" intorder="1">awsamplify2024</bcf:citekey>
+    <bcf:citekey order="37" intorder="1">scrum2020</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">examplearticle</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

@@ -927,35 +927,6 @@
       \verb https://scrumguides.org/scrum-guide.html
       \endverb
     \endentry
-    \entry{examplearticle}{article}{}
-      \name{author}{1}{}{%
-        {{hash=055f6811649a97bc3a36ff4b2581f441}{%
-           family={Smith},
-           familyi={S\bibinitperiod},
-           given={Jane},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{fullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{bibnamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authorbibnamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authornamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authorfullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Revista Ejemplo}
-      \field{number}{3}
-      \field{title}{Título del Artículo}
-      \field{volume}{15}
-      \field{year}{2021}
-      \field{pages}{123\bibrangedash 145}
-      \range{pages}{23}
-      \verb{doi}
-      \verb 10.1234/rev-ejemplo.2021.015
-      \endverb
-    \endentry
   \enddatalist
 \endrefsection
 \endinput

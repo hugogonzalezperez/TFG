@@ -1,14 +1,96 @@
-\chapter{Diseño del sistema}
-\label{ch:diseno}
+\chapter{Estudio de viabilidad económica}
+\label{ch:viabilidad_economica}
 
-Los capítulos intermedios sirven para cubrir los siguientes aspectos: antecedentes, problemática o estado del arte, objetivos, fases y desarrollo del proyecto.
+En esta sección, se llevará a cabo un análisis detallado de la viabilidad económica asociada con la implementación del sistema Parky. Este estudio se ha diseñado bajo la premisa de la ejecución del proyecto en un entorno empresarial profesional real, haciendo uso de recursos humanos cualificados en el sector tecnológico y proyectado al mercado del año 2026. El objetivo es corroborar que, más allá de la solidez técnica, el proyecto es escalable, sostenible y rentable económicamente a medio plazo, elaborando asimismo un esquema integral de comercialización, mantenimiento y proyecciones de retorno.
 
-En el \autoref{ch:introducción} se comentó lo que \cite{examplearticle} dijo al respecto. Aquí vamos a profundizar en una de sus afirmaciones más controvertidas:
+\section{Desarrollo del proyecto}
+\label{sec:desarrollo_proyecto}
 
-\begin{displayquote}[Albert Einstein]
-\lipsum[7]
-\end{displayquote}
+Para garantizar un proceso de creación eficiente y cumplir con los más altos estándares de calidad propios de una plataforma P2P\footnote{\textit{Peer-to-Peer}: Red entre pares que permite el intercambio de información y servicios directos entre usuarios, sin intermediación bancaria o administrativa central en transacciones puras.} transaccional, el ciclo de vida del proyecto se ha dividido en seis fases bien definidas. La adopción de un modelo iterativo e incremental ha permitido paralelizar tareas críticas, acortando los tiempos generales del proyecto.
 
-Es decir que \textquote{erat ac sagittis sempe}, lo que se ilustra en el esquema de la \autoref{fig:otra}.
+\begin{itemize}
+    \item \textbf{Análisis (27 días):} Fase crítica centrada en la definición exhaustiva de requisitos funcionales, validación de la lógica de negocio del modelo de aparcamiento y análisis normativo en torno a las ZBE\footnote{Zonas de Bajas Emisiones (ZBE): Áreas urbanas específicas con restricciones de acceso vehiculares para mejorar la calidad del aire.}. Es indispensable afianzar estos conceptos para evitar sobrecostes en etapas posteriores.
+    \item \textbf{Diseño (24 días):} Establecimiento de la arquitectura del software. En esta etapa se decide el ecosistema tecnológico (React, TypeScript, Supabase, Capacitor), la estructuración de la base de datos PostgreSQL en cumplimiento estricto con las políticas de RLS\footnote{\textit{Row Level Security} (RLS): Políticas de base de datos que restringen qué filas de una tabla pueden ser leídas o manipuladas por un usuario determinado.} y el diseño de interfaces UI/UX\footnote{\textit{User Interface / User Experience} (UI/UX): Diseño centrado en la interacción del usuario y la percepción visual de la plataforma.} para las plataformas web y móvil.
+    \item \textbf{Desarrollo e implementación (135 días):} Constituye la actividad central del cronograma. Durante estos meses, se ejecuta la codificación del \textit{frontend}, la construcción de la base de datos y la orquestación del \textit{backend}, destacando la integración de la pasarela de pagos descentralizada con Stripe Connect y la geolocalización mediante Leaflet.
+    \item \textbf{Pruebas (130 días):} Dada la sensibilidad en el procesamiento de transacciones financieras, esta fase, ejecutada en paralelo al desarrollo, resulta innegociable. Engloba pruebas unitarias, de integración y simulaciones de vulnerabilidad, garantizando que el reparto de comisiones y el cálculo de la tarifa tributaria operan sin fallos.
+    \item \textbf{Despliegue (10 días):} Fase de paso técnico a producción. Se configuran los servidores en la nube (Vercel para la vista de cliente y Render/Supabase como proveedor de servicios de \textit{backend}), y se lleva a cabo la publicación oficial de la versión móvil en las respectivas plataformas, asegurando un lanzamiento íntegro.
+    \item \textbf{Mantenimiento (Continuo):} Práctica recurrente tras el lanzamiento destinada a monitorizar el tráfico, aplicar parches de seguridad, optimizar el SEO\footnote{\textit{Search Engine Optimization} (SEO): Prácticas para mejorar el posicionamiento de una plataforma en los resultados de motores de búsqueda orgánicos.} y mantener la escalabilidad progresiva del software al ritmo de aumento en la base de usuarios.
+\end{itemize}
 
-\lipsum[2]
+% AÑADIR IMAGEN DEL DIAGRAMA DE GANTT (FASE 1)
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{images/gantt_parky_01}
+%     \caption{Diagrama de Gantt del desarrollo de Parky (Parte 1)}
+%     \label{fig:gantt_1}
+% \end{figure}
+
+\subsection{Coste y duración del proyecto}
+\label{subsec:coste_duracion}
+
+Para hacer frente a una arquitectura de complejidad media-alta, es indispensable conformar un equipo tecnológico multidisciplinar bajo la modalidad de subcontratación de una agencia o consultora de software. Esto exime al propietario de gestionar nóminas directas, asumiéndose una tarifa por hora técnica que ya incluye los seguros sociales, los equipos de trabajo (licencias de software y hardware como ordenadores, y dispositivos nativos iOS y Android de testeo) y el margen de intermediación.
+
+El equipo humano presupuestado cuenta, como mínimo, con los siguientes roles: Jefe de Proyecto, Analista de Software, Arquitecto de Software, Desarrollador Frontend y Backend (perfiles tanto Junior como Senior), Diseñador UI/UX y QA\footnote{\textit{Quality Assurance} (QA): Profesional o procedimiento destinado a validar proactivamente la integridad y calidad del desarrollo del software antes de su liberación al cliente.}.
+
+Evaluando las tareas desglosadas se ha estimado un plazo total de ejecución de 191 días hábiles de trabajo en jornada completa. Tomando como base la estructura contractual de consultoría para perfiles en España a valores del mercado IT de 2026, el coste de ejecución total ronda los \textbf{230.400 euros}.
+
+% AÑADIR TABLA O IMAGEN DEL PRESUPUESTO BASADO EN LA IMAGEN QUE ENVIASTE ANTES
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{images/tabla_presupuesto_horas}
+%     \caption{Presupuesto y tarifas por perfil técnico para el desarrollo}
+%     \label{fig:presupuesto_equipo}
+% \end{figure}
+
+Para mitigar contingencias y cubrir el gasto publicitario y operativo del lanzamiento hasta que la curva de ingresos genere beneficios constantes, se concluye como altamente recomendada una inyección de capital o \textbf{inversión inicial no inferior a los 300.000 euros}.
+
+
+\section{Funcionalidades adicionales}
+\label{sec:funcionalidades_adicionales}
+
+Parky nace con una propuesta de valor completamente funcional en su vertiente MVP\footnote{\textit{Minimum Viable Product} (MVP): Versión incial funcional de un producto que dispone de las características esenciales para satisfacer una necesidad de mercado y testear la viabilidad con clientes reales.}. Sin embargo, bajo un esquema de profesionalización profunda, la aplicación incorporaría funcionalidades tecnológicas de máximo nivel para lograr una ventaja competitiva radical respecto a posibles alternativas, orientando la plataforma a los paradigmas de las \textit{Smart Cities}. Entre ellas se destacan:
+
+\begin{itemize}
+    \item \textbf{Motor de Inteligencia Artificial para Precios Dinámicos:} Algoritmo predictivo que, analizando la densidad de tráfico, eventos masivos cercanos y los precios medios del entorno en tiempo real, sugiere al propietario de la plaza la tarifa óptima.
+    \item \textbf{Apertura Remota mediante conectividad IoT\footnote{\textit{Internet of Things} (IoT) o Internet de las cosas: Interconexión digital de objetos físicos cotidianos con redes de telecomunicaciones, permitiendo control remoto.}:} Integración con módulos de hardware embebidos (conexión \textit{Bluetooth Low Energy}/NFC). Un usuario arrendatario, durante el periodo estricto de su reserva, podría accionar remotamente la apertura del garaje físico desde la aplicación móvil sin necesidad de un intercambio físico de llaves.
+    \item \textbf{Filtraje automatizado de Zonas de Bajas Emisiones (ZBE):} Dado el progresivo endurecimiento de las normativas de circulación, la plataforma cruzará las matrículas de los vehículos con las bases medioambientales y solo proveerá acceso a aquellas plazas de aparcamiento a las que el vehículo del usuario esté legalmente autorizado a acceder, protegiéndole frente a sanciones administrativas.
+    \item \textbf{Validación Biométrica de Identidades:} En un sector P2P (entre particulares), garantizar la confianza mutua es el servicio más vital. Mediante servicios KYC\footnote{\textit{Know Your Customer} (KYC): Procedimiento legal y tecnológico adoptado por las empresas para verificar de forma inequívoca la identidad de sus clientes.}, los usuarios verificarán su identidad uniendo el Reconocimiento Facial (FaceID) y la digitalización de su Documento Nacional de Identidad.
+    \item \textbf{Sistema de Fidelización Eco-Parky:} Promoción de un sistema de incentivos y gamificación. El propietario obtendrá descuentos sobre la comisión del servicio si permite la recarga de vehículos eléctricos en su plaza, y los arrendatarios obtendrán puntos canjeables si poseen un vehículo con distintivo "Cero" o "Eco".
+\end{itemize}
+
+
+\section{Modelo de comercialización}
+\label{sec:modelo_comercializacion}
+
+A diferencia de la venta de software tradicional, Parky basa su estrategia de monetización en la transacción de servicios \textit{peer-to-peer} (P2P), complementándose con suscripciones empresariales y planes de fidelización. Este modelo se diseña en dos vertientes: el canon por operación y la suscripción recurrente. 
+
+\begin{itemize}
+    \item \textbf{Comisión por Transacción (Modelo Core):} Al erigirse como el puente tecnológico y de confianza entre el arrendador del garaje y el usuario conductor, la aplicación percibe ingresos como intermediario, reteniendo automáticamente un porcentaje fijo (aproximadamente entre un 10\,\% y un 15\,\%) sobre cada proceso de reserva cerrado de forma exitosa.
+    \item \textbf{Subscripción Propietario "Premium":} Enfocado hacia aquellos usuarios que administran una cantidad notable de plazas de aparcamiento o pequeñas agencias de inversión inmobiliaria, se les habilitará una suscripción recurrente. Esta les dotaría de paneles de control financieros detallados (tasas de ocupación e ingresos automatizados), opciones masivas (\textit{bulk}) de modificación de tarifas y un soporte preferente las 24 horas del día.
+\end{itemize}
+
+El sostén operativo de este modelo exige asumir gastos fijos imprescindibles. Entre los más destacados se ubican las pasarelas de pago que aplicarán un modesto cargo por cada transacción completada; los servidores de almacenamiento dinámico y base de datos relacional para sostener la demanda; la red de alojamiento API\footnote{\textit{Application Programming Interface} (API): Conjunto de rutinas y protocolos que permite la comunicación programática entre distintos sistemas de \textit{software}.}; y, de forma obligatoria, las licencias anuales o pagos únicos para distribuir la aplicación móvil a través de la App Store de Apple y la Google Play Store de Google, respectivamente.
+
+
+\section{Estimación del Retorno de la Inversión (ROI)}
+\label{sec:estimacion_roi}
+
+Determinar el Retorno de la Inversión o ROI\footnote{\textit{Return on Investment} (ROI): Métrica financiera utilizada para evaluar la rentabilidad o ganancia obtenida en comparación con la inversión inicial requerida, hallando el \textit{Break-Even} (punto de equilibrio).} implica confrontar los elevados costes de la inversión inicial, el paulatino aumento de los costes de escalabilidad (mantenimiento en la nube) y la inyección progresiva de ingresos fruto del auge en el número de reservas procesadas. Para el estudio, se asume un crecimiento conservador en la tracción de usuarios.
+
+\textbf{Embudos de Adquisición y Gastos Iniciales:} \\
+Basándonos en la captación de usuarios mediante plataformas publicitarias y SEO, se destinará una cantidad mensual de publicidad activa (agregadores y redes sociales) en los primeros seis meses hasta llegar a un estado de inercia o conocimiento mediático en las Islas Canarias. Del 100\,\% de los usuarios captados orgánicamente, se predice que solo entre el 2\,\% y 3\,\% pasará por el embudo de conversión hasta concretar transacciones pagadas semanalmente. 
+
+Por otro lado, los gastos operativos fijos crecen suavemente. Aquí deben costearse las transferencias a infraestructuras web y móvil para tolerar la latencia simultánea, y los gastos mensuales referidos a herramientas colaborativas y seguridad de base de datos.
+
+% AÑADIR IMAGEN GRÁFICA DE "GASTOS vs INGRESOS (PROYECCIÓN)"
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{images/proyeccion_ingresos_gastos}
+%     \caption{Evolución proyectada de los gastos consolidados frente a los ingresos generados}
+%     \label{fig:grafica_roi}
+% \end{figure}
+
+\textbf{Punto de Retorno:} \\
+Siguiendo las curvas de proyección estimadas bajo un escenario de aceptación de mercado estándar (ni excesivamente pesimista ni inflado por el optimismo), la brecha entre los gastos acumulados y los ingresos devengados en materia de comisiones de aparcamiento o bonos de fidelización irá acortándose sistemáticamente a medida que la aplicación logre un posicionamiento firme e invite al uso diario. 
+
+Por lo que respecta a la simulación efectuada, de mantenerse con constancia el porcentaje de comisiones transaccionales, se estima que el punto de equilibrio que absorberá el umbral de los 300.000 euros iniciales se materializará aproximadamente en el \textbf{decimosexto mes comercial} de funcionamiento de la empresa, momento a partir del cual el sistema arrojaría un saldo de retribución neta favorable para la directiva interesada en la inversión.

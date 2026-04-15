@@ -1,0 +1,2020 @@
+TRABAJO DE FIN DE GRADO EN INGENIERÍA INFORMÁTICA
+
+Desarrollo de plataforma gamificada para la gestión
+eficiente del flujo de trabajo empresarial
+Development of a gamified platform for eﬀicient business workflow management
+
+Pablo Medina Moreno
+
+Escuela Superior de Ingeniería y Tecnología
+Universidad de La Laguna
+La Laguna, 20 de mayo de 2025
+
+D. Francisco Javier Rodríguez González, profesor Asociado de Universidad adscrito al Departamento de Ingeniería Informática y de Sistemas en el área de Ciencia de la Computación e Inteligencia
+Artificial de la Universidad de La Laguna, como tutor.
+D. Alejandro Pérez Navas, profesor Asociado de Universidad adscrito al Departamento de Ingeniería
+Informática y de Sistemas en el área de Ciencia de la Computación e Inteligencia Artificial de la
+Universidad de La Laguna, como cotutor.
+
+CERTIFICAN
+Que la presente memoria titulada:
+“Desarrollo de plataforma gamificada para la gestión eficiente del flujo de trabajo empresarial”
+ha sido realizada bajo su dirección por D. Pablo Medina Moreno.
+Y para que así conste, en cumplimiento de la legislación vigente y a los efectos oportunos, firman la
+presente en La Laguna a 20 de mayo de 2025.
+
+Agradecimientos
+Quiero agradecer a mi familia, amigos y compañeros de universidad por su apoyo incondicional. También a mi tutor, Javier, por ser un valioso mentor en este proyecto y por su orientación fundamental.
+
+Licencia
+
+© Esta obra está bajo una licencia de Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0
+Internacional.
+
+Resumen
+En el contexto actual de transformación digital, muchas organizaciones se enfrentan a desafíos relacionados con la eficiencia operativa y la falta de motivación en sus equipos. Este proyecto presenta
+el desarrollo de WorkGam, una aplicación web y móvil full-stack que combina la gestión estructurada del flujo de trabajo con técnicas de gamificación, orientadas a aumentar la productividad, la
+implicación del empleado y la transparencia en la gestión de trámites internos.
+La plataforma permite a los clientes iniciar trámites y adjuntar documentación, a los empleados completar tareas asignadas con un sistema de recompensas basado en puntos, niveles y rankings, y a los
+administradores supervisar en tiempo real el avance de cada proceso y el rendimiento individual del
+equipo.
+Desde el punto de vista técnico, el desarrollo abarca áreas clave de la ingeniería de software. El
+frontend ha sido construido con React, JavaScript, Vite y Tailwind CSS; el backend se ha desarrollado con Node.js y Express. La gestión de datos se realiza con PostgreSQL, alojado en Railway, y el
+almacenamiento de archivos se apoya en Amazon S3. El despliegue de la aplicación se lleva a cabo mediante Netlify y Railway. Además, se ha desarrollado un prototipo funcional para dispositivos
+móviles, adaptado a las necesidades de los distintos tipos de usuarios.
+Asimismo, se incluye un estudio preliminar de viabilidad económica, con una duración estimada del
+desarrollo de 10 meses y un retorno de la inversión previsto a los 13 meses tras su comercialización.
+Palabras clave: Gamificación, flujo de trabajo, eficiencia operativa, aplicación web, aplicación móvil,
+gestión de tareas.
+
+IV
+
+Abstract
+In the current context of digital transformation, many organizations face challenges related to operational eﬀiciency and lack of motivation among their teams. This project presents the development
+of WorkGam, a full-stack web and mobile application that combines structured workflow management
+with gamification techniques, aiming to increase productivity, employee engagement, and transparency
+in internal process management.
+The platform allows clients to initiate procedures and upload documentation, employees to complete assigned tasks with a reward system based on points, levels, and rankings, and administrators to
+monitor, in real time, the progress of each process and the individual performance of the team.
+From a technical perspective, the project covers key areas of software engineering. The frontend is
+built using React, JavaScript, Vite, and Tailwind CSS; the backend is developed with Node.js and
+Express. Data is managed with PostgreSQL, hosted on Railway, and files are stored using Amazon S3.
+The application is deployed via Netlify and Railway. A functional prototype for mobile devices has
+also been developed, adapted to the needs of different user roles.
+A preliminary economic feasibility study is also included, estimating a development duration of 10
+months and a projected return on investment after 13 months from commercialization.
+Keywords: Gamification, workflow, operational eﬀiciency, web application, mobile application, task
+management.
+
+Índice general
+Capítulo 1 Introducción
+1.1 Definición del problema . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2 Justificación . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3 Estado del Arte . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3.1 Herramientas de Gestión de Tareas y Proyectos . . . . . . . . . . . . . . . .
+1.3.2 Aplicaciones de Gamificación Personal y de Hábitos . . . . . . . . . . . . .
+1.3.3 Plataformas de Gamificación Empresarial . . . . . . . . . . . . . . . . . . .
+1.4 Tendencia del mercado . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.1 Crecimiento del mercado de gamificación . . . . . . . . . . . . . . . . . . .
+1.4.2 Demanda de Soluciones Digitales PostPandemia . . . . . . . . . . . . . . .
+1.4.3 Perspectivas Futuras de la Gamificación . . . . . . . . . . . . . . . . . . . .
+1.4.4 Conclusión . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.5 Objetivos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+1
+1
+2
+3
+4
+4
+5
+6
+6
+7
+7
+8
+8
+
+Capítulo 2 Estudio Previo
+2.1 Lenguajes de programación y frameworks . . . . . . . . . . . . . . . . . . . . . . .
+2.1.1 Frontend . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.2 Backend . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.3 Base de datos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Entorno de desarrollo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.1 Editor de código: Visual Studio Code . . . . . . . . . . . . . . . . . . . . .
+2.2.2 Control de versiones: Git y GitHub . . . . . . . . . . . . . . . . . . . . . .
+2.2.3 Otras tecnologías y herramientas . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Plataformas para realizar el despliegue . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.1 Servicios en la Nube . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.2 Plataformas de alojamiento web compartido . . . . . . . . . . . . . . . . . .
+2.4 Dificultades encontradas en las tecnologías . . . . . . . . . . . . . . . . . . . . . .
+2.4.1 Optimización para dispositivos móviles . . . . . . . . . . . . . . . . . . . .
+2.4.2 Seguridad . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4.3 Rendimiento y tiempo de carga . . . . . . . . . . . . . . . . . . . . . . . . .
+
+11
+11
+11
+13
+14
+16
+17
+17
+18
+19
+19
+20
+21
+21
+22
+22
+
+I
+
+2.5
+
+Aplicaciones similares . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5.1 Trello . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5.2 Habitica . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5.3 ClickUp . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5.4 Bunchball Nitro . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5.5 Comparativa y aportación diferencial de WorkGam . . . . . . . . . . . . . .
+
+22
+22
+23
+23
+23
+24
+
+Capítulo 3 Desarrollo del proyecto
+3.1 Visión general del flujo de trabajo y casos de uso . . . . . . . . . . . . . . . . . . .
+3.2 Elección de tecnologías y herramientas . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3 Arquitectura . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4 Frontend . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4.1 Páginas principales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4.2 Funcionalidades visibles . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5 Backend . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5.1 Gestión de rutas, roles y lógica de acceso . . . . . . . . . . . . . . . . . . .
+3.5.2 Gamificación y asignación de tareas . . . . . . . . . . . . . . . . . . . . . .
+3.5.3 Persistencia de datos y comunicación en tiempo real . . . . . . . . . . . . .
+3.6 Base de datos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.7 Despliegue de la aplicación . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.7.1 Funcionamiento . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.7.2 Ventajas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.8 Resultados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+25
+25
+26
+27
+28
+29
+31
+32
+32
+33
+33
+34
+35
+35
+36
+36
+
+Capítulo 4 Estudio de viabilidad económica
+4.1 Funcionalidades adicionales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2 Desarrollo del proyecto . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3 Coste y duración del proyecto . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.4 Modelo de comercialización . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.5 Estimación del retorno de la inversión [68] . . . . . . . . . . . . . . . . . . . . . . .
+
+37
+37
+39
+42
+44
+45
+
+Capítulo 5 Conclusiones y líneas futuras
+
+49
+
+Capítulo 6 Summary and Conclusions
+
+50
+
+Capítulo 7 Presupuesto
+
+51
+
+II
+
+Índice de figuras
+1.1
+
+Proyección del mercado global de gamificación por región . . . . . . . . . . . . . .
+
+7
+
+2.1 Logos lenguajes de programación frontend . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Logos frameworks de frontend . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Logos de lenguajes de programación backend . . . . . . . . . . . . . . . . . . . . .
+2.4 Logos frameworks de backend . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5 Logos base datos relacionales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.6 Logos base datos no relacionales . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.7 Logo de Visual Studio Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.8 Logo de GitHub . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.9 Herramientas utilizadas en el entorno de desarrollo . . . . . . . . . . . . . . . . . .
+2.10 Logos de los principales servicios en la nube. . . . . . . . . . . . . . . . . . . . . .
+2.11 Logos de plataformas de alojamiento web compartido. . . . . . . . . . . . . . . . .
+2.12 Logos de aplicaciones similares . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+12
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+23
+
+3.1
+3.2
+3.3
+3.4
+3.5
+3.6
+3.7
+3.8
+
+Diagrama de casos de uso del sistema WorkGam . . . . . . . . . . . . . . . . . . .
+Stack PERN utilizado . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Página de Inicio de Sesión . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Página de Clientes para Adjuntar Documentación . . . . . . . . . . . . . . . . . . .
+Página de Trabajadores para Completar Tareas . . . . . . . . . . . . . . . . . . . . .
+Página de Ranking de Gamificación . . . . . . . . . . . . . . . . . . . . . . . . . .
+Panel de Administración . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Estructura relacional de la base de datos de WorkGam . . . . . . . . . . . . . . . . .
+
+26
+27
+29
+30
+30
+31
+31
+34
+
+4.1
+4.2
+4.3
+4.4
+4.5
+4.6
+4.7
+4.8
+
+Funcionalidades adicionales de la aplicación profesional . . . . . . . . . . . . . . .
+Tareas definidas para el desarrollo del proyecto . . . . . . . . . . . . . . . . . . . .
+Diagrama de Gantt (1) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Diagrama de Gantt (2) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Diagrama de Gantt (3) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Diagrama de Gantt (4) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Diagrama de Gantt (5) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Recursos necesarios para llevar a cabo la aplicación profesional . . . . . . . . . . . .
+
+38
+40
+40
+41
+41
+41
+42
+44
+
+III
+
+4.9 Promedio de usuarios en cada plan . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.10 Evolución de los gastos frente a los ingresos . . . . . . . . . . . . . . . . . . . . . .
+4.11 Punto en el que se empieza a tener beneficios . . . . . . . . . . . . . . . . . . . . .
+
+IV
+
+47
+48
+48
+
+Índice de tablas
+2.1
+
+Comparativa de funcionalidades entre aplicaciones similares . . . . . . . . . . . . .
+
+24
+
+4.1
+
+Características de cada uno de los planes de suscripción . . . . . . . . . . . . . . . .
+
+45
+
+7.1
+
+Presupuesto de Equipos y Licencias . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+51
+
+V
+
+Capítulo 1
+Introducción
+1.1. Definición del problema
+En muchas organizaciones, la gestión del flujo de trabajo (workflow1 ) presenta carencias que afectan la
+eficiencia y la motivación del personal. Los procesos administrativos suelen apoyarse en herramientas
+dispares (correo electrónico, hojas de cálculo, aplicaciones aisladas) o en metodologías tradicionales
+poco ágiles. Esto conduce a ineficiencias significativas, como muestra un estudio global que encontró
+que en promedio un 26 % de la jornada laboral se desperdicia en tareas administrativas evitables, pasos
+innecesarios o métodos obsoletos de trabajo [1].
+De igual modo, más de dos tercios de los empleados reconocen que gran parte de su tiempo se destina a tareas de bajo valor e ineficientes [2]. Estas ineficiencias no solo restan productividad, sino
+que generan frustración en los empleados, quienes a menudo lidian con flujos manuales y tecnologías desactualizadas. De hecho, cerca de la mitad de los trabajadores encuestados cree que sería más
+productivo si dispusiera de mejores herramientas y sistemas en su empresa [1].
+Paralelamente, existe un serio déficit de motivación intrínseca2 en muchos entornos laborales actuales.
+Los empleados frecuentemente se muestran desconectados o desmotivados con respecto a sus tareas
+diarias, más allá de cumplir con lo mínimo exigido. Este síntoma se refleja en las métricas de engagement3 : según Gallup, solo el 21 % de los empleados a nivel mundial se siente comprometido con su
+trabajo [3].
+Fenómenos recientes como el “quiet quitting”4 ilustran esta falta de motivación. La desmotivación
+no solo reduce el rendimiento, sino que puede conducir a más errores, menor calidad de servicio y
+un incremento del ausentismo o rotación de personal. Un informe reveló que el 32 % de los trabaja1
+
+Workflow: conjunto estructurado de tareas, responsables y reglas que permiten gestionar procesos de forma eficiente.
+Motivación intrínseca: impulso interno que lleva a una persona a realizar una actividad por interés o satisfacción
+propia, sin necesidad de incentivos externos.
+3
+Engagement: grado de implicación emocional y compromiso que un empleado siente hacia su trabajo y su organización.
+4
+Quiet quitting: actitud en la que el trabajador cumple estrictamente con sus obligaciones mínimas sin comprometerse
+emocional o profesionalmente con la empresa.
+2
+
+1
+
+dores admite «perder el tiempo» por falta de motivación para esforzarse [4]. Esta situación crea un
+círculo vicioso: la baja motivación merma los resultados, y a su vez los pobres resultados alimentan
+la insatisfacción y la desmoralización del equipo.
+La combinación de procesos de trabajo ineficientes y escasa motivación intrínseca forma un problema
+doble para las empresas. Por un lado, los flujos mal gestionados provocan retrasos, duplicidad de
+esfuerzos y estrés en los empleados. Por otro lado, muchos trabajadores operan sin propósito o estímulo
+más allá del salario, lo que reduce la iniciativa, la innovación y el alineamiento con los objetivos
+estratégicos de la organización.
+
+1.2. Justificación
+Ante este panorama, surge la propuesta de WorkGam, una plataforma web integral que aborda conjuntamente ambos frentes: la optimización del flujo de trabajo y la motivación del empleado mediante
+gamificación. La idea central de WorkGam es que una mejor gestión de trámites y tareas, combinada
+con dinámicas de juego, puede mejorar significativamente la eficiencia y el compromiso dentro de la
+empresa.
+Organizar el flujo de trabajo de forma eficiente garantiza que cada empleado sepa qué hacer, cuándo y
+cómo hacerlo, reduciendo tiempos muertos y cuellos de botella. Pero, además de la racionalidad operacional, WorkGam incorpora mecánicas lúdicas para potenciar la motivación intrínseca. Esta estrategia
+consiste en aplicar elementos característicos de los juegos (puntos, niveles, insignias, rankings, recompensas, desafíos) en contextos no lúdicos, con el fin de influir positivamente en el comportamiento de
+las personas.
+Numerosos estudios respaldan la eficacia de este tipo de metodologías en entornos laborales. Por ejemplo, una investigación publicada en el Journal of Business Research halló que las empresas que integraron dinámicas lúdicas en sus procesos internos lograron, en promedio, un 48 % de aumento en la
+participación y compromiso de sus empleados [5]. Los equipos con alta participación superan a los
+demás en métricas de negocio: un informe de Gallup indicó que las compañías con empleados altamente involucrados obtienen un 147 % más de ganancias por acción en comparación con aquellas con
+bajo nivel de engagement [6].
+En otra encuesta corporativa, el 89 % de los empleados afirmó sentirse más productivo en un entorno
+de trabajo con elementos de juego, y un 88 % más feliz en su puesto. Asimismo, el 83 % de quienes
+recibieron formación mediante técnicas lúdicas reportaron sentirse más motivados para capacitarse [7],
+lo que indica que este enfoque no solo entretiene, sino que fomenta el deseo de aprendizaje continuo.
+La literatura en psicología organizacional sugiere que estas experiencias activan motivadores intrínsecos clave descritos por la teoría de la autodeterminación: el sentido de logro, la autonomía al elegir
+
+2
+
+tareas y la relación social a través de rankings o colaboración en equipo. Cuando se diseña correctamente, este enfoque convierte tareas monótonas en desafíos atractivos, generando un entorno más
+gratificante.
+Un estudio de TalentLMS resaltó que el 89 % de los trabajadores opina que la incorporación de mecánicas de juego les hace más productivos y comprometidos [8], al proporcionarles metas claras, retroalimentación instantánea y pequeños triunfos diarios que estimulan su motivación. En suma, existe un
+consenso creciente en datos empíricos: introducir elementos lúdicos en el trabajo mejora el desempeño,
+el aprendizaje y el clima organizacional.
+La experiencia práctica de diversas organizaciones corrobora estos beneficios. Deloitte, por ejemplo,
+implementó dinámicas de juego en su programa de desarrollo profesional y logró aumentar la participación de sus empleados en un 47 %. La aerolínea Alitalia, a través del sistema Alitalia CityLovers,
+elevó la productividad de su equipo en un 15 % en seis meses. Asimismo, SAP aplicó este tipo de
+mecánicas en la formación de sus empleados con su plataforma SAP Learning Rooms, mejorando la
+retención del conocimiento en un 60 % [5].
+Estos ejemplos muestran que el uso de dinámicas inspiradas en el juego no es solo una idea teórica,
+sino una estrategia probada que, bien ejecutada, eleva el compromiso, la productividad y hasta la
+innovación.
+En conclusión, WorkGam aporta valor al combinar la gestión estructurada de flujos de trabajo con
+técnicas lúdicas que abordan el problema motivacional desde la raíz. Donde antes un empleado veía
+una tarea como algo tedioso, ahora puede percibirla como una misión con puntos y reconocimiento.
+Esto minimiza el tiempo perdido en trámites mal coordinados y maximiza la implicación del empleado
+al ver que cada acción suma a su progreso visible. Para las empresas, esto se traduce en procesos más
+ágiles y un personal más comprometido, con la consiguiente mejora en resultados. La justificación
+de WorkGam, respaldada por estudios y casos reales, es clara: organizar de forma más eficiente el
+trabajo y hacerlo motivador puede transformar la dinámica laboral hacia un entorno de alto rendimiento
+sostenible.
+
+1.3. Estado del Arte
+El enfoque de WorkGam abarca dos dominios que usualmente han estado cubiertos por herramientas
+separadas: por un lado, las aplicaciones de gestión de proyectos y tareas (workflow management5 ), y
+por otro, las plataformas de gamificación6 orientadas a motivar conductas. Para entender el aporte
+5
+
+Workflow management: conjunto de herramientas y metodologías orientadas a gestionar y automatizar flujos de
+trabajo dentro de una organización.
+6
+Plataformas de gamificación: sistemas tecnológicos diseñados para aplicar mecánicas de juego (puntos, niveles,
+recompensas) en contextos no lúdicos con fines motivacionales.
+
+3
+
+diferencial de WorkGam, es necesario analizar el estado del arte de soluciones existentes en ambos
+ámbitos y sus limitaciones en relación con la visión integrada que se propone.
+
+1.3.1. Herramientas de Gestión de Tareas y Proyectos
+En esta categoría destacan productos ampliamente adoptados como Asana o Trello, entre otros. Estas
+aplicaciones permiten asignar tareas, hacer seguimiento del progreso, coordinar equipos y visualizar
+flujos de trabajo, como los tableros Kanban7 , listas o calendarios. De hecho, se estima que más del
+88 % de las organizaciones utilizan algún software de gestión de proyectos 8 para digitalizar y organizar
+sus procesos [9].
+Su contribución a la eficiencia es notable: ayudan a clarificar responsabilidades, fechas límite y dependencias, reduciendo errores de comunicación. Sin embargo, estas herramientas generalistas no
+abordan el problema de la motivación del empleado de manera directa. Asana y Trello se centran en
+el qué hacer, pero no en incentivar el cómo o con qué ganas se hace. El uso cotidiano de estas plataformas depende en gran medida de la disciplina individual o de la presión externa (por ejemplo, el
+seguimiento del jefe de proyecto), pero carecen de estrategias motivacionales basadas en el juego.
+No hay en ellas sistemas nativos de puntos, recompensas por cumplimiento temprano, medallas por
+buenos resultados ni rankings entre colegas, más allá de alguna animación ocasional al completar una
+tarea. En síntesis, Asana, Trello y equivalentes son muy eficaces para organizar el trabajo, pero no
+fomentan el compromiso mediante recursos lúdicos. WorkGam subsanaría esta limitación al integrar
+mecánicas propias de gamificación dentro del flujo de tareas, proporcionando retroalimentación motivadora continua (puntos, progreso, recompensas), algo de lo que las herramientas actuales carecen.
+
+1.3.2. Aplicaciones de Gamificación Personal y de Hábitos
+En el otro extremo del espectro, existen herramientas diseñadas específicamente para gamificar la
+productividad individual. Un ejemplo representativo es Habitica, una aplicación de código abierto
+que convierte la gestión de tareas personales en un juego de rol9 . Presenta cada tarea o hábito como
+misiones que permiten ganar experiencia, subir de nivel y obtener recompensas virtuales [10].
+Habitica ha ganado adeptos entre usuarios individuales y pequeños grupos porque gamifica el proceso
+para motivar: completar tareas fortalece al personaje, mientras que incumplirlas lo debilita. Sin embargo, tiene limitaciones importantes en un contexto empresarial. Por diseño, permite formar equipos
+7
+
+Kanban: método visual para la gestión de tareas, que utiliza tarjetas en columnas para representar el estado de los
+procesos.
+8
+Software de gestión de proyectos: herramienta digital que permite planificar, ejecutar y controlar tareas y recursos
+asociados a proyectos organizacionales.
+9
+Juego de rol: tipo de juego en el que el usuario asume un personaje y progresa en una historia a través de acciones
+y logros.
+
+4
+
+(parties10 ) de hasta 30 miembros como máximo [11], lo cual es insuficiente para departamentos grandes. Además, se orienta a listas de tareas y hábitos individuales, y no a flujos corporativos complejos
+que involucren múltiples pasos, roles o aprobaciones.
+Tampoco maneja funciones avanzadas como dependencias entre tareas o gestión de recursos. Desde
+la perspectiva de seguridad y personalización, es una aplicación genérica en la nube, sin adaptaciones
+específicas para empresas. En resumen, Habitica gamifica bien los hábitos personales, pero no está diseñada para procesos empresariales complejos ni para integrarse con sistemas corporativos. WorkGam
+tomaría lo mejor de este enfoque lúdico y lo aplicaría a una plataforma robusta y escalable, pensada
+para el ámbito empresarial.
+
+1.3.3. Plataformas de Gamificación Empresarial
+Existen soluciones especializadas que ofrecen dinámicas de juego para empresas, usualmente integrándose con sistemas ya existentes. Un referente temprano es Bunchball Nitro, un SaaS11 pionero
+en gamificación corporativa. Bunchball permite configurar puntos, insignias, retos y rankings que se
+superponen a procesos como la atención al cliente o la formación interna [12].
+Otros proveedores similares son Badgeville, Centrical o GamEffective. Estas plataformas han sido útiles para motivar acciones específicas, pero no gestionan el flujo de trabajo por sí mismas. Funcionan
+como motores externos: recogen acciones en otros sistemas (por ejemplo, CRM12 , ERPs13 , plataformas
+de e-learning) y otorgan recompensas en consecuencia. Esto introduce una limitación clave: requieren herramientas externas de gestión y una integración perfecta para mantener coherencia. Además,
+muchas se orientan a casos de uso como fidelización de clientes, más que a la productividad interna.
+WorkGam propone una solución unificada: en lugar de gamificar procesos alojados en herramientas
+externas, WorkGam es la propia herramienta donde se gestionan las tareas y se aplican dinámicas de
+juego simultáneamente. A diferencia de Asana o Trello, motiva desde dentro; a diferencia de Habitica,
+es escalable y corporativa; a diferencia de Bunchball, no necesita acoplarse a sistemas terceros.
+En resumen, las herramientas actuales abordan por separado la organización del trabajo y la motivación, mientras que WorkGam representa una propuesta novedosa al unir estas dos dimensiones. Esta
+integración es el aporte diferenciador del presente TFG: al eliminar la separación entre «dónde trabajo»
+y «dónde juego», se busca aumentar la adopción, la motivación sostenida y la fluidez en los procesos
+empresariales.
+10
+
+Party: grupo de usuarios dentro de una aplicación gamificada que coopera o compite colectivamente.
+SaaS (Software as a Service): modelo de distribución de software a través de internet donde el proveedor aloja y
+mantiene la aplicación.
+12
+CRM (Customer Relationship Management): sistema para gestionar relaciones con clientes y centralizar datos de
+ventas, marketing y soporte.
+13
+ERP (Enterprise Resource Planning): software empresarial que integra diferentes áreas como finanzas, logística o
+recursos humanos en un solo sistema.
+11
+
+5
+
+1.4. Tendencia del mercado
+El contexto de mercado para una plataforma como WorkGam es sumamente propicio, dado que confluyen varias tendencias favorables: la gamificación empresarial 14 está en plena expansión, la transformación digital postpandemia ha acelerado la demanda de soluciones digitales para la productividad y
+el compromiso, y las proyecciones indican que estas estrategias seguirán ganando terreno en el futuro
+cercano, incorporando incluso nuevas tecnologías como inteligencia artificial15 y realidad extendida16 .
+
+1.4.1. Crecimiento del mercado de gamificación
+En la última década, este enfoque ha pasado de ser un concepto emergente a una práctica común en
+múltiples sectores. El valor del mercado global de gamificación pasó de 9,1 mil millones de dólares
+en 2020 a una proyección de 30,7 mil millones para 2025, lo que implica una tasa compuesta anual
+de crecimiento (CAGR17 ) del 27,4 % [13]. Esta expansión evidencia que cada vez más organizaciones
+invierten en plataformas, consultorías y desarrollos lúdicos para propósitos como formación, recursos
+humanos, productividad interna y marketing.
+América del Norte lidera el gasto en experiencias motivacionales basadas en el juego, seguida por
+Europa, pero Asia-Pacífico y Latinoamérica están creciendo aceleradamente. Más del 70 % de las
+empresas en la lista Global 2000 ya ha incorporado este tipo de técnicas en al menos un proceso
+de negocio. El sector retail18 representa aproximadamente el 28,6 % del mercado, seguido de cerca
+por educación, pero los usos internos también se han ampliado en recursos humanos, capacitación y
+bienestar laboral.
+Se estima que un 87 % de las empresas a nivel mundial utilizarán estrategias lúdicas en los próximos
+cinco años, y cerca de la mitad las considerará una prioridad estratégica. Esto consolida su papel como
+herramienta empresarial estable y en evolución [14].
+
+14
+
+Gamificación empresarial: uso de mecánicas y dinámicas propias de los juegos para aumentar la motivación, compromiso y productividad en contextos laborales.
+15
+Inteligencia artificial: disciplina informática que busca desarrollar sistemas capaces de realizar tareas que requieren
+inteligencia humana, como razonamiento, aprendizaje o reconocimiento.
+16
+Realidad extendida (XR): conjunto de tecnologías que incluyen la realidad aumentada (AR), virtual (VR) y mixta
+(MR), utilizadas para enriquecer la experiencia sensorial del usuario en entornos digitales.
+17
+CAGR (Compound Annual Growth Rate): tasa de crecimiento promedio anual de una inversión o mercado a lo
+largo del tiempo.
+18
+Retail: sector comercial enfocado en la venta directa de productos o servicios al consumidor final.
+
+6
+
+Figura 1.1: Proyección del mercado global de gamificación por región
+
+1.4.2. Demanda de Soluciones Digitales PostPandemia
+La pandemia de COVID-19 impulsó un cambio radical en la gestión del trabajo y en la digitalización
+organizacional. El teletrabajo 19 y los modelos híbridos se convirtieron en norma. Actualmente, el 72 %
+de los equipos de proyecto trabaja en modalidad remota o mixta [9], y el 88 % de las organizaciones
+utilizan software de gestión 20 para coordinar el trabajo distribuido.
+En este escenario, las empresas enfrentan nuevos desafíos: mantener el compromiso emocional del
+empleado remoto, combatir la fatiga digital y conservar la cultura corporativa. Las dinámicas basadas
+en el juego han emergido como respuesta a estas necesidades. Elementos lúdicos ayudan a recrear la
+motivación y el sentido de pertenencia que antes ocurrían presencialmente. Según SHRM, el 89 % de
+los empleados afirma sentirse más productivo y el 88 % más feliz en un entorno que incorpora estas
+técnicas [7].
+Muchas organizaciones han implementado sistemas de puntos para tareas desde casa, concursos virtuales y programas de bienestar gamificados. WorkGam responde perfectamente a estas necesidades
+al ser una plataforma web adaptable al trabajo remoto, con funciones que promueven la implicación
+activa más allá de la pantalla.
+
+1.4.3. Perspectivas Futuras de la Gamificación
+El futuro apunta hacia una experiencia cada vez más personalizada e inmersiva. Una tendencia clara
+es la integración con inteligencia artificial para adaptar dinámicas de juego al perfil de cada empleado:
+19
+
+Teletrabajo: modalidad laboral que permite desempeñar tareas profesionales desde fuera de las oficinas tradicionales,
+apoyándose en tecnologías de la información.
+20
+Software de gestión: aplicaciones diseñadas para organizar, planificar y controlar actividades dentro de una organización.
+
+7
+
+retos colaborativos para quienes valoran el trabajo en equipo, desafíos competitivos para los que se
+motivan por superar a sus pares.
+Además, se anticipa una mayor adopción de tecnologías de realidad virtual (VR21 ) y aumentada (AR22 )
+para crear experiencias envolventes en inducciones, formación y simulaciones empresariales [8]. Por
+ejemplo, un nuevo empleado podría completar una inducción explorando una oficina virtual gamificada, mientras que un equipo comercial podría entrenar en escenarios simulados con feedback23
+inmediato.
+El mercado ya refleja esta evolución: compañías como Oracle, IBM o Google están invirtiendo en
+plataformas gamificadas con analítica avanzada y componentes inmersivos [14]. También se extiende
+a sectores tradicionalmente más conservadores como banca, administración pública o fuerzas armadas.
+Un dato destacable es que el 80 % de los millennials24 y la Generación Z afirma que sería más leal a una
+empresa que integre elementos de juego en su entorno laboral [14]. Por ello, este tipo de herramientas
+no solo son útiles para retener talento, sino también para atraer nuevas generaciones.
+
+1.4.4. Conclusión
+Las tendencias del mercado respaldan firmemente la viabilidad de WorkGam. El crecimiento acelerado de la inversión en estrategias lúdicas, la digitalización postpandemia y la llegada de nuevas
+tecnologías conforman un terreno fértil. Mientras muchas soluciones actuales abordan la productividad o la motivación por separado, WorkGam se sitúa en la intersección, ofreciendo una plataforma
+integrada que combina ambas dimensiones.
+Gracias a su concepción flexible, podría evolucionar en el futuro con módulos de inteligencia artificial, realidad extendida y mayor personalización, adaptándose a la transformación digital del entorno
+laboral y pudiendo destacar como una solución pionera, funcional e innovadora para las necesidades
+de la empresa moderna.
+
+1.5. Objetivos
+El objetivo general de este Trabajo de Fin de Grado es diseñar e implementar WorkGam, una aplicación web orientada a incrementar la eficiencia en la gestión del flujo de trabajo de trámites internos
+21
+
+Realidad virtual (VR): entorno generado por ordenador que simula una experiencia inmersiva, normalmente mediante el uso de dispositivos como gafas o cascos.
+22
+Realidad aumentada (AR): superposición de elementos digitales (como imágenes o datos) sobre el mundo físico
+en tiempo real.
+23
+Feedback: retroalimentación o información sobre el rendimiento de una persona o sistema.
+24
+Millennials: generación nacida aproximadamente entre 1981 y 1996, caracterizada por su cercanía con la tecnología.
+
+8
+
+dentro de una organización, al tiempo que potencie la motivación de los empleados mediante dinámicas inspiradas en el juego. Para alcanzar este propósito, se definen los siguientes objetivos específicos:
+1. Evaluar soluciones actualmente disponibles: Investigar y analizar herramientas y aplicaciones
+existentes en el mercado relacionadas con la gestión de workflow y estrategias motivacionales
+para determinar oportunidades de mejora que WorkGam pueda cubrir.
+2. Investigar tecnologías y herramientas: Seleccionar aquellas tecnologías y entornos más adecuados según los requisitos del proyecto, incluyendo lenguajes de programación, frameworks25 ,
+bases de datos y servicios de alojamiento.
+3. Desarrollar arquitecturas:
+Creación del backend:
+• Implementación de un sistema robusto para gestionar autenticación, autorización y seguridad.
+• Creación de una API REST 26 clara y eficiente para la gestión integral de trámites,
+tareas y elementos de motivación gamificada.
+Desarrollar frontend tanto web como móvil: Diseño e implementación de interfaces
+intuitivas, accesibles y atractivas que permitan gestionar trámites y visualizar el sistema
+de puntos, niveles o recompensas desde múltiples dispositivos.
+Interconectar las diferentes arquitecturas: Garantizar la correcta integración y comunicación entre frontend27 y backend28 para asegurar un funcionamiento fluido y coherente
+del workflow.
+Verificar desempeño: Realizar pruebas exhaustivas para evaluar la eficiencia, estabilidad
+y experiencia del usuario en la aplicación web y móvil.
+4. Elaborar un plan de negocio para la comercialización del producto:
+Creación de un diagrama de Gantt 29 detallado con tareas, duraciones, recursos necesarios
+y costos asociados.
+Estimación completa del costo total del proyecto, considerando desarrollo, despliegue,
+mantenimiento y operación.
+25
+
+Framework: conjunto de herramientas y librerías que facilita el desarrollo estructurado de aplicaciones.
+API REST: interfaz de programación basada en el paradigma REST (Representational State Transfer) que permite
+la comunicación entre sistemas usando protocolos HTTP.
+27
+Frontend: parte de una aplicación que interactúa directamente con el usuario.
+28
+Backend: lógica y estructuras internas de una aplicación que procesan datos y ejecutan funciones del lado del servidor.
+29
+Diagrama de Gantt: representación gráfica de un cronograma que muestra tareas, duración y dependencias de un
+proyecto.
+26
+
+9
+
+Diseño de un modelo de comercialización orientado a empresas.
+Cálculo del retorno de inversión (ROI) 30 esperado, validando la viabilidad económica del
+proyecto.
+Estos objetivos aseguran que WorkGam no solo funcione técnicamente como aplicación web y móvil,
+sino también como un producto profesionalmente viable y atractivo para empresas interesadas en
+mejorar su flujo operativo interno y aumentar el compromiso de sus empleados mediante enfoques
+motivacionales innovadores.
+
+30
+
+ROI (Return on Investment): indicador financiero que mide la rentabilidad de una inversión en relación a su coste.
+
+10
+
+Capítulo 2
+Estudio Previo
+En el siguiente apartado, se explorarán diversas tecnologías y herramientas consideradas durante la fase de desarrollo del proyecto. Posteriormente, se discutirán las opciones óptimas, así como los desafíos
+identificados en el análisis de estas tecnologías.
+
+2.1. Lenguajes de programación y frameworks
+2.1.1. Frontend
+Entre los distintos lenguajes de programación que existen a día de hoy, los que son esenciales para la
+creación del frontend de las páginas web son HTML, CSS y JavaScript [15-17].
+HTML (Hypertext Markup Language): Lenguaje fundamental para estructurar el contenido de
+una página web. Utiliza etiquetas para definir elementos como encabezados, párrafos, enlaces e
+imágenes.
+CSS (Cascading Style Sheets): Se utiliza para dar estilo y formato a los elementos HTML. Define
+la apariencia visual, como colores, fuentes, márgenes y alineaciones.
+• Tailwind CSS [18]: Marco de trabajo de hojas de estilo en cascada (CSS) que se utiliza
+para diseñar sitios web de manera rápida y eficiente.
+• Bootstrap [19]: Marco de diseño de código abierto desarrollado por Twitter. Se utiliza
+para facilitar el desarrollo web y la creación de sitios responsivos y móviles.
+• Materialize [20]: Marco CSS receptivo moderno basado en Material Design de Google.
+JavaScript: Lenguaje de programación del lado del cliente que permite la interactividad en las
+páginas web. Puede manipular el contenido HTML, responder a eventos del usuario y realizar
+solicitudes a servidores.
+
+11
+
+Figura 2.1: Logos lenguajes de programación frontend
+
+Para crear interfaces modernas de forma más rápida y estructurada, es común apoyarse en frameworks.
+Algunos de los más destacados son:
+React [21]: Biblioteca de JavaScript desarrollada por Facebook. Se centra en la construcción de
+interfaces de usuario interactivas mediante la creación de componentes reutilizables. Facilita el
+mantenimiento y la escalabilidad del código.
+Next.js [22]: Framework basado en React que permite renderizado del lado del servidor (SSR)
+y generación estática de sitios web. Es especialmente útil para mejorar el rendimiento, el SEO
+y la organización de aplicaciones React complejas.
+Angular [23]: Framework de desarrollo web mantenido por Google. Proporciona herramientas
+integrales para desarrollo, prueba y despliegue de aplicaciones complejas. Utiliza TypeScript y
+facilita la productividad mediante detección de errores en tiempo de compilación.
+Vue.js [24]: Framework progresivo para construir interfaces de usuario. Es valorado por su
+simplicidad y flexibilidad, permitiendo una integración incremental en proyectos existentes.
+
+Figura 2.2: Logos frameworks de frontend
+
+12
+
+2.1.2. Backend
+El backend de una aplicación es la parte responsable del procesamiento de datos, la lógica de negocio
+y la gestión de la base de datos. Existen diversos lenguajes y tecnologías ampliamente utilizadas para
+esta función.
+Entre los lenguajes más comunes en el desarrollo backend se encuentran:
+Python [25]: Lenguaje de sintaxis clara y legible. Es ampliamente utilizado con frameworks
+como Flask y Django, que facilitan la creación de aplicaciones web de forma rápida y estructurada.
+Java [26]: Lenguaje orientado a objetos muy empleado en aplicaciones empresariales. Spring
+Boot es uno de los frameworks más populares gracias a su robustez y flexibilidad.
+Ruby [27]: Conocido por su sintaxis sencilla y elegante. Ruby on Rails es un framework destacado que sigue el principio de «convención sobre configuración».
+PHP [28]: Diseñado para el desarrollo web, cuenta con frameworks como Laravel y Symfony
+que simplifican tareas habituales y promueven buenas prácticas.
+Go (Golang) [29]: Apreciado por su eficiencia y rendimiento, ideal para sistemas concurrentes
+y distribuidos de gran escala.
+JavaScript (Node.js) [30]: Node.js permite utilizar JavaScript en el servidor. Gracias a su arquitectura basada en eventos y su alto rendimiento, se ha convertido en una solución moderna
+para backend.
+
+Figura 2.3: Logos de lenguajes de programación backend
+En cuanto a frameworks para el desarrollo del backend, se destacan los siguientes:
+Express.js [31]: Framework minimalista para Node.js que permite construir servidores y APIs
+REST de forma sencilla y flexible.
+
+13
+
+Django [32]: Framework de alto nivel para Python que incluye muchas funcionalidades integradas (autenticación, panel de administración, ORM, etc.).
+Spring Boot [33]: Permite desarrollar aplicaciones Java rápidamente mediante una configuración mínima, siendo ideal para microservicios.
+Ruby on Rails [34]: Framework muy productivo que incluye herramientas prediseñadas para
+acelerar el desarrollo.
+Laravel [35]: Popular en el ecosistema PHP, destaca por su sintaxis clara, integración con bases
+de datos y sistema de rutas intuitivo.
+Flask [36]: Microframework para Python, adecuado para proyectos más ligeros o cuando se
+requiere mayor control sobre los componentes.
+
+Figura 2.4: Logos frameworks de backend
+
+2.1.3. Base de datos
+La elección del sistema de gestión de bases de datos (SGBD) es un aspecto crítico en el desarrollo de
+cualquier aplicación, ya que influye directamente en la eficiencia del almacenamiento, recuperación y
+manejo de la información. Estos sistemas se pueden clasificar principalmente en dos grandes grupos:
+bases de datos relacionales (SQL1 ) y no relacionales (NoSQL2 ).
+
+Relacionales (SQL)
+MySQL [37]: Uno de los sistemas más utilizados en el mundo, reconocido por su robustez,
+fiabilidad y documentación. Es ideal para aplicaciones que requieren transacciones complejas.
+1
+
+SQL (Structured Query Language): lenguaje de consulta estructurado utilizado para interactuar con bases de datos
+relacionales.
+2
+NoSQL: categoría de bases de datos que no se basan en el modelo relacional tradicional ni utilizan SQL como
+lenguaje principal de consulta.
+
+14
+
+Sin embargo, puede presentar limitaciones de escalabilidad en entornos con grandes volúmenes
+de datos o alta concurrencia.
+PostgreSQL [38]: Sistema avanzado que soporta tipos de datos complejos y operaciones extendidas. Es altamente conforme con los estándares SQL y permite una amplia personalización.
+Requiere, eso sí, mayores recursos y curva de aprendizaje respecto a MySQL.
+Oracle Database [39]: Altamente escalable, seguro y optimizado para procesamiento paralelo.
+Suele utilizarse en entornos empresariales exigentes. No obstante, su coste de licenciamiento
+puede resultar elevado para proyectos pequeños o startups.
+
+Figura 2.5: Logos base datos relacionales
+
+No relacionales (NoSQL)
+MongoDB [40]: Consta de esquemas de datos flexibles que permiten almacenar documentos
+JSON además de tener buen rendimiento para grandes volúmenes de datos y consultas simples.
+Sin embargo, las transacciones son menos robustas en comparación con las bases de datos relacionales. La gestión del tamaño de almacenamiento puede ser desafiante.
+Redis [41]: Es una base de datos en memoria, ofrece altísima velocidad para operaciones de
+lectura/escritura. Es interesante destacar que soporta estructuras de datos complejas. También
+añadior que la limitación de memoria puede ser un problema para conjuntos de datos grandes.
+
+15
+
+Figura 2.6: Logos base datos no relacionales
+
+Criterios de elección
+La decisión entre usar una base de datos relacional o una no relacional depende de múltiples factores,
+como el tipo y estructura de los datos, volumen, velocidad de acceso, escalabilidad y experiencia del
+equipo. En general:
+SQL es apropiado para datos altamente estructurados, relaciones complejas y necesidades fuertes de consistencia, ya que soporta el modelo ACID3 .
+NoSQL se adapta mejor a esquemas de datos flexibles y proyectos que requieren escalabilidad
+horizontal, priorizando la disponibilidad sobre la consistencia estricta en muchos casos, como
+se describe en el teorema CAP4 .
+La elección final debe considerar el contexto específico del proyecto y sus requerimientos técnicos y
+funcionales.
+
+2.2. Entorno de desarrollo
+El entorno de desarrollo es fundamental en la creación de cualquier proyecto de software, ya que
+proporciona las herramientas y procesos necesarios para escribir, probar y depurar código de manera
+eficiente. En el contexto de un proyecto web como WorkGam, este entorno abarca desde el editor de
+código hasta los sistemas de control de versiones, herramientas de diseño, plataformas de despliegue,
+y utilidades complementarias para desarrollo frontend y backend.
+3
+
+ACID: conjunto de propiedades (Atomicidad, Consistencia, Aislamiento y Durabilidad) que garantizan la fiabilidad
+de las transacciones en una base de datos relacional.
+4
+Teorema CAP: establece que una base de datos distribuida solo puede garantizar simultáneamente dos de las tres
+propiedades: Consistencia, Disponibilidad y Tolerancia a particiones.
+
+16
+
+2.2.1. Editor de código: Visual Studio Code
+Visual Studio Code (VS Code) [42] es un editor de código fuente desarrollado por Microsoft. Destaca
+por su ligereza, personalización y extensibilidad.
+Extensiones: posee un ecosistema amplio con soporte para linters, formateadores y extensiones
+para React, Vue, Angular, entre otros.
+Depuración integrada: permite ejecutar y depurar proyectos desde el propio editor para distintos lenguajes y entornos.
+Git integrado: incorpora funciones nativas para commit, pull, push y manejo de ramas.
+Temas y personalización: interfaz totalmente adaptable a las preferencias del desarrollador.
+
+Figura 2.7: Logo de Visual Studio Code
+
+2.2.2. Control de versiones: Git y GitHub
+Git [43] es un sistema de control de versiones distribuido ampliamente adoptado en entornos de desarrollo profesional. GitHub [44] es la plataforma de alojamiento basada en Git más popular.
+Colaboración: revisión de código mediante pull requests, seguimiento de tareas mediante issues
+y gestión de ramas.
+Integraciones: herramientas de CI5 / CD6 , despliegue continuo, revisión automatizada de código y testing.
+
+5
+
+CI (Integración Continua): Práctica de desarrollo que consiste en integrar cambios de código frecuentemente en
+un repositorio compartido, seguido de la ejecución automatizada de pruebas.
+6
+CD (Despliegue Continuo): Estrategia que automatiza el proceso de entrega de nuevas versiones de software, permitiendo su publicación en entornos de producción de manera frecuente y fiable.
+
+17
+
+Figura 2.8: Logo de GitHub
+
+2.2.3. Otras tecnologías y herramientas
+Supabase [45]: plataforma BaaS7 que provee funcionalidades como base de datos Postgres,
+autenticación, almacenamiento y APIs generadas automáticamente.
+Docker [46]: permite crear entornos reproducibles para desarrollo y despliegue. Mejora la portabilidad y la consistencia del sistema.
+Postman [47]: suite para probar y documentar APIs REST. Permite simular peticiones a endpoints y comprobar el correcto funcionamiento del backend.
+Figma [48]: herramienta de diseño UI/UX8 colaborativa que facilita la creación de prototipos
+de interfaces.
+ProjectLibre [49]: software de planificación de proyectos para la gestión de tareas, cronogramas
+y recursos.
+Overleaf [50]: entorno colaborativo en la nube para edición de documentos LaTeX9 . Ideal para
+documentar el proyecto.
+PWA (Progressive Web Apps) [51]: técnica para que una aplicación web se comporte como
+una aplicación nativa. Mejora la experiencia del usuario.
+
+7
+
+BaaS (Backend as a Service): Servicio que automatiza el desarrollo del backend mediante la tercerización de estas
+funciones.
+8
+UI/UX: Conceptos usados en el diseño web para representar la interfaz de usuario (UI) y la experiencia del usuario
+(UX).
+9
+LaTeX: Sistema de composición de documentos ampliamente utilizado para la creación de distintos tipos de documentos científicos y profesionales.
+
+18
+
+Figura 2.9: Herramientas utilizadas en el entorno de desarrollo
+
+Cada una de estas tecnologías desempeña un papel esencial en la construcción de un flujo de trabajo
+full-stack moderno, desde el diseño de interfaz hasta el despliegue de servicios en la nube, lo que
+permite crear una solución escalable y mantenible como WorkGam.
+
+2.3. Plataformas para realizar el despliegue
+Para que la página web desarrollada sea accesible desde cualquier navegador, es imprescindible desplegar la aplicación. Este proceso puede realizarse mediante servicios en la nube o plataformas de
+alojamiento compartido.
+
+2.3.1. Servicios en la Nube
+Los servicios en la nube son una solución robusta y escalable para el despliegue de aplicaciones modernas. Permiten gestionar infraestructura de forma flexible y automatizada, proporcionando alto rendimiento y disponibilidad. A continuación, se presentan algunas de las opciones más populares:
+Amazon Web Services (AWS) [52]: Es uno de los proveedores líderes en servicios en la nube.
+Ofrece desde almacenamiento (Amazon S3) hasta máquinas virtuales escalables (Amazon EC2)
+y servicios para aplicaciones web como Elastic Beanstalk y App Runner.
+Google Cloud Platform (GCP) [53]: Plataforma de Google que proporciona servicios de almacenamiento, bases de datos y App Engine, ideal para aplicaciones con gran demanda de escalabilidad e integración con IA.
+Microsoft Azure [54]: Plataforma de Microsoft que facilita el despliegue de máquinas virtuales,
+aplicaciones web y contenedores. Destaca por su integración con herramientas como .NET y
+SQL Server.
+
+19
+
+DigitalOcean [55]: Destinada a desarrolladores que buscan una solución simple y económica.
+Proporciona droplets (instancias virtuales) y servicios como Kubernetes gestionado.
+
+Figura 2.10: Logos de los principales servicios en la nube.
+
+2.3.2. Plataformas de alojamiento web compartido
+Las plataformas de alojamiento compartido son ideales para proyectos pequeños y medianos, proporcionando simplicidad de configuración, integración continua y despliegue rápido.
+Netlify [56]: Es una plataforma de alojamiento web que se especializa en ofrecer despliegue
+continuo y funciones de CDN10 . Se integra fácilmente con repositorios de Git y proporciona
+certificados SSL11 gratuitos, así como funciones de redireccionamiento y reescritura.
+Vercel [57]: Similar a Netlify, es una plataforma de alojamiento que se enfoca en proporcionar despliegue automático y funciones avanzadas para aplicaciones web y estáticas. Ofrece un
+enfoque sin servidor y permite integración continua directa desde repositorios de Git.
+Railway [58]: Es una plataforma como servicio (PaaS) que permite desplegar fácilmente aplicaciones backend o full-stack. Ofrece soporte para múltiples lenguajes, bases de datos gestionadas,
+entornos en la nube y despliegue automático desde Git. Su enfoque es flexible y pensado para
+desarrolladores que necesitan rapidez sin perder control sobre el entorno.
+Render [59]: Es una plataforma de la nube que ofrece servicios de alojamiento y despliegue de
+aplicaciones web, aplicaciones estáticas, despliegue de contenedores y funciones serverless 12
+
+10
+
+CDN (Content Delivery Network): Red de servidores interconectados que acelera la carga de las páginas web para
+las aplicaciones que tienen un uso intensivo de datos.
+11
+SSL: Tecnología estandarizada que permite cifrar el tráfico de datos entre un navegador web y un sitio web (o entre
+dos servidores web), protegiendo así la conexión.
+12
+Serverless: Solución que permite crear y ejecutar aplicaciones sin gestionar servidores directamente.
+
+20
+
+Figura 2.11: Logos de plataformas de alojamiento web compartido.
+
+Estas soluciones facilitan el despliegue ágil de aplicaciones modernas, con opciones adaptadas tanto
+a proyectos personales como a aplicaciones empresariales de alto tráfico.
+
+2.4. Dificultades encontradas en las tecnologías
+Durante el desarrollo del proyecto WorkGam, se identificaron diversas dificultades técnicas que afectaron al proceso de desarrollo web. A continuación, se describen los principales retos encontrados y
+las estrategias comunes para abordarlos.
+
+2.4.1. Optimización para dispositivos móviles
+El creciente acceso desde dispositivos móviles obliga a adoptar estrategias específicas para garantizar
+una experiencia de usuario óptima [60]:
+Diseño responsivo: Aplicar principios de responsive design utilizando unidades flexibles y media queries para adaptar la interfaz.
+Optimización de imágenes: Comprimir imágenes y emplear formatos adecuados (como WebP)
+para reducir el peso y mejorar la carga.
+Pruebas reales: Realizar tests en dispositivos físicos y no solo en emuladores, para detectar
+posibles fallos específicos de ciertos entornos.
+
+21
+
+2.4.2. Seguridad
+La seguridad es un aspecto crítico en el desarrollo web. Las aplicaciones están expuestas a numerosos
+ataques, por lo que es esencial implementar medidas preventivas [61]:
+HTTPS13 : Emplear siempre conexiones cifradas mediante certificados SSL/TLS para proteger
+la información transmitida [62].
+Validación de entradas: Sanitizar y validar todos los datos recibidos, especialmente los enviados desde formularios, para prevenir inyección de código malicioso.
+Prevención de vulnerabilidades comunes: Proteger contra amenazas como Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF) y manejo inseguro de sesiones.
+
+2.4.3. Rendimiento y tiempo de carga
+El rendimiento tiene un impacto directo sobre la experiencia de usuario y el posicionamiento SEO.
+Algunos de los factores que afectan a este aspecto incluyen [63, 64]:
+Minificación de recursos: Reducir el tamaño de archivos CSS y JavaScript eliminando espacios
+innecesarios y comentarios.
+Combinar recursos: Agrupar archivos en menos peticiones para disminuir la latencia.
+Uso de caché: Aprovechar el almacenamiento en caché del navegador y de proxies para reducir
+solicitudes al servidor.
+
+2.5. Aplicaciones similares
+Antes de desarrollar WorkGam, se ha realizado un análisis comparativo de aplicaciones existentes con
+funcionalidades relacionadas, tanto en la gestión del flujo de trabajo como en la implementación de
+elementos lúdicos para la motivación laboral. A continuación, se presentan algunas de las herramientas
+más relevantes:
+
+2.5.1. Trello
+Trello es una herramienta de gestión de proyectos basada en tableros Kanban. Permite a los usuarios
+organizar tareas mediante tarjetas, listas y columnas. Su interfaz intuitiva lo hace ideal para equipos pe13
+
+HTTPS (Hypertext Transfer Protocol Secure): protocolo de comunicación en internet que utiliza cifrado SSL/TLS
+para proteger la integridad y confidencialidad de los datos entre el navegador del usuario y el sitio web.
+
+22
+
+queños o medianos. Sin embargo, Trello carece de dinámicas motivacionales avanzadas o mecanismos
+lúdicos, lo que puede limitar la implicación de los empleados a largo plazo [65].
+
+2.5.2. Habitica
+Habitica convierte la gestión de tareas personales en un juego de rol. Permite ganar puntos, subir de
+nivel y obtener recompensas virtuales. Aunque es muy eficaz a nivel individual, sus limitaciones de
+escalabilidad (equipos pequeños de hasta 30 personas) y la ausencia de gestión estructurada de flujos
+empresariales complejos lo hacen poco adecuado para entornos corporativos [11].
+
+2.5.3. ClickUp
+ClickUp es una plataforma integral de productividad que combina gestión de tareas, tiempo, documentación y comunicación. Aunque incorpora algunos elementos visuales atractivos, no integra mecánicas
+gamificadas como recompensas, rankings o progresión. Su enfoque se mantiene más en la organización
+que en la motivación intrínseca [66].
+
+2.5.4. Bunchball Nitro
+Bunchball Nitro es un sistema de gamificación empresarial que se integra con plataformas existentes
+como CRMs o sistemas de formación. Ofrece recompensas, puntos, retos y rankings. No obstante,
+requiere integrarse a sistemas externos y no permite gestionar el flujo de trabajo directamente desde
+su interfaz [67].
+
+Figura 2.12: Logos de aplicaciones similares
+
+23
+
+2.5.5. Comparativa y aportación diferencial de WorkGam
+En la Tabla 2.1 se resumen las funcionalidades clave de las aplicaciones analizadas, en comparación
+con WorkGam.
+Tabla 2.1: Comparativa de funcionalidades entre aplicaciones similares
+Funcionalidad
+
+Trello
+
+Habitica
+
+ClickUp
+
+WorkGam
+
+Gestión de tareas
+
+3
+
+3
+
+3
+
+3
+
+Gamificación integrada
+
+7
+
+3
+
+7
+
+3
+
+Escalabilidad empresarial
+
+3
+
+7
+
+3
+
+3
+
+Visualización Kanban
+
+3
+
+7
+
+3
+
+3
+
+Rankings y recompensas
+
+7
+
+3
+
+7
+
+3
+
+Integración con backend
+
+7
+
+7
+
+3
+
+3
+
+Como se puede observar, WorkGam destaca por integrar nativamente las funcionalidades de gestión
+estructurada de procesos con mecánicas de motivación, sin necesidad de herramientas externas ni
+integraciones complejas. Esta dualidad funcional lo convierte en una alternativa sólida para empresas
+que buscan eficiencia operativa y mayor implicación del talento humano.
+
+24
+
+Capítulo 3
+Desarrollo del proyecto
+3.1. Visión general del flujo de trabajo y casos de uso
+Antes de abordar los aspectos técnicos del desarrollo, es fundamental presentar una visión general del
+funcionamiento de la plataforma WorkGam. Esta sección describe un flujo típico de uso, destacando
+la interacción entre los distintos tipos de usuarios y la integración de la gamificación como elemento
+diferenciador del sistema.
+El proceso comienza cuando un cliente accede a la plataforma e inicia un nuevo trámite. Para ello, completa un formulario con los datos requeridos, adjunta la documentación necesaria y envía la solicitud.
+El sistema genera automáticamente el conjunto de tareas correspondientes, las cuales son distribuidas
+a los trabajadores según su rol, su carga de trabajo actual y su historial de rendimiento.
+Las tareas se presentan a los trabajadores como acciones concretas que deben realizar: validar documentación, emitir informes, realizar verificaciones, etc. Como parte del sistema de gamificación,
+reciben puntos en función de tres criterios: el tiempo empleado en completarla, su nivel de dificultad
+y los puntos de experiencia (XP)1 asociados.
+Este sistema de puntuación se traduce en un ranking dinámico, visible por todos los trabajadores,
+que actúa como mecanismo de motivación interna y mejora continua. Los puntos acumulados también
+determinan el nivel de cada trabajador, desbloqueando posibles beneficios u objetivos.
+Durante todo el ciclo, el administrador tiene acceso a herramientas de supervisión para visualizar
+trámites activos, reasignar tareas si es necesario y consultar estadísticas de rendimiento global. Al
+finalizar todas las tareas asociadas, el sistema marca automáticamente el trámite como completado
+y el cliente es notificado con los resultados. También puede revisar el historial del proceso en todo
+momento.
+Para ilustrar este comportamiento de forma más visual, se presenta a continuación un diagrama UML
+1
+
+Puntos de experiencia (XP): medida acumulativa que refleja el progreso del trabajador dentro del sistema gamifica-
+
+do.
+
+25
+
+de casos de uso. Este representa los principales actores del sistema y sus interacciones con las funcionalidades clave.
+
+Figura 3.1: Diagrama de casos de uso del sistema WorkGam
+
+Como se observa en el diagrama, cada actor tiene asignadas funcionalidades específicas en función de
+su rol. Esta estructura permite delimitar claramente los permisos de acceso y las acciones disponibles,
+reforzando la seguridad y la coherencia del flujo de trabajo. A su vez, el modelo gamificado se integra
+de forma transversal en el sistema, afectando tanto a la experiencia del usuario como a la eficiencia
+global de los procesos internos.
+
+3.2. Elección de tecnologías y herramientas
+Para el desarrollo de la aplicación WorkGam se eligió un conjunto de tecnologías modernas con el
+objetivo de construir una solución full-stack, escalable y orientada a mejorar la experiencia del usuario
+en contextos empresariales.
+El frontend se implementó como una Single Page Application (SPA)2 utilizando React y Vite, lo que
+permitió un desarrollo rápido y modular. El diseño visual se estructuró con Tailwind CSS, asegurando
+una interfaz coherente y adaptativa. Para el despliegue de la parte cliente se utilizó la plataforma
+Netlify, que permite automatizar el proceso de publicación con integración directa desde el repositorio
+del proyecto.
+El backend se desarrolló con Node.js y Express, estructurando la lógica en rutas, controladores y
+servicios independientes. La API 3 expone operaciones seguras y eficientes para la gestión de usuarios,
+2
+
+Single Page Application (SPA): aplicación web que se carga una sola vez y actualiza dinámicamente su contenido
+sin necesidad de recargar la página completa.
+3
+API (Application Programming Interface): interfaz que permite la comunicación estructurada entre diferentes
+partes de un sistema o entre sistemas distintos.
+
+26
+
+tareas, trámites y rankings. Para la persistencia de datos se empleó PostgreSQL, alojado en la plataforma Railway, que proporciona un entorno simplificado para el despliegue, la monitorización y la
+escalabilidad del sistema. La gestión de archivos y documentación asociada a los trámites se realiza
+mediante Amazon S3, lo que garantiza un almacenamiento fiable, seguro y de alta disponibilidad.
+La aplicación fue concebida para ser multiplataforma. Además de su versión web, se desarrolló un
+prototipo móvil accesible desde dispositivos de diferentes tamaños, adaptando los componentes y la
+navegación a un formato táctil y compacto, sin necesidad de app nativa.
+La lógica de gamificación constituye uno de los ejes centrales del sistema. Cada tarea tiene asociada
+una puntuación que se calcula automáticamente en función de tres factores: los días empleados en
+completarla, su nivel de dificultad y los puntos de experiencia definidos para dicha tarea. Los trabajadores son asignados a nuevas tareas de forma dinámica, teniendo en cuenta su rol, la carga de trabajo
+actual y su puntuación acumulada en el sistema de gamificación. Estos parámetros se actualizan en
+tiempo real, fomentando la participación, el equilibrio operativo y la mejora continua.
+La arquitectura del sistema se basó en el stack PERN4 , lo que permitió mantener coherencia tecnológica en todas las capas del desarrollo y facilitar la colaboración entre distintas áreas del proyecto.
+
+Figura 3.2: Stack PERN utilizado
+
+3.3. Arquitectura
+La arquitectura de WorkGam se diseñó siguiendo un enfoque modular y distribuido, orientado a la
+separación de responsabilidades y a la escalabilidad del sistema. La aplicación se estructura bajo el
+modelo cliente-servidor, donde las distintas capas interactúan mediante peticiones HTTP y eventos en
+tiempo real.
+4
+
+PERN: stack tecnológico2 que combina PostgreSQL, Express, React y Node.js, utilizado para construir aplicaciones
+web completas y eficientes.
+2
+Stack tecnológico: conjunto de tecnologías y herramientas utilizadas en el desarrollo de una aplicación, organizadas
+por capas funcionales (base de datos, servidor, interfaz, etc.).
+
+27
+
+El cliente actúa como una interfaz de usuario autónoma, que consume datos desde un servidor mediante una API y responde a cambios de estado sin recargar la página. Esta capa se comunica directamente
+con la lógica del servidor, sin intervención de motores de plantillas u otras capas intermedias. La
+responsabilidad del cliente es puramente visual y de interacción.
+En el lado del servidor, se centralizan las operaciones relacionadas con la gestión de datos, control
+de accesos, cálculos de puntuaciones y asignación de tareas. Esta lógica se organiza en controladores
+y servicios que responden a solicitudes provenientes del frontend. Además, se utilizan canales de
+comunicación en tiempo real para emitir eventos relacionados con cambios de estado en trámites,
+tareas asignadas o actualizaciones en los rankings.
+El sistema de base de datos mantiene una estructura relacional, con entidades como usuarios, tareas,
+trámites, niveles de dificultad y registros de actividad. Esta estructura permite representar de manera
+clara las relaciones entre roles, historiales de tareas y progresos individuales.
+El sistema también incorpora una lógica específica para la asignación dinámica de tareas y el seguimiento de la participación de los empleados. Esta lógica opera a partir de reglas configurables que
+combinan criterios como rol, disponibilidad y rendimiento. La comunicación entre componentes se
+diseñó para ser asincrónica5 cuando es necesario, asegurando fluidez en entornos de alta concurrencia.
+La plataforma fue pensada desde el inicio para ser extensible y desacoplada, lo que permite introducir
+nuevas funcionalidades o integrar servicios externos sin necesidad de reestructurar el núcleo del sistema. Además, se ha favorecido una arquitectura ligera y mantenible, adecuada tanto para despliegues
+en entornos de prueba como en producción.
+
+3.4. Frontend
+El frontend de la aplicación WorkGam-Client constituye la capa de presentación del sistema, desde la
+cual los usuarios interactúan con las distintas funcionalidades según su rol: cliente, trabajador o administrador. Su diseño modular y adaptable permite ofrecer una experiencia clara, funcional y coherente
+tanto en dispositivos móviles como en entornos de escritorio.
+La estructura del proyecto está organizada para mantener una separación lógica entre componentes
+reutilizables, páginas específicas, servicios de comunicación y lógica de navegación. Esta organización
+facilita el mantenimiento, la escalabilidad y la incorporación de nuevas funcionalidades.
+Estructura del repositorio frontend:
+5
+
+Comunicación asincrónica: aquella en la que el emisor y el receptor no necesitan interactuar al mismo tiempo;
+permite que las operaciones continúen sin esperar una respuesta inmediata, mejorando el rendimiento en sistemas concurrentes.
+
+28
+
+src/
+��� components/
+��� pages/
+��� services/
+��� store/
+��� context/
+��� public/
+��� routes.jsx
+��� App.jsx
+
+# Componentes reutilizables de interfaz
+# Páginas organizadas por rol de usuario
+# Funciones para consumir la API del backend
+# Almacenamiento del estado global de la aplicación
+# Contextos globales como autenticación o notificaciones
+# Archivos estáticos como logotipos e iconos
+# Definición de rutas y navegación
+# Componente principal de la aplicación
+
+3.4.1. Páginas principales
+La interfaz de usuario está formada por distintas vistas que se adaptan dinámicamente en función del
+rol del usuario autenticado. A continuación, se describen las principales pantallas que conforman la
+experiencia:
+
+1. Iniciar Sesión
+Pantalla inicial desde la cual los usuarios pueden acceder al sistema. Una vez validadas las credenciales,
+se redirige al panel correspondiente según su rol.
+
+Figura 3.3: Página de Inicio de Sesión
+
+2. Adjuntar Documentación (Clientes)
+Permite a los clientes subir archivos asociados a sus trámites, como formularios, certificados u otros
+documentos. El sistema informa sobre el estado del envío y los requisitos de formato.
+
+29
+
+Figura 3.4: Página de Clientes para Adjuntar Documentación
+
+3. Completar Tareas (Trabajadores)
+Los trabajadores acceden a una vista personalizada donde visualizan las tareas asignadas, revisan los
+detalles y marcan las acciones realizadas. También pueden dejar observaciones o rechazar tareas si no
+cumplen ciertos criterios.
+
+Figura 3.5: Página de Trabajadores para Completar Tareas
+
+4. Ranking de Gamificación
+Los empleados pueden consultar su posición en un ranking general, visualizar sus puntos acumulados
+y comprobar su progreso en los diferentes niveles. Esta vista motiva la participación y reconoce el
+rendimiento individual.
+
+30
+
+Figura 3.6: Página de Ranking de Gamificación
+
+5. Panel de Administración
+Espacio reservado a administradores, desde el cual se gestiona el sistema: usuarios, roles, tareas, estadísticas y procesos internos. La información se presenta mediante tablas, gráficos y listados interactivos.
+
+Figura 3.7: Panel de Administración
+
+3.4.2. Funcionalidades visibles
+Interfaz diferenciada por rol: Cada tipo de usuario accede a una experiencia adaptada con
+vistas exclusivas.
+Subida de documentación: Los clientes pueden adjuntar archivos en los trámites activos.
+Gestión de tareas: Los trabajadores visualizan, completan o rechazan tareas asignadas.
+
+31
+
+Consulta de ranking: Los empleados pueden seguir su progreso y compararse con otros usuarios.
+Gestión administrativa: Los administradores acceden a herramientas de supervisión y control
+del sistema.
+Diseño adaptativo: Toda la interfaz está optimizada para ofrecer una experiencia fluida en móviles y escritorio.
+Actualizaciones inmediatas: El usuario recibe en pantalla los cambios reflejados desde el sistema en tiempo real.
+
+3.5. Backend
+El backend de la aplicación WorkGam-Server representa el núcleo lógico del sistema. Desde esta capa
+se gestionan los procesos internos que sostienen el funcionamiento de la plataforma: autenticación de
+usuarios, gestión de trámites y tareas, cálculo de puntuaciones y control de roles. También coordina la
+persistencia de datos, la gestión de archivos adjuntos y la comunicación en tiempo real con el cliente.
+El diseño modular y desacoplado permite una clara separación de responsabilidades, facilitando el
+mantenimiento del sistema y su escalabilidad futura. Cada componente se organiza por funcionalidad,
+y el código sigue una arquitectura orientada a servicios.
+Estructura general del backend:
+src/
+��� controllers/
+��� routes/
+��� services/
+��� middlewares/
+��� databases/
+��� utils/
+��� constants/
+��� index.js
+
+# Controladores por recurso (usuarios, tareas, trámites, etc.)
+# Definición de rutas agrupadas por funcionalidad
+# Lógica de negocio (asignación, puntuación, notificaciones)
+# Autenticación, validación y permisos de acceso
+# Configuración de conexión a datos y almacenamiento externo
+# Funciones auxiliares y de cálculo
+# Reglas, configuraciones y variables globales
+# Punto de entrada e inicialización del servidor
+
+3.5.1. Gestión de rutas, roles y lógica de acceso
+El backend expone una interfaz estructurada en rutas, agrupadas por módulo funcional (usuarios, trámites, tareas, puntuaciones, etc.). Estas rutas están conectadas a controladores que ejecutan la lógica
+
+32
+
+necesaria para operar sobre la base de datos o coordinar servicios internos.
+El sistema diferencia entre tres perfiles: cliente, trabajador y administrador. Cada uno tiene acceso restringido a diferentes vistas y operaciones, lo que se implementa mediante validaciones y verificaciones
+en la capa de middleware6 .
+Además de la autenticación, se gestiona la autorización para proteger operaciones críticas y garantizar
+un uso seguro del sistema.
+
+3.5.2. Gamificación y asignación de tareas
+Uno de los elementos clave del backend es la lógica de gamificación, diseñada para incentivar la
+productividad. Cada tarea completada por un trabajador genera una puntuación calculada automáticamente a partir de tres factores:
+El número de días que han transcurrido desde que fue asignada.
+El nivel de dificultad definido para la tarea.
+Los puntos de experiencia (XP) asociados al tipo de trámite.
+Estos puntos se acumulan y modifican el nivel del usuario, así como su posición en un ranking general
+visible desde el frontend. El ranking se actualiza en tiempo real tras cada acción relevante.
+Además, el backend se encarga de distribuir tareas nuevas de forma dinámica. Para ello, analiza la
+carga de trabajo del personal, su rol, y los puntos acumulados en el sistema. De este modo, se asegura
+una distribución equilibrada que favorece la participación y evita sobrecargas puntuales.
+
+3.5.3. Persistencia de datos y comunicación en tiempo real
+Toda la información de la aplicación se almacena mediante un modelo relacional estructurado que
+permite representar adecuadamente los vínculos entre usuarios, tareas, trámites y puntuaciones. El
+backend también gestiona la subida y recuperación de archivos relacionados con cada trámite, asegurando su integridad, disponibilidad y acceso restringido.
+Además, se implementa un canal de comunicación en tiempo real entre el servidor y los clientes conectados. Gracias a este canal, los usuarios reciben actualizaciones instantáneas sobre eventos relevantes:
+nuevas tareas asignadas, cambios de estado en trámites, o modificaciones en el ranking de empleados.
+En conjunto, el backend de WorkGam proporciona una base sólida, segura y adaptable que soporta el
+6
+
+Middleware: función intermedia que se ejecuta en el servidor antes de procesar una solicitud. Su propósito es interceptar peticiones para realizar tareas como la validación de datos, autenticación de usuarios o control de permisos.
+
+33
+
+funcionamiento interno de la aplicación. Su arquitectura modular y su lógica orientada a la eficiencia y
+la participación garantizan una plataforma sostenible, alineada con los retos actuales de transformación
+digital en el entorno empresarial.
+
+3.6. Base de datos
+La base de datos que sustenta la plataforma WorkGam ha sido diseñada siguiendo un modelo relacional7 que permite gestionar de forma eficiente los distintos elementos del sistema: usuarios, trámites,
+tareas, roles y componentes de gamificación. Esta estructura facilita el mantenimiento de la integridad
+referencial, la trazabilidad de las acciones realizadas y la ejecución de consultas optimizadas desde el
+backend.
+
+Figura 3.8: Estructura relacional de la base de datos de WorkGam
+
+El modelo de datos se organiza en torno a las siguientes entidades principales:
+person: Contiene los datos generales de todos los usuarios de la plataforma, incluyendo nombre,
+correo electrónico, contraseña cifrada y foto de perfil. Esta tabla se relaciona con las entidades
+específicas client y employee.
+client / employee: Diferencian los tipos de usuario. Los clientes pueden iniciar trámites, mientras que los empleados reciben y completan tareas asignadas.
+role: Define los permisos de acceso dentro del sistema para los empleados, permitiendo distinguir funciones administrativas o técnicas.
+7
+
+Modelo relacional: forma de estructurar datos en bases de datos mediante tablas conectadas entre sí por relaciones
+lógicas, lo que facilita la organización y vinculación de información.
+
+34
+
+procedure: Representa los procedimientos administrativos disponibles en la plataforma. Cada
+procedimiento se compone de una o varias tareas.
+task: Almacena la definición de cada tarea, incluyendo su descripción, duración estimada, dificultad, puntos de experiencia (XP) y posición dentro del flujo del procedimiento.
+started_procedure / started_task: Registran las instancias activas de trámites y tareas. Incluyen fechas de inicio y finalización, estado actual y usuario involucrado. Permiten hacer seguimiento individualizado del progreso de cada proceso.
+gamification: Registra el desempeño acumulado de los empleados. Almacena el total de tareas
+completadas, los puntos obtenidos y otros indicadores clave que alimentan el ranking general y
+el sistema de niveles.
+notification: Gestiona los mensajes enviados a los usuarios, incluyendo su contenido, tipo y
+estado de lectura. Se utiliza para notificaciones de asignación, cambios de estado o recordatorios.
+password_reset_token: Gestiona los tokens temporales de recuperación de contraseña, asegurando su validez y fecha de expiración.
+Esta estructura ofrece una representación robusta y escalable del sistema, permitiendo reflejar adecuadamente las relaciones entre actores, tareas y procedimientos, al tiempo que habilita la aplicación de
+reglas de negocio avanzadas, como la asignación automatizada de tareas o el cálculo de puntuación
+gamificada.
+
+3.7. Despliegue de la aplicación
+Para el despliegue del proyecto WorkGam, se optó por utilizar dos plataformas especializadas en
+aplicaciones web modernas: Netlify para el frontend y Railway para el backend y la base de datos.
+Ambas soluciones permiten gestionar entornos de desarrollo y producción de manera sencilla, rápida
+y escalable, ofreciendo soporte nativo para tecnologías como React, Node.js y PostgreSQL.
+
+3.7.1. Funcionamiento
+Integración con Git: Tanto Netlify como Railway ofrecen integración directa con plataformas
+de control de versiones como GitHub. Esto permite configurar despliegues automáticos desde
+los repositorios, aplicando principios de integración y entrega continua.
+Infraestructura en la nube: Las dos plataformas disponen de infraestructura distribuida, lo
+que permite una entrega eficiente del contenido a nivel global, asegurando tiempos de respuesta
+reducidos para los usuarios.
+
+35
+
+Certificados SSL: Ambos servicios proporcionan certificados SSL gratuitos, garantizando conexiones seguras entre los usuarios y la aplicación mediante HTTPS.
+
+3.7.2. Ventajas
+Facilidad de configuración: Las plataformas ofrecen interfaces gráficas intuitivas que permiten
+realizar despliegues sin necesidad de configuraciones manuales complejas.
+Despliegue automático: Cada vez que se realiza un cambio en el repositorio, las plataformas
+detectan los cambios y actualizan automáticamente la aplicación en producción.
+Escalabilidad: Railway gestiona automáticamente los recursos según la demanda del backend,
+mientras que Netlify ofrece optimización para SPAs y entrega eficiente del frontend desde CDN.
+
+3.8. Resultados
+A continuación, se enumeran algunos enlaces a los recursos desarrollados para el prototipo de WorkGam:
+Repositorio del frontend: https://github.com/PabloMedinaMoreno/WorkGam-Client
+Repositorio del backend: https://github.com/PabloMedinaMoreno/WorkGam-Server
+Aplicación desplegada: https://workgam.netlify.app/
+Escanea el siguiente código QR para acceder a la aplicación:
+
+36
+
+Capítulo 4
+Estudio de viabilidad económica
+En esta sección, se llevará a cabo un examen detallado de la viabilidad económica asociada con la
+implementación de este proyecto que se realizaría en un entorno profesional, haciendo uso de recursos humanos altamente cualificados y con gran cantidad de funcionalidades avanzadas. Además, se
+elaborará un plan integral de comercialización para promover eficazmente el producto.
+
+4.1. Funcionalidades adicionales
+Con el objetivo de incrementar el valor añadido de la plataforma WorkGam en un entorno profesional,
+se contemplan una serie de funcionalidades avanzadas que complementarán el sistema base. Estas
+características permitirán escalar la solución, mejorar la experiencia de usuario, facilitar la toma de
+decisiones y optimizar la gestión del flujo de trabajo.
+Chat interno con soporte multimedia: se habilitará un sistema de mensajería en tiempo real
+entre usuarios (clientes, empleados y administradores), con capacidad para el envío de archivos
+adjuntos como imágenes, documentos PDF o vídeos. El chat estará vinculado a cada trámite y
+permitirá mantener un historial completo de comunicaciones.
+Asistente virtual inteligente (IA): se integrará un bot basado en inteligencia artificial, capaz
+de responder a preguntas frecuentes, guiar al usuario en la navegación de la plataforma, sugerir
+prioridades según el contexto del workflow y ofrecer ayuda para rellenar formularios o entender
+los estados del trámite.
+Generación de contenido multimedia a partir de texto: mediante herramientas de procesamiento de lenguaje natural y generación automática, se podrán transformar textos en recursos
+visuales como infografías explicativas, vídeos breves sobre procedimientos, o resúmenes gráficos del progreso de un trámite.
+Gamificación avanzada con desafíos dinámicos: se incorporarán misiones temporales, logros
+y retos semanales para los empleados. Estas dinámicas servirán para reforzar la participación y
+
+37
+
+permitirán a los usuarios canjear puntos por beneficios internos o reconocimientos virtuales.
+Dashboard predictivo para administradores: se desarrollará un panel inteligente con visualizaciones avanzadas que permita identificar cuellos de botella, prever retrasos, sugerir redistribución de carga laboral y analizar tendencias de rendimiento o motivación en el equipo.
+Integración con calendarios externos: se permitirá vincular WorkGam con servicios como
+Google Calendar o Outlook, de manera que las tareas, citas y plazos se sincronicen automáticamente en el calendario del usuario.
+Firma digital de documentos: se integrará un sistema de firma electrónica para validar documentos y finalizar trámites directamente desde la plataforma, mejorando la trazabilidad y
+seguridad del proceso.
+Sistema de retroalimentación bidireccional: los empleados y clientes podrán valorar mutuamente la experiencia tras la finalización de un trámite, promoviendo una cultura de mejora continua y transparencia interna.
+
+Figura 4.1: Funcionalidades adicionales de la aplicación profesional
+
+Estas funcionalidades están diseñadas para ser modularmente extensibles, permitiendo que la plataforma evolucione en futuras versiones sin necesidad de rehacer su arquitectura base.
+
+38
+
+4.2. Desarrollo del proyecto
+El desarrollo del proyecto se llevará a cabo en seis fases bien definidas, cada una con objetivos específicos para garantizar un proceso eficiente y de alta calidad. A continuación, se describen en detalle:
+Análisis (29 días): Fase inicial crucial en la que se comprende a fondo el problema a resolver y
+se establecen las bases del software. Se redacta un documento de requisitos y funcionalidades
+que permite fijar plazos y costos. La comunicación mediante reuniones con el equipo garantiza
+avances alineados y expectativas claras. La definición precisa de los requisitos es clave para el
+éxito.
+Diseño (44 días): Se exploran posibles soluciones técnicas y se establece la arquitectura general
+del sistema, en respuesta a los requisitos definidos. Se eligen fuentes de datos y tecnologías
+apropiadas, se diseña la estructura de la base de datos y se definen las interfaces de usuario
+tanto para la versión web como móvil.
+Desarrollo e implementación (130 días): Etapa central del proyecto en la que se construye la
+aplicación siguiendo los objetivos establecidos. Incluye el desarrollo del frontend, backend y la
+base de datos, así como la integración de todos los componentes. Se aplican buenas prácticas de
+programación para asegurar eficiencia y calidad del código. Se desarrollan las funcionalidades
+previstas para web y móvil.
+Pruebas (125 días): Durante esta fase se realizan pruebas de unidad, de integración y de usuario. El objetivo es garantizar la estabilidad, funcionalidad y calidad del sistema. Se detectan y
+corrigen errores, asegurando que el producto cumpla con los estándares requeridos.
+Despliegue (19 días): Con la aplicación lista, se prepara su puesta en producción. Esto implica la configuración de servidores, la gestión de la base de datos en entorno productivo y la
+configuración de servicios en la nube. El despliegue se realiza de forma planificada para evitar
+interrupciones.
+Mantenimiento (continuo): Una vez implementada, comienza una etapa de mantenimiento
+continuo. Incluye la supervisión del rendimiento, solución de problemas, actualizaciones de seguridad y mejoras evolutivas. También se podrán incorporar nuevas funcionalidades en función
+de las necesidades del mercado y los usuarios.
+
+39
+
+Figura 4.2: Tareas definidas para el desarrollo del proyecto
+
+La tareas que se han definido para la realización del proyecto se pueden visualizar según su orden de
+ejecución en el siguiente diagrama de Gantt.
+
+Figura 4.3: Diagrama de Gantt (1)
+
+40
+
+Figura 4.4: Diagrama de Gantt (2)
+
+Figura 4.5: Diagrama de Gantt (3)
+
+Figura 4.6: Diagrama de Gantt (4)
+
+41
+
+Figura 4.7: Diagrama de Gantt (5)
+
+4.3. Coste y duración del proyecto
+La ejecución del proyecto se realizará mediante un equipo profesional compuesto por perfiles especializados en distintas áreas clave del desarrollo tecnológico y organizacional. Esta estructura busca
+asegurar una implementación exitosa de WorkGam, integrando tanto el desarrollo de software como
+la estrategia de gamificación y su aplicación en entornos empresariales reales. A continuación, se
+describen los perfiles seleccionados:
+Jefe de proyecto: Responsable de coordinar el equipo, definir prioridades, supervisar cada fase
+del proyecto y asegurar el cumplimiento de los objetivos estratégicos y los plazos establecidos.
+Analista funcional: Encargado de identificar y documentar los requisitos del sistema a partir de
+las necesidades empresariales. Traduce esos requisitos en especificaciones claras para el equipo
+de desarrollo.
+Arquitecto de software: Diseña la estructura técnica de la aplicación, seleccionando tecnologías, definiendo patrones de diseño y asegurando una arquitectura escalable y mantenible.
+Desarrolladores full-stack: Implementan tanto el frontend como el backend de la plataforma.
+Deben contar con experiencia en React, Node.js, PostgreSQL, servicios en la nube y metodologías ágiles.
+Diseñador UI/UX: Define la experiencia de usuario y el diseño visual, garantizando una interfaz
+intuitiva, atractiva y coherente en todas las plataformas (web y móvil).
+Especialista en gamificación y comportamiento: Profesional del ámbito de la psicología organizacional o ciencias del comportamiento, con experiencia en motivación intrínseca, diseño
+de dinámicas de juego y engagement. Define las reglas de gamificación, los estímulos motivacionales y la coherencia psicológica del sistema.
+
+42
+
+Matemático o científico de datos: Diseña los algoritmos de puntuación, rankings, niveles y
+predicción de rendimiento. También puede colaborar en la generación de analíticas y dashboards
+predictivos para los administradores.
+Tester QA (Control de calidad): Realiza pruebas exhaustivas (unitarias, integración, usabilidad
+y aceptación) para asegurar la calidad del software y prevenir errores antes de su publicación.
+Analista de negocio y comercialización: Define el modelo de negocio, calcula el coste total
+del proyecto, desarrolla las estrategias de suscripción y estima el retorno de inversión (ROI). Se
+encarga también del análisis de mercado y pricing.
+Este equipo, multidisciplinario, aborda cada aspecto del proyecto, desde la concepción hasta la implementación, asegurando un enfoque integral y colaborativo para alcanzar los objetivos establecidos.
+Sin embargo, además del equipo humano, para el desarrollo de la aplicación, es esencial contar con
+los siguientes materiales:
+Portátiles: Equipos esenciales para la ejecución del desarrollo de software, incluyendo estaciones de trabajo con la capacidad necesaria para la codificación y la gestión de proyectos.
+Móvil Android: Un dispositivo Android1 para probar y verificar la funcionalidad de la aplicación en el sistema operativo Android.
+Móvil iOS: Un dispositivo iOS2 para realizar pruebas y asegurar la compatibilidad de la aplicación con el sistema operativo iOS.
+Estos materiales constituyen la infraestructura básica necesaria para llevar a cabo el desarrollo de la
+aplicación de manera efectiva y garantizar la compatibilidad en diversas plataformas y dispositivos.
+La elección y calidad de estos materiales contribuirán significativamente al rendimiento y éxito del
+equipo de desarrollo.
+
+1
+
+Android: Sistema operativo móvil basado en el núcleo Linux y otros software de código abierto.
+iOS: Sistema operativo móvil de código cerrado desarrollado por Apple Inc. Originalmente desarrollado para el
+iPhone, después se utilizó en dispositivos como el iPod touch y el iPad.
+2
+
+43
+
+Figura 4.8: Recursos necesarios para llevar a cabo la aplicación profesional
+
+Luego de identificar todas las tareas esenciales y determinar sus respectivas duraciones, se estima que
+el proyecto se completará en un período de 222 días hábiles. Este plazo abarca desde el 31 de enero de
+2025 hasta el 8 de diciembre de 2025, considerando una jornada laboral estándar de 8 horas al día, de
+lunes a viernes. En términos financieros, el costo total para la ejecución exitosa del proyecto se cifra
+en 301.695,67 euros,
+
+4.4. Modelo de comercialización
+El modelo de comercialización de WorkGam está diseñado para adaptarse a distintos perfiles de
+empresas, desde pequeñas startups hasta grandes organizaciones. El objetivo es ofrecer una solución
+flexible, escalable y sostenible económicamente, permitiendo monetizar el uso de la plataforma a través
+de un sistema de suscripciones. Este modelo no solo busca generar ingresos recurrentes, sino también
+proporcionar una experiencia personalizada según las necesidades de cada cliente.
+
+Planes de suscripción
+Se han definido cuatro niveles de servicio, diferenciados por el acceso a funcionalidades específicas:
+Gratis: acceso limitado a funcionalidades básicas, ideal para pruebas iniciales o pequeñas organizaciones. Permite tareas básicas y seguimiento general de trámites.
+Básico (13,95 €/mes o 149 €/año): incluye funcionalidades de gestión avanzada de tareas, historial completo de procesos y soporte limitado.
+Pro (24,95 €/mes o 249 €/año): pensado para equipos en crecimiento que requieren automatización parcial, chat con documentos, gamificación avanzada y acceso a métricas detalladas.
+
+44
+
+Business (34,95 €/mes o 349 €/año): plan empresarial con acceso completo a todas las funcionalidades, soporte prioritario, integración con herramientas externas y analítica predictiva.
+Tabla 4.1: Características de cada uno de los planes de suscripción
+Características
+
+Gratis
+
+Básico
+
+Pro
+
+Business
+
+Gestión de tareas y trámites
+
+SI
+
+SI
+
+SI
+
+SI
+
+Visualización de rankings
+
+SI
+
+SI
+
+SI
+
+SI
+
+Chat interno con PDF
+
+NO
+
+NO
+
+SI
+
+SI
+
+Asistente virtual IA
+
+NO
+
+NO
+
+NO
+
+SI
+
+Gamificación avanzada
+
+NO
+
+NO
+
+SI
+
+SI
+
+Generación multimedia
+
+NO
+
+NO
+
+SI
+
+SI
+
+Analítica y estadísticas
+
+NO
+
+SI
+
+SI
+
+SI
+
+Integración con terceros
+
+NO
+
+NO
+
+NO
+
+SI
+
+Soporte 24/7
+
+NO
+
+NO
+
+SI
+
+SI
+
+Actualizaciones prioritarias
+
+NO
+
+NO
+
+NO
+
+SI
+
+Estrategia de lanzamiento
+El lanzamiento inicial de WorkGam se enfocará en empresas medianas interesadas en optimizar sus
+procesos y motivar a sus equipos. Se ofrecerá un período de prueba gratuito de 30 días con acceso al
+plan Pro, junto con campañas de marketing digital en redes sociales y colaboración con partners del
+sector tecnológico.
+También se contempla un modelo B2B personalizado para grandes corporaciones, con planes ajustables, funcionalidades exclusivas y soporte dedicado según volumen de usuarios o necesidades específicas del cliente.
+
+4.5. Estimación del retorno de la inversión [68]
+Después de haber completado el desarrollo y lanzamiento de la aplicación al mercado, es crucial evaluar cuándo se alcanzará el Retorno de la Inversión (ROI). Este cálculo implica la consideración de los
+costos asociados al desarrollo, así como los gastos de mantenimiento recurrentes, ya sean mensuales
+o anuales, en comparación con los ingresos generados por el uso de la aplicación. La meta es estimar
+cuándo se recuperará la inversión inicial, generalmente proyectando una semana específica para este
+logro.
+
+45
+
+En este análisis, se parte de la suposición de que la adopción de usuarios seguirá una trayectoria exponencial. Se han realizado diversos cálculos, iniciando con la proyección del crecimiento de usuarios.
+Este enfoque permitirá determinar el momento aproximado en el cual los ingresos generados superarán
+los costos, llevando al punto de equilibrio y alcanzando el retorno de la inversión.
+
+Usuarios
+Como se ha mencionado con anterioridad, la aplicación se segmenta en cuatro tipos de usuarios: gratuitos, básicos, pro y business. Cabe destacar que en las categorías de pago, se ofrecen cuentas con
+opciones de renovación mensual y anual. La premisa inicial del análisis sugiere que la distribución de
+usuarios seguirá una tendencia descendente, siendo la opción gratuita la preferida por la mayoría en
+sus primeras interacciones con la plataforma.
+Dentro de esta lógica, se ha llevado a cabo una simulación que modela un crecimiento gradual de
+usuarios, considerando que la gran mayoría optará por iniciar su experiencia con el plan gratuito. Con
+el objetivo de captar la atención y participación de un número significativo de usuarios, se ha propuesto
+una inversión mensual de 2.000 euros en anuncios proporcionados por Meta, asegurando así que, en
+promedio, 4.000 usuarios tengan la oportunidad de visualizar el anuncio de nuestra aplicación.
+De este conjunto de 4.000 usuarios, se estima que aproximadamente el 30 % decidirá utilizar la aplicación en su plan gratuito, siendo este un punto crucial en el embudo de conversión. Dentro de ese
+grupo, solo el 5 % se espera que realice la transición hacia la adquisición de los planes de pago disponibles. Esta estrategia se basa en la premisa de que, al ofrecer una experiencia inicial gratuita robusta
+y atractiva, podemos motivar a un porcentaje significativo de usuarios a explorar y aprovechar las
+funcionalidades premium ofrecidas.
+
+Ingresos por suscripciones
+En relación a los ingresos provenientes de las suscripciones, se han fijado los precios según la duración de dichas suscripciones y la cantidad de funcionalidades de las que se desee disponer. Conforme
+mencionado anteriormente, los costos varían entre los 13,95 euros a los 34,95 euros para la suscripción mensual y entre los 149 euros y los 349 euros en suscripciones anuales. Utilizando la cantidad
+acumulada de usuarios de cada tipo, se puede proceder a calcular los beneficios mensuales.
+Este enfoque permite proyectar los ingresos derivados de las suscripciones a lo largo del tiempo, considerando la variabilidad en la duración de las mismas y la distribución de usuarios en cada categoría.
+Para hacer los cálculos más realistas, según el estudio realizado por YouGov [69], el 30 % de los usuarios a nivel mundial prefieren pagos mensuales, a un 27 % les es indiferente y otro 11 % no saben. Para
+poder hacer un cálculo aproximado, supongamos que estos dos grupos de usuarios también pagarán
+
+46
+
+la cuota mensual, es decir que un 68 % de los usuarios que se decidieron por pagar una suscripción
+escogerán una mensual y el 32 % restante por una anual.
+
+Figura 4.9: Promedio de usuarios en cada plan
+
+Gastos de la aplicación
+En la sección de gastos, se incluye la tarifa anual de desarrollador de Apple de 99 euros y los 25 euros
+correspondientes al pago único de desarrollador de Google. Estas tarifas son esenciales para poder
+publicar la aplicación en las tiendas de aplicaciones y aprovechar otras utilidades proporcionadas por
+estas plataformas.
+Además, se contemplan las cuotas de Publicidad de Meta, para poder dar a conocer la aplicación y que
+llegue al máximo de usuarios posibles y así asegurar un crecimiento más rápido.
+Por otro lado, también hay que tener en cuenta los distintos planes de suscripción de las plataformas de
+IA. Considerando la generación de contenido multimedia mediante Inteligencia Artificial, se requerirán planes de suscripción que proporcionen acceso a los servicios de IA necesarios para la generación
+de audio, imágenes, video, código. texto, etc. También será importante tener en cuenta las nóminas
+que se deberán seguir pagando a los empleados que en un principio se contrató para llevar a cabo la
+aplicación.
+En el análisis de gastos, también se incorporan las tarifas de DigitalOcean, que abarcan el despliegue de
+la web, la API, la base de datos, entre otros servicios. Se añade un recargo variable según el número
+de usuarios activos, ya que a medida que aumentan las transacciones por usuario o la demanda de
+recursos de servicios específicos, se refleja en un incremento de costos.
+
+Ingresos frente a gastos
+Esta sección es crucial para calcular el Retorno de la Inversión. En este proceso, se restan los gastos
+acumulados, que incluyen la inversión inicial, de los ingresos que se van generando a lo largo del
+
+47
+
+tiempo. Este análisis proporcionará una visión clara de cuándo la aplicación comenzará a generar
+beneficios netos en relación con la inversión realizada.
+Si se logra recuperar la inversión inicial, en algún momento esta operación arrojará un resultado positivo, señalando que a partir de ese punto se ha igualado la inversión y se comenzará a obtener beneficios
+netos. En este caso, tras 13 meses desde que se publica la aplicación.
+
+Figura 4.10: Evolución de los gastos frente a los ingresos
+
+Figura 4.11: Punto en el que se empieza a tener beneficios
+
+48
+
+Capítulo 5
+Conclusiones y líneas futuras
+Este proyecto representa una respuesta innovadora a los desafíos actuales relacionados con la gestión
+eficiente del flujo de trabajo y la motivación laboral mediante técnicas avanzadas de gamificación.
+En un contexto donde la transformación digital y la eficiencia operativa son cada vez más relevantes,
+WorkGam se posiciona como una herramienta indispensable que aborda directamente estos problemas.
+Para llevar a cabo este proyecto, se han seleccionado tecnologías robustas como React, Vite, Tailwind
+CSS, Node.js, Express, PostgreSQL y Amazon S3. Estas tecnologías ofrecen una base sólida para el
+desarrollo full-stack, proporcionando un frontend intuitivo y adaptable, un backend eficiente y seguro, y una gestión de datos fiable y escalable. Netlify y Railway han facilitado el despliegue rápido,
+automatizado y escalable en la nube.
+La integración de técnicas de gamificación en la gestión del flujo de trabajo proporciona una solución
+completa que fomenta la participación activa y el compromiso de los empleados. Esto simplifica y optimiza las tareas administrativas internas, incrementando significativamente la productividad y satisfacción laboral. Además, funcionalidades avanzadas como asistentes virtuales, dashboards predictivos y
+generación multimedia enriquecen aún más la propuesta, ofreciendo a las empresas herramientas para
+la toma de decisiones más eficiente.
+Desde el punto de vista económico, el proyecto muestra un gran potencial de rentabilidad. La inversión
+inicial se estima recuperable en tan solo 13 meses desde el lanzamiento, gracias a un modelo de negocio
+basado en suscripciones flexibles y escalables adaptadas a distintos tamaños empresariales. Se proyecta
+un crecimiento exponencial en usuarios e ingresos, confirmando la viabilidad financiera del producto.
+En resumen, WorkGam es una solución integral, innovadora y rentable que combina gestión empresarial eficiente y motivación laboral. Con un enfoque continuo en la mejora y adaptación a las necesidades del mercado, se anticipa que el proyecto seguirá creciendo, ofreciendo constantemente nuevas
+funcionalidades y beneficios tanto para empresas como para sus usuarios.
+
+49
+
+Capítulo 6
+Summary and Conclusions
+This project represents an innovative response to current challenges related to eﬀicient workflow management and employee motivation through advanced gamification techniques. In a context where digital
+transformation and operational eﬀiciency are increasingly important, WorkGam positions itself as an
+essential tool that directly addresses these issues.
+To carry out this project, robust technologies such as React, Vite, Tailwind CSS, Node.js, Express,
+PostgreSQL, and Amazon S3 were selected. These technologies provide a solid foundation for fullstack development, delivering an intuitive and adaptable frontend, an eﬀicient and secure backend,
+and reliable and scalable data management. Netlify and Railway have facilitated rapid, automated,
+and scalable cloud deployment.
+Integrating gamification techniques into workflow management provides a comprehensive solution that
+fosters active participation and employee engagement. This approach simplifies and optimizes internal
+administrative tasks, significantly increasing productivity and job satisfaction. Additionally, advanced
+functionalities such as virtual assistants, predictive dashboards, and multimedia content generation
+further enrich the offering, providing companies with tools for more eﬀicient decision-making.
+From an economic standpoint, the project demonstrates strong profitability potential. The initial investment is estimated to be recoverable within just 13 months following the launch, thanks to a flexible and
+scalable subscription-based business model adapted to various company sizes. Exponential growth in
+users and revenue is projected, confirming the financial viability of the product.
+In summary, WorkGam is a comprehensive, innovative, and profitable solution that combines eﬀicient
+business management with employee motivation. With a continuous focus on improvement and adaptation to market needs, the project is expected to keep growing, consistently offering new functionalities
+and benefits to both companies and their users.
+
+50
+
+Capítulo 7
+Presupuesto
+Además de analizar la viabilidad económica del proyecto, también se ha llevado a cabo una evaluación
+de los costos asociados con la ejecución de esta aplicación. La estimación del tiempo dedicado se
+basa en la duración total del proyecto, que se establece en 300 horas de acuerdo con las pautas de
+la Resolución del 21 de marzo de 2011 de la Universidad de La Laguna. Según dicha resolución, un
+Trabajo de Fin de Grado equivale a 12 créditos ECTS, y dado que cada crédito implica un total de 25
+horas, se concluye que la duración total del proyecto abarca 300 horas.
+Tabla 7.1: Presupuesto de Equipos y Licencias
+Tareas
+
+Horas dedicadas
+
+Coste (€)
+
+Análisis del problema y tendencia del mercado
+
+20 horas
+
+16 €/h
+
+Estudio y selección de tecnologías
+
+40 horas
+
+16 €/h
+
+Implementación del Backend
+
+75 horas
+
+20 €/h
+
+Implementación del Frontend web y móvil
+
+100 horas
+
+20 €/h
+
+Documentación del proyecto
+
+65 horas
+
+16 €/h
+
+TOTAL
+
+300 horas
+
+5500 €
+
+Por lo tanto, para realizar este proyecto hicieron falta 300 horas con un coste de 5.500€.
+
+51
+
+Bibliografía
+Las siguientes referencias bibliográficas se presentan en orden de aparición en el texto.
+[1]
+
+Adam Reynolds. How ineﬀicient processes waste nearly a third of employees’ time. Consultado
+en 2025. 2019. URL: https://the-cfo.io/2019/06/19/how-inefficient-processeswaste-nearly-a-third-of-employees-time/.
+
+[2]
+
+Eagle Hill Consulting. Workers say they regularly spend time on low-value, ineﬀicient tasks.
+Consultado en 2025. 2025. URL: https://www.eaglehillconsulting.com/news/workerssay-they-regularly-spend-time-on-low-value-inefficient-tasks/.
+
+[3]
+
+Gallup. State of the Global Workplace Report. Consultado en 2025. 2023. URL: https://www.
+gallup.com/workplace/349484/state-of-the-global-workplace.aspx.
+
+[4]
+
+Time Doctor. Strategies to reduce work ineﬀiciency. Consultado en 2025. 2020. URL: https:
+//www.timedoctor.com/blog/strategies-to-reduce-work-inefficiency/.
+
+[5]
+
+Psico-Smart. Casos de éxito: empresas que han transformado su capacitación a través de la
+gamificación. Consultado en 2025. 2024. URL: https://psico- smart.com/articulos/
+articulo-casos-de-exito-empresas-que-han-transformado-su-capacitacion-atraves-de-la-gamificacion-162499.
+
+[6]
+
+Psico-Smart. What are the surprising effects of gamification on employee satisfaction? Consultado en 2025. 2025. URL: https://psico-smart.com/en/blogs/blog-what-are-thesurprising-effects-of-gamification-on-employee-satisfacti-187301.
+
+[7]
+
+Society for Human Resource Management (SHRM). Gamification Advances Post-Pandemic.
+Consultado en 2025. 2022. URL: https://www.shrm.org/topics-tools/news/technology/
+gamification-advances-post-pandemic.
+
+[8]
+
+BuildEmpire. Gamification Statistics. Consultado en 2025. 2025. URL: https://buildempire.
+co.uk/gamification-statistics/.
+
+[9]
+
+Electro IQ. Project Management Statistics. Consultado en 2025. 2025. URL: https://electroiq.
+com/stats/project-management-statistics/.
+
+[10] Worklenz. Worklenz vs Habitica. Consultado en 2025. 2024. URL: https://worklenz.com/
+blog/worklenz-vs-habitica/.
+
+52
+
+[11] Habitica Inc. Habitica User Documentation. Consultado en 2025. 2023. URL: https://habitica.
+com/static/home.
+[12] Wikipedia. Bunchball. Consultado en 2025. 2023. URL: https://en.wikipedia.org/wiki/
+Bunchball.
+[13] Scavify. Benefits of Gamification. Consultado en 2025. 2025. URL: https://www.scavify.
+com/gamification/benefits-of-gamification.
+[14] Growth Engineering. 19 Gamification Trends for 2022–2025. Consultado en 2025. 2023. URL:
+https://www.growthengineering.co.uk/19-gamification-trends-for-2022-2025top-stats-facts-examples/.
+[15] MDN Web Docs. HTML: Lenguaje de etiquetas de hipertexto. Consultado en 2025. 2025. URL:
+https://developer.mozilla.org/es/docs/Web/HTML.
+[16] MDN Web Docs. CSS: Hojas de estilo en cascada. Consultado en 2025. 2025. URL: https:
+//developer.mozilla.org/es/docs/Web/CSS.
+[17] MDN Web Docs. JavaScript. Consultado en 2025. 2025. URL: https://developer.mozilla.
+org/es/docs/Web/JavaScript.
+[18] Tailwind Labs. Tailwind CSS. Consultado en 2025. 2025. URL: https://tailwindcss.com/.
+[19] Bootstrap Team. Bootstrap. Consultado en 2025. 2025. URL: https://getbootstrap.com/.
+[20] Materialize. Materialize CSS. Consultado en 2025. 2025. URL: https://materializecss.
+com/.
+[21] Meta Platforms, Inc. React. Consultado en 2025. 2025. URL: https://es.react.dev/.
+[22] Vercel. Next.js Documentation. Consultado en 2025. 2025. URL: https://nextjs.org/docs.
+[23] Google. Angular. Consultado en 2025. 2025. URL: https://angular.io/.
+[24] Vue.js Team. Vue.js. Consultado en 2025. 2025. URL: https://vuejs.org/.
+[25] Python Software Foundation. Python. Consultado en 2025. 2025. URL: https://www.python.
+org/.
+[26] Oracle Corporation. Java. Consultado en 2025. 2025. URL: https://www.java.com/es/.
+[27] Ruby Core Team. Ruby. Consultado en 2025. 2025. URL: https://www.ruby-lang.org/es/.
+[28] The PHP Group. PHP. Consultado en 2025. 2025. URL: https://www.php.net/.
+[29] The Go Authors. Go. Consultado en 2025. 2025. URL: https://go.dev/.
+[30] OpenJS Foundation. Node.js. Consultado en 2025. 2025. URL: https://nodejs.org/en.
+[31] Express.js Team. Express.js. Consultado en 2025. 2025. URL: https://expressjs.com/.
+[32] Django Software Foundation. Django. Consultado en 2025. 2025. URL: https://www.djangoproject.
+com/.
+
+53
+
+[33] Pivotal Software. Spring Boot. Consultado en 2025. 2025. URL: https://spring.io/.
+[34] Rails Core Team. Ruby on Rails. Consultado en 2025. 2025. URL: https://rubyonrails.
+org/.
+[35] Taylor Otwell. Laravel. Consultado en 2025. 2025. URL: https://laravel.com/.
+[36] Pallets Projects. Flask. Consultado en 2025. 2025. URL: https://flask.palletsprojects.
+com/en/3.0.x/.
+[37] MySQL Developers. MySQL. Consultado en 2025. 2025. URL: https://www.mysql.com/.
+[38] PostgreSQL Global Development Group. PostgreSQL. Consultado en 2025. 2025. URL: https:
+//www.postgresql.org/.
+[39] Oracle Corporation. Oracle Database. Consultado en 2025. 2025. URL: https://www.oracle.
+com/es/database/.
+[40] MongoDB Inc. MongoDB. Consultado en 2025. 2025. URL: https://www.mongodb.com/es.
+[41] Redis Labs. Redis. Consultado en 2025. 2025. URL: https://redis.io/.
+[42] Microsoft. Visual Studio Code. Consultado en 2025. 2025. URL: https://code.visualstudio.
+com/.
+[43] Git SCM. Git. Consultado en 2025. 2025. URL: https://git-scm.com/.
+[44] GitHub Inc. GitHub. Consultado en 2025. 2025. URL: https://github.com/.
+[45] Supabase Inc. Supabase. Consultado en 2025. 2025. URL: https://supabase.com/.
+[46] Docker Inc. Docker. Consultado en 2025. 2025. URL: https://www.docker.com/.
+[47] Postman Inc. Postman. Consultado en 2025. 2025. URL: https://www.postman.com/.
+[48] Figma Inc. Figma. Consultado en 2025. 2025. URL: https://www.figma.com/.
+[49] Inc. ProjectLibre. ProjectLibre. Consultado en 2025. 2025. URL: https://www.projectlibre.
+com/.
+[50] Overleaf Ltd. Overleaf. Consultado en 2025. 2025. URL: https://es.overleaf.com.
+[51] MDN Web Docs. Progressive Web Apps (PWA). Consultado en 2025. 2025. URL: https://
+developer.mozilla.org/es/docs/Web/Progressive_web_apps.
+[52] Amazon Web Services. Amazon Web Services. Consultado en 2025. 2024. URL: https://aws.
+amazon.com/es/.
+[53] Google Cloud. Google Cloud Platform. Consultado en 2025. 2024. URL: https : / / cloud .
+google.com/?hl=es.
+[54] Microsoft Corporation. Microsoft Azure. Consultado en 2025. 2024. URL: https : / / azure .
+microsoft.com/es-es.
+
+54
+
+[55] DigitalOcean Inc. DigitalOcean. Consultado en 2025. 2024. URL: https://www.digitalocean.
+com/.
+[56] Netlify. Netlify. Consultado en 2025. 2024. URL: https://www.netlify.com/.
+[57] Vercel Inc. Vercel. Consultado en 2025. 2024. URL: https://vercel.com/.
+[58] Railway Inc. Railway. Consultado en 2025. 2024. URL: https://railway.com/.
+[59] Render. Render. Consultado en 2025. 2024. URL: https://render.com/.
+[60] Google Developers. Mobile-first indexing best practices. Consultado en 2025. 2021. URL: https:
+//developers.google.com/search/mobile-sites/mobile-first-indexing.
+[61] OWASP Foundation. OWASP Top Ten Web Application Security Risks. Consultado en 2025.
+2023. URL: https://owasp.org/www-project-top-ten/.
+[62] IETF RFC 8446. Transport Layer Security (TLS) Protocol. RFC estándar de TLS 1.3. 2022.
+URL: https://datatracker.ietf.org/doc/html/rfc8446.
+[63] GTmetrix. GTmetrix Performance Testing Tool. Consultado en 2025. 2023. URL: https : / /
+gtmetrix.com.
+[64] Google Web.dev. Web performance optimization strategies. Consultado en 2025. 2022. URL:
+https://web.dev/performance/.
+[65] Atlassian. Trello: Herramienta de gestión visual de proyectos. Consultado en 2025. 2023. URL:
+https://trello.com/.
+[66] ClickUp. ClickUp: Productivity Platform. Consultado en 2025. 2023. URL: https://clickup.
+com.
+[67] Bunchball. Driving Enterprise Performance Through Gamification. Consultado en 2025. 2019.
+URL: https://www.bunchball.com.
+
+[68] Estudio de Viabilidad Económica. https://docs.google.com/spreadsheets/d/1Sqz3bxWF6ofKwXXu
+edit?usp=sharing. Accedido en mayo de 2025.
+[69] A. Becerra González. ‘Suscripción mensual o pago único: ¿qué prefieren los consumidores?’
+YouGov. 13 de abr. de 2022. URL: https://es.yougov.com/international/articles/
+42103-suscripcion-mensual-o-pago-unico-que-prefieren-los.
+
+55
+
+

@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber memtfg"] 1776207787.46861 "memtfg.bcf" "memtfg.bbl" "memtfg" 1776207802.80622 0
-  "memtfg.bcf" 1776207802.5494 109245 2d777bcc7d523aaaecfd0b647dd7ecc6 "pdflatex"
+["biber memtfg"] 1776293666.10176 "memtfg.bcf" "memtfg.bbl" "memtfg" 1776293676.39053 0
+  "memtfg.bcf" 1776293676.18471 109175 2a48f771bf74858e0ff6973cb366f11c "pdflatex"
   "referencias.bib" 1776207775.06385 9174 6d10faaa798c847b24c73cf0937662f9 ""
   (generated)
   "memtfg.bbl"
   "memtfg.blg"
   (rewritten before read)
-["pdflatex"] 1776207797.43704 "memtfg.tex" "memtfg.pdf" "memtfg" 1776207802.80651 0
+["pdflatex"] 1776293671.29197 "memtfg.tex" "memtfg.pdf" "memtfg" 1776293676.39093 0
   "/etc/texmf/web2c/texmf.cnf" 1772565105.97287 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/sourcecodepro/a_lutrty.enc" 1558300257 2905 926f570532f1104044846d18d8d97080 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -308,8 +308,8 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1772565186 8214451 e3991010fdcb380458b5766369a12947 ""
   "01-introducción.tex" 1776197929.26062 19763 6575a54ae56a278246ce3d4abc286919 ""
   "02-capítulo2.tex" 1776205430.94649 24252 da58d80be8d6ca6f4eeb2e225a3e4e89 ""
-  "03-capítulo3.tex" 1776207762.50126 17578 1d47361faff08640bf5777cb4f3fe1b5 ""
-  "04-capítulo4.tex" 1776109606.08749 566 d009119445754f6166ee3e9ac1c6af7a ""
+  "03-capítulo3.tex" 1776208504.69688 17495 e4a470496e28e7e79cad411e4f099acf ""
+  "04-capítulo4.tex" 1776293221.24361 13660 08ce56f92323b7af49967ddd91acf679 ""
   "05-conclusiones.tex" 1757504110 201 ffcd6ceaa1311959678bad01a900d4c4 ""
   "05-implementacion.tex" 1776109622.18421 90 e2745af8e0ddf7c1eaf27f264dd1291c ""
   "06-conclusions.tex" 1757504110 159 e76e17db045afb7cdb21600af1681a52 ""
@@ -327,14 +327,14 @@
   "images/horas_perdidas.png" 1773939526.74087 383125 7f1043a62556b1f29559362bc8840a5a ""
   "images/licenses/by-nc-nd.eu.eps" 1757504110 69200 748ea699400753f21d5be217ac36e0f5 ""
   "images/logos/escuela-ingenieria-tecnologia-original.pdf" 1757504110 14093 68ca699acbd7089dca36ed426e07a70b ""
-  "memtfg.aux" 1776207802.53942 47384 06c4ea3b7b088b7d41aa9aecd0c5aa38 "pdflatex"
-  "memtfg.bbl" 1776207788.3334 34741 066ada151494fbc82f95ed8826454de0 "biber memtfg"
-  "memtfg.lof" 1776207802.5494 1005 db63bcde1b19cb734188d38be25c94c2 "pdflatex"
-  "memtfg.lot" 1776207802.5494 2088 edb22229e4c28f6091c818167a4fb898 "pdflatex"
-  "memtfg.out" 1776207799.27878 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "memtfg.run.xml" 1776207802.5494 2361 3af801e513f975e537742a614ef38cb5 "pdflatex"
+  "memtfg.aux" 1776293676.17496 50590 339522d3b95870adbe979eb96366c480 "pdflatex"
+  "memtfg.bbl" 1776293666.94942 33645 0c362d0c02ca6873ff544b6db3a900e2 "biber memtfg"
+  "memtfg.lof" 1776293676.19447 1005 db63bcde1b19cb734188d38be25c94c2 "pdflatex"
+  "memtfg.lot" 1776293676.19447 2088 9e2c1e3185f39207ca708980aa674ee3 "pdflatex"
+  "memtfg.out" 1776293673.99024 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "memtfg.run.xml" 1776293676.18471 2361 3af801e513f975e537742a614ef38cb5 "pdflatex"
   "memtfg.tex" 1776198511.01989 15422 15a411d1473c062eac1da136761a3120 ""
-  "memtfg.toc" 1776207802.5494 5490 3d5926276efa296fcf50af017d2303b7 "pdflatex"
+  "memtfg.toc" 1776293676.19447 5971 c553c10e111bd3c2f34fbdabef8c05be "pdflatex"
   "settings/listings.tex" 1757504110 6043 009de0d62aff431257a1544ba2a7940a ""
   (generated)
   "memtfg.aux"

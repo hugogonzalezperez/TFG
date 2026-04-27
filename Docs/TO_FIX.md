@@ -5,3 +5,10 @@
 5. 1.3.1 y 1.3.2 poner los enlaces a las apps de referencia como Telpark y demás.
 
 Revisar las fechas de la bibliografia
+
+
+
+
+Poner de alguna forma una funcionalidad de prevencion de fraudes, es decir, si alguien pretende entrar al garaje para robar los vehiculos, no se le de permiso de salida.
+
+¿Cuantos garajes van a haber en la aplicacion?

@@ -17,13 +17,24 @@ Para garantizar un proceso de creación eficiente y cumplir con los más altos e
     \item \textbf{Mantenimiento (Continuo):} Práctica recurrente tras el lanzamiento destinada a monitorizar el tráfico, aplicar parches de seguridad, optimizar el SEO\footnote{\textit{Search Engine Optimization} (SEO): Prácticas para mejorar el posicionamiento de una plataforma en los resultados de motores de búsqueda orgánicos.} y mantener la escalabilidad progresiva del software al ritmo de aumento en la base de usuarios.
 \end{itemize}
 
-% AÑADIR IMAGEN DEL DIAGRAMA DE GANTT (FASE 1)
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{images/gantt_parky_01}
-%     \caption{Diagrama de Gantt del desarrollo de Parky (Parte 1)}
-%     \label{fig:gantt_1}
-% \end{figure}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.3} % Espaciado vertical
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Fase / Mes} & \textbf{Mes 1} & \textbf{Mes 2} & \textbf{Mes 3} & \textbf{Mes 4} & \textbf{Mes 5} & \textbf{Mes 6} & \textbf{Mes 7} & \textbf{Mes 8} & \textbf{Mes 9} \\ \hline
+        Análisis (27 d.) & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & \\ \hline
+        Diseño (24 d.) & & \cellcolor{orange!30} & \cellcolor{orange!30} & & & & & & \\ \hline
+        Desarrollo (135 d.) & & & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \\ \hline
+        Pruebas (130 d.) & & & & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} \\ \hline
+        Despliegue (10 d.) & & & & & & & & & \cellcolor{red!30} \\ \hline
+        Mantenimiento & & & & & & & & & \cellcolor{gray!30} \\ \hline
+    \end{tabular}%
+    }
+    \caption{Diagrama de Gantt del desarrollo de Parky representado como tabla}
+    \label{tab:gantt_1}
+\end{table}
 
 \subsection{Coste y duración del proyecto}
 \label{subsec:coste_duracion}
@@ -34,13 +45,28 @@ El equipo humano presupuestado cuenta, como mínimo, con los siguientes roles: J
 
 Evaluando las tareas desglosadas se ha estimado un plazo total de ejecución de 191 días hábiles de trabajo en jornada completa. Tomando como base la estructura contractual de consultoría para perfiles en España a valores del mercado IT de 2026, el coste de ejecución total ronda los \textbf{230.400 euros}.
 
-% AÑADIR TABLA O IMAGEN DEL PRESUPUESTO BASADO EN LA IMAGEN QUE ENVIASTE ANTES
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{images/tabla_presupuesto_horas}
-%     \caption{Presupuesto y tarifas por perfil técnico para el desarrollo}
-%     \label{fig:presupuesto_equipo}
-% \end{figure}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Perfil Técnico} & \textbf{Horas Est.} & \textbf{Tarifa (€/h)} & \textbf{Coste Total (€)} \\
+        \midrule
+        Jefe de Proyecto & 300 & 65 & 19.500 \\
+        Analista de Software & 400 & 55 & 22.000 \\
+        Arquitecto de Software & 300 & 70 & 21.000 \\
+        Desarrollador Backend (Senior) & 800 & 60 & 48.000 \\
+        Desarrollador Frontend (Senior) & 800 & 60 & 48.000 \\
+        Desarrollador Full-Stack (Junior) & 1.200 & 35 & 42.000 \\
+        Diseñador UI/UX & 300 & 45 & 13.500 \\
+        QA (Aseguramiento de Calidad) & 410 & 40 & 16.400 \\
+        \midrule
+        \textbf{Coste Total de Ejecución} & \textbf{4.510} & \textbf{-} & \textbf{230.400} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Presupuesto y tarifas por perfil técnico para el desarrollo}
+    \label{tab:presupuesto_equipo}
+\end{table}
 
 Para mitigar contingencias y cubrir el gasto publicitario y operativo del lanzamiento hasta que la curva de ingresos genere beneficios constantes, se concluye como altamente recomendada una inyección de capital o \textbf{inversión inicial no inferior a los 300.000 euros}.
 
@@ -82,13 +108,26 @@ Basándonos en la captación de usuarios mediante plataformas publicitarias y SE
 
 Por otro lado, los gastos operativos fijos crecen suavemente. Aquí deben costearse las transferencias a infraestructuras web y móvil para tolerar la latencia simultánea, y los gastos mensuales referidos a herramientas colaborativas y seguridad de base de datos.
 
-% AÑADIR IMAGEN GRÁFICA DE "GASTOS vs INGRESOS (PROYECCIÓN)"
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{images/proyeccion_ingresos_gastos}
-%     \caption{Evolución proyectada de los gastos consolidados frente a los ingresos generados}
-%     \label{fig:grafica_roi}
-% \end{figure}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{cccc}
+        \toprule
+        \textbf{Mes Comercial} & \textbf{Gastos Acumulados (€)} & \textbf{Ingresos Acumulados (€)} & \textbf{Balance (€)} \\
+        \midrule
+        Mes 1 & 305.000 & 2.000 & -303.000 \\
+        Mes 4 & 312.000 & 25.000 & -287.000 \\
+        Mes 8 & 318.000 & 85.000 & -233.000 \\
+        Mes 12 & 325.000 & 180.000 & -145.000 \\
+        Mes 15 & 330.000 & 290.000 & -40.000 \\
+        \textbf{Mes 16 (Punto de equilibrio)} & \textbf{331.000} & \textbf{335.000} & \textbf{+4.000} \\
+        Mes 18 & 335.000 & 440.000 & +105.000 \\
+        Mes 24 & 345.000 & 850.000 & +505.000 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Evolución proyectada de gastos frente a ingresos y punto de equilibrio}
+    \label{tab:grafica_roi}
+\end{table}
 
 \textbf{Punto de Retorno:} \\
 Siguiendo las curvas de proyección estimadas bajo un escenario de aceptación de mercado estándar (ni excesivamente pesimista ni inflado por el optimismo), la brecha entre los gastos acumulados y los ingresos devengados en materia de comisiones de aparcamiento o bonos de fidelización irá acortándose sistemáticamente a medida que la aplicación logre un posicionamiento firme e invite al uso diario. 

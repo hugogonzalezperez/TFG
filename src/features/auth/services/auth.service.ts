@@ -394,14 +394,17 @@ export const changePassword = async (
   newPassword: string
 ): Promise<void> => {
   try {
-    // Supabase Auth maneja la verificación de la contraseña actual internamente
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+    if (getUserError || !user?.email) throw new Error('No se pudo obtener el usuario actual');
 
-    if (error) {
-      throw error;
-    }
+    const { error: reAuthError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (reAuthError) throw new Error('Contraseña actual incorrecta');
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
   } catch (error) {
     console.error('Error in changePassword:', error);
     throw error;

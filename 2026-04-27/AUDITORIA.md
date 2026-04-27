@@ -14,7 +14,7 @@
 ## 🔴 CRÍTICOS — Hacer antes de la defensa
 
 ### C-1: QueryClient recreado en cada render
-- [ ] Mover `new QueryClient({...})` fuera del cuerpo de `App()` en [src/App.tsx:42](../src/App.tsx#L42)
+- [x] Mover `new QueryClient({...})` fuera del cuerpo de `App()` en [src/App.tsx:42](../src/App.tsx#L42)
 - **Impacto si no se hace:** Toda la caché de TanStack Query se destruye en cada re-render. Comportamiento impredecible.
 - **Fix:** 2 líneas. Mover antes del `export default function App()` o usar `useState`.
 
@@ -41,7 +41,7 @@ export default function App() { ... }
 ---
 
 ### C-3: `changePassword` no verifica contraseña actual
-- [ ] Añadir re-autenticación antes de `updateUser` en [src/features/auth/services/auth.service.ts:295](../src/features/auth/services/auth.service.ts#L295)
+- [x] Añadir re-autenticación antes de `updateUser` en [src/features/auth/services/auth.service.ts:295](../src/features/auth/services/auth.service.ts#L295)
 - **Impacto si no se hace:** Session hijacking → cambio de contraseña sin conocer la original → account takeover.
 
 ```typescript
@@ -182,16 +182,19 @@ if (reAuthError) throw new Error('Contraseña actual incorrecta');
 
 - [ ] Habilitar RLS en tablas sin cobertura confirmada (payments, refunds, reviews, smart_access, roles)
 - [ ] Restringir `SELECT *` en `auth_providers` — nunca exponer `password_hash` al cliente
-- [ ] Auditar función `increment_garage_spots` — cualquier user puede llamarla como RPC
-- [ ] Crear tabla `booking_access_logs` con RLS si no existe
+- [x] `increment/decrement_garage_spots` — REVOKE EXECUTE anon aplicado ✅
+- [x] `booking_access_logs` existe en DB con RLS y 4 políticas ✅ (policy débil eliminada)
 - [ ] Revisar política `USING (true)` en `users` — expone emails y teléfonos públicamente
+- [x] `pricing_rules` 0 policies → 2 policies creadas (feature de precios dinámicos restaurada) ✅
+- [x] `user_roles` INSERT WITH CHECK(true) → policy eliminada (escalada de privilegios cerrada) ✅
+- [x] `complete_past_bookings` REVOKE EXECUTE anon aplicado ✅
 
 ---
 
 ## PROGRESO GLOBAL
 
 ```
-Críticos completados:  0 / 6
+Críticos completados:  2 / 6  (C-1, C-3)
 Media completados:     0 / 8
 Baja completados:      0 / 6
 Documentación:        2 / 8 capítulos

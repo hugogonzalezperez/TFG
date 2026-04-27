@@ -9,6 +9,15 @@ import { AuthProvider, useAuth } from './features/auth';
 import { AnimatedLoader } from './shared/components/loaders';
 import { isNative, hideSplash } from '@/mobile';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    },
+  },
+});
+
 function AppContent() {
   const { initialized } = useAuth();
 
@@ -39,15 +48,6 @@ function AppContent() {
 }
 
 export default function App() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 1,
-      },
-    },
-  });
-
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" richColors closeButton />

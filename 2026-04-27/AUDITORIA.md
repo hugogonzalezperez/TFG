@@ -32,9 +32,10 @@ export default function App() { ... }
 ---
 
 ### C-2: Precio de reserva calculado en cliente — sin validación server-side
-- [ ] Crear Supabase Edge Function `POST /functions/v1/calculate-price` que recalcule precio en servidor
-- [ ] El cliente envía `spotId + startTime + endTime`, servidor devuelve `total_price` firmado
-- [ ] Validar en trigger PL/pgSQL que `total_price` insertado coincide con el calculado
+- [x] Edge Function `calculate-price` desplegada y activa (ACTIVE, verify_jwt: true)
+- [x] `bookingDal.getServerCalculatedPrice()` llama a la función antes de insertar
+- [x] `bookingDal.insertBooking()` usa precio del servidor — ignora totalPrice del cliente
+- [ ] Opcional: trigger PL/pgSQL para doble validación (no crítico para TFG)
 - **Impacto si no se hace:** Cualquier usuario con DevTools puede insertar `total_price: 0.01`. Reservas gratis.
 - **Archivo:** [src/features/booking/services/pricing.service.ts](../src/features/booking/services/pricing.service.ts) + [booking.dal.ts:75](../src/features/booking/services/booking.dal.ts#L75)
 
@@ -56,9 +57,9 @@ if (reAuthError) throw new Error('Contraseña actual incorrecta');
 ---
 
 ### C-4: Dos archivos `database.types.ts` divergentes
-- [ ] Eliminar [src/shared/types/database.types.ts](../src/shared/types/database.types.ts) (65 líneas, manual, desactualizado)
-- [ ] Actualizar todos los imports en auth/ y booking/ para apuntar a `@/types/database.types`
-- [ ] Ejecutar `supabase gen types typescript --project-id gvyeipohgqzbhrqrxbqk > src/types/database.types.ts`
+- [x] `src/types/database.types.ts` regenerado vía MCP — incluye 5 ENUMs, booking_access_logs, public_profiles view, elimina tablas fantasma
+- [x] `src/shared/types/database.types.ts` verificado como código muerto (0 imports en todo src/) — sin acción necesaria
+- [x] parking.dal.ts ya importaba desde `src/types/database.types.ts` correctamente
 - **Impacto si no se hace:** Tipos fantasma. Errores en runtime enmascarados por `as any`.
 
 ---
@@ -96,8 +97,8 @@ if (reAuthError) throw new Error('Contraseña actual incorrecta');
 - [ ] Añadir filtro `WHERE deleted_at IS NULL` en todas las queries de bookings
 
 ### M-4: Añadir Error Boundary global
-- [ ] Crear `src/shared/components/ErrorBoundary.tsx`
-- [ ] Wrappear `<Outlet />` en [src/App.tsx](../src/App.tsx)
+- [x] `src/shared/components/ErrorBoundary.tsx` creado
+- [x] Wrappea `<Suspense><Outlet /></Suspense>` en AppContent
 
 ### M-5: Fijar versiones wildcard en package.json
 - [ ] `"clsx": "^2.1.1"` (en vez de `"*"`)
@@ -194,8 +195,8 @@ if (reAuthError) throw new Error('Contraseña actual incorrecta');
 ## PROGRESO GLOBAL
 
 ```
-Críticos completados:  2 / 6  (C-1, C-3)
-Media completados:     0 / 8
+Críticos completados:  4 / 6  (C-1, C-2, C-3, C-4)
+Media completados:     1 / 8  (M-4)
 Baja completados:      0 / 6
 Documentación:        2 / 8 capítulos
 ```

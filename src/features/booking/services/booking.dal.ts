@@ -60,7 +60,22 @@ export const bookingDal = {
   },
 
   /**
-   * Inserta una reserva completa
+   * Obtiene el precio calculado en servidor para una reserva (seguridad: evita manipulación client-side)
+   */
+  async getServerCalculatedPrice(params: {
+    spotId: string;
+    startTime: string;
+    endTime: string;
+  }): Promise<{ totalPrice: number; pricePerHour: number; multiplierApplied: number; totalHours: number }> {
+    const { data, error } = await supabase.functions.invoke('calculate-price', {
+      body: params,
+    });
+    if (error) throw new Error(`Error calculando precio: ${error.message}`);
+    return data;
+  },
+
+  /**
+   * Inserta una reserva completa — el precio final se recalcula en servidor
    */
   async insertBooking(params: {
     spotId: string;
@@ -75,6 +90,13 @@ export const bookingDal = {
     vehicleDescription: string;
     status: BookingStatus;
   }) {
+    // Precio recalculado en servidor — ignora totalPrice del cliente
+    const serverPrice = await bookingDal.getServerCalculatedPrice({
+      spotId: params.spotId,
+      startTime: params.startTime,
+      endTime: params.endTime,
+    });
+
     const { data, error } = await supabase
       .from('bookings')
       .insert({
@@ -82,10 +104,10 @@ export const bookingDal = {
         renter_id: params.userId,
         start_time: params.startTime,
         end_time: params.endTime,
-        total_hours: params.totalHours,
-        total_price: params.totalPrice,
-        price_per_hour_at_booking: params.basePriceStr,
-        dynamic_multiplier_applied: params.multiplierApplied,
+        total_hours: serverPrice.totalHours,
+        total_price: serverPrice.totalPrice,
+        price_per_hour_at_booking: serverPrice.pricePerHour,
+        dynamic_multiplier_applied: serverPrice.multiplierApplied,
         vehicle_plate: params.vehiclePlate,
         vehicle_description: params.vehicleDescription,
         status: params.status

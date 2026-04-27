@@ -7,6 +7,7 @@ import { FilterProvider } from './features/parking';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './features/auth';
 import { AnimatedLoader } from './shared/components/loaders';
+import { ErrorBoundary } from './shared/components/ErrorBoundary';
 import { isNative, hideSplash } from '@/mobile';
 
 const queryClient = new QueryClient({
@@ -41,9 +42,11 @@ function AppContent() {
   }
 
   return (
-    <Suspense fallback={<AnimatedLoader message="Cargando..." />}>
-      <Outlet />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<AnimatedLoader message="Cargando..." />}>
+        <Outlet />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

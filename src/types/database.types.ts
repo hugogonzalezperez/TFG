@@ -6,558 +6,698 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.1"
+  }
   public: {
     Tables: {
-      access_logs: {
+      booking_access_logs: {
         Row: {
+          action: string
+          booking_id: string
+          created_at: string | null
           id: string
-          smart_access_id: string
-          opened_at: string
+          ip_address: unknown
           success: boolean
-          ip_address: string | null
           user_agent: string | null
-          location_lat: number | null
-          location_lng: number | null
         }
         Insert: {
+          action: string
+          booking_id: string
+          created_at?: string | null
           id?: string
-          smart_access_id: string
-          opened_at?: string
-          success: boolean
-          ip_address?: string | null
-          user_agent?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
-        }
-        Update: {
-          id?: string
-          smart_access_id?: string
-          opened_at?: string
+          ip_address?: unknown
           success?: boolean
-          ip_address?: string | null
           user_agent?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
-        }
-      }
-      auth_providers: {
-        Row: {
-          id: string
-          user_id: string
-          provider: string
-          provider_uid: string | null
-          password_hash: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          provider: string
-          provider_uid?: string | null
-          password_hash?: string | null
-          created_at?: string
         }
         Update: {
+          action?: string
+          booking_id?: string
+          created_at?: string | null
           id?: string
-          user_id?: string
-          provider?: string
-          provider_uid?: string | null
-          password_hash?: string | null
-          created_at?: string
+          ip_address?: unknown
+          success?: boolean
+          user_agent?: string | null
         }
-      }
-      favorites: {
-        Row: {
-          id: string
-          user_id: string
-          parking_spot_id: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          parking_spot_id: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          parking_spot_id?: string
-          created_at?: string
-        }
-      }
-      availability_slots: {
-        Row: {
-          id: string
-          parking_spot_id: string | null
-          slot_time: string
-          is_occupied: boolean
-          booking_id: string | null
-        }
-        Insert: {
-          id?: string
-          parking_spot_id?: string | null
-          slot_time: string
-          is_occupied?: boolean
-          booking_id?: string | null
-        }
-        Update: {
-          id?: string
-          parking_spot_id?: string | null
-          slot_time?: string
-          is_occupied?: boolean
-          booking_id?: string | null
-        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_access_logs_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bookings: {
         Row: {
+          created_at: string | null
+          dynamic_multiplier_applied: number | null
+          end_time: string
           id: string
           parking_spot_id: string
+          price_per_hour_at_booking: number
           renter_id: string
           start_time: string
-          end_time: string
+          status: Database["public"]["Enums"]["booking_status"] | null
           total_hours: number
           total_price: number
-          status: string
-          created_at: string
-          updated_at: string
-          price_per_hour_at_booking: number
-          dynamic_multiplier_applied: number
+          updated_at: string | null
+          vehicle_description: string | null
+          vehicle_plate: string | null
         }
         Insert: {
+          created_at?: string | null
+          dynamic_multiplier_applied?: number | null
+          end_time: string
           id?: string
           parking_spot_id: string
+          price_per_hour_at_booking: number
           renter_id: string
           start_time: string
-          end_time: string
+          status?: Database["public"]["Enums"]["booking_status"] | null
           total_hours: number
           total_price: number
-          status?: string
-          created_at?: string
-          updated_at?: string
-          price_per_hour_at_booking: number
-          dynamic_multiplier_applied?: number
+          updated_at?: string | null
+          vehicle_description?: string | null
+          vehicle_plate?: string | null
         }
         Update: {
+          created_at?: string | null
+          dynamic_multiplier_applied?: number | null
+          end_time?: string
           id?: string
           parking_spot_id?: string
+          price_per_hour_at_booking?: number
           renter_id?: string
           start_time?: string
-          end_time?: string
+          status?: Database["public"]["Enums"]["booking_status"] | null
           total_hours?: number
           total_price?: number
-          status?: string
-          created_at?: string
-          updated_at?: string
-          price_per_hour_at_booking?: number
-          dynamic_multiplier_applied?: number
+          updated_at?: string | null
+          vehicle_description?: string | null
+          vehicle_plate?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_parking_spot_id_fkey"
+            columns: ["parking_spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          parking_spot_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parking_spot_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parking_spot_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_parking_spot_id_fkey"
+            columns: ["parking_spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       garage_images: {
         Row: {
-          id: string
+          created_at: string | null
+          display_order: number | null
           garage_id: string
+          id: string
           image_url: string
-          is_main: boolean
-          display_order: number
-          created_at: string
+          is_main: boolean | null
         }
         Insert: {
-          id?: string
+          created_at?: string | null
+          display_order?: number | null
           garage_id: string
+          id?: string
           image_url: string
-          is_main?: boolean
-          display_order?: number
-          created_at?: string
+          is_main?: boolean | null
         }
         Update: {
-          id?: string
+          created_at?: string | null
+          display_order?: number | null
           garage_id?: string
+          id?: string
           image_url?: string
-          is_main?: boolean
-          display_order?: number
-          created_at?: string
+          is_main?: boolean | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "garage_images_garage_id_fkey"
+            columns: ["garage_id"]
+            isOneToOne: false
+            referencedRelation: "garages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       garages: {
         Row: {
-          id: string
-          owner_id: string
-          name: string
-          description: string | null
           address: string
           city: string
-          postal_code: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
           lat: number
           lng: number
+          name: string
+          owner_id: string
+          postal_code: string | null
           total_spots: number
-          is_active: boolean
-          created_at: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          id?: string
-          owner_id: string
-          name: string
-          description?: string | null
           address: string
           city: string
-          postal_code?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
           lat: number
           lng: number
+          name: string
+          owner_id: string
+          postal_code?: string | null
           total_spots?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          owner_id?: string
-          name?: string
-          description?: string | null
           address?: string
           city?: string
-          postal_code?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
           lat?: number
           lng?: number
+          name?: string
+          owner_id?: string
+          postal_code?: string | null
           total_spots?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "garages_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       parking_spot_images: {
         Row: {
+          created_at: string | null
+          display_order: number | null
           id: string
-          parking_spot_id: string
           image_url: string
-          display_order: number
-          created_at: string
+          parking_spot_id: string
         }
         Insert: {
+          created_at?: string | null
+          display_order?: number | null
           id?: string
-          parking_spot_id: string
           image_url: string
-          display_order?: number
-          created_at?: string
+          parking_spot_id: string
         }
         Update: {
+          created_at?: string | null
+          display_order?: number | null
           id?: string
-          parking_spot_id?: string
           image_url?: string
-          display_order?: number
-          created_at?: string
+          parking_spot_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "parking_spot_images_parking_spot_id_fkey"
+            columns: ["parking_spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       parking_spots: {
         Row: {
-          id: string
-          garage_id: string
-          owner_id: string
-          spot_number: string
           base_price_per_hour: number
+          created_at: string | null
           current_price_per_hour: number
           description: string | null
-          is_active: boolean
-          type: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
           garage_id: string
+          id: string
+          is_active: boolean | null
           owner_id: string
           spot_number: string
-          base_price_per_hour: number
-          current_price_per_hour: number
-          description?: string | null
-          is_active?: boolean
-          type?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          garage_id?: string
-          owner_id?: string
-          spot_number?: string
-          base_price_per_hour?: number
-          current_price_per_hour?: number
-          description?: string | null
-          is_active?: boolean
-          type?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      payments: {
-        Row: {
-          id: string
-          booking_id: string
-          user_id: string
-          amount_total: number
-          platform_fee: number
-          owner_amount: number
-          stripe_payment_id: string | null
-          status: string
-          created_at: string
-          updated_at: string
+          type: string | null
+          updated_at: string | null
         }
         Insert: {
+          base_price_per_hour: number
+          created_at?: string | null
+          current_price_per_hour: number
+          description?: string | null
+          garage_id: string
           id?: string
-          booking_id: string
-          user_id: string
-          amount_total: number
-          platform_fee: number
-          owner_amount: number
-          stripe_payment_id?: string | null
-          status?: string
-          created_at?: string
-          updated_at?: string
+          is_active?: boolean | null
+          owner_id: string
+          spot_number: string
+          type?: string | null
+          updated_at?: string | null
         }
         Update: {
+          base_price_per_hour?: number
+          created_at?: string | null
+          current_price_per_hour?: number
+          description?: string | null
+          garage_id?: string
           id?: string
-          booking_id?: string
-          user_id?: string
-          amount_total?: number
-          platform_fee?: number
-          owner_amount?: number
-          stripe_payment_id?: string | null
-          status?: string
-          created_at?: string
-          updated_at?: string
+          is_active?: boolean | null
+          owner_id?: string
+          spot_number?: string
+          type?: string | null
+          updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "parking_spots_garage_id_fkey"
+            columns: ["garage_id"]
+            isOneToOne: false
+            referencedRelation: "garages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_spots_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       price_history: {
         Row: {
+          created_at: string | null
           id: string
           parking_spot_id: string
           price_per_hour: number
           reason: string | null
-          created_at: string
         }
         Insert: {
+          created_at?: string | null
           id?: string
           parking_spot_id: string
           price_per_hour: number
           reason?: string | null
-          created_at?: string
         }
         Update: {
+          created_at?: string | null
           id?: string
           parking_spot_id?: string
           price_per_hour?: number
           reason?: string | null
-          created_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "price_history_parking_spot_id_fkey"
+            columns: ["parking_spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pricing_rules: {
         Row: {
+          created_at: string | null
+          day_of_week: number | null
+          end_time: string | null
           id: string
+          is_active: boolean | null
+          multiplier: number
           parking_spot_id: string | null
           rule_name: string
-          day_of_week: number | null
           start_time: string | null
-          end_time: string | null
-          multiplier: number
-          is_active: boolean
-          created_at: string
         }
         Insert: {
+          created_at?: string | null
+          day_of_week?: number | null
+          end_time?: string | null
           id?: string
+          is_active?: boolean | null
+          multiplier?: number
           parking_spot_id?: string | null
           rule_name: string
-          day_of_week?: number | null
           start_time?: string | null
-          end_time?: string | null
-          multiplier?: number
-          is_active?: boolean
-          created_at?: string
         }
         Update: {
+          created_at?: string | null
+          day_of_week?: number | null
+          end_time?: string | null
           id?: string
+          is_active?: boolean | null
+          multiplier?: number
           parking_spot_id?: string | null
           rule_name?: string
-          day_of_week?: number | null
           start_time?: string | null
-          end_time?: string | null
-          multiplier?: number
-          is_active?: boolean
-          created_at?: string
         }
-      }
-      refunds: {
-        Row: {
-          id: string
-          payment_id: string
-          amount: number
-          reason: string
-          status: string
-          processed_at: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          payment_id: string
-          amount: number
-          reason: string
-          status?: string
-          processed_at?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          payment_id?: string
-          amount?: number
-          reason?: string
-          status?: string
-          processed_at?: string | null
-          created_at?: string
-        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_rules_parking_spot_id_fkey"
+            columns: ["parking_spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
-          id: string
-          garage_id: string
-          user_id: string
           booking_id: string | null
-          rating: number
           comment: string | null
-          created_at: string
-          updated_at: string
+          created_at: string | null
+          garage_id: string
+          id: string
+          rating: number
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          garage_id: string
-          user_id: string
           booking_id?: string | null
-          rating: number
           comment?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at?: string | null
+          garage_id: string
+          id?: string
+          rating: number
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          id?: string
-          garage_id?: string
-          user_id?: string
           booking_id?: string | null
-          rating?: number
           comment?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at?: string | null
+          garage_id?: string
+          id?: string
+          rating?: number
+          updated_at?: string | null
+          user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_garage_id_fkey"
+            columns: ["garage_id"]
+            isOneToOne: false
+            referencedRelation: "garages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       roles: {
         Row: {
-          id: string
-          name: string
+          created_at: string | null
           description: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          description?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          description?: string | null
-          created_at?: string
-        }
-      }
-      smart_access: {
-        Row: {
           id: string
-          booking_id: string
-          garage_id: string
-          access_code: string
-          valid_from: string
-          valid_until: string
-          is_active: boolean
-          created_at: string
+          name: Database["public"]["Enums"]["user_role_type"]
         }
         Insert: {
+          created_at?: string | null
+          description?: string | null
           id?: string
-          booking_id: string
-          garage_id: string
-          access_code: string
-          valid_from: string
-          valid_until: string
-          is_active?: boolean
-          created_at?: string
+          name: Database["public"]["Enums"]["user_role_type"]
         }
         Update: {
+          created_at?: string | null
+          description?: string | null
           id?: string
-          booking_id?: string
-          garage_id?: string
-          access_code?: string
-          valid_from?: string
-          valid_until?: string
-          is_active?: boolean
-          created_at?: string
+          name?: Database["public"]["Enums"]["user_role_type"]
         }
+        Relationships: []
       }
       user_roles: {
         Row: {
-          user_id: string
+          assigned_at: string | null
           role_id: string
-          assigned_at: string
+          user_id: string
         }
         Insert: {
-          user_id: string
+          assigned_at?: string | null
           role_id: string
-          assigned_at?: string
+          user_id: string
         }
         Update: {
-          user_id?: string
+          assigned_at?: string | null
           role_id?: string
-          assigned_at?: string
+          user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {
-          id: string
+          avatar_url: string | null
+          created_at: string | null
           email: string
+          id: string
+          is_active: boolean | null
           name: string
           phone: string | null
-          avatar_url: string | null
-          is_active: boolean
-          created_at: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          id?: string
+          avatar_url?: string | null
+          created_at?: string | null
           email: string
+          id?: string
+          is_active?: boolean | null
           name: string
           phone?: string | null
-          avatar_url?: string | null
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
+          avatar_url?: string | null
+          created_at?: string | null
           email?: string
+          id?: string
+          is_active?: boolean | null
           name?: string
           phone?: string | null
-          avatar_url?: string | null
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
+        Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          id: string | null
+          name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      check_parking_spot_availability: {
+        Args: { p_end_time: string; p_spot_id: string; p_start_time: string }
+        Returns: boolean
+      }
+      complete_past_bookings: { Args: never; Returns: undefined }
+      decrement_garage_spots: {
+        Args: { garage_id_param: string }
+        Returns: undefined
+      }
+      get_owner_average_rating: {
+        Args: { owner_uuid: string }
+        Returns: number
+      }
+      increment_garage_spots: {
+        Args: { garage_id_param: string }
+        Returns: undefined
+      }
     }
     Enums: {
+      auth_provider_type: "email" | "google" | "facebook"
+      booking_status: "pending" | "confirmed" | "active" | "completed" | "cancelled"
+      payment_status: "pending" | "completed" | "failed" | "refunded"
+      refund_status: "pending" | "approved" | "rejected" | "completed"
+      user_role_type: "admin" | "user" | "owner"
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      auth_provider_type: ["email", "google", "facebook"],
+      booking_status: ["pending", "confirmed", "active", "completed", "cancelled"],
+      payment_status: ["pending", "completed", "failed", "refunded"],
+      refund_status: ["pending", "approved", "rejected", "completed"],
+      user_role_type: ["admin", "user", "owner"],
+    },
+  },
+} as const

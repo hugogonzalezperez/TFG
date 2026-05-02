@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.3)  15 APR 2026 23:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.3)  23 APR 2026 23:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2026,9 +2026,12 @@ Package tocbasic Info: Using my definition of `\numberline' on input line 11.
 Package tocbasic Info: Using my definition of `\numberline' on input line 12.
 Package tocbasic Info: Using my definition of `\numberline' on input line 13.
 Package tocbasic Info: Using my definition of `\numberline' on input line 14.
-Package tocbasic Info: Using my definition of `\numberline' on input line 21.
-Package tocbasic Info: Using my definition of `\numberline' on input line 22.
-Package tocbasic Info: Using my definition of `\numberline' on input line 23.
+Package tocbasic Info: Using my definition of `\numberline' on input line 16.
+Package tocbasic Info: Using my definition of `\numberline' on input line 17.
+Package tocbasic Info: Using my definition of `\numberline' on input line 18.
+Package tocbasic Info: Using my definition of `\numberline' on input line 24.
+Package tocbasic Info: Using my definition of `\numberline' on input line 25.
+Package tocbasic Info: Using my definition of `\numberline' on input line 26.
 )
 \tf@lot=\write8
 \openout8 = `memtfg.lot'.
@@ -2058,12 +2061,12 @@ l.19 E
 
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}]
-<images/horas_perdidas.png, id=241, 642.4pt x 642.4pt>
+<images/horas_perdidas.png, id=247, 642.4pt x 642.4pt>
 File: images/horas_perdidas.png Graphic file (type png)
 <use images/horas_perdidas.png>
 Package pdftex.def Info: images/horas_perdidas.png  used on input line 29.
 (pdftex.def)             Requested size: 154.78653pt x 154.78688pt.
-<images/ciclo_parky.png, id=242, 642.4pt x 642.4pt>
+<images/ciclo_parky.png, id=248, 642.4pt x 642.4pt>
 File: images/ciclo_parky.png Graphic file (type png)
 <use images/ciclo_parky.png>
 Package pdftex.def Info: images/ciclo_parky.png  used on input line 36.
@@ -2106,23 +2109,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 49--49
 []|\T1/lmss/m/n/12 (+20) Componentes
  []
 
-<images/assets/HTML_logo.png, id=328, 863.225pt x 863.225pt>
+<images/assets/HTML_logo.png, id=335, 863.225pt x 863.225pt>
 File: images/assets/HTML_logo.png Graphic file (type png)
 <use images/assets/HTML_logo.png>
 Package pdftex.def Info: images/assets/HTML_logo.png  used on input line 58.
 (pdftex.def)             Requested size: 72.55157pt x 72.54991pt.
-<images/assets/Typescript_logo.png, id=329, 863.225pt x 863.225pt>
+<images/assets/Typescript_logo.png, id=336, 863.225pt x 863.225pt>
 File: images/assets/Typescript_logo.png Graphic file (type png)
 <use images/assets/Typescript_logo.png>
 Package pdftex.def Info: images/assets/Typescript_logo.png  used on input line 
 59.
 (pdftex.def)             Requested size: 72.55157pt x 72.54991pt.
-<images/assets/React_logo.png, id=330, 863.225pt x 784.9325pt>
+<images/assets/React_logo.png, id=337, 863.225pt x 784.9325pt>
 File: images/assets/React_logo.png Graphic file (type png)
 <use images/assets/React_logo.png>
 Package pdftex.def Info: images/assets/React_logo.png  used on input line 60.
 (pdftex.def)             Requested size: 72.55157pt x 65.9698pt.
-<images/assets/Tailwind_logo.png, id=331, 602.25pt x 602.25pt>
+<images/assets/Tailwind_logo.png, id=338, 602.25pt x 602.25pt>
 File: images/assets/Tailwind_logo.png Graphic file (type png)
 <use images/assets/Tailwind_logo.png>
 Package pdftex.def Info: images/assets/Tailwind_logo.png  used on input line 61
@@ -2130,13 +2133,13 @@ Package pdftex.def Info: images/assets/Tailwind_logo.png  used on input line 61
 (pdftex.def)             Requested size: 72.55157pt x 72.55176pt.
 [9] [10 <./images/assets/HTML_logo.png> <./images/assets/Typescript_logo.png> <
 ./images/assets/React_logo.png> <./images/assets/Tailwind_logo.png>] [11]
-<images/assets/PostgreSQL_logo.png, id=380, 863.225pt x 959.585pt>
+<images/assets/PostgreSQL_logo.png, id=386, 863.225pt x 959.585pt>
 File: images/assets/PostgreSQL_logo.png Graphic file (type png)
 <use images/assets/PostgreSQL_logo.png>
 Package pdftex.def Info: images/assets/PostgreSQL_logo.png  used on input line 
 110.
 (pdftex.def)             Requested size: 96.73788pt x 107.53136pt.
-<images/assets/Supabase_logo.png, id=381, 863.225pt x 863.225pt>
+<images/assets/Supabase_logo.png, id=387, 863.225pt x 863.225pt>
 File: images/assets/Supabase_logo.png Graphic file (type png)
 <use images/assets/Supabase_logo.png>
 Package pdftex.def Info: images/assets/Supabase_logo.png  used on input line 11
@@ -2181,32 +2184,37 @@ chapter 4.
 [26
 
 
-] [27] [28]) (./05-implementacion.tex [29]
+] [27] [28] [29]
+Overfull \hbox (56.65547pt too wide) in paragraph at lines 114--128
+ [][] 
+ []
+
+) (./05-implementacion.tex [30]
 chapter 5.
-) (./06-pruebas.tex [30
+) (./06-pruebas.tex [31
 
 
 ]
 chapter 6.
-) (./05-conclusiones.tex [31
+) (./05-conclusiones.tex [32
 
 
 ]
 chapter 7.
-) (./06-conclusions.tex [32
+) (./06-conclusions.tex [33
 
 
 ]
 chapter 8.
-) (./07-presupuesto.tex [33
+) (./07-presupuesto.tex [34
 
 
 ]
 chapter 9.
-) (./0A-apéndice1.tex [34
+) (./0A-apéndice1.tex [35
 
 
-] [35]
+] [36]
 chapter A.
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
@@ -2219,7 +2227,7 @@ File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
 (Font)              scaled to size 8.50006pt on input line 10.
- [36
+ [37
 
 
 ]
@@ -2230,17 +2238,17 @@ put line 76.
 \c@algpx@indentEndPage-2=\count535
 \c@algpx@indentEndCoordIndex-0=\count536
 )
-(./0B-apéndice2.tex [37{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}]
+(./0B-apéndice2.tex [38{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}]
 chapter B.
-) [38
+) [39
 
 
-] [39
+] [40
 
 
 
 
-] [40] (./memtfg.aux
+] [41] (./memtfg.aux
 LaTeX Info: Redefining \sptext on input line 14.
 LaTeX Info: Redefining \. on input line 14.
 LaTeX Info: Redefining \% on input line 14.
@@ -2256,10 +2264,10 @@ Package logreq Info: Writing requests to 'memtfg.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 47586 strings out of 474222
- 950064 string characters out of 5748734
+ 47601 strings out of 474222
+ 950319 string characters out of 5748734
  1963975 words of memory out of 5000000
- 68444 multiletter control sequences out of 15000+600000
+ 68455 multiletter control sequences out of 15000+600000
  689868 words of font info for 321 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,12n,117p,10914b,2908s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2276,10 +2284,10 @@ fb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts
 b></usr/share/texmf/fonts/type1/public/lm/lmsso17.pfb></usr/share/texmf/fonts/t
 ype1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/symbols/msam10.pfb>
-Output written on memtfg.pdf (50 pages, 2053353 bytes).
+Output written on memtfg.pdf (51 pages, 2056476 bytes).
 PDF statistics:
- 973 PDF objects out of 1000 (max. 8388607)
- 852 compressed objects within 9 object streams
- 232 named destinations out of 1000 (max. 500000)
+ 984 PDF objects out of 1000 (max. 8388607)
+ 862 compressed objects within 9 object streams
+ 236 named destinations out of 1000 (max. 500000)
  77863 words of extra memory for PDF output out of 89155 (max. 10000000)
 

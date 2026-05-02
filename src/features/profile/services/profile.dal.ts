@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 // Data Access Layer
 
 import { supabase } from '../../../shared/lib/supabase';
@@ -38,7 +39,8 @@ export const profileDal = {
       .from('bookings')
       .select('total_price, created_at, status, spot:parking_spots!inner(owner_id)')
       .eq('spot.owner_id', ownerId)
-      .in('status', ['confirmed', 'active', 'completed']);
+      .in('status', ['confirmed', 'active', 'completed'])
+      .is('deleted_at', null);
 
     if (error) throw error;
     return bookings || [];
@@ -88,7 +90,7 @@ export const profileDal = {
     try {
       await supabase.rpc('complete_past_bookings');
     } catch (e) {
-      console.warn('Error auto-completing bookings for owner:', e);
+      logger.warn('Error auto-completing bookings for owner:', e);
     }
   },
 
@@ -108,6 +110,7 @@ export const profileDal = {
         )
       `)
       .eq('spot.owner_id', ownerId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;

@@ -44,17 +44,16 @@ export const parkingDal = {
       .eq('is_active', true)
       .returns<GarageResponse[]>();
 
-    if (data) {
-      data.forEach(garage => {
-        garage.parking_spots.forEach(spot => {
-          if (spot.bookings) {
-            spot.bookings = spot.bookings.filter(b => ['confirmed', 'active'].includes(b.status));
-          }
-        });
-      });
-    }
-
     if (error) throw error;
+
+    data?.forEach(garage => {
+      garage.parking_spots.forEach(spot => {
+        if (spot.bookings) {
+          spot.bookings = spot.bookings.filter(b => ['confirmed', 'active'].includes(b.status));
+        }
+      });
+    });
+
     return data || [];
   },
 

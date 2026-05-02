@@ -1,3 +1,4 @@
+import { logger } from '../../../../shared/lib/logger';
 import { MapPin, Edit, Trash2, Plus, Building2 } from 'lucide-react';
 import { Card, Badge, Button, Switch, ConfirmationDialog, EmptyState, GarageCardSkeleton } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
@@ -32,7 +33,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
       queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
       toast.success(`Garaje ${isActive ? 'activado' : 'desactivado'} correctamente`);
     } catch (err) {
-      console.error('Error al cambiar estado del garaje:', err);
+      logger.error('Error al cambiar estado del garaje:', err);
       toast.error('Error al cambiar el estado del garaje');
     }
   };
@@ -43,7 +44,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
       queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
       toast.success(`Plaza ${isActive ? 'activada' : 'desactivada'} correctamente`);
     } catch (err) {
-      console.error('Error al cambiar estado de la plaza:', err);
+      logger.error('Error al cambiar estado de la plaza:', err);
       toast.error('Error al cambiar el estado de la plaza');
     }
   };
@@ -54,7 +55,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
       queryClient.invalidateQueries({ queryKey: ['owner-garages'] });
       toast.success('Plaza eliminada correctamente');
     } catch (err) {
-      console.error('Error al eliminar plaza:', err);
+      logger.error('Error al eliminar plaza:', err);
       toast.error('Error al eliminar la plaza');
     }
   };
@@ -71,7 +72,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
 
       toast.success('Garaje eliminado correctamente');
     } catch (err: any) {
-      console.error('Error al eliminar garaje:', err);
+      logger.error('Error al eliminar garaje:', err);
       const message = err.message?.includes('violates foreign key constraint')
         ? 'No se puede eliminar el garaje porque tiene reservas activas o pasadas.'
         : 'Error al eliminar el garaje. Inténtalo de nuevo.';

@@ -1,9 +1,10 @@
+import { logger } from '../../../shared/lib/logger';
 /* eslint-disable react-refresh/only-export-components */
 // =====================================================
 // CONTEXTO DE AUTENTICACIÓN
 // =====================================================
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
 import {
   registerWithEmail,
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // =====================================================
   // INICIALIZACIÓN
@@ -74,15 +76,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loadUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
-      if (session?.user) {
-        loadUser(session.user.id);
-      } else {
-        setAuthUser(null);
-        setLoading(false);
-      }
+      // Debounce 300ms: onAuthStateChange puede disparar SIGNED_IN + USER_UPDATED
+      // en ráfaga tras OAuth redirect. Sin debounce → 3 loadUser() simultáneos.
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        if (session?.user) {
+          loadUser(session.user.id);
+        } else {
+          setAuthUser(null);
+          setLoading(false);
+        }
+      }, 300);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, []);
 
   /**
@@ -120,7 +130,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setAuthUser(userRes);
     } catch (error) {
-      console.error('Error loading user:', error);
+      logger.error('Error loading user:', error);
       setAuthUser(null);
     } finally {
       setLoading(false);
@@ -150,7 +160,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await registerWithEmail(data);
       await loadUser();
     } catch (error: any) {
-      console.error('Error in register:', error);
+      logger.error('Error in register:', error);
       throw new Error(error.message || 'Error al completar el registro');
     } finally {
       setLoading(false);
@@ -166,7 +176,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await loginWithEmail(data);
       await loadUser();
     } catch (error: any) {
-      console.error('Error in login:', error);
+      logger.error('Error in login:', error);
       throw new Error(error.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
@@ -182,7 +192,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await loginWithGoogle();
       // El redirect manejará el resto
     } catch (error: any) {
-      console.error('Error in loginWithGoogle:', error);
+      logger.error('Error in loginWithGoogle:', error);
       setLoading(false);
       throw new Error(error.message || 'Error al iniciar sesión con Google');
     }
@@ -197,7 +207,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await loginWithFacebook();
       // El redirect manejará el resto
     } catch (error: any) {
-      console.error('Error in loginWithFacebook:', error);
+      logger.error('Error in loginWithFacebook:', error);
       setLoading(false);
       throw new Error(error.message || 'Error al iniciar sesión con Facebook');
     }
@@ -212,7 +222,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await authLogout();
       setAuthUser(null);
     } catch (error: any) {
-      console.error('Error in logout:', error);
+      logger.error('Error in logout:', error);
       throw new Error(error.message || 'Error al cerrar sesión');
     } finally {
       setLoading(false);
@@ -238,7 +248,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         user: updatedUser,
       });
     } catch (error: any) {
-      console.error('Error in updateProfile:', error);
+      logger.error('Error in updateProfile:', error);
       throw new Error(error.message || 'Error al actualizar el perfil');
     }
   };
@@ -254,7 +264,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await changePassword(authUser.user.id, currentPassword, newPassword);
     } catch (error: any) {
-      console.error('Error in changePassword:', error);
+      logger.error('Error in changePassword:', error);
       throw new Error(error.message || 'Error al cambiar la contraseña');
     }
   };

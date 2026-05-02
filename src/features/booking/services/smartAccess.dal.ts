@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { supabase } from '../../../shared/lib/supabase';
 
 export const smartAccessDal = {
@@ -18,7 +19,7 @@ export const smartAccessDal = {
       .single();
 
     if (error) {
-      console.error('Error in insertAccessLog:', error);
+      logger.error('Error in insertAccessLog:', error);
       throw error;
     }
     return data;

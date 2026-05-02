@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFilters } from '../context/FilterContext';
@@ -53,7 +54,7 @@ export function MapView() {
         setMapZoom(15);
       }
     } catch (err) {
-      console.error('Error centrado mapa:', err);
+      logger.error('Error centrado mapa:', err);
     }
   }, []);
 
@@ -128,7 +129,19 @@ export function MapView() {
   const handleSpotSelect = (spot: Parking) => {
     setSelectedParkingId(spot.id);
     setIsGarageModalOpen(false);
-    navigate(`/parking/${spot.id}`, { state: spot });
+    navigate(`/parking/${spot.id}`, {
+      state: {
+        ...spot,
+        searchDates: filters.startDate
+          ? {
+              startDate: filters.startDate,
+              startTime: filters.startTime,
+              endDate: filters.endDate || filters.startDate,
+              endTime: filters.endTime,
+            }
+          : undefined,
+      },
+    });
   };
 
   const garageFilteredSpots = useMemo(() => {

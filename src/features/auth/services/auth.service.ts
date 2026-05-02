@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 // =====================================================
 // SERVICIO DE AUTENTICACIÓN - VERSIÓN SIMPLIFICADA
 // Sin bcryptjs, usando Supabase Auth directamente
@@ -42,7 +43,7 @@ export const registerWithEmail = async ({
 
   if (authError) {
     // Si el error es 422 aquí, es definitivamente el Trigger
-    console.error("Error detallado de Supabase:", authError);
+    logger.error("Error detallado de Supabase:", authError);
     throw new Error(authError.message);
   }
 
@@ -133,7 +134,7 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
         : undefined,
     };
   } catch (error) {
-    console.error('Error in loginWithEmail:', error);
+    logger.error('Error in loginWithEmail:', error);
     throw error;
   }
 };
@@ -160,7 +161,7 @@ export const loginWithGoogle = async () => {
 
     return data;
   } catch (error) {
-    console.error('Error in loginWithGoogle:', error);
+    logger.error('Error in loginWithGoogle:', error);
     throw error;
   }
 };
@@ -185,7 +186,7 @@ export const loginWithFacebook = async () => {
 
     return data;
   } catch (error) {
-    console.error('Error in loginWithFacebook:', error);
+    logger.error('Error in loginWithFacebook:', error);
     throw error;
   }
 };
@@ -215,7 +216,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
     // Verificar si el usuario ya existe en nuestra DB
     const { data: existingUser } = await supabase
       .from('users')
-      .select('*')
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .eq('id', authUser.id)
       .single();
 
@@ -223,7 +224,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
       // Usuario existe, verificar si tiene este proveedor
       const { data: existingProvider } = await supabase
         .from('auth_providers')
-        .select('*')
+        .select('id, provider, provider_uid')
         .eq('user_id', existingUser.id)
         .eq('provider', provider)
         .single();
@@ -280,7 +281,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 
     return newUser as User;
   } catch (error) {
-    console.error('Error in handleOAuthCallback:', error);
+    logger.error('Error in handleOAuthCallback:', error);
     throw error;
   }
 };
@@ -299,7 +300,7 @@ export const logout = async (): Promise<void> => {
       throw error;
     }
   } catch (error) {
-    console.error('Error in logout:', error);
+    logger.error('Error in logout:', error);
     throw error;
   }
 };
@@ -314,7 +315,7 @@ export const logout = async (): Promise<void> => {
 export const getCurrentUserWithRoles = async (userId: string): Promise<AuthUser | null> => {
   // ESCUDO: Si no hay ID o es la palabra "undefined", salimos antes de fallar
   if (!userId || userId === 'undefined') {
-    console.warn('getCurrentUserWithRoles llamado sin un ID válido');
+    logger.warn('getCurrentUserWithRoles llamado sin un ID válido');
     return null;
   }
 
@@ -345,7 +346,7 @@ export const getCurrentUserWithRoles = async (userId: string): Promise<AuthUser 
       isAdmin: roles.includes('admin'),
     };
   } catch (error) {
-    console.error('Error in getCurrentUserWithRoles:', error);
+    logger.error('Error in getCurrentUserWithRoles:', error);
     return null;
   }
 };
@@ -362,6 +363,18 @@ export const updateUserProfile = async (
   updates: Partial<Pick<User, 'name' | 'phone' | 'avatar_url'>>
 ): Promise<User> => {
   try {
+    // MED-A: Sanitizar campos de texto libre — eliminar etiquetas HTML antes de persistir
+    if (updates.name !== undefined) {
+      updates.name = updates.name.replace(/<[^>]*>/g, '').trim();
+    }
+
+    // MED-B: Validar que avatar_url sea una URL http/https segura
+    if (updates.avatar_url !== undefined && updates.avatar_url !== null && updates.avatar_url !== '') {
+      if (!/^https?:\/\//i.test(updates.avatar_url)) {
+        throw new Error('La URL del avatar debe comenzar con http:// o https://');
+      }
+    }
+
     const { data, error } = await supabase
       .from('users')
       .update(updates)
@@ -375,7 +388,7 @@ export const updateUserProfile = async (
 
     return data as User;
   } catch (error) {
-    console.error('Error in updateUserProfile:', error);
+    logger.error('Error in updateUserProfile:', error);
     throw error;
   }
 };
@@ -406,7 +419,7 @@ export const changePassword = async (
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) throw error;
   } catch (error) {
-    console.error('Error in changePassword:', error);
+    logger.error('Error in changePassword:', error);
     throw error;
   }
 };

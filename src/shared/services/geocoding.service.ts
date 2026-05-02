@@ -1,3 +1,4 @@
+import { logger } from '../lib/logger';
 
 /// <reference types="vite/client" />
 import opencage from 'opencage-api-client';
@@ -64,7 +65,7 @@ export const geocodingService = {
       }
       return null;
     } catch (error) {
-      console.error('Error geocoding address:', error);
+      logger.error('Error geocoding address:', error);
       return null;
     }
   },
@@ -108,7 +109,7 @@ export const geocodingService = {
       }
       return null;
     } catch (error) {
-      console.error('Error reverse geocoding:', error);
+      logger.error('Error reverse geocoding:', error);
       return null;
     }
   }

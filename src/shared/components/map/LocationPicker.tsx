@@ -1,3 +1,4 @@
+import { logger } from '../../lib/logger';
 
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -47,7 +48,7 @@ export function LocationPicker({ lat, lng, onChange, onAddressUpdate, className 
           onAddressUpdate(result);
         }
       } catch (error) {
-        console.error('Error reverse geocoding:', error);
+        logger.error('Error reverse geocoding:', error);
       } finally {
         setIsSyncing(false);
       }

@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../auth';
 import { bookingService, pricingService, BookingEstimation } from '..';
@@ -64,7 +65,7 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
         );
         setEstimation(est);
       } catch (err) {
-        console.error('Error fetching rules:', err);
+        logger.error('Error fetching rules:', err);
       } finally {
         setRulesLoading(false);
       }
@@ -124,7 +125,7 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
 
       setBookingComplete(true);
     } catch (err: any) {
-      console.error('Booking confirmation error:', err);
+      logger.error('Booking confirmation error:', err);
 
       // Handle the custom database trigger error message
       if (err.message?.includes('solapamiento') || err.message?.includes('ya ha sido reservada')) {

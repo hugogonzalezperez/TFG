@@ -1,3 +1,4 @@
+import { logger } from '../../../../shared/lib/logger';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
@@ -115,7 +116,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
       toast.success(isSpotEdit ? 'Plaza actualizada con éxito' : 'Garaje actualizado con éxito');
       onClose();
     } catch (error) {
-      console.error('Error updating:', error);
+      logger.error('Error updating:', error);
       toast.error('Error al actualizar. Por favor inténtalo de nuevo.');
     } finally {
       setIsLoading(false);

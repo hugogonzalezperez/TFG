@@ -1,3 +1,4 @@
+import { logger } from '../../../../shared/lib/logger';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import {
@@ -55,7 +56,7 @@ export function AddSpotToGarageModal({ garage, isOpen, onClose }: AddSpotToGarag
       toast.success('¡Nueva plaza añadida con éxito!');
       onClose();
     } catch (err: any) {
-      console.error('Error al añadir plaza:', err);
+      logger.error('Error al añadir plaza:', err);
       setError(err.message || 'Error al añadir la plaza. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);

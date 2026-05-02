@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { Parking, ParkingFilter } from '../types/parking.types';
 
 /**
@@ -71,7 +72,7 @@ export function filterParkings(parkings: Parking[], filters: ParkingFilter): Par
           }
         }
       } catch (e) {
-        console.error('Error filtering by availability:', e);
+        logger.error('Error filtering by availability:', e);
       }
     }
 

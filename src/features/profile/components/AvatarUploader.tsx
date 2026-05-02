@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
 import { Camera, Loader2 } from 'lucide-react';
@@ -19,8 +20,9 @@ export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUpl
       }
 
       const file = event.target.files[0];
-      if (!file.type.startsWith('image/')) {
-        toast.error('Por favor sube un archivo de imagen válido.');
+      const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+        toast.error('Solo se permiten imágenes JPEG, PNG, WebP o GIF.');
         return;
       }
 
@@ -54,7 +56,7 @@ export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUpl
       onUploadComplete(data.publicUrl);
 
     } catch (error: any) {
-      console.error('Error uploading avatar:', error);
+      logger.error('Error uploading avatar:', error);
       toast.error('Error al subir la imagen: ' + error.message);
     } finally {
       setIsUploading(false);
@@ -81,7 +83,7 @@ export function AvatarUploader({ userId, onUploadComplete, disabled }: AvatarUpl
         <input
           id="avatar-upload"
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           className="hidden"
           onChange={handleFileChange}
           disabled={disabled || isUploading}

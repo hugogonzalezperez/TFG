@@ -137,7 +137,9 @@ const BookingCard = ({ booking, onCancel }: { booking: any, onCancel?: (id: stri
             <Button
               variant="outline"
               size="sm"
-              className="flex-1 h-9 md:h-8 text-[11px] font-bold gap-1.5 hover:bg-muted"
+              disabled
+              title="Mensajería próximamente disponible"
+              className="flex-1 h-9 md:h-8 text-[11px] font-bold gap-1.5 opacity-50 cursor-not-allowed"
             >
               <MessageSquare className="h-3.5 w-3.5" />
               Contactar

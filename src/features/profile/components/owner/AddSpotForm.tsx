@@ -1,3 +1,4 @@
+import { logger } from '../../../../shared/lib/logger';
 import { CircleX } from 'lucide-react';
 import { Card, Button, Label, Input, Textarea, ConfirmationDialog } from '../../../../ui';
 import { AddressSearch } from '../../../../ui/address-search';
@@ -78,7 +79,7 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
           postal_code: formData.postalCode,
           lat: formData.lat,
           lng: formData.lng,
-          price: Math.max(0, parseFloat(formData.price)),
+          price: Math.max(0.01, parseFloat(formData.price)),
           type: formData.type,
           spot_number: formData.spotNumber,
           description: formData.description,
@@ -112,7 +113,7 @@ export function AddSpotForm({ userId, onCancel }: AddSpotFormProps) {
       toast.success(createSpot ? '¡Garaje y plaza publicados con éxito!' : '¡Garaje creado con éxito!');
       onCancel();
     } catch (err: any) {
-      console.error('Error al publicar:', err);
+      logger.error('Error al publicar:', err);
       setError(err.message || 'Error al publicar el garaje. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);

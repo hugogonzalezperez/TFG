@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
@@ -70,7 +71,7 @@ function LocateButton({ onLocate }: { onLocate: (pos: [number, number]) => void 
       onLocate(coords);
       toast.success('Ubicación encontrada');
     } catch (error: any) {
-      console.error('Location error:', error);
+      logger.error('Location error:', error);
       if (error === 'PERMISSION_DENIED' || error.code === 1) {
         toast.error('Permiso de ubicación denegado. Por favor, actívalo en los ajustes de tu móvil.');
       } else if (error === 'NOT_SUPPORTED') {

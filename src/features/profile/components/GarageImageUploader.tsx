@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { useState } from 'react';
 import { supabase } from '../../../shared/lib/supabase';
 import { Camera, Loader2, X } from 'lucide-react';
@@ -39,7 +40,18 @@ export function GarageImageUploader({
 
       // Subida secuencial para evitar race conditions raras en UI
       for (const file of files) {
-        if (!file.type.startsWith('image/')) continue;
+        const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+          toast.error(`${file.name}: solo se permiten JPEG, PNG, WebP o GIF.`);
+          continue;
+        }
+
+        // HIGH-5: validar tamaño máximo (5 MB por imagen de garaje)
+        const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+        if (file.size > MAX_SIZE_BYTES) {
+          toast.error(`${file.name}: el tamaño máximo permitido es 5 MB.`);
+          continue;
+        }
 
         const fileExt = file.name.split('.').pop();
         const fileName = `${userId}/${garageId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -49,7 +61,7 @@ export function GarageImageUploader({
           .upload(fileName, file);
 
         if (uploadError) {
-          console.error('Error uploading file:', file.name, uploadError);
+          logger.error('Error uploading file:', file.name, uploadError);
           continue; // Skip failed uploads
         }
 
@@ -57,11 +69,11 @@ export function GarageImageUploader({
         newUrls.push(data.publicUrl);
       }
 
-      console.log('Uploaded images:', newUrls);
+      logger.log('Uploaded images:', newUrls);
       onImagesChange([...currentImages, ...newUrls]);
 
     } catch (error: any) {
-      console.error('Error uploading images:', error);
+      logger.error('Error uploading images:', error);
       toast.error('Error general en la subida.');
     } finally {
       // Reset input value to allow selecting same files again if needed
@@ -125,7 +137,7 @@ export function GarageImageUploader({
 
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               multiple
               className="hidden"
               onChange={handleFileChange}

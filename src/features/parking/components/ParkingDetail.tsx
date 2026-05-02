@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2, Car } from 'lucide-react';
 import { Button } from '../../../ui/button';
 import { AnimatedLoader } from '../../../shared/components/loaders';
@@ -22,6 +22,8 @@ import { toast } from 'sonner';
 export function ParkingDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const searchDates = location.state?.searchDates;
 
   // Real data fetching with React Query
   const { data: parking, isLoading, error: queryError } = useParkingSpot(id);
@@ -143,14 +145,9 @@ export function ParkingDetail() {
             )}
           </div>
 
-          {/* Columna Lateral (Reserva) - En móvil se maneja via Drawer y un CTA flotante */}
-          <div className="hidden lg:block lg:col-span-1">
-            <ParkingBookingCard parking={parking} />
-          </div>
-
-          {/* En móvil, el ParkingBookingCard renderizará el CTA flotante y el Drawer */}
-          <div className="lg:hidden">
-            <ParkingBookingCard parking={parking} />
+          {/* Booking card — handles desktop sidebar and mobile drawer internally */}
+          <div className="lg:col-span-1">
+            <ParkingBookingCard parking={parking} searchDates={searchDates} />
           </div>
         </div>
       </div>

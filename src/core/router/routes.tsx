@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
           {
             path: 'owner-profile',
             element: (
-              <ProtectedRoute>
+              <ProtectedRoute requireOwner={true}>
                 <OwnerProfilePage />
               </ProtectedRoute>
             )
@@ -44,8 +44,8 @@ export const router = createBrowserRouter([
       { path: 'auth/callback', element: <AuthCallbackPage /> },
 
       // Rutas con headers específicos (Por ahora se mantienen fuera del MainLayout)
-      { path: 'map', element: <ProtectedRoute><MapViewPage /></ProtectedRoute> },
-      { path: 'parking/:id', element: <ProtectedRoute><ParkingDetailPage /></ProtectedRoute> },
+      { path: 'map', element: <MapViewPage /> },
+      { path: 'parking/:id', element: <ParkingDetailPage /> },
       { path: 'book/:id', element: <ProtectedRoute><BookingPage /></ProtectedRoute> },
     ],
   },

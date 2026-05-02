@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ConfirmationDialog } from '../../../ui';
@@ -50,13 +51,13 @@ export function UserProfile() {
 
   const handleCancelBooking = async (bookingId: string) => {
     try {
-      await bookingService.deleteBooking(bookingId);
-      toast.success('Reserva eliminada correctamente');
-      // Invalidate queries to refresh data
+      // MED-9: cancelar = status → 'cancelled', NO borrar del historial
+      await bookingService.cancelBooking(bookingId);
+      toast.success('Reserva cancelada correctamente');
       queryClient.invalidateQueries({ queryKey: ['user-bookings'] });
       queryClient.invalidateQueries({ queryKey: ['user-stats'] });
     } catch (err: any) {
-      toast.error('Error al eliminar la reserva: ' + err.message);
+      toast.error('Error al cancelar la reserva: ' + err.message);
     }
   };
 
@@ -88,7 +89,7 @@ export function UserProfile() {
   };
 
   const handleAvatarUpdate = (url: string) => {
-    updateProfile({ avatar_url: url }).catch(console.error);
+    updateProfile({ avatar_url: url }).catch((e) => logger.error(e));
   };
 
   return (

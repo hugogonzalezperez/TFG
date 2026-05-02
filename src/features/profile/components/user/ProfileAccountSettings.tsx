@@ -43,7 +43,8 @@ export function ProfileAccountSettings({ initialData, onSave }: ProfileAccountSe
       // Map avatar back to avatar_url for backend if needed, or just pass as is if backend handles it
       // Assuming backend expects avatar_url based on previous code
       const payload = {
-        ...formData,
+        name: formData.name,
+        phone: formData.phone,
         avatar_url: formData.avatar
       };
       await onSave(payload);

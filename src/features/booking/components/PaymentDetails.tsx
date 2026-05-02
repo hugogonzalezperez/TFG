@@ -24,32 +24,7 @@ export function PaymentDetails({
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-6">Método de pago</h2>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <button
-          onClick={() => setPaymentMethod('card')}
-          className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'card'
-              ? 'border-primary bg-primary/5'
-              : 'border-border hover:border-primary/50'
-            }`}
-        >
-          <CreditCard className="h-6 w-6 mx-auto mb-2" />
-          <p className="text-sm font-medium">Tarjeta</p>
-        </button>
-        <button
-          onClick={() => setPaymentMethod('paypal')}
-          className={`p-4 border-2 rounded-lg transition-all ${paymentMethod === 'paypal'
-              ? 'border-primary bg-primary/5'
-              : 'border-border hover:border-primary/50'
-            }`}
-        >
-          <div className="h-6 w-6 mx-auto mb-2 bg-[#0070BA] rounded flex items-center justify-center text-white text-xs font-bold">
-            P
-          </div>
-          <p className="text-sm font-medium">PayPal</p>
-        </button>
-      </div>
-
-      {paymentMethod === 'card' && (
+      {true && (
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="cardNumber">Número de tarjeta</Label>
@@ -111,29 +86,6 @@ export function PaymentDetails({
         </div>
       )}
 
-      {paymentMethod === 'paypal' && (
-        <div className="text-center py-8">
-          <div className="bg-[#0070BA] text-white rounded-lg p-6 mb-4">
-            <p className="font-semibold mb-2">PayPal</p>
-            <p className="text-sm opacity-90">Serás redirigido a PayPal para completar el pago</p>
-          </div>
-          <Button
-            type="button"
-            onClick={onConfirm}
-            disabled={loading}
-            className="w-full h-12 bg-[#0070BA] hover:bg-[#005ea6] text-white"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Procesando...
-              </>
-            ) : (
-              'Continuar con PayPal'
-            )}
-          </Button>
-        </div>
-      )}
     </Card>
   );
 }

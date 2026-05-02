@@ -42,7 +42,7 @@ export function ParkingOwnerCard({ owner }: ParkingOwnerCardProps) {
               </p>
             </div>
           </div>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 opacity-50 cursor-not-allowed" disabled title="Mensajería próximamente disponible">
             <MessageCircle className="h-4 w-4" />
             Contactar
           </Button>

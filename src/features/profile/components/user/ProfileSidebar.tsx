@@ -1,4 +1,4 @@
-import { User, Star, Calendar, Settings, CreditCard, Bell, Shield, LogOut } from 'lucide-react';
+import { User, Star, Calendar, Settings, LogOut } from 'lucide-react';
 import { Card, Avatar, Button } from '../../../../ui';
 import { AvatarUploader } from '../AvatarUploader';
 
@@ -22,9 +22,6 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
     { id: 'bookings', label: 'Mis reservas', icon: Calendar },
     { id: 'favorites', label: 'Favoritos', icon: Star },
     { id: 'settings', label: 'Configuración', icon: Settings },
-    { id: 'payments', label: 'Pagos', icon: CreditCard },
-    { id: 'notifications', label: 'Notificaciones', icon: Bell },
-    { id: 'security', label: 'Seguridad', icon: Shield },
   ];
 
   return (

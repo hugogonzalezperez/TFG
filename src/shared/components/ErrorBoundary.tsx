@@ -1,3 +1,4 @@
+import { logger } from '../lib/logger';
 import { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
@@ -21,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[ErrorBoundary]', error.message, info.componentStack);
+    logger.error('[ErrorBoundary]', error.message, info.componentStack);
   }
 
   render() {
@@ -31,7 +32,9 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">
           <div className="max-w-md">
             <h2 className="text-xl font-semibold text-destructive mb-2">Algo ha salido mal</h2>
-            <p className="text-muted-foreground text-sm mb-6">{this.state.error?.message}</p>
+            <p className="text-muted-foreground text-sm mb-6">
+              {import.meta.env.DEV ? this.state.error?.message : 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo.'}
+            </p>
             <button
               onClick={() => this.setState({ hasError: false, error: null })}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm hover:bg-primary/90 transition-colors"

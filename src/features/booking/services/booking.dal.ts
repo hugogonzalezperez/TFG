@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/lib/logger';
 // Data Access Layer
 
 import { supabase } from '../../../shared/lib/supabase';
@@ -10,7 +11,7 @@ export const bookingDal = {
   async fetchPricingRules(spotId: string): Promise<PricingRule[]> {
     const { data, error } = await supabase
       .from('pricing_rules')
-      .select('*')
+      .select('id, parking_spot_id, rule_name, day_of_week, start_time, end_time, multiplier, is_active')
       .eq('parking_spot_id', spotId)
       .eq('is_active', true);
 
@@ -19,26 +20,20 @@ export const bookingDal = {
   },
 
   async checkAvailability(spotId: string, startTime: Date, endTime: Date): Promise<boolean> {
-    // Para el TFG: Margen de 30 minutos (0.5 horas)
+    // Margen de 30 minutos para limpieza entre reservas
     const BUFFER_MS = 30 * 60 * 1000;
-
-    // Rango "sucio" que queremos proteger
     const safeStart = new Date(startTime.getTime() - BUFFER_MS).toISOString();
-    const safeEnd = new Date(endTime.getTime() + BUFFER_MS).toISOString();
+    const safeEnd   = new Date(endTime.getTime()   + BUFFER_MS).toISOString();
 
-    // Consultamos si hay reservas confirmadas que solapen con nuestro rango protegido
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('id')
-      .eq('parking_spot_id', spotId)
-      .in('status', ['confirmed', 'active'])
-      .lt('start_time', safeEnd)
-      .gt('end_time', safeStart);
+    // RPC SECURITY DEFINER — no expone PII de reservas ajenas (CRIT-E fix)
+    const { data, error } = await supabase.rpc('check_parking_spot_availability', {
+      p_spot_id:   spotId,
+      p_start_time: safeStart,
+      p_end_time:   safeEnd,
+    });
 
     if (error) throw error;
-
-    const hasConflict = data.length > 0;
-    return !hasConflict;
+    return data as boolean;
   },
 
   /**
@@ -49,10 +44,11 @@ export const bookingDal = {
 
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select('id, parking_spot_id, renter_id, start_time, end_time, total_hours, total_price, status, vehicle_plate, vehicle_description')
       .eq('parking_spot_id', spotId)
       .in('status', ['confirmed', 'active'])
-      .gte('end_time', now) // Solo traemos las presentes o futuras
+      .gte('end_time', now)
+      .is('deleted_at', null)
       .order('start_time', { ascending: true });
 
     if (error) throw error;
@@ -97,6 +93,11 @@ export const bookingDal = {
       endTime: params.endTime,
     });
 
+    // CRIT-2: precio 0 no es válido — si la Edge Function retorna 0, algo está mal
+    if (!serverPrice.totalPrice || serverPrice.totalPrice <= 0) {
+      throw new Error('Precio calculado inválido. Verifica que la plaza tenga un precio base mayor a 0.');
+    }
+
     const { data, error } = await supabase
       .from('bookings')
       .insert({
@@ -126,7 +127,7 @@ export const bookingDal = {
     try {
       await supabase.rpc('complete_past_bookings');
     } catch (e) {
-      console.warn('Error auto-completing bookings:', e);
+      logger.warn('Error auto-completing bookings:', e);
     }
   },
 
@@ -137,7 +138,9 @@ export const bookingDal = {
     const { data, error } = await supabase
       .from('bookings')
       .select(`
-        *,
+        id, parking_spot_id, renter_id, start_time, end_time, total_hours, total_price,
+        price_per_hour_at_booking, dynamic_multiplier_applied, status,
+        vehicle_plate, vehicle_description, created_at, updated_at,
         spot:parking_spots (
           spot_number,
           images:parking_spot_images (
@@ -158,6 +161,7 @@ export const bookingDal = {
         reviews (id)
       `)
       .eq('renter_id', userId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -179,13 +183,10 @@ export const bookingDal = {
     if (error) throw error;
   },
 
-  /**
-   * Elimina una reserva (Hard Delete)
-   */
   async deleteBooking(bookingId: string) {
     const { error } = await supabase
       .from('bookings')
-      .delete()
+      .update({ deleted_at: new Date().toISOString() })
       .eq('id', bookingId);
 
     if (error) throw error;

@@ -1,3 +1,4 @@
+import { logger } from './logger';
 // =====================================================
 // CLIENTE SUPABASE
 // =====================================================
@@ -39,7 +40,7 @@ export const getCurrentUser = async () => {
   } = await supabase.auth.getUser();
 
   if (error) {
-    console.error('Error getting current user:', error);
+    logger.error('Error getting current user:', error);
     return null;
   }
 

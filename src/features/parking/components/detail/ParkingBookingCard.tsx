@@ -19,8 +19,16 @@ import { Parking } from '../../types/parking.types';
 import { useSpotBookings } from '../../../booking/hooks/useSpotBookings';
 import { useIsMobile } from '../../../../shared/hooks/use-mobile';
 
+interface SearchDates {
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+}
+
 interface ParkingBookingCardProps {
   parking: Parking;
+  searchDates?: SearchDates;
 }
 
 const getLocalISOString = (d: Date) => {
@@ -28,15 +36,17 @@ const getLocalISOString = (d: Date) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
+export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { data: bookings = [] } = useSpotBookings(parking.id);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Initialize with current local time rounded up to nearest 15 mins
   const [entryDate, setEntryDate] = useState(() => {
+    if (searchDates?.startDate && searchDates?.startTime) {
+      return `${searchDates.startDate}T${searchDates.startTime}`;
+    }
     const d = new Date();
     d.setMinutes(Math.ceil(d.getMinutes() / 15) * 15);
     d.setSeconds(0);
@@ -45,6 +55,9 @@ export function ParkingBookingCard({ parking }: ParkingBookingCardProps) {
   });
 
   const [exitDate, setExitDate] = useState(() => {
+    if (searchDates?.endDate && searchDates?.endTime) {
+      return `${searchDates.endDate}T${searchDates.endTime}`;
+    }
     const d = new Date();
     d.setMinutes(Math.ceil(d.getMinutes() / 15) * 15);
     d.setSeconds(0);

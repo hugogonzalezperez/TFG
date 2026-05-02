@@ -84,14 +84,9 @@ export function BookingSummary({ parking, estimation, bookingDates }: BookingSum
               <Zap className="h-3 w-3" />
               Tarifa dinámica ({((estimation.multiplier_applied - 1) * 100).toFixed(0)}%)
             </span>
-            <span>{(estimation.total_price - (parking.base_price_per_hour * (estimation.hours || 0)) - 1.5).toFixed(2)}€</span>
+            <span>{(parking.base_price_per_hour * (estimation.hours || 0) * (estimation.multiplier_applied - 1)).toFixed(2)}€</span>
           </div>
         )}
-
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Tarifa de servicio</span>
-          <span>1.50€</span>
-        </div>
       </div>
 
       <div className="border-t border-border pt-4 flex justify-between items-center">

@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
           {
             path: 'owner-profile',
             element: (
-              <ProtectedRoute requireOwner={true}>
+              <ProtectedRoute>
                 <OwnerProfilePage />
               </ProtectedRoute>
             )

@@ -70,7 +70,7 @@ export function GarageCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <Star className="h-2.5 w-2.5 fill-accent text-accent" />
-                <span className="text-[10px] font-bold">{garage.rating || '4.5'}</span>
+                <span className="text-[10px] font-bold">{garage.rating || 'N/A'}</span>
               </div>
               <Badge variant="secondary" className="text-[9px] h-4 px-1 font-bold">
                 {filteredSpots.length} LIBRES
@@ -194,7 +194,7 @@ export function GarageCard({
             <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-sm mt-1 sm:mt-2">
               <div className="flex items-center gap-1">
                 <Star className="h-3 w-3 fill-accent text-accent" />
-                <span className="font-bold">{garage.rating || '4.5'}</span>
+                <span className="font-bold">{garage.rating || 'N/A'}</span>
               </div>
               <span className="text-muted-foreground">|</span>
               <span className="text-secondary font-medium">{filteredSpots.length} plazas</span>

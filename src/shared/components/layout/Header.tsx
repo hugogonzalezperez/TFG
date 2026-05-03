@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Car, Menu, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../../features/auth';
 import { isNative } from '@/mobile';
@@ -14,8 +14,19 @@ import {
 
 export function Header() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { logout, authUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  const isHome = pathname === '/';
+  const transparent = isHome && isAtTop && !isNative();
+
+  useEffect(() => {
+    const onScroll = () => setIsAtTop(window.scrollY < 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const navigation = [
     { name: 'Encuentra aparcamiento', href: '/map' },
@@ -33,25 +44,33 @@ export function Header() {
       <img
         src={authUser.user.avatar_url}
         alt={authUser.user.name}
-        className={`${size} rounded-full object-cover border-2 border-primary`}
+        className={`${size} rounded-full object-cover ${transparent ? 'border-2 border-white/60' : 'border-2 border-primary'}`}
       />
     ) : (
-      <div className={`${size} rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary`}>
-        <User className={size === "h-8 w-8" ? "h-4 w-4 text-primary" : "h-5 w-5 text-primary"} />
+      <div className={`${size} rounded-full flex items-center justify-center ${transparent ? 'bg-white/20 border-2 border-white/40' : 'bg-primary/10 border-2 border-primary'}`}>
+        <User className={`${size === "h-8 w-8" ? "h-4 w-4" : "h-5 w-5"} ${transparent ? 'text-white' : 'text-primary'}`} />
       </div>
     )
   );
 
   return (
-    <header className={`bg-card border-b border-border sticky top-0 z-50 shadow-sm ${isNative() ? 'pt-[env(safe-area-inset-top)]' : ''}`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isNative() ? 'pt-[env(safe-area-inset-top)]' : ''} ${
+        transparent
+          ? 'bg-transparent border-transparent shadow-none'
+          : 'bg-card/95 backdrop-blur-md border-b border-border shadow-sm'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <div className="bg-primary p-2 rounded-xl">
+            <div className={`p-2 rounded-xl transition-colors ${transparent ? 'bg-white/20' : 'bg-primary'}`}>
               <Car className="h-6 w-6 text-white" />
             </div>
-            <h1 className="ml-2 text-2xl font-bold text-foreground">Parky</h1>
+            <h1 className={`ml-2 text-2xl font-bold transition-colors ${transparent ? 'text-white' : 'text-foreground'}`}>
+              Parky
+            </h1>
           </div>
 
           {/* Desktop Navigation */}
@@ -60,7 +79,7 @@ export function Header() {
               <button
                 key={item.name}
                 onClick={() => handleNavigate(item.href)}
-                className="text-foreground hover:text-primary transition-colors font-medium"
+                className={`transition-colors font-medium ${transparent ? 'text-white/90 hover:text-white' : 'text-foreground hover:text-primary'}`}
               >
                 {item.name}
               </button>
@@ -69,29 +88,52 @@ export function Header() {
 
           {/* User Menu (Desktop) */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/profile')}
-              className="flex items-center space-x-2"
-            >
-              <UserAvatar />
-              <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
-            </Button>
-            <Button
-              variant="exit"
-              onClick={logout}
-              className="flex items-center space-x-2 h-10 px-6 text-base font-bold"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Salir</span>
-            </Button>
+            {transparent ? (
+              <>
+                <button
+                  onClick={() => navigate('/profile')}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                  style={{ color: 'white' }}
+                >
+                  <UserAvatar />
+                  <span className="font-medium">{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                </button>
+                <button
+                  onClick={logout}
+                  className="flex items-center space-x-2 h-10 px-5 rounded-lg font-bold hover:bg-white/10 transition-colors border"
+                  style={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Salir</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/profile')}
+                  className="flex items-center space-x-2"
+                >
+                  <UserAvatar />
+                  <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                </Button>
+                <Button
+                  variant="exit"
+                  onClick={logout}
+                  className="flex items-center space-x-2 h-10 px-6 text-base font-bold"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Salir</span>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden" style={transparent ? { color: 'white' } : {}}>
                   <Menu className="h-6 w-6" />
                 </Button>
               </DialogTrigger>
@@ -101,7 +143,6 @@ export function Header() {
                 </DialogHeader>
 
                 <div className="flex flex-col py-2 space-y-2">
-                  {/* User info in mobile */}
                   <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-2xl mb-2">
                     <UserAvatar size="h-10 w-10" />
                     <div className="min-w-0">

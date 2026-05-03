@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Input, Card, Button, DatePicker, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../ui';
 import {
   Car, MapPin, Calendar, Clock, Search,
-  Star, Shield, Check, X, BadgeCheck, ArrowRight,
-  TrendingUp, Users, Euro, CreditCard, ThumbsUp,
-  Twitter, Instagram, Linkedin, Mail, Phone, Zap
+  Star, Shield, Check, X, BadgeCheck, ArrowRight, ChevronLeft, ChevronRight,
+  TrendingUp, Euro, CreditCard,
+  Twitter, Instagram, Linkedin, Mail, Phone, Zap, Wallet
 } from 'lucide-react';
 import { useFilters } from '../../features/parking';
 import { useAuth } from '../../features/auth';
@@ -18,6 +18,7 @@ const ZONES = [
     name: 'Santa Cruz',
     subtitle: 'Centro urbano',
     spots: 156,
+    price: '2.50€/h',
     rating: 4.8,
     hot: true,
     image: 'https://images.unsplash.com/photo-1703693837521-e76ee7b8dc74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -27,6 +28,7 @@ const ZONES = [
     name: 'La Laguna',
     subtitle: 'Ciudad universitaria',
     spots: 89,
+    price: '2.00€/h',
     rating: 4.7,
     hot: false,
     image: 'https://images.unsplash.com/photo-1616428394230-ba242d33e3ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -36,6 +38,7 @@ const ZONES = [
     name: 'Puerto de la Cruz',
     subtitle: 'Costa norte',
     spots: 67,
+    price: '2.20€/h',
     rating: 4.9,
     hot: true,
     image: 'https://images.unsplash.com/photo-1771407573830-a21d9b6a1e5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -45,6 +48,7 @@ const ZONES = [
     name: 'Los Cristianos',
     subtitle: 'Costa sur',
     spots: 124,
+    price: '3.00€/h',
     rating: 4.6,
     hot: false,
     image: 'https://images.unsplash.com/photo-1766293777298-992506f9fb84?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -54,6 +58,7 @@ const ZONES = [
     name: 'Costa Adeje',
     subtitle: 'Zona turística',
     spots: 98,
+    price: '3.50€/h',
     rating: 4.8,
     hot: true,
     image: 'https://images.unsplash.com/photo-1776323753894-53ffa5d198f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -63,6 +68,7 @@ const ZONES = [
     name: 'Aeropuerto Sur',
     subtitle: 'TFS · Larga estancia',
     spots: 47,
+    price: '1.80€/h',
     rating: 4.9,
     hot: true,
     image: 'https://images.unsplash.com/photo-1761397300888-348e0dbdcc09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
@@ -92,11 +98,11 @@ const BENEFITS = [
     statLabel: 'cargos ocultos',
   },
   {
-    icon: <ThumbsUp className="w-5 h-5" />,
-    title: 'Garantía de satisfacción',
-    desc: 'Si algo no está bien, te devolvemos el dinero. Sin preguntas.',
-    stat: '4.9★',
-    statLabel: 'satisfacción usuarios',
+    icon: <Clock className="w-5 h-5" />,
+    title: 'Acceso inteligente 24/7',
+    desc: 'Abre y cierra el garaje desde la app, a cualquier hora. Sin esperas, sin contacto físico.',
+    stat: '24/7',
+    statLabel: 'acceso disponible',
   },
 ];
 
@@ -105,7 +111,7 @@ const COMPARISON = [
   { feature: 'Precio fijo garantizado', parky: true, traditional: false },
   { feature: 'Cancelación gratuita', parky: true, traditional: false },
   { feature: 'Acceso inteligente 24/7', parky: true, traditional: false },
-  { feature: 'Reembolso automático', parky: true, traditional: false },
+  { feature: 'Sin comisiones ocultas', parky: true, traditional: false },
   { feature: 'Plazas verificadas', parky: true, traditional: true },
 ];
 
@@ -152,32 +158,16 @@ const REVIEWS = [
   },
 ];
 
-const PERKS = [
-  { icon: <Euro className="w-4 h-4" />, title: 'Hasta 200€/mes', desc: 'De media, propietarios en Tenerife ganan 200€ mensuales con una sola plaza.' },
-  { icon: <Clock className="w-4 h-4" />, title: 'Tú decides cuándo', desc: 'Bloquea los días que necesites y alquila el resto. Control total.' },
-  { icon: <Shield className="w-4 h-4" />, title: 'Siempre protegido', desc: 'Acceso inteligente verificado. Tu propiedad, siempre segura.' },
-  { icon: <TrendingUp className="w-4 h-4" />, title: 'Alta demanda garantizada', desc: 'Miles de conductores buscan plazas en tu zona cada día.' },
+const EARN_STEPS = [
+  { icon: <Car className="w-5 h-5" />, step: 'Paso 1', title: 'Registra tu plaza', desc: 'Añade tu plaza en menos de 5 minutos' },
+  { icon: <Calendar className="w-5 h-5" />, step: 'Paso 2', title: 'Define disponibilidad', desc: 'Tú decides cuándo alquilarla' },
+  { icon: <Wallet className="w-5 h-5" />, step: 'Paso 3', title: 'Empieza a ganar', desc: 'Recibe pagos seguros cada mes' },
 ];
 
-const STEPS = [
-  {
-    step: '01',
-    icon: <Search className="h-6 w-6" />,
-    title: 'Busca tu zona',
-    desc: 'Introduce tu destino y las fechas. Disponibilidad en tiempo real.',
-  },
-  {
-    step: '02',
-    icon: <Calendar className="h-6 w-6" />,
-    title: 'Reserva en segundos',
-    desc: 'Elige el garaje que más te guste y confirma al instante.',
-  },
-  {
-    step: '03',
-    icon: <Car className="h-6 w-6" />,
-    title: 'Aparca y listo',
-    desc: 'Acceso inteligente 24/7. Sin llaves, sin esperas.',
-  },
+const EARN_ROWS = [
+  { hours: '4h/día', label: 'de disponibilidad', amount: '120€/mes' },
+  { hours: '8h/día', label: 'de disponibilidad', amount: '280€/mes' },
+  { hours: '24/7', label: 'de disponibilidad', amount: '450€/mes' },
 ];
 
 const FOOTER_LINKS = {
@@ -191,6 +181,7 @@ export default function Home() {
   const navigate = useNavigate();
   const { setDateTimeFilters, resetFilters } = useFilters();
   const { loading } = useAuth();
+  const zonesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     resetFilters();
@@ -243,65 +234,44 @@ export default function Home() {
     navigate('/map', { state: { location: zoneName } });
   };
 
+  const scrollZones = (dir: 'left' | 'right') => {
+    zonesRef.current?.scrollBy({ left: dir === 'left' ? -296 : 296, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ── 1. HERO ── */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden">
-        {/* Background image */}
+      {/* ── 1. HERO ── full viewport, header is fixed and floats above ── */}
+      <section className={`relative flex flex-col overflow-hidden ${isNative() ? 'min-h-[80vh]' : 'min-h-[100svh]'}`}>
+        {/* Background image — covers full section including area behind sticky header */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1758443230465-b6aef0da08b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1440"
-            alt="Vista aérea de ciudad"
-            className="w-full h-full object-cover"
+            src="/hero_section.png"
+            alt="Costa de Tenerife"
+            className="w-full h-full object-cover object-center"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(135deg, rgba(3,2,19,0.88) 0%, rgba(3,2,19,0.68) 50%, rgba(3,2,19,0.80) 100%)' }}
-          />
+          <div className="absolute inset-0 bg-[#0A0C23]/[0.68]" />
         </div>
 
-        {/* Animated blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div
-            className="absolute -top-24 -left-24 w-96 h-96 rounded-full opacity-20 blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%)' }}
-          />
-          <div
-            className="absolute top-1/3 -right-32 w-80 h-80 rounded-full opacity-15 blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%)' }}
-          />
-        </div>
-
-        {/* Content */}
-        <div className={`relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 ${isNative() ? 'py-4 pt-10' : 'pt-24 pb-16'}`}>
-          {/* Social proof badge */}
-          <div
-            className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full"
-            style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)' }}
-          >
-            <span className="flex">
-              {[1,2,3,4,5].map(i => <span key={i} className="text-yellow-400 text-xs">★</span>)}
-            </span>
-            <span className="text-xs text-white/90" style={{ fontWeight: 500 }}>
-              4.9 · Más de <strong className="text-white">500 conductores</strong> confían en Parky
-            </span>
-          </div>
+        {/* Content — pt accounts for header (h-16 = 4rem) + extra breathing room */}
+        <div className={`relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 ${isNative() ? 'py-6' : 'pt-28 pb-16 md:pt-32 md:pb-20'}`}>
 
           {/* Headline */}
           <h1
-            className="text-center text-white mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3.75rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em', maxWidth: '760px' }}
+            className="text-center text-white mb-5 text-[clamp(2.4rem,6vw,4.5rem)] font-black leading-[1.05] tracking-[-0.04em] max-w-[820px]"
           >
             Encuentra{' '}
-            <span style={{ color: 'hsl(var(--accent))' }}>aparcamiento</span>
+            <span className="text-accent">aparcamiento</span>
             <br />
-            en cualquier lugar de Tenerife.
+            en cualquier lugar de{' '}
+            <span className="text-blue-500">
+              Tenerife
+            </span>
+            .
           </h1>
 
           <p
-            className="text-center mb-10"
-            style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'rgba(255,255,255,0.75)', maxWidth: '520px', lineHeight: 1.6 }}
+            className="text-center mb-10 text-[clamp(1rem,2vw,1.25rem)] text-white/75 max-w-[540px] leading-[1.65]"
           >
             Reserva plazas privadas hasta un{' '}
             <strong className="text-white">60% más baratas</strong>{' '}
@@ -396,128 +366,115 @@ export default function Home() {
               </Button>
             </div>
           </Card>
-
-          {/* Trust stats */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 md:gap-10">
-            {[
-              { icon: <MapPin className="w-4 h-4" />, value: '6+', label: 'zonas en Tenerife' },
-              { icon: <Users className="w-4 h-4" />, value: '500+', label: 'usuarios activos' },
-              { icon: <Star className="w-4 h-4" />, value: '4.9★', label: 'valoración media' },
-              { icon: <TrendingUp className="w-4 h-4" />, value: '60%', label: 'ahorro vs. público' },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-2">
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)' }}
-                >
-                  {stat.icon}
-                </div>
-                <div>
-                  <div className="text-white text-sm" style={{ fontWeight: 700, lineHeight: 1.2 }}>{stat.value}</div>
-                  <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.2 }}>{stat.label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* Wave transition */}
+        {/* Wave */}
         <div className="relative z-10">
-          <svg viewBox="0 0 1440 60" className="w-full block" style={{ marginBottom: '-2px' }} preserveAspectRatio="none">
+          <svg viewBox="0 0 1440 60" className="w-full block -mb-[2px]" preserveAspectRatio="none">
             <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="#ffffff" />
           </svg>
         </div>
       </section>
 
-      {/* ── 2. ZONAS POPULARES ── */}
-      <section className="py-16 md:py-20 bg-white">
+      {/* ── 2. ZONAS POPULARES — v0 style ── */}
+      <section className="py-14 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          {/* Header row */}
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3 bg-muted text-muted-foreground">
-                <span className="text-xs font-semibold tracking-wider uppercase">Zonas populares</span>
-              </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight leading-tight">
-                Las zonas más buscadas
-                <br />
-                <span className="text-muted-foreground font-medium text-2xl md:text-3xl">en toda la isla</span>
+                Zonas populares en{' '}
+                <span className="text-primary">Tenerife</span>
               </h2>
+              <p className="text-muted-foreground mt-1">Descubre las zonas con más plazas disponibles</p>
             </div>
-            <button
-              onClick={() => navigate('/map')}
-              className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-foreground hover:gap-2.5 transition-all duration-200"
-            >
-              Ver mapa completo <ArrowRight className="w-4 h-4" />
-            </button>
+            {/* Carousel arrows */}
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                onClick={() => scrollZones('left')}
+                className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => scrollZones('right')}
+                className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
-          {/* Horizontal scroll */}
+          {/* Zones carousel */}
           <div
-            className="flex gap-4 overflow-x-auto pb-4"
-            style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}
+            ref={zonesRef}
+            className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {ZONES.map((zone) => (
               <div
                 key={zone.id}
-                className="flex-shrink-0 w-56 md:w-64 cursor-pointer transition-all duration-250 overflow-hidden"
-                style={{
-                  scrollSnapAlign: 'start',
-                  borderRadius: '1rem',
-                  border: '1.5px solid hsl(var(--border))',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                  background: '#ffffff',
-                }}
+                className="flex-shrink-0 w-64 md:w-72 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group snap-start"
                 onClick={() => navigateToZone(zone.name)}
               >
                 {/* Image */}
-                <div className="relative h-36 overflow-hidden">
+                <div className="relative h-44 overflow-hidden">
                   <img
                     src={zone.image}
                     alt={zone.name}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: 'linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.55) 100%)' }}
-                  />
-                  {/* Hot badge */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-black/65" />
+
+                  {/* Alta demanda badge — amber/yellow like v0 */}
                   {zone.hot && (
-                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500 text-white">
-                      <Zap className="w-2.5 h-2.5 fill-white" />
+                    <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-400 text-amber-900">
+                      <Zap className="w-3 h-3 fill-amber-900" />
                       <span className="text-[10px] font-bold">Alta demanda</span>
                     </div>
                   )}
+
                   {/* Rating */}
                   <div
-                    className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full"
-                    style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }}
+                    className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 backdrop-blur-sm"
                   >
-                    <Star className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-[10px] font-semibold text-white">{zone.rating}</span>
+                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-[11px] font-semibold text-white">{zone.rating}</span>
                   </div>
-                  {/* City on image */}
-                  <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1 text-white/90">
-                    <MapPin className="w-3 h-3" />
-                    <span className="text-xs font-medium">{zone.subtitle}</span>
+
+                  {/* Zone name overlay */}
+                  <div className="absolute bottom-3 left-3">
+                    <div className="flex items-center gap-1.5 text-white">
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span className="font-bold text-sm">{zone.name}</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Body */}
-                <div className="p-3.5">
-                  <h3 className="font-bold text-sm text-foreground mb-1">{zone.name}</h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-foreground">Ver plazas</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
-                      {zone.spots} libres
-                    </span>
+                {/* Card body */}
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Plazas disponibles</p>
+                      <p className="text-2xl font-extrabold text-foreground leading-none mt-0.5">{zone.spots}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">Desde</p>
+                      <p className="text-lg font-extrabold text-primary leading-none mt-0.5">{zone.price}</p>
+                    </div>
                   </div>
+                  <button
+                    className="w-full py-2 text-sm font-semibold rounded-xl border border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200"
+                    onClick={(e) => { e.stopPropagation(); navigateToZone(zone.name); }}
+                  >
+                    Ver plazas
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Mobile CTA */}
-          <div className="mt-6 flex justify-center md:hidden">
+          <div className="mt-5 flex justify-center md:hidden">
             <button
               onClick={() => navigate('/map')}
               className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-foreground border border-border hover:bg-muted transition-all"
@@ -531,11 +488,7 @@ export default function Home() {
       {/* ── 3. ¿POR QUÉ PARKY? ── */}
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Header */}
           <div className="max-w-xl mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 bg-primary text-primary-foreground">
-              <span className="text-xs font-bold tracking-widest uppercase">¿Por qué Parky?</span>
-            </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight leading-tight">
               Aparcar no debería ser
               <br />
@@ -543,15 +496,11 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Asymmetric layout */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             {/* Benefits 2×2 */}
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {BENEFITS.map((b) => (
-                <div
-                  key={b.title}
-                  className="p-6 bg-white rounded-2xl border border-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-                >
+                <div key={b.title} className="p-6 bg-white rounded-2xl border border-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-primary text-primary-foreground">
                     {b.icon}
                   </div>
@@ -568,39 +517,31 @@ export default function Home() {
             {/* Comparison table */}
             <div className="lg:col-span-2">
               <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
-                {/* Header */}
                 <div className="grid grid-cols-3 px-5 py-4 bg-primary text-primary-foreground">
                   <div className="text-xs font-semibold">Características</div>
                   <div className="text-center text-xs font-bold">Parky ✓</div>
-                  <div className="text-center text-xs font-medium opacity-60">Parking tradicional</div>
+                  <div className="text-center text-xs font-medium opacity-60">Tradicional</div>
                 </div>
 
-                {/* Rows */}
                 {COMPARISON.map((row, i) => (
                   <div
                     key={row.feature}
-                    className="grid grid-cols-3 px-5 py-3.5 items-center hover:bg-muted/50 transition-colors"
-                    style={{ borderBottom: i < COMPARISON.length - 1 ? '1px solid hsl(var(--border))' : 'none' }}
+                    className="grid grid-cols-3 px-5 py-3.5 items-center hover:bg-muted/50 transition-colors border-b border-border last:border-none"
                   >
                     <span className="text-xs font-medium text-foreground pr-3 leading-snug">{row.feature}</span>
                     <div className="flex justify-center">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.parky ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
-                        {row.parky
-                          ? <Check className="w-3.5 h-3.5" strokeWidth={3} />
-                          : <X className="w-3.5 h-3.5" strokeWidth={3} />}
+                        {row.parky ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <X className="w-3.5 h-3.5" strokeWidth={3} />}
                       </div>
                     </div>
                     <div className="flex justify-center">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.traditional ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
-                        {row.traditional
-                          ? <Check className="w-3.5 h-3.5" strokeWidth={3} />
-                          : <X className="w-3.5 h-3.5" strokeWidth={3} />}
+                        {row.traditional ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <X className="w-3.5 h-3.5" strokeWidth={3} />}
                       </div>
                     </div>
                   </div>
                 ))}
 
-                {/* Footer CTA */}
                 <div className="px-5 py-5 bg-muted/50">
                   <button
                     onClick={handleSearch}
@@ -608,9 +549,6 @@ export default function Home() {
                   >
                     Prueba Parky gratis →
                   </button>
-                  <p className="text-center text-xs mt-2 text-muted-foreground">
-                    Sin tarjeta de crédito · Cancela cuando quieras
-                  </p>
                 </div>
               </div>
             </div>
@@ -621,57 +559,28 @@ export default function Home() {
       {/* ── 4. OPINIONES ── */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Stats row */}
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-px mb-14 overflow-hidden rounded-2xl border border-border bg-border"
-          >
-            {[
-              { icon: <Users className="w-5 h-5" />, value: '500+', label: 'Usuarios activos' },
-              { icon: <Star className="w-5 h-5" />, value: '4.9/5', label: 'Valoración media' },
-              { icon: <TrendingUp className="w-5 h-5" />, value: '6', label: 'Zonas en Tenerife' },
-              { icon: <BadgeCheck className="w-5 h-5" />, value: '1.000+', label: 'Reservas completadas' },
-            ].map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center justify-center py-8 px-4 text-center bg-white">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-muted text-foreground">
-                  {stat.icon}
-                </div>
-                <div className="text-2xl font-extrabold text-foreground tracking-tight leading-none">{stat.value}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Reviews header */}
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3 bg-muted text-muted-foreground">
-                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs font-semibold tracking-widest uppercase">Opiniones reales</span>
-              </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
                 Lo que dicen nuestros usuarios
               </h2>
             </div>
             <div className="hidden md:flex flex-col items-end gap-1">
               <div className="flex gap-0.5">
-                {[1,2,3,4,5].map(i => <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />)}
+                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />)}
               </div>
-              <span className="text-sm font-semibold text-foreground">4.9 de 5 — más de 500 reseñas</span>
+              <span className="text-sm font-semibold text-foreground">4.75 de 5 — más de 500 reseñas</span>
             </div>
           </div>
 
-          {/* Reviews horizontal scroll */}
           <div
-            className="flex gap-4 overflow-x-auto pb-4"
-            style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}
+            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {REVIEWS.map((review) => (
               <div
                 key={review.id}
-                className="p-5 flex-shrink-0 w-72 md:w-80 bg-white border border-border rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-                style={{ scrollSnapAlign: 'start' }}
+                className="p-5 flex-shrink-0 w-72 md:w-80 bg-white border border-border rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 snap-start"
               >
-                {/* Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-primary text-primary-foreground">
@@ -688,14 +597,9 @@ export default function Home() {
                   <span className="text-xs text-muted-foreground">{review.time}</span>
                 </div>
 
-                {/* Stars */}
                 <div className="flex gap-0.5 mb-3">
-                  {[1,2,3,4,5].map(i => (
-                    <Star
-                      key={i}
-                      className="w-3.5 h-3.5"
-                      style={{ fill: i <= review.rating ? '#facc15' : 'transparent', color: i <= review.rating ? '#facc15' : 'hsl(var(--border))' }}
-                    />
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <Star key={i} className={`w-3.5 h-3.5 ${i <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'fill-transparent text-border'}`} />
                   ))}
                 </div>
 
@@ -710,10 +614,8 @@ export default function Home() {
               </div>
             ))}
 
-            {/* CTA card */}
             <div
-              className="flex-shrink-0 w-72 md:w-80 flex flex-col items-center justify-center p-8 text-center rounded-2xl bg-muted"
-              style={{ scrollSnapAlign: 'start', border: '1.5px dashed hsl(var(--border))' }}
+              className="flex-shrink-0 w-72 md:w-80 flex flex-col items-center justify-center p-8 text-center rounded-2xl bg-muted snap-start border-[1.5px] border-dashed border-border"
             >
               <div className="text-3xl mb-3">⭐</div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
@@ -727,190 +629,109 @@ export default function Home() {
               </button>
             </div>
           </div>
-
-          {/* Trust badges */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 py-6 border-t border-border">
-            {[
-              { icon: '🔒', label: 'Pagos seguros SSL' },
-              { icon: '✅', label: 'Plazas verificadas' },
-              { icon: '📱', label: 'App iOS y Android' },
-              { icon: '🛡️', label: 'Garantía de reembolso' },
-              { icon: '🏆', label: 'Hecho en Tenerife' },
-            ].map((badge) => (
-              <div key={badge.label} className="flex items-center gap-2 text-muted-foreground">
-                <span className="text-base">{badge.icon}</span>
-                <span className="text-xs font-medium">{badge.label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* ── 5. CÓMO FUNCIONA ── */}
-      <section className="py-16 md:py-20 bg-muted/40 border-y border-border/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 bg-muted text-muted-foreground">
-              <span className="text-xs font-semibold tracking-widest uppercase">Proceso simple</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight mb-2">
-              ¿Cómo funciona?
-            </h2>
-            <p className="text-muted-foreground">Reserva en menos de 2 minutos</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative">
-            {/* Connector line */}
-            <div className="hidden md:block absolute top-7 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-px bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
-            {STEPS.map((item) => (
-              <div key={item.step} className="flex flex-col items-center text-center relative">
-                <div className="relative mb-5">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary relative z-10 ring-4 ring-background">
-                    {item.icon}
-                  </div>
-                  <span className="absolute -top-3 -right-3 text-2xl font-black text-primary/15 leading-none select-none">{item.step}</span>
-                </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-[220px]">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. GANA DINERO ── */}
-      <section className="relative overflow-hidden py-16 md:py-24 bg-primary">
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 40%)' }}
-        />
+      {/* ── 5. GANA DINERO ── */}
+      <section
+        className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-[#1B4FD8] via-[#1a3fb5] via-60% to-[#152f8c]"
+      >
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.3)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15)_0%,transparent_40%)]" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Content */}
-            <div>
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
-                style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.9)', border: '1px solid rgba(255,255,255,0.2)' }}
-              >
-                <TrendingUp className="w-3.5 h-3.5" />
-                <span className="text-xs font-bold tracking-widest uppercase">Propietarios</span>
-              </div>
 
+            {/* Left: content */}
+            <div>
               <h2
-                className="text-white mb-4"
-                style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em' }}
+                className="text-white font-extrabold mb-4 text-[clamp(1.9rem,4vw,2.9rem)] leading-[1.12] tracking-[-0.02em]"
               >
-                Tu plaza vacía
-                <br />
-                <span style={{ color: 'rgba(255,255,255,0.55)' }}>es dinero perdido.</span>
+                ¿Tienes una plaza de<br />aparcamiento sin usar?
               </h2>
 
-              <p className="mb-8" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '440px' }}>
-                Mientras tú no la usas, alguien la necesita. Publica tu plaza en 5 minutos y empieza a cobrar esta semana.
+              <p className="mb-8 text-lg leading-relaxed max-w-md text-white/75">
+                Únete a miles de propietarios que ya generan ingresos extra alquilando su plaza cuando no la usan.
               </p>
 
-              {/* Perks */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {PERKS.map((perk) => (
-                  <div key={perk.title} className="flex items-start gap-3">
-                    <div
-                      className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                      style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.9)', border: '1px solid rgba(255,255,255,0.15)' }}
-                    >
-                      {perk.icon}
+              {/* 3 step cards */}
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                {EARN_STEPS.map((s) => (
+                  <div
+                    key={s.step}
+                    className="p-4 rounded-xl bg-white/10 border border-white/20"
+                  >
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3 text-white bg-white/20">
+                      {s.icon}
                     </div>
-                    <div>
-                      <div className="text-sm text-white font-bold mb-0.5">{perk.title}</div>
-                      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.5 }}>{perk.desc}</div>
-                    </div>
+                    <div className="text-xs mb-1 font-medium text-white/50">{s.step}</div>
+                    <div className="text-sm font-bold text-white mb-1 leading-tight">{s.title}</div>
+                    <div className="text-xs leading-snug text-white/55">{s.desc}</div>
                   </div>
                 ))}
               </div>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => navigate('/owner-profile')}
-                  className="flex items-center justify-center gap-2 px-6 py-4 text-sm font-bold rounded-lg bg-white text-primary hover:opacity-90 hover:shadow-xl transition-all duration-200 active:scale-[0.98]"
-                >
-                  Publicar mi plaza <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate('/owner-profile')}
-                  className="flex items-center justify-center gap-2 px-6 py-4 text-sm font-semibold rounded-lg hover:bg-white/10 transition-all duration-200"
-                  style={{ background: 'transparent', color: 'rgba(255,255,255,0.85)', border: '1.5px solid rgba(255,255,255,0.25)' }}
-                >
-                  Calcular mis ingresos
-                </button>
-              </div>
-
-              <p className="mt-5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                Más de{' '}
-                <strong style={{ color: 'rgba(255,255,255,0.75)' }}>400 propietarios</strong>{' '}
-                ya están ganando dinero con Parky en Tenerife
-              </p>
+              <button
+                onClick={() => navigate('/owner-profile')}
+                className="flex items-center gap-2 px-7 py-4 rounded-xl font-bold text-sm transition-all duration-200 active:scale-[0.98] hover:shadow-xl bg-accent text-white"
+              >
+                Empieza a ganar dinero <ArrowRight className="w-4 h-4 text-white" />
+              </button>
             </div>
 
-            {/* Image + floating cards */}
+            {/* Right: earnings calculator card */}
             <div className="relative">
-              {/* Earnings card */}
-              <div
-                className="absolute -top-4 -left-4 md:-left-8 z-10 px-4 py-3 flex items-center gap-3 rounded-2xl"
-                style={{ background: '#ffffff', boxShadow: '0 12px 40px rgba(0,0,0,0.25)' }}
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-green-100">
-                  <Euro className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">Este mes ganaste</div>
-                  <div className="font-extrabold text-lg text-green-600">+198,50€</div>
-                </div>
+              {/* ¡Popular! badge */}
+              <div className="absolute -top-4 right-6 z-10 px-7 py-2.5 rounded-full text-sm font-bold shadow-lg bg-accent text-[#1a1a1a]">
+                ¡Popular!
               </div>
 
-              {/* Reservations badge */}
-              <div
-                className="absolute -bottom-4 -right-4 md:-right-8 z-10 px-4 py-3 flex items-center gap-2 rounded-2xl"
-                style={{ background: '#ffffff', boxShadow: '0 12px 40px rgba(0,0,0,0.25)' }}
-              >
-                <div className="flex -space-x-2">
-                  {['#121db6', '#4a4a6a', '#717182'].map((color, i) => (
+              <div className="bg-white rounded-2xl p-6 shadow-2xl">
+                <h3 className="font-bold text-foreground text-lg mb-1">Calcula tus ganancias</h3>
+                <p className="text-sm text-muted-foreground mb-5">Estimación basada en una plaza en zona céntrica</p>
+
+                <div className="space-y-2">
+                  {EARN_ROWS.map((row, i) => (
                     <div
-                      key={i}
-                      className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-xs text-white font-bold"
-                      style={{ background: color }}
+                      key={row.hours}
+                      className="flex items-center justify-between py-3 border-b border-border last:border-b-0"
                     >
-                      {['C', 'M', 'J'][i]}
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#1B4FD8]/10">
+                          <Calendar className="w-4 h-4 text-[#1B4FD8]" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-sm text-foreground">{row.hours}</div>
+                          <div className="text-xs text-muted-foreground">{row.label}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-extrabold text-base text-[#1B4FD8]">{row.amount}</div>
+                        <div className="text-xs text-muted-foreground">aproximado</div>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <div>
-                  <div className="font-bold text-sm text-foreground">3 reservas hoy</div>
-                  <div className="text-xs text-muted-foreground">Próxima: 18:00h</div>
-                </div>
-              </div>
 
-              {/* Main image */}
-              <div className="overflow-hidden rounded-3xl border border-white/10">
-                <img
-                  src="https://images.unsplash.com/photo-1768244016536-6ccee6dc07d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
-                  alt="Propietario ganando dinero con Parky"
-                  className="w-full h-80 md:h-96 object-cover"
-                />
+                <div className="mt-5 flex items-start gap-2 text-sm">
+                  <Check className="w-4 h-4 mt-0.5 shrink-0 text-[#1B4FD8]" />
+                  <span className="text-muted-foreground">
+                    <strong className="text-foreground">+400 propietarios</strong> en Tenerife ya están generando ingresos con Parky
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 7. FOOTER ── */}
-      <footer className="bg-primary">
-        {/* Pre-footer CTA */}
-        <div className="border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+      {/* ── 6. FOOTER ── */}
+      <footer className="bg-footer-background">
+        <div className="border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="text-white font-bold text-lg mb-1">¿Listo para aparcar sin estrés?</h3>
-              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.9rem' }}>
+              <p className="text-white/55 text-[0.9rem]">
                 Más de 500 conductores en Tenerife ya lo hacen con Parky.
               </p>
             </div>
@@ -923,8 +744,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => navigate('/owner-profile')}
-                className="px-5 py-2.5 text-sm font-semibold rounded-lg hover:bg-white/10 transition-all"
-                style={{ background: 'transparent', color: 'rgba(255,255,255,0.8)', border: '1.5px solid rgba(255,255,255,0.2)' }}
+                className="px-5 py-2.5 text-sm font-semibold rounded-lg hover:bg-white/10 transition-all bg-transparent text-white/80 border-[1.5px] border-white/20"
               >
                 Publicar plaza
               </button>
@@ -932,73 +752,52 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Main footer */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
-            {/* Brand */}
             <div className="col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.15)' }}
-                >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 border border-white/15">
                   <Car className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xl text-white font-bold">Parky</span>
               </div>
-              <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.45)', lineHeight: 1.65, maxWidth: '220px' }}>
+              <p className="text-sm mb-6 text-white/45 leading-[1.65] max-w-[220px]">
                 El marketplace de parking que conecta conductores con propietarios en Tenerife. Simple, rápido y seguro.
               </p>
-
-              {/* Social */}
               <div className="flex gap-3 mb-6">
                 {[
                   { icon: <Twitter className="w-3.5 h-3.5" />, label: 'Twitter' },
                   { icon: <Instagram className="w-3.5 h-3.5" />, label: 'Instagram' },
                   { icon: <Linkedin className="w-3.5 h-3.5" />, label: 'LinkedIn' },
                 ].map((social) => (
-                  <button
-                    key={social.label}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/15 transition-all"
-                    style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}
-                    aria-label={social.label}
-                  >
+                  <button key={social.label} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/15 transition-all bg-white/10 text-white/70 border border-white/10"
+                    aria-label={social.label}>
                     {social.icon}
                   </button>
                 ))}
               </div>
-
-              {/* Contact */}
               <div className="flex flex-col gap-2">
                 {[
                   { icon: <Mail className="w-3.5 h-3.5" />, text: 'hola@parky.es' },
                   { icon: <Phone className="w-3.5 h-3.5" />, text: '+34 922 000 000' },
-                ].map((contact) => (
-                  <div key={contact.text} className="flex items-center gap-2">
-                    <span style={{ color: 'rgba(255,255,255,0.35)' }}>{contact.icon}</span>
-                    <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{contact.text}</span>
+                ].map((c) => (
+                  <div key={c.text} className="flex items-center gap-2">
+                    <span className="text-white/35">{c.icon}</span>
+                    <span className="text-xs text-white/45">{c.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Link columns */}
             {Object.entries(FOOTER_LINKS).map(([category, links]) => (
               <div key={category} className="col-span-1">
-                <h4
-                  className="mb-4 text-xs font-bold uppercase tracking-widest"
-                  style={{ color: 'rgba(255,255,255,0.9)' }}
-                >
+                <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
                   {category}
                 </h4>
                 <ul className="flex flex-col gap-2.5">
                   {links.map((link) => (
                     <li key={link}>
-                      <a
-                        href="#"
-                        className="text-sm transition-colors hover:text-white"
-                        style={{ color: 'rgba(255,255,255,0.4)' }}
-                      >
+                      <a href="#" className="text-sm transition-colors hover:text-white text-white/40">
                         {link}
                       </a>
                     </li>
@@ -1008,29 +807,17 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Bottom bar */}
-          <div
-            className="mt-12 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3"
-            style={{ borderColor: 'rgba(255,255,255,0.08)' }}
-          >
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-white/30">
               © 2026 Parky · TFG Hugo González Pérez · Universidad de La Laguna. Todos los derechos reservados.
             </p>
             <div className="flex items-center gap-4">
-              {[
-                { icon: '🍎', label: 'App Store' },
-                { icon: '🤖', label: 'Google Play' },
-              ].map((app) => (
-                <button
-                  key={app.label}
-                  className="flex items-center gap-1.5 text-xs hover:opacity-70 transition-all"
-                  style={{ color: 'rgba(255,255,255,0.35)' }}
-                >
-                  <span>{app.icon}</span>
+              {[{ label: 'App Store' }, { label: 'Google Play' }].map((app) => (
+                <button key={app.label} className="flex items-center gap-1.5 text-xs hover:opacity-70 transition-all text-white/35">
                   {app.label}
                 </button>
               ))}
-              <div className="flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              <div className="flex items-center gap-1.5 text-xs text-white/25">
                 <MapPin className="w-3 h-3" />
                 Tenerife, España
               </div>

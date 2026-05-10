@@ -61,14 +61,7 @@ export default defineConfig({
           if (!id.includes('node_modules')) return;
           if (id.includes('leaflet') || id.includes('react-leaflet')) return 'vendor-map';
           if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-')) return 'vendor-charts';
-          if (id.includes('react-dom') || id.includes('react/') || id.includes('scheduler')) return 'vendor-react';
-          if (id.includes('react-router') || id.includes('@remix-run')) return 'vendor-router';
           if (id.includes('@supabase')) return 'vendor-supabase';
-          if (id.includes('@tanstack')) return 'vendor-query';
-          if (id.includes('@radix-ui')) return 'vendor-radix';
-          if (id.includes('lucide-react')) return 'vendor-icons';
-          if (id.includes('date-fns') || id.includes('react-day-picker')) return 'vendor-dates';
-          return 'vendor';
         },
       },
     },

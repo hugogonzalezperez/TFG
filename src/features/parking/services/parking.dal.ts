@@ -63,10 +63,7 @@ export const parkingDal = {
   async fetchGarageReviews(garageId: string) {
     const { data, error } = await supabase
       .from('reviews')
-      .select(`
-        *,
-        user:users (id, name, avatar_url)
-      `)
+      .select('id, garage_id, user_id, rating, comment, created_at, user:users (id, name, avatar_url)')
       .eq('garage_id', garageId)
       .order('created_at', { ascending: false });
 
@@ -93,7 +90,7 @@ export const parkingDal = {
         rating: params.rating,
         comment: params.comment
       })
-      .select()
+      .select('id, garage_id, user_id, rating, comment, created_at')
       .single();
 
     if (error) throw error;

@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
       {
         element: <MainLayout />,
         children: [
-          { index: true, element: <ProtectedRoute><HomePage /></ProtectedRoute> },
+          { index: true, element: <HomePage /> },
           { path: 'profile', element: <ProtectedRoute><UserProfilePage /></ProtectedRoute> },
           {
             path: 'owner-profile',

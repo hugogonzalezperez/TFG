@@ -5,11 +5,13 @@ import { Checkbox } from '../../ui';
 import { useAuth } from '../../features/auth';
 import { ErrorMessage } from '../../ui';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register, loginWithGoogle, loginWithFacebook, loading } = useAuth();
+  const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -83,7 +85,7 @@ export default function SignUpPage() {
       });
 
       // Si tiene éxito, navegamos
-      navigate('/');
+      navigate(from, { replace: true });
     } catch (err: any) {
       // Al fallar (ej: correo duplicado), detenemos el loader inmediatamente
       setIsSubmitting(false);
@@ -351,7 +353,7 @@ export default function SignUpPage() {
           <p className="text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/login', { state: location.state })}
               className="text-primary hover:underline font-medium"
               disabled={isSubmitting || loading}
             >

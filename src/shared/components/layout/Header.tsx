@@ -88,42 +88,75 @@ export function Header() {
 
           {/* User Menu (Desktop) */}
           <div className="hidden md:flex items-center space-x-4">
-            {transparent ? (
+            {authUser ? (
+              transparent ? (
+                <>
+                  <button
+                    onClick={() => navigate('/profile')}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                    style={{ color: 'white' }}
+                  >
+                    <UserAvatar />
+                    <span className="font-medium">{authUser.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="flex items-center space-x-2 h-10 px-5 rounded-lg font-bold hover:bg-white/10 transition-colors border"
+                    style={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Salir</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate('/profile')}
+                    className="flex items-center space-x-2"
+                  >
+                    <UserAvatar />
+                    <span>{authUser.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                  </Button>
+                  <Button
+                    variant="exit"
+                    onClick={logout}
+                    className="flex items-center space-x-2 h-10 px-6 text-base font-bold"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Salir</span>
+                  </Button>
+                </>
+              )
+            ) : transparent ? (
               <>
                 <button
-                  onClick={() => navigate('/profile')}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
-                  style={{ color: 'white' }}
+                  onClick={() => navigate('/login')}
+                  className="h-10 px-5 rounded-lg font-semibold text-white/90 hover:text-white hover:bg-white/10 transition-all border border-white/25 hover:border-white/50"
                 >
-                  <UserAvatar />
-                  <span className="font-medium">{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                  Iniciar sesión
                 </button>
                 <button
-                  onClick={logout}
-                  className="flex items-center space-x-2 h-10 px-5 rounded-lg font-bold hover:bg-white/10 transition-colors border"
-                  style={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+                  onClick={() => navigate('/signup')}
+                  className="h-10 px-5 rounded-lg font-bold bg-white text-[#1B4FD8] hover:bg-white/90 transition-all shadow-lg shadow-black/20"
                 >
-                  <LogOut className="h-5 w-5" />
-                  <span>Salir</span>
+                  Registrarse
                 </button>
               </>
             ) : (
               <>
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/profile')}
-                  className="flex items-center space-x-2"
+                  onClick={() => navigate('/login')}
+                  className="h-10 px-5 font-semibold"
                 >
-                  <UserAvatar />
-                  <span>{authUser?.user?.name?.split(' ')[0] || 'Mi cuenta'}</span>
+                  Iniciar sesión
                 </Button>
                 <Button
-                  variant="exit"
-                  onClick={logout}
-                  className="flex items-center space-x-2 h-10 px-6 text-base font-bold"
+                  onClick={() => navigate('/signup')}
+                  className="h-10 px-5 font-bold bg-primary text-white hover:bg-primary/90"
                 >
-                  <LogOut className="h-5 w-5" />
-                  <span>Salir</span>
+                  Registrarse
                 </Button>
               </>
             )}
@@ -143,13 +176,31 @@ export function Header() {
                 </DialogHeader>
 
                 <div className="flex flex-col py-2 space-y-2">
-                  <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-2xl mb-2">
-                    <UserAvatar size="h-10 w-10" />
-                    <div className="min-w-0">
-                      <p className="font-bold text-sm leading-tight">{authUser?.user?.name || 'Usuario'}</p>
-                      <p className="text-[11px] text-muted-foreground truncate">{authUser?.user?.email}</p>
+                  {authUser ? (
+                    <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-2xl mb-2">
+                      <UserAvatar size="h-10 w-10" />
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm leading-tight">{authUser.user?.name || 'Usuario'}</p>
+                        <p className="text-[11px] text-muted-foreground truncate">{authUser.user?.email}</p>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleNavigate('/login')}
+                        className="h-11 font-semibold"
+                      >
+                        Iniciar sesión
+                      </Button>
+                      <Button
+                        onClick={() => handleNavigate('/signup')}
+                        className="h-11 font-bold bg-primary text-white"
+                      >
+                        Registrarse
+                      </Button>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 gap-1">
                     {navigation.map((item) => (
@@ -161,25 +212,29 @@ export function Header() {
                         {item.name}
                       </button>
                     ))}
-                    <button
-                      onClick={() => handleNavigate('/profile')}
-                      className="flex items-center w-full px-4 py-2.5 text-base font-semibold hover:bg-muted rounded-xl transition-colors"
-                    >
-                      Mi Perfil
-                    </button>
+                    {authUser && (
+                      <button
+                        onClick={() => handleNavigate('/profile')}
+                        className="flex items-center w-full px-4 py-2.5 text-base font-semibold hover:bg-muted rounded-xl transition-colors"
+                      >
+                        Mi Perfil
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-border">
-                  <Button
-                    variant="exit"
-                    onClick={logout}
-                    className="w-full h-11 text-base justify-center text-destructive bg-destructive/5 hover:bg-destructive hover:text-white rounded-xl transition-all font-bold"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    Cerrar sesión
-                  </Button>
-                </div>
+                {authUser && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <Button
+                      variant="exit"
+                      onClick={logout}
+                      className="w-full h-11 text-base justify-center text-destructive bg-destructive/5 hover:bg-destructive hover:text-white rounded-xl transition-all font-bold"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Cerrar sesión
+                    </Button>
+                  </div>
+                )}
               </DialogContent>
             </Dialog>
           </div>

@@ -125,7 +125,7 @@ export const bookingDal = {
    */
   async autoCompletePastBookings() {
     try {
-      await supabase.rpc('complete_past_bookings');
+      await supabase.functions.invoke('complete-past-bookings');
     } catch (e) {
       logger.warn('Error auto-completing bookings:', e);
     }

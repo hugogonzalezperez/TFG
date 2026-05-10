@@ -5,11 +5,13 @@ import { useAuth } from '../../features/auth';
 import { AnimatedLoader } from '../../shared/components/loaders';
 import { ErrorMessage } from '../../ui';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, loginWithGoogle, loginWithFacebook, loading } = useAuth();
+  const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -34,10 +36,8 @@ export default function LoginPage() {
       // Intentamos el login
       await login({ email, password });
 
-      // Si llegamos aquí, el login fue exitoso
-      // Es vital NO resetear isSubmitting aquí si vamos a navegar, 
-      // para evitar que el formulario parpadee antes de irse
-      navigate('/');
+      // Redirigir a la ruta de origen si existe, si no al home
+      navigate(from, { replace: true });
     } catch (err: any) {
       // IMPORTANTE: Primero desactivamos el estado de carga
       setIsSubmitting(false);
@@ -197,7 +197,7 @@ export default function LoginPage() {
             <p className="text-sm text-muted-foreground">
               ¿No tienes cuenta?{' '}
               <button
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/signup', { state: location.state })}
                 className="text-primary hover:underline font-medium"
                 disabled={isSubmitting || loading}
               >

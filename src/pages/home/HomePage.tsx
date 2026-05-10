@@ -21,7 +21,7 @@ const ZONES = [
     price: '2.50€/h',
     rating: 4.8,
     hot: true,
-    image: 'https://images.unsplash.com/photo-1703693837521-e76ee7b8dc74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://imgs.search.brave.com/d5GGdqb82i_8xmaHhZvJtrueJBmox8Y7L4hHGlTd_d0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/ZGVzdGlub3NpbnRl/bGlnZW50ZXMuZXMv/d3AtY29udGVudC91/cGxvYWRzLzIwMjIv/MDUvU2FudGEtQ3J1/ei1kZS1UZW5lcmlm/ZS5qcGc',
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const ZONES = [
     price: '2.00€/h',
     rating: 4.7,
     hot: false,
-    image: 'https://images.unsplash.com/photo-1616428394230-ba242d33e3ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://espanaviajar.com/wp-content/uploads/2022/01/SAN-CRISTOBALA-DE-LA-LAGUNA-Pueblos-mas-bonitos-de-Tenerife.jpg',
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ const ZONES = [
     price: '2.20€/h',
     rating: 4.9,
     hot: true,
-    image: 'https://images.unsplash.com/photo-1771407573830-a21d9b6a1e5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://www.barcelo.com/guia-turismo/wp-content/uploads/puerto-de-la-cruz-3.jpg',
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const ZONES = [
     price: '3.00€/h',
     rating: 4.6,
     hot: false,
-    image: 'https://images.unsplash.com/photo-1766293777298-992506f9fb84?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://www.home4escape.com/wp-content/uploads/2024/07/image-1.png',
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const ZONES = [
     price: '3.50€/h',
     rating: 4.8,
     hot: true,
-    image: 'https://images.unsplash.com/photo-1776323753894-53ffa5d198f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://www.jet2holidays.com/destinations/canary-islands/tenerife/media_16ac09285401ef9effafdcb98950ba161179e711b.jpg?width=1200&format=pjpg&optimize=medium',
   },
   {
     id: 6,
@@ -71,7 +71,7 @@ const ZONES = [
     price: '1.80€/h',
     rating: 4.9,
     hot: true,
-    image: 'https://images.unsplash.com/photo-1761397300888-348e0dbdcc09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    image: 'https://s1.abcstatics.com/media/espana/2020/05/16/Aeropuerto-Tenerife-Sur-Fotografia-AENA_EDIIMA20151124_0473_42-k1m--1248x698@abc.jpg',
   },
 ];
 

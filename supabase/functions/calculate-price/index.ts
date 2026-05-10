@@ -16,6 +16,11 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return json({ error: 'Authorization requerida' }, 401);
+  }
+
   let body: { spotId?: string; startTime?: string; endTime?: string };
   try {
     body = await req.json();

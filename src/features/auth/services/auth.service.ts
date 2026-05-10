@@ -88,7 +88,7 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
     // 2. Actualizar nuestra tabla
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select()
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .eq('id', authData.user.id)
       .single();
 
@@ -104,7 +104,7 @@ export const loginWithEmail = async ({ email, password }: LoginRequest): Promise
           avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authData.user.user_metadata?.name || 'Usuario'}`,
           is_active: true,
         })
-        .select()
+        .select('id, email, name, phone, avatar_url, is_active, created_at')
         .single();
 
       if (createError) {
@@ -251,7 +251,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
         avatar_url: authUser.user_metadata.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authUser.user_metadata.full_name || authUser.user_metadata.name || 'Usuario'}`,
         is_active: true,
       })
-      .select()
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .single();
 
     if (userError || !newUser) {
@@ -379,7 +379,7 @@ export const updateUserProfile = async (
       .from('users')
       .update(updates)
       .eq('id', userId)
-      .select()
+      .select('id, email, name, phone, avatar_url, is_active, created_at')
       .single();
 
     if (error) {

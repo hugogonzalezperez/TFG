@@ -123,11 +123,7 @@ export const profileDal = {
   async fetchOwnerReviews(ownerId: string) {
     const { data, error } = await supabase
       .from('reviews')
-      .select(`
-        *,
-        user:users!reviews_user_id_fkey(name, avatar_url),
-        garage:garages!inner(name, owner_id)
-      `)
+      .select('id, garage_id, user_id, rating, comment, created_at, user:users!reviews_user_id_fkey(name, avatar_url), garage:garages!inner(name, owner_id)')
       .eq('garage.owner_id', ownerId)
       .order('created_at', { ascending: false });
 

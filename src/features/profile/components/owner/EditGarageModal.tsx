@@ -324,16 +324,32 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
 
         {isSpotEdit && spot ? (
           <Tabs defaultValue="info" className="w-full">
-            <TabsList className="w-full">
-              <TabsTrigger value="info" className="flex-1">Información</TabsTrigger>
-              <TabsTrigger value="horario" className="flex-1">Horario</TabsTrigger>
+            <TabsList className="w-full h-10 bg-muted/60 p-1 rounded-xl">
+              <TabsTrigger
+                value="info"
+                className="flex-1 h-full rounded-lg text-sm font-medium transition-all
+                  text-muted-foreground hover:text-foreground hover:bg-background/60
+                  data-[state=active]:bg-primary data-[state=active]:text-primary-foreground
+                  data-[state=active]:shadow-sm"
+              >
+                Información
+              </TabsTrigger>
+              <TabsTrigger
+                value="horario"
+                className="flex-1 h-full rounded-lg text-sm font-medium transition-all
+                  text-muted-foreground hover:text-foreground hover:bg-background/60
+                  data-[state=active]:bg-primary data-[state=active]:text-primary-foreground
+                  data-[state=active]:shadow-sm"
+              >
+                Horario
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="info" className="mt-4">
+            <TabsContent value="info" className="mt-4 min-h-[380px]">
               {SpotInfoForm}
             </TabsContent>
 
-            <TabsContent value="horario" className="mt-4">
+            <TabsContent value="horario" className="mt-4 min-h-[380px]">
               <SpotScheduleEditor
                 spotId={spot.id}
                 initialSchedule={spot.availability_schedule}

@@ -13,14 +13,14 @@ interface SpotScheduleEditorProps {
   onSaved?: () => void;
 }
 
-const DAY_LABELS: { dow: keyof AvailabilitySchedule; label: string; short: string }[] = [
-  { dow: '1', label: 'Lunes',     short: 'L' },
-  { dow: '2', label: 'Martes',    short: 'M' },
-  { dow: '3', label: 'Miércoles', short: 'X' },
-  { dow: '4', label: 'Jueves',    short: 'J' },
-  { dow: '5', label: 'Viernes',   short: 'V' },
-  { dow: '6', label: 'Sábado',    short: 'S' },
-  { dow: '0', label: 'Domingo',   short: 'D' },
+const DAY_LABELS: { dow: keyof AvailabilitySchedule; label: string }[] = [
+  { dow: '1', label: 'Lunes' },
+  { dow: '2', label: 'Martes' },
+  { dow: '3', label: 'Miércoles' },
+  { dow: '4', label: 'Jueves' },
+  { dow: '5', label: 'Viernes' },
+  { dow: '6', label: 'Sábado' },
+  { dow: '0', label: 'Domingo' },
 ];
 
 const TIME_OPTIONS: string[] = [];
@@ -50,18 +50,16 @@ function buildInitial(schedule: AvailabilitySchedule | null | undefined): Availa
 }
 
 export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotScheduleEditorProps) {
-  const [schedule, setSchedule] = useState<AvailabilitySchedule>(() => buildInitial(initialSchedule));
+  const [schedule, setSchedule] = useState<AvailabilitySchedule>(() =>
+    buildInitial(initialSchedule),
+  );
   const [isSaving, setIsSaving] = useState(false);
 
   const updateDay = (dow: keyof AvailabilitySchedule, patch: Partial<DaySchedule>) => {
-    setSchedule(prev => ({
-      ...prev,
-      [dow]: { ...prev[dow], ...patch },
-    }));
+    setSchedule((prev) => ({ ...prev, [dow]: { ...prev[dow], ...patch } }));
   };
 
   const handleSave = async () => {
-    // Client-side coherence check before hitting the server
     for (const { dow, label } of DAY_LABELS) {
       const day = schedule[dow];
       if (day.enabled && day.open >= day.close) {
@@ -69,15 +67,13 @@ export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotSch
         return;
       }
     }
-
     setIsSaving(true);
     try {
       await parkingService.updateSpotSchedule(spotId, schedule);
       toast.success('Horario guardado correctamente');
       onSaved?.();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Error al guardar el horario';
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : 'Error al guardar el horario');
     } finally {
       setIsSaving(false);
     }
@@ -87,20 +83,22 @@ export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotSch
 
   return (
     <div className="space-y-3">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium">Horario de disponibilidad</span>
+          <span className="text-sm font-medium">Horario semanal</span>
         </div>
         <span className="text-xs text-muted-foreground">
           {enabledCount === 0
-            ? 'Plaza bloqueada todos los días'
+            ? 'Bloqueado todos los días'
             : enabledCount === 7
-              ? 'Disponible toda la semana'
+              ? 'Toda la semana'
               : `${enabledCount} día${enabledCount !== 1 ? 's' : ''} activo${enabledCount !== 1 ? 's' : ''}`}
         </span>
       </div>
 
+      {/* Day rows */}
       <div className="rounded-lg border border-border overflow-hidden">
         {DAY_LABELS.map(({ dow, label }, idx) => {
           const day = schedule[dow];
@@ -110,51 +108,56 @@ export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotSch
             <div
               key={dow}
               className={[
-                'flex items-center gap-3 px-3 py-2.5',
+                'flex items-center gap-2 px-2.5 py-2',
                 idx !== DAY_LABELS.length - 1 ? 'border-b border-border' : '',
                 isWeekend ? 'bg-muted/30' : '',
-                !day.enabled ? 'opacity-60' : '',
+                !day.enabled ? 'opacity-55' : '',
               ].join(' ')}
             >
-              {/* Day toggle */}
-              <div className="flex items-center gap-2 w-28 shrink-0">
+              {/* Toggle + label — fixed, compact */}
+              <div className="flex items-center gap-1.5 w-[7.5rem] shrink-0">
                 <Switch
                   checked={day.enabled}
                   onCheckedChange={(checked) => updateDay(dow, { enabled: checked })}
                 />
-                <span className="text-sm font-medium">{label}</span>
+                <span className="text-sm font-medium truncate">{label}</span>
               </div>
 
-              {/* Time window */}
+              {/* Time window — fills remaining space */}
               {day.enabled ? (
-                <div className="flex items-center gap-2 flex-1">
-                  <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <div className="flex items-center gap-1 flex-1 min-w-0">
+                  <Clock className="h-3 w-3 text-muted-foreground shrink-0" />
+
                   <Select
                     value={day.open}
                     onValueChange={(val) => updateDay(dow, { open: val })}
                   >
-                    <SelectTrigger className="h-8 w-24 text-xs">
+                    <SelectTrigger className="h-8 flex-1 min-w-0 text-xs px-2">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {TIME_OPTIONS.filter(t => t < day.close).map(t => (
-                        <SelectItem key={t} value={t} className="text-xs">{t}</SelectItem>
+                      {TIME_OPTIONS.filter((t) => t < day.close).map((t) => (
+                        <SelectItem key={t} value={t} className="text-xs">
+                          {t}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
 
-                  <span className="text-xs text-muted-foreground">→</span>
+                  <span className="text-xs text-muted-foreground shrink-0">–</span>
 
                   <Select
                     value={day.close}
                     onValueChange={(val) => updateDay(dow, { close: val })}
                   >
-                    <SelectTrigger className="h-8 w-24 text-xs">
+                    <SelectTrigger className="h-8 flex-1 min-w-0 text-xs px-2">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {TIME_OPTIONS.filter(t => t > day.open).map(t => (
-                        <SelectItem key={t} value={t} className="text-xs">{t}</SelectItem>
+                      {TIME_OPTIONS.filter((t) => t > day.open).map((t) => (
+                        <SelectItem key={t} value={t} className="text-xs">
+                          {t}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -167,12 +170,7 @@ export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotSch
         })}
       </div>
 
-      <Button
-        onClick={handleSave}
-        disabled={isSaving}
-        size="sm"
-        className="w-full"
-      >
+      <Button onClick={handleSave} disabled={isSaving} size="sm" className="w-full">
         {isSaving ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (

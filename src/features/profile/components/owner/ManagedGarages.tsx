@@ -1,5 +1,5 @@
 import { logger } from '../../../../shared/lib/logger';
-import { MapPin, Edit, Trash2, Plus, Building2 } from 'lucide-react';
+import { MapPin, Edit, Trash2, Plus, Building2, Car } from 'lucide-react';
 import { Card, Badge, Button, Switch, ConfirmationDialog, EmptyState, GarageCardSkeleton } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
 import { useQueryClient } from '@tanstack/react-query';
@@ -156,7 +156,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                     {garage.parking_spots?.length || 0} plazas
                   </Badge>
                   <Button
-                    variant="outline"
+                    variant="primary"
                     size="sm"
                     className="gap-1.5 h-8 md:h-9 text-[10px] md:text-xs font-bold px-2 md:px-4 border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-primary"
                     onClick={() => setSelectedGarageForSpot(garage)}
@@ -196,7 +196,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                     const spotImage = spot.images?.[0] ||
                       spot.parking_spot_images?.[0]?.image_url ||
                       garageImage ||
-                      'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
+                      null;
 
                     return (
                       <div
@@ -204,13 +204,19 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                         className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 border border-border rounded-xl bg-card/50 hover:border-primary/30 transition-all group"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex-shrink-0 overflow-hidden border border-border shadow-sm">
-                            <img
-                              src={spotImage}
-                              alt={spot.spot_number}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                              loading="lazy"
-                            />
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex-shrink-0 overflow-hidden border border-border shadow-sm bg-muted">
+                            {spotImage ? (
+                              <img
+                                src={spotImage}
+                                alt={spot.spot_number}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                <Car className="h-6 w-6" />
+                              </div>
+                            )}
                           </div>
 
                           <div className="flex-1 min-w-0">
@@ -249,7 +255,6 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 md:h-9 gap-1.5 text-xs font-semibold px-2 md:px-3 hover:bg-primary/5"
                               onClick={() => setEditingItem({ garage, spot })}
                             >
                               <Edit className="h-3.5 w-3.5" />

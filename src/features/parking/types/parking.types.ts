@@ -2,6 +2,16 @@
 // TIPOS DE PARKING
 // =====================================================
 
+export interface DaySchedule {
+  enabled: boolean;
+  open: string;   // "HH:MM"
+  close: string;  // "HH:MM"
+}
+
+export type AvailabilitySchedule = {
+  [dow in '0' | '1' | '2' | '3' | '4' | '5' | '6']: DaySchedule;
+};
+
 export interface Garage {
   id: string;
   name: string;
@@ -59,6 +69,7 @@ export interface Parking {
     end_time: string;
     status: string;
   }[];
+  availability_schedule?: AvailabilitySchedule | null;
 }
 
 export interface ParkingFilter {

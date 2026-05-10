@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
-import { Clock, Shield, AlertTriangle, Star } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
+import { Clock, Shield, AlertTriangle, Star, CalendarX } from 'lucide-react';
+import { AvailabilitySchedule } from '../../types/parking.types';
 import {
   Card,
   Button,
@@ -36,12 +37,33 @@ const getLocalISOString = (d: Date) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
+function isDayBlocked(dayStr: string, schedule: AvailabilitySchedule | null | undefined): boolean {
+  if (!schedule) return false;
+  const dow = new Date(dayStr).getDay().toString() as keyof AvailabilitySchedule;
+  return !schedule[dow]?.enabled;
+}
+
+function isTimeDisabled(
+  time: string,
+  dayStr: string,
+  schedule: AvailabilitySchedule | null | undefined,
+  role: 'entry' | 'exit',
+): boolean {
+  if (!schedule) return false;
+  const dow = new Date(dayStr).getDay().toString() as keyof AvailabilitySchedule;
+  const day = schedule[dow];
+  if (!day?.enabled) return true;
+  if (role === 'entry') return time < day.open || time >= day.close;
+  return time <= day.open || time > day.close;
+}
+
 export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { data: bookings = [] } = useSpotBookings(parking.id);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const schedule = parking.availability_schedule ?? null;
 
   const [entryDate, setEntryDate] = useState(() => {
     if (searchDates?.startDate && searchDates?.startTime) {
@@ -78,6 +100,19 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     return options;
   }, []);
 
+  const isEntryTimeDisabled = useCallback(
+    (time: string) => isTimeDisabled(time, entryDate.split('T')[0], schedule, 'entry'),
+    [entryDate, schedule],
+  );
+
+  const isExitTimeDisabled = useCallback(
+    (time: string) => isTimeDisabled(time, exitDate.split('T')[0], schedule, 'exit'),
+    [exitDate, schedule],
+  );
+
+  const entryDayBlocked = isDayBlocked(entryDate.split('T')[0], schedule);
+  const exitDayBlocked  = isDayBlocked(exitDate.split('T')[0],  schedule);
+
   const handleBooking = () => {
     setErrorMsg(null);
     const start = new Date(entryDate);
@@ -98,6 +133,35 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     if (durationMs < 2 * 60 * 60 * 1000) {
       setErrorMsg('La duración mínima de la reserva es de 2 horas.');
       return;
+    }
+
+    // Check schedule restrictions
+    if (schedule) {
+      const startDow = start.getDay().toString() as keyof AvailabilitySchedule;
+      const endDow   = end.getDay().toString()   as keyof AvailabilitySchedule;
+      const startDay = schedule[startDow];
+      const endDay   = schedule[endDow];
+
+      if (!startDay?.enabled) {
+        setErrorMsg('La plaza no está disponible el día de entrada seleccionado.');
+        return;
+      }
+      if (!endDay?.enabled) {
+        setErrorMsg('La plaza no está disponible el día de salida seleccionado.');
+        return;
+      }
+
+      const startTimeStr = `${String(start.getHours()).padStart(2,'0')}:${String(start.getMinutes()).padStart(2,'0')}`;
+      const endTimeStr   = `${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}`;
+
+      if (startTimeStr < startDay.open || startTimeStr >= startDay.close) {
+        setErrorMsg(`La hora de entrada debe estar entre ${startDay.open} y ${startDay.close}.`);
+        return;
+      }
+      if (endTimeStr <= endDay.open || endTimeStr > endDay.close) {
+        setErrorMsg(`La hora de salida debe estar entre ${endDay.open} y ${endDay.close}.`);
+        return;
+      }
     }
 
     // Check overlaps
@@ -160,6 +224,17 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
         </div>
       )}
 
+      {(entryDayBlocked || exitDayBlocked) && !errorMsg && (
+        <div role="alert" className="mb-4 p-3 rounded-lg flex items-center gap-2 text-sm bg-amber-50 text-amber-700 border border-amber-200">
+          <CalendarX className="h-5 w-5 shrink-0" />
+          <span>
+            {entryDayBlocked
+              ? 'La plaza no está disponible el día de entrada seleccionado.'
+              : 'La plaza no está disponible el día de salida seleccionado.'}
+          </span>
+        </div>
+      )}
+
       <div className="space-y-4 mb-6">
         <div className="grid grid-cols-1 gap-4">
           <div>
@@ -201,7 +276,13 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
                   </SelectTrigger>
                   <SelectContent>
                     {timeOptions.map(time => (
-                      <SelectItem key={`entry-${time}`} value={time}>{time}</SelectItem>
+                      <SelectItem
+                        key={`entry-${time}`}
+                        value={time}
+                        disabled={isEntryTimeDisabled(time)}
+                      >
+                        {time}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -242,7 +323,13 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
                   </SelectTrigger>
                   <SelectContent>
                     {timeOptions.map(time => (
-                      <SelectItem key={`exit-${time}`} value={time}>{time}</SelectItem>
+                      <SelectItem
+                        key={`exit-${time}`}
+                        value={time}
+                        disabled={isExitTimeDisabled(time)}
+                      >
+                        {time}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

@@ -16,6 +16,7 @@ import { Garage, Parking } from '../../../parking/types/parking.types';
 import { GarageImageUploader } from '../GarageImageUploader';
 import { LocationPicker } from '../../../../shared/components/map/LocationPicker';
 import { Loader2, Map, ChevronDown, ChevronUp } from 'lucide-react';
+import { SpotScheduleEditor } from './SpotScheduleEditor';
 
 interface EditGarageModalProps {
   garage: Garage;
@@ -285,6 +286,16 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
             </Button>
           </div>
         </form>
+
+        {isSpotEdit && spot && (
+          <div className="border-t border-border pt-4">
+            <SpotScheduleEditor
+              spotId={spot.id}
+              initialSchedule={spot.availability_schedule}
+              onSaved={onSuccess}
+            />
+          </div>
+        )}
       </DialogContent>
     </Dialog >
   );

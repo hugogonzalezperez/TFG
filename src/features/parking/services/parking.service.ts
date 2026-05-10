@@ -1,4 +1,4 @@
-import { Parking, Garage } from '../types/parking.types';
+import { Parking, Garage, AvailabilitySchedule } from '../types/parking.types';
 import { parkingDal } from './parking.dal';
 
 export const parkingService = {
@@ -58,6 +58,7 @@ export const parkingService = {
           spot_number: spot.spot_number,
           type: (spot.type === 'Subterránea' ? 'Subterráneo' : spot.type as Parking['type']) || 'Subterráneo',
           bookings: spot.bookings || [],
+          availability_schedule: (spot as unknown as { availability_schedule: AvailabilitySchedule | null }).availability_schedule ?? null,
           owner: spot.owner
             ? {
               id: spot.owner.id,
@@ -164,6 +165,7 @@ export const parkingService = {
       spot_number: spot.spot_number,
       type: (spot.type === 'Subterránea' ? 'Subterráneo' : spot.type as Parking['type']) || 'Subterráneo',
       bookings: spot.bookings || [],
+      availability_schedule: (spot as unknown as { availability_schedule: AvailabilitySchedule | null }).availability_schedule ?? null,
       owner: spot.owner
         ? {
           id: (spot.owner as any).id,
@@ -313,6 +315,10 @@ export const parkingService = {
     if (images.length > 0) {
       await parkingDal.insertParkingSpotImages(spotId, images);
     }
+  },
+
+  async updateSpotSchedule(spotId: string, schedule: AvailabilitySchedule): Promise<void> {
+    return await parkingDal.updateSpotSchedule(spotId, schedule);
   },
 
   async deleteGarage(garageId: string) {

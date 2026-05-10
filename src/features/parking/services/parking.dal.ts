@@ -2,6 +2,7 @@
 
 import { supabase } from '../../../shared/lib/supabase';
 import { Database } from '../../../types/database.types';
+import { AvailabilitySchedule } from '../types/parking.types';
 
 type GarageRow = Database['public']['Tables']['garages']['Row'];
 type ParkingSpotRow = Database['public']['Tables']['parking_spots']['Row'];
@@ -295,6 +296,14 @@ export const parkingDal = {
       .delete()
       .eq('parking_spot_id', spotId);
 
+    if (error) throw error;
+  },
+
+  async updateSpotSchedule(spotId: string, schedule: AvailabilitySchedule): Promise<void> {
+    const { error } = await supabase.rpc('update_spot_schedule', {
+      p_spot_id: spotId,
+      p_schedule: schedule as unknown as Record<string, unknown>,
+    });
     if (error) throw error;
   },
 

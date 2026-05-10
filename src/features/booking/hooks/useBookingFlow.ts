@@ -2,20 +2,25 @@ import { logger } from '../../../shared/lib/logger';
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../auth';
 import { bookingService, pricingService, BookingEstimation } from '..';
+import { AvailabilitySchedule } from '../../parking/types/parking.types';
+import { validateSchedule } from '../../parking/utils/schedule.utils';
 
 interface UseBookingFlowProps {
   parkingId: string;
   basePrice: number;
   initialStartDate?: Date;
   initialEndDate?: Date;
+  availabilitySchedule?: AvailabilitySchedule | null;
 }
 
-export function useBookingFlow({ parkingId, basePrice, initialStartDate, initialEndDate }: UseBookingFlowProps) {
+export function useBookingFlow({ parkingId, basePrice, initialStartDate, initialEndDate, availabilitySchedule }: UseBookingFlowProps) {
   const { authUser } = useAuth();
 
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [bookingComplete, setBookingComplete] = useState(false);
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(null);
+  const [confirmedPrice, setConfirmedPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [rulesLoading, setRulesLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +95,14 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
       return;
     }
 
+    // Schedule validation (mirrors ParkingBookingCard client-side check)
+    const scheduleError = validateSchedule(bookingDates.start, bookingDates.end, availabilitySchedule);
+    if (scheduleError) {
+      setError(scheduleError);
+      setLoading(false);
+      return;
+    }
+
     try {
       const isAvailable = await bookingService.checkAvailability(
         parkingId,
@@ -113,7 +126,7 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
         if (match) normalizedPlate = `${match[1]} ${match[2]} ${match[3]}`;
       }
 
-      await bookingService.createBooking({
+      const confirmed = await bookingService.createBooking({
         spotId: parkingId,
         userId: authUser.user.id,
         startTime: bookingDates.start,
@@ -123,6 +136,8 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
         vehicleDescription: formData.carModel,
       });
 
+      setConfirmedBookingId((confirmed as any)?.id ?? null);
+      setConfirmedPrice((confirmed as any)?.total_price ?? null);
       setBookingComplete(true);
     } catch (err: any) {
       logger.error('Booking confirmation error:', err);
@@ -144,6 +159,8 @@ export function useBookingFlow({ parkingId, basePrice, initialStartDate, initial
     paymentMethod,
     setPaymentMethod,
     bookingComplete,
+    confirmedBookingId,
+    confirmedPrice,
     loading,
     rulesLoading,
     error,

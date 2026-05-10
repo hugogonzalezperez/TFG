@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { profileService } from '../services/profile.service';
 import { bookingService } from '../../booking/services/booking.service';
+import { supabase } from '../../../shared/lib/supabase';
 
 export const useUserStats = (userId: string | undefined) => {
   return useQuery({
@@ -13,12 +15,32 @@ export const useUserStats = (userId: string | undefined) => {
 };
 
 export const useUserBookings = (userId: string | undefined) => {
+  const queryClient = useQueryClient();
+
+  // Realtime: invalidate on any booking change for this renter
+  useEffect(() => {
+    if (!userId) return;
+
+    const channel = supabase
+      .channel(`user-bookings-${userId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bookings', filter: `renter_id=eq.${userId}` },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['user-bookings', userId] });
+          queryClient.invalidateQueries({ queryKey: ['user-stats', userId] });
+        },
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [userId, queryClient]);
+
   return useQuery({
     queryKey: ['user-bookings', userId],
     queryFn: () => bookingService.getUserBookings(userId!),
     enabled: !!userId,
-    refetchInterval: 10000, // Refresh every 10s
-    // Sort logic moved to query level to avoid re-sorting on every render
+    refetchInterval: 60000, // 1 min fallback — realtime handles instant updates
     select: (data) => [...data].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
   });
 };

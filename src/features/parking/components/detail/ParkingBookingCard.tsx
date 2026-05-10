@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Clock, Shield, AlertTriangle, Star, CalendarX } from 'lucide-react';
 import { AvailabilitySchedule } from '../../types/parking.types';
+import { validateSchedule } from '../../utils/schedule.utils';
 import {
   Card,
   Button,
@@ -136,32 +137,10 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     }
 
     // Check schedule restrictions
-    if (schedule) {
-      const startDow = start.getDay().toString() as keyof AvailabilitySchedule;
-      const endDow   = end.getDay().toString()   as keyof AvailabilitySchedule;
-      const startDay = schedule[startDow];
-      const endDay   = schedule[endDow];
-
-      if (!startDay?.enabled) {
-        setErrorMsg('La plaza no está disponible el día de entrada seleccionado.');
-        return;
-      }
-      if (!endDay?.enabled) {
-        setErrorMsg('La plaza no está disponible el día de salida seleccionado.');
-        return;
-      }
-
-      const startTimeStr = `${String(start.getHours()).padStart(2,'0')}:${String(start.getMinutes()).padStart(2,'0')}`;
-      const endTimeStr   = `${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}`;
-
-      if (startTimeStr < startDay.open || startTimeStr >= startDay.close) {
-        setErrorMsg(`La hora de entrada debe estar entre ${startDay.open} y ${startDay.close}.`);
-        return;
-      }
-      if (endTimeStr <= endDay.open || endTimeStr > endDay.close) {
-        setErrorMsg(`La hora de salida debe estar entre ${endDay.open} y ${endDay.close}.`);
-        return;
-      }
+    const scheduleError = validateSchedule(start, end, schedule);
+    if (scheduleError) {
+      setErrorMsg(scheduleError);
+      return;
     }
 
     // Check overlaps

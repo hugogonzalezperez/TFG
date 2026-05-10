@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Card, Button } from '../../../ui';
-import { Check, MapPin, Calendar, CreditCard, AlertCircle } from 'lucide-react';
+import { Check, MapPin, Calendar, CreditCard, AlertCircle, Hash } from 'lucide-react';
 
 interface BookingSuccessProps {
   parking: {
@@ -13,9 +13,10 @@ interface BookingSuccessProps {
     end: Date;
   };
   totalPrice: number;
+  bookingId?: string;
 }
 
-export function BookingSuccess({ parking, bookingDates, totalPrice }: BookingSuccessProps) {
+export function BookingSuccess({ parking, bookingDates, totalPrice, bookingId }: BookingSuccessProps) {
   const navigate = useNavigate();
 
   return (
@@ -79,6 +80,18 @@ export function BookingSuccess({ parking, bookingDates, totalPrice }: BookingSuc
                 <p className="text-2xl font-bold text-primary">{totalPrice.toFixed(2)}€</p>
               </div>
             </div>
+
+            {bookingId && (
+              <div className="flex items-start gap-3 pt-2 border-t border-border/50">
+                <div className="bg-muted p-2 rounded-lg">
+                  <Hash className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Referencia de reserva</p>
+                  <p className="text-xs font-mono text-foreground/70 select-all">{bookingId}</p>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
 

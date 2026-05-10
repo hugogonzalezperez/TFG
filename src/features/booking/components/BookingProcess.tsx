@@ -28,6 +28,8 @@ export function BookingProcess() {
     paymentMethod,
     setPaymentMethod,
     bookingComplete,
+    confirmedBookingId,
+    confirmedPrice,
     loading,
     rulesLoading,
     error,
@@ -42,6 +44,7 @@ export function BookingProcess() {
     basePrice: parking.base_price_per_hour,
     initialStartDate: parking.initialStartDate,
     initialEndDate: parking.initialEndDate,
+    availabilitySchedule: parking.availability_schedule ?? null,
   });
 
   if (rulesLoading) return <AnimatedLoader message="Calculando precios dinámicos..." />;
@@ -51,7 +54,8 @@ export function BookingProcess() {
       <BookingSuccess
         parking={parking}
         bookingDates={bookingDates}
-        totalPrice={estimation?.total_price || 0}
+        totalPrice={confirmedPrice ?? estimation?.total_price ?? 0}
+        bookingId={confirmedBookingId ?? undefined}
       />
     );
   }

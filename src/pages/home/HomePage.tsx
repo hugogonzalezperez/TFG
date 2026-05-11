@@ -239,7 +239,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
 
       {/* ── 1. HERO ── full viewport, header is fixed and floats above ── */}
       <section className={`relative flex flex-col overflow-hidden ${isNative() ? 'min-h-[80vh]' : 'min-h-[100svh]'}`}>
@@ -279,7 +279,7 @@ export default function Home() {
           </p>
 
           {/* Search Card */}
-          <Card className="w-full max-w-5xl p-1 md:p-2 shadow-2xl rounded-2xl md:rounded-3xl border-0 bg-white/95 backdrop-blur-xl">
+          <Card className="w-full max-w-5xl p-1 md:p-2 shadow-2xl rounded-2xl md:rounded-3xl border-0 bg-card/95 backdrop-blur-xl">
             <div className="p-5 md:p-8 lg:p-10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
                 {/* Ubicación */}
@@ -370,14 +370,14 @@ export default function Home() {
 
         {/* Wave */}
         <div className="relative z-10">
-          <svg viewBox="0 0 1440 60" className="w-full block -mb-[2px]" preserveAspectRatio="none">
-            <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="#ffffff" />
+          <svg viewBox="0 0 1440 60" className="w-full block -mb-[2px] text-background" preserveAspectRatio="none">
+            <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="currentColor" />
           </svg>
         </div>
       </section>
 
       {/* ── 2. ZONAS POPULARES — v0 style ── */}
-      <section className="py-14 md:py-20 bg-white">
+      <section className="py-14 md:py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {/* Header row */}
           <div className="flex items-end justify-between mb-8">
@@ -413,7 +413,7 @@ export default function Home() {
             {ZONES.map((zone) => (
               <div
                 key={zone.id}
-                className="flex-shrink-0 w-64 md:w-72 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group snap-start"
+                className="flex-shrink-0 w-64 md:w-72 bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group snap-start"
                 onClick={() => navigateToZone(zone.name)}
               >
                 {/* Image */}
@@ -488,11 +488,9 @@ export default function Home() {
       {/* ── 3. ¿POR QUÉ PARKY? ── */}
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="max-w-xl mb-12">
+          <div className="max-w-3xl mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight leading-tight">
-              Aparcar no debería ser
-              <br />
-              <span className="text-muted-foreground font-medium">una aventura.</span>
+              Aparcar no debería ser <span className="text-muted-foreground font-medium">una aventura.</span>
             </h2>
           </div>
 
@@ -500,7 +498,7 @@ export default function Home() {
             {/* Benefits 2×2 */}
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {BENEFITS.map((b) => (
-                <div key={b.title} className="p-6 bg-white rounded-2xl border border-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div key={b.title} className="p-6 bg-card rounded-2xl border border-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-primary text-primary-foreground">
                     {b.icon}
                   </div>
@@ -516,7 +514,7 @@ export default function Home() {
 
             {/* Comparison table */}
             <div className="lg:col-span-2">
-              <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
+              <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
                 <div className="grid grid-cols-3 px-5 py-4 bg-primary text-primary-foreground">
                   <div className="text-xs font-semibold">Características</div>
                   <div className="text-center text-xs font-bold">Parky ✓</div>
@@ -530,12 +528,12 @@ export default function Home() {
                   >
                     <span className="text-xs font-medium text-foreground pr-3 leading-snug">{row.feature}</span>
                     <div className="flex justify-center">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.parky ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.parky ? 'bg-green-500/15 text-green-500 dark:bg-green-500/20 dark:text-green-400' : 'bg-red-500/15 text-red-500 dark:bg-red-500/20 dark:text-red-400'}`}>
                         {row.parky ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <X className="w-3.5 h-3.5" strokeWidth={3} />}
                       </div>
                     </div>
                     <div className="flex justify-center">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.traditional ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${row.traditional ? 'bg-green-500/15 text-green-500 dark:bg-green-500/20 dark:text-green-400' : 'bg-red-500/15 text-red-500 dark:bg-red-500/20 dark:text-red-400'}`}>
                         {row.traditional ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <X className="w-3.5 h-3.5" strokeWidth={3} />}
                       </div>
                     </div>
@@ -557,7 +555,7 @@ export default function Home() {
       </section>
 
       {/* ── 4. OPINIONES ── */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-end justify-between mb-8">
             <div>
@@ -579,7 +577,7 @@ export default function Home() {
             {REVIEWS.map((review) => (
               <div
                 key={review.id}
-                className="p-5 flex-shrink-0 w-72 md:w-80 bg-white border border-border rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 snap-start"
+                className="p-5 flex-shrink-0 w-72 md:w-80 bg-card border border-border rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 snap-start"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -686,7 +684,7 @@ export default function Home() {
                 ¡Popular!
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-2xl">
+              <div className="bg-card rounded-2xl p-6 shadow-2xl">
                 <h3 className="font-bold text-foreground text-lg mb-1">Calcula tus ganancias</h3>
                 <p className="text-sm text-muted-foreground mb-5">Estimación basada en una plaza en zona céntrica</p>
 

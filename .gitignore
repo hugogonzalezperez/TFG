@@ -45,3 +45,10 @@ supabase/
 
 #playwright
 .playwright-mcp/
+# E2E auth states and fixtures
+e2e/.auth/
+e2e/.fixtures/
+e2e-report/
+e2e/
+test-results/
+playwright.config.ts

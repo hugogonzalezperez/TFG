@@ -43,9 +43,9 @@ export function GarageCard({
       >
         <div className="flex gap-3">
           <div className="w-14 h-14 bg-muted rounded-lg flex-shrink-0 overflow-hidden relative">
-            {garage.image || garage.spots?.[0]?.image ? (
+            {garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400' ? (
               <img
-                src={garage.image || garage.spots?.[0]?.image}
+                src={garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
                 alt={garage.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -95,9 +95,9 @@ export function GarageCard({
       >
         <div className="flex gap-3">
           <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
-            {garage.image || garage.spots?.[0]?.image ? (
+            {garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400' ? (
               <img
-                src={garage.image || garage.spots?.[0]?.image}
+                src={garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
                 alt={garage.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -140,9 +140,9 @@ export function GarageCard({
       <div className="flex flex-row gap-3 sm:gap-4 h-auto min-w-0">
         {/* Imagen con tamaño fijo y responsivo */}
         <div className="w-24 h-24 sm:w-36 sm:h-36 bg-muted rounded-xl flex items-center justify-center text-muted-foreground overflow-hidden flex-shrink-0 relative">
-          {garage.image || garage.spots?.[0]?.image ? (
+          {garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400' ? (
             <img
-              src={garage.image || garage.spots?.[0]?.image}
+              src={garage.image || garage.spots?.[0]?.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
               alt={garage.name}
               className="w-full h-full object-cover"
               loading="lazy"

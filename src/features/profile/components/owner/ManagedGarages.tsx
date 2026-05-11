@@ -105,7 +105,8 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
       {garages.map((garage) => {
         const garageImage = garage.images?.[0] ||
           garage.garage_images?.find((img: any) => img.is_main)?.image_url ||
-          garage.garage_images?.[0]?.image_url || null;
+          garage.garage_images?.[0]?.image_url ||
+          'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400';
 
         return (
           <Card key={garage.id} className="overflow-hidden border border-border/50">
@@ -156,7 +157,7 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                     {garage.parking_spots?.length || 0} plazas
                   </Badge>
                   <Button
-                    variant="primary"
+                    variant="outline"
                     size="sm"
                     className="gap-1.5 h-8 md:h-9 text-[10px] md:text-xs font-bold px-2 md:px-4 border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-primary"
                     onClick={() => setSelectedGarageForSpot(garage)}
@@ -193,10 +194,13 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
               {garage.parking_spots && garage.parking_spots.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {garage.parking_spots.map((spot: any) => {
+                    const realGarageImage = garage.images?.[0] ||
+                      garage.garage_images?.find((img: any) => img.is_main)?.image_url ||
+                      garage.garage_images?.[0]?.image_url;
                     const spotImage = spot.images?.[0] ||
                       spot.parking_spot_images?.[0]?.image_url ||
-                      garageImage ||
-                      null;
+                      realGarageImage ||
+                      'https://images.unsplash.com/photo-1590674899484-d5640e854abe?q=80&w=400';
 
                     return (
                       <div

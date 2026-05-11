@@ -328,7 +328,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
               <TabsTrigger
                 value="info"
                 className="flex-1 h-full rounded-lg text-sm font-medium transition-all
-                  text-muted-foreground hover:text-foreground hover:bg-background/60
+                  text-foreground hover:text-foreground hover:bg-accent
                   data-[state=active]:bg-primary data-[state=active]:text-primary-foreground
                   data-[state=active]:shadow-sm"
               >
@@ -337,7 +337,7 @@ export function EditGarageModal({ garage, spot, isOpen, onClose, onSuccess }: Ed
               <TabsTrigger
                 value="horario"
                 className="flex-1 h-full rounded-lg text-sm font-medium transition-all
-                  text-muted-foreground hover:text-foreground hover:bg-background/60
+                  text-foreground hover:bg-accent
                   data-[state=active]:bg-primary data-[state=active]:text-primary-foreground
                   data-[state=active]:shadow-sm"
               >

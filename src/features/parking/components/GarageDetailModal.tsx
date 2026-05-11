@@ -9,7 +9,7 @@ import {
 } from '../../../ui/drawer';
 import { Button } from '../../../ui/button';
 import { Badge } from '../../../ui/badge';
-import { MapPin, Euro, Car, ArrowRight } from 'lucide-react';
+import { MapPin, Euro, ArrowRight } from 'lucide-react';
 import { cn } from '../../../shared/lib/cn';
 import { useIsMobile } from '../../../shared/hooks/use-mobile';
 
@@ -69,17 +69,11 @@ export function GarageDetailModal({
 
         {/* Imagen real del garaje o fallback */}
         <div className="absolute inset-0">
-          {garage.image ? (
-            <img
-              src={garage.image}
-              alt={garage.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-primary/5">
-              <Car className="w-12 h-12 opacity-20" />
-            </div>
-          )}
+          <img
+            src={garage.image || 'https://images.unsplash.com/photo-1619335680796-54f13b88c6ba?q=80&w=400'}
+            alt={garage.name}
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <div className="absolute bottom-4 left-6 z-20">

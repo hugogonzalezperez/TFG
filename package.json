@@ -90,6 +90,10 @@
             "cap:live": "npx cap run android --livereload --external",
             "docs:build": "cd Docs && latexmk -pdf memtfg.tex",
             "docs:watch": "cd Docs && latexmk -pvc -pdf memtfg.tex",
-            "docs:clean": "cd Docs && latexmk -c"
+            "docs:clean": "cd Docs && latexmk -c",
+      "test:e2e": "playwright test",
+      "test:e2e:ui": "playwright test --ui",
+      "test:e2e:headed": "playwright test --headed",
+      "test:e2e:report": "playwright show-report e2e-report"
       }
 }

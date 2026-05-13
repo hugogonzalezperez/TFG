@@ -126,13 +126,15 @@ export function OwnerProfile() {
 
             <div className="overflow-x-auto scrollbar-hide py-1">
               <TabsList className="bg-card border border-border p-1 gap-1 h-auto shadow-md rounded-2xl flex-nowrap w-max sm:w-auto mx-auto">
-                <TabsTrigger
-                  value="dashboard"
-                  className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
-                >
-                  <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" />
-                  Resumen
-                </TabsTrigger>
+                {(garages.length > 0 || garagesLoading) && (
+                  <TabsTrigger
+                    value="dashboard"
+                    className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
+                  >
+                    <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" />
+                    Resumen
+                  </TabsTrigger>
+                )}
                 <TabsTrigger
                   value="garages"
                   className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
@@ -162,13 +164,15 @@ export function OwnerProfile() {
             </div>
           </div>
 
-          <TabsContent value="dashboard" className="m-0 focus-visible:outline-none">
-            <OwnerDashboardTab
-              stats={ownerStats}
-              garages={garages}
-              bookings={bookings}
-            />
-          </TabsContent>
+          {(garages.length > 0 || garagesLoading) && (
+            <TabsContent value="dashboard" className="m-0 focus-visible:outline-none">
+              <OwnerDashboardTab
+                stats={ownerStats}
+                garages={garages}
+                bookings={bookings}
+              />
+            </TabsContent>
+          )}
 
           <TabsContent value="garages" className="m-0 focus-visible:outline-none">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">

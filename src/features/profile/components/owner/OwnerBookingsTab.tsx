@@ -1,7 +1,8 @@
-import { Calendar, Clock, Euro, Mail, MessageSquare, Trash2, MapPin, Car } from 'lucide-react';
+import { Calendar, Clock, Euro, Mail, MessageSquare, Trash2, MapPin, Car, ExternalLink } from 'lucide-react';
 import { Card, Button, Avatar, AvatarImage, AvatarFallback, Badge } from '../../../../ui';
 import { cn } from '../../../../shared/lib/cn';
 import { TabSkeletonLoader } from '../shared/ProfileSkeletonLoaders';
+import { useNavigate } from 'react-router-dom';
 
 interface OwnerBookingsTabProps {
   bookings: any[];
@@ -10,6 +11,7 @@ interface OwnerBookingsTabProps {
 }
 
 const BookingCard = ({ booking, onCancel }: { booking: any, onCancel?: (id: string) => void }) => {
+  const navigate = useNavigate();
   // Database status mapping - Strictly following user requirement
   // confirmed -> "Confirmada" (Blue)
   // active -> "Activa ahora" (Green)
@@ -79,13 +81,17 @@ const BookingCard = ({ booking, onCancel }: { booking: any, onCancel?: (id: stri
 
         {/* Row 2/Col 2: Parking & Vehicle */}
         <div className="grid grid-cols-2 md:block gap-3 md:space-y-2">
-          <div className="flex items-center gap-2 bg-muted/40 px-2.5 py-1.5 rounded-lg border border-border/50 col-span-2 md:col-span-1">
+          <button
+            onClick={() => booking.parking_spot_id && navigate(`/parking/${booking.parking_spot_id}`)}
+            className="flex items-center gap-2 bg-muted/40 px-2.5 py-1.5 rounded-lg border border-border/50 col-span-2 md:col-span-1 hover:border-primary/40 hover:bg-muted/60 transition-colors cursor-pointer group/nav w-full text-left"
+          >
             <MapPin className="h-5 w-5 md:h-6 md:w-6 text-primary shrink-0" />
-            <div className="flex flex-col min-w-0">
-              <span className="font-bold text-[13px] md:text-[14px] leading-none truncate">{booking.spot?.garage?.name}</span>
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="font-bold text-[13px] md:text-[14px] leading-none truncate group-hover/nav:text-primary transition-colors">{booking.spot?.garage?.name}</span>
               <span className="text-[11px] md:text-[12px] text-primary/80 font-mono mt-0.5">Plaza {booking.spot?.spot_number}</span>
             </div>
-          </div>
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover/nav:opacity-60 transition-opacity shrink-0" />
+          </button>
           <div className="flex items-center gap-2 px-1 md:px-3.5 mt-1 md:mt-0">
             <Car className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0" />
             <span className="text-[10px] md:text-[11px] font-mono font-bold text-background bg-foreground px-2 md:px-3 py-0.5 rounded border border-border/50">

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Button, Input } from '../../../ui';
+import { Button, DatePicker, TimePicker } from '../../../ui';
 import { RangeSlider } from '../../../ui/RangeSlider';
 import { ChevronDown } from 'lucide-react';
 import { useFilters } from '../context/FilterContext';
+import { toLocalDateStr, getMinTimeForDate, laterTime, addOneMinute } from '@/shared/lib/time-utils';
 
 export function FilterSidebar() {
   const { filters, toggleType, setAvailability, setPriceRange, setDateTimeFilters, resetFilters } = useFilters();
@@ -168,63 +169,72 @@ export function FilterSidebar() {
           </button>
           {expandedSections.datetime && (
             <div className="space-y-3 ml-2 pt-3">
+              {/* Entrada */}
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium block">Inicio</label>
-                <Input
-                  type="date"
-                  value={filters.startDate}
-                  onChange={(e) => setDateTimeFilters({
-                    startDate: e.target.value,
-                    startTime: filters.startTime,
-                    endDate: filters.endDate,
-                    endTime: filters.endTime
-                  })}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="h-8 text-xs"
-                />
+                <label className="text-xs text-muted-foreground font-medium block">Entrada</label>
+                <div className="flex gap-1.5">
+                  <div className="flex-[3] min-w-0">
+                    <DatePicker
+                      date={filters.startDate ? new Date(filters.startDate) : undefined}
+                      onChange={(date) => {
+                        const val = date ? toLocalDateStr(date) : '';
+                        const endDate = (date && filters.endDate && new Date(filters.endDate) < date)
+                          ? val
+                          : filters.endDate;
+                        setDateTimeFilters({ startDate: val, startTime: filters.startTime, endDate, endTime: filters.endTime });
+                      }}
+                      minDate={new Date()}
+                      placeholder="Fecha"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div className="flex-[2] min-w-0">
+                    <TimePicker
+                      value={filters.startTime}
+                      onChange={(val) => {
+                        const sameDay = filters.startDate && filters.startDate === filters.endDate;
+                        const endTime = sameDay && filters.endTime && filters.endTime <= val ? '' : filters.endTime;
+                        setDateTimeFilters({ startDate: filters.startDate, startTime: val, endDate: filters.endDate, endTime });
+                      }}
+                      minTime={getMinTimeForDate(filters.startDate || undefined)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </div>
               </div>
+
+              {/* Salida */}
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium block">Hora inicio</label>
-                <Input
-                  type="time"
-                  value={filters.startTime}
-                  onChange={(e) => setDateTimeFilters({
-                    startDate: filters.startDate,
-                    startTime: e.target.value,
-                    endDate: filters.endDate,
-                    endTime: filters.endTime
-                  })}
-                  className="h-8 text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium block">Fin</label>
-                <Input
-                  type="date"
-                  value={filters.endDate}
-                  onChange={(e) => setDateTimeFilters({
-                    startDate: filters.startDate,
-                    startTime: filters.startTime,
-                    endDate: e.target.value,
-                    endTime: filters.endTime
-                  })}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="h-8 text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium block">Hora fin</label>
-                <Input
-                  type="time"
-                  value={filters.endTime}
-                  onChange={(e) => setDateTimeFilters({
-                    startDate: filters.startDate,
-                    startTime: filters.startTime,
-                    endDate: filters.endDate,
-                    endTime: e.target.value
-                  })}
-                  className="h-8 text-xs"
-                />
+                <label className="text-xs text-muted-foreground font-medium block">Salida</label>
+                <div className="flex gap-1.5">
+                  <div className="flex-[3] min-w-0">
+                    <DatePicker
+                      date={filters.endDate ? new Date(filters.endDate) : undefined}
+                      onChange={(date) => {
+                        const val = date ? toLocalDateStr(date) : '';
+                        const sameDay = val && val === filters.startDate;
+                        const endTime = sameDay && filters.endTime && filters.endTime <= filters.startTime ? '' : filters.endTime;
+                        setDateTimeFilters({ startDate: filters.startDate, startTime: filters.startTime, endDate: val, endTime });
+                      }}
+                      minDate={filters.startDate ? new Date(filters.startDate) : new Date()}
+                      placeholder="Fecha"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div className="flex-[2] min-w-0">
+                    <TimePicker
+                      value={filters.endTime}
+                      onChange={(val) => setDateTimeFilters({ startDate: filters.startDate, startTime: filters.startTime, endDate: filters.endDate, endTime: val })}
+                      minTime={laterTime(
+                        getMinTimeForDate(filters.endDate || undefined),
+                        filters.startDate && filters.endDate && filters.startDate === filters.endDate
+                          ? addOneMinute(filters.startTime)
+                          : undefined,
+                      )}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           )}

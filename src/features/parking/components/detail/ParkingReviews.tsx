@@ -52,7 +52,7 @@ export function ParkingReviews({ rating, reviewsCount, reviews = [] }: ParkingRe
                         />
                       ))}
                     </div>
-                    <p className="text-muted-foreground">{review.comment}</p>
+                    <p className="text-muted-foreground">{review.comment.replace(/<[^>]*>/g, '')}</p>
                   </div>
                 </div>
               </Card>

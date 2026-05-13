@@ -20,8 +20,8 @@ export const bookingDal = {
   },
 
   async checkAvailability(spotId: string, startTime: Date, endTime: Date): Promise<boolean> {
-    // Margen de 30 minutos para limpieza entre reservas
-    const BUFFER_MS = 30 * 60 * 1000;
+    // Margen de 15 minutos para limpieza entre reservas
+    const BUFFER_MS = 15 * 60 * 1000;
     const safeStart = new Date(startTime.getTime() - BUFFER_MS).toISOString();
     const safeEnd   = new Date(endTime.getTime()   + BUFFER_MS).toISOString();
 
@@ -51,6 +51,20 @@ export const bookingDal = {
       .is('deleted_at', null)
       .order('start_time', { ascending: true });
 
+    if (error) throw error;
+    return data || [];
+  },
+
+  async fetchSpotBookingsRich(spotId: string) {
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('id, parking_spot_id, renter_id, start_time, end_time, total_hours, total_price, status, renter:users!bookings_renter_id_fkey(id, name, avatar_url)')
+      .eq('parking_spot_id', spotId)
+      .in('status', ['confirmed', 'active', 'pending'])
+      .gte('end_time', now)
+      .is('deleted_at', null)
+      .order('start_time', { ascending: true });
     if (error) throw error;
     return data || [];
   },

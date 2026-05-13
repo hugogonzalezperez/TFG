@@ -29,12 +29,10 @@ export function DatePicker({ date, onChange, placeholder = "Seleccionar fecha", 
             className
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
-          {date ? (
-            `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`
-          ) : (
-            <span>{placeholder}</span>
-          )}
+          <CalendarIcon className="mr-2 h-4 w-4 text-primary shrink-0" />
+          {date
+            ? `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`
+            : placeholder}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

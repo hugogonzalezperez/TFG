@@ -21,6 +21,7 @@ export * from './select';
 export * from './popover';
 export * from './calendar';
 export * from './date-picker';
+export * from './time-picker';
 export * from './skeleton';
 export * from './empty-state';
 export * from './garage-card-skeleton';

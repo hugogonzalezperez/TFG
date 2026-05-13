@@ -1,18 +1,14 @@
 import { logger } from '../../../shared/lib/logger';
-import { Parking, ParkingFilter } from '../types/parking.types';
+import { Parking, ParkingFilter, DEFAULT_AVAILABILITY_SCHEDULE } from '../types/parking.types';
+import { validateSchedule } from './schedule.utils';
 
-/**
- * Filtra un array de aparcamientos basado en los filtros activos
- */
 export function filterParkings(parkings: Parking[], filters: ParkingFilter): Parking[] {
   return parkings.filter((parking) => {
-    // Filtro por tipo: si hay tipos seleccionados, solo mostrar esos
-    if (filters.types.size > 0 && parking.type && !filters.types.has(parking.type)) {
-      return false;
-    }
+    // Fix 3: always hide inactive spots regardless of availability filter
+    if (!parking.is_active) return false;
 
-    // Filtro por disponibilidad
-    if (filters.availability === 'available' && !parking.is_active) {
+    // Filtro por tipo
+    if (filters.types.size > 0 && parking.type && !filters.types.has(parking.type)) {
       return false;
     }
 
@@ -28,48 +24,41 @@ export function filterParkings(parkings: Parking[], filters: ParkingFilter): Par
         parking.name.toLowerCase().includes(query) ||
         parking.address.toLowerCase().includes(query) ||
         parking.city.toLowerCase().includes(query);
-
-      if (!matchesSearch) {
-        return false;
-      }
+      if (!matchesSearch) return false;
     }
 
     // Filtro por disponibilidad real (Fechas y horas)
     if (filters.startDate && filters.startTime && filters.endDate && filters.endTime) {
       try {
-        // Normalizar entrada de búsqueda
-        // Agregamos :00 para asegurar formato HH:mm:ss y evitar problemas en algunos parsers
-        const searchStartStr = `${filters.startDate.split('T')[0]}T${filters.startTime}${filters.startTime.length === 5 ? ':00' : ''}`;
-        const searchEndStr = `${filters.endDate.split('T')[0]}T${filters.endTime}${filters.endTime.length === 5 ? ':00' : ''}`;
+        const startDatePart = filters.startDate.split('T')[0];
+        const endDatePart   = filters.endDate.split('T')[0];
+        const startTimePart = filters.startTime.length === 5 ? `${filters.startTime}:00` : filters.startTime;
+        const endTimePart   = filters.endTime.length === 5   ? `${filters.endTime}:00`   : filters.endTime;
 
-        const searchStart = new Date(searchStartStr).getTime();
-        const searchEnd = new Date(searchEndStr).getTime();
+        const searchStart = new Date(`${startDatePart}T${startTimePart}`);
+        const searchEnd   = new Date(`${endDatePart}T${endTimePart}`);
 
-        if (isNaN(searchStart) || isNaN(searchEnd)) return true;
+        if (isNaN(searchStart.getTime()) || isNaN(searchEnd.getTime())) return true;
 
-        // Margen de seguridad de 30 minutos (0.5 horas)
-        const BUFFER_MS = 30 * 60 * 1000;
-        const safeStart = searchStart - BUFFER_MS;
-        const safeEnd = searchEnd + BUFFER_MS;
+        // Apply schedule filter — NULL falls back to DEFAULT_AVAILABILITY_SCHEDULE (Mon-Fri 08-20, Sat-Sun off)
+        const schedule = parking.availability_schedule ?? DEFAULT_AVAILABILITY_SCHEDULE;
+        const scheduleError = validateSchedule(searchStart, searchEnd, schedule);
+        if (scheduleError) return false;
 
-        // Comprobar colisiones con reservas existentes
+        // Check booking overlaps (with 15-min buffer)
+        const BUFFER_MS  = 15 * 60 * 1000;
+        const safeStart  = searchStart.getTime() - BUFFER_MS;
+        const safeEnd    = searchEnd.getTime()   + BUFFER_MS;
+
         if (Array.isArray(parking.bookings)) {
           const hasConflict = parking.bookings.some(booking => {
             if (!booking.start_time || !booking.end_time) return false;
-
-            // Supabase devuelve ISO strings. new Date() los maneja bien.
             const bStart = new Date(booking.start_time).getTime();
-            const bEnd = new Date(booking.end_time).getTime();
-
+            const bEnd   = new Date(booking.end_time).getTime();
             if (isNaN(bStart) || isNaN(bEnd)) return false;
-
-            // Lógica de solapamiento: (A_start < B_end) && (A_end > B_start)
-            return (safeStart < bEnd) && (safeEnd > bStart);
+            return safeStart < bEnd && safeEnd > bStart;
           });
-
-          if (hasConflict) {
-            return false;
-          }
+          if (hasConflict) return false;
         }
       } catch (e) {
         logger.error('Error filtering by availability:', e);
@@ -80,23 +69,14 @@ export function filterParkings(parkings: Parking[], filters: ParkingFilter): Par
   });
 }
 
-/**
- * Ordena aparcamientos por distancia (por defecto)
- */
 export function sortParkingsByDistance(parkings: Parking[]): Parking[] {
   return [...parkings].sort((a, b) => (a.distance || 0) - (b.distance || 0));
 }
 
-/**
- * Ordena aparcamientos por rating
- */
 export function sortParkingsByRating(parkings: Parking[]): Parking[] {
   return [...parkings].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 }
 
-/**
- * Ordena aparcamientos por precio (ascendente)
- */
 export function sortParkingsByPrice(parkings: Parking[]): Parking[] {
   return [...parkings].sort((a, b) => a.base_price_per_hour - b.base_price_per_hour);
 }

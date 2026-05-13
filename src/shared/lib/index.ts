@@ -7,3 +7,4 @@ export { supabase, getCurrentUser, hasActiveSession, onAuthStateChange } from '.
 
 // Utilities
 export { cn } from './cn';
+export { toLocalDateStr, generateTimeOptions, getMinTimeForDate, isTimePast, laterTime, addOneMinute } from './time-utils';

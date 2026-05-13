@@ -60,7 +60,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'Fechas inválidas' }, 400);
   }
 
-  const totalHours = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60));
+  const totalHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
   const dayOfWeek = start.getDay();
   const pad = (n: number) => String(n).padStart(2, '0');
   const startTimeStr = `${pad(start.getHours())}:${pad(start.getMinutes())}:${pad(start.getSeconds())}`;

@@ -12,6 +12,16 @@ export type AvailabilitySchedule = {
   [dow in '0' | '1' | '2' | '3' | '4' | '5' | '6']: DaySchedule;
 };
 
+export const DEFAULT_AVAILABILITY_SCHEDULE: AvailabilitySchedule = {
+  '0': { enabled: false, open: '08:00', close: '20:00' },
+  '1': { enabled: true,  open: '08:00', close: '20:00' },
+  '2': { enabled: true,  open: '08:00', close: '20:00' },
+  '3': { enabled: true,  open: '08:00', close: '20:00' },
+  '4': { enabled: true,  open: '08:00', close: '20:00' },
+  '5': { enabled: true,  open: '08:00', close: '20:00' },
+  '6': { enabled: false, open: '08:00', close: '20:00' },
+};
+
 export interface Garage {
   id: string;
   name: string;

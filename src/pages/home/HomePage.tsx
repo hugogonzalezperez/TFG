@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { Input, Card, Button, DatePicker, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../ui';
+import { useState, useEffect, useRef } from 'react';
+import { Input, Card, Button, DatePicker, TimePicker } from '../../ui';
 import {
   Car, MapPin, Calendar, Clock, Search,
   Star, Shield, Check, X, BadgeCheck, ArrowRight, ChevronLeft, ChevronRight,
@@ -11,6 +11,7 @@ import { useAuth } from '../../features/auth';
 import { HomeSkeleton } from '../../shared/components/loaders';
 import { isNative } from '@/mobile';
 import { useNavigate } from 'react-router-dom';
+import { toLocalDateStr, getMinTimeForDate, laterTime, addOneMinute } from '@/shared/lib/time-utils';
 
 const ZONES = [
   {
@@ -188,22 +189,12 @@ export default function Home() {
   }, [resetFilters]);
 
   const [searchData, setSearchData] = useState({
-    location: 'Santa Cruz de Tenerife',
+    location: '',
     startTime: '',
     endTime: '',
   });
   const [entryDate, setEntryDate] = useState<Date | undefined>(undefined);
   const [exitDate, setExitDate] = useState<Date | undefined>(undefined);
-
-  const timeOptions = useMemo(() => {
-    const options = [];
-    for (let h = 0; h < 24; h++) {
-      for (let m = 0; m < 60; m += 15) {
-        options.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
-      }
-    }
-    return options;
-  }, []);
 
   if (loading) {
     return <HomeSkeleton />;
@@ -212,20 +203,26 @@ export default function Home() {
   const isSearchDisabled = !searchData.location.trim();
 
   const handleSearch = () => {
-    const datePart = entryDate ? entryDate.toISOString().split('T')[0] : '';
-    const exitDatePart = exitDate ? exitDate.toISOString().split('T')[0] : datePart;
-    if (datePart && searchData.startTime && searchData.endTime) {
-      setDateTimeFilters({
-        startDate: datePart,
-        startTime: searchData.startTime,
-        endDate: exitDatePart,
-        endTime: searchData.endTime,
-      });
+    const datePart = entryDate ? toLocalDateStr(entryDate) : '';
+    const exitDatePart = exitDate ? toLocalDateStr(exitDate) : datePart;
+
+    // Sanitize: drop any time that is now in the past
+    const entryMin = getMinTimeForDate(entryDate ?? new Date());
+    const startTime = entryMin && searchData.startTime < entryMin ? '' : searchData.startTime;
+    const exitMin = getMinTimeForDate(exitDate ?? new Date());
+    let endTime = exitMin && searchData.endTime < exitMin ? '' : searchData.endTime;
+    // Drop exit time if same day and exit ≤ entry
+    if (endTime && startTime && datePart === exitDatePart && endTime <= startTime) {
+      endTime = '';
+    }
+
+    if (datePart && startTime && endTime) {
+      setDateTimeFilters({ startDate: datePart, startTime, endDate: exitDatePart, endTime });
     } else {
       setDateTimeFilters({ startDate: '', startTime: '', endDate: '', endTime: '' });
     }
     navigate('/map', {
-      state: { ...searchData, startDate: datePart, endDate: exitDatePart },
+      state: { ...searchData, startTime, endTime, startDate: datePart, endDate: exitDatePart },
     });
   };
 
@@ -237,6 +234,17 @@ export default function Home() {
   const scrollZones = (dir: 'left' | 'right') => {
     zonesRef.current?.scrollBy({ left: dir === 'left' ? -296 : 296, behavior: 'smooth' });
   };
+
+  // Derived minTimes for the two time pickers
+  const entryMinTime = getMinTimeForDate(entryDate ?? new Date());
+  // When no date is selected both default to today → treat as same day
+  const entryDateStr = entryDate ? toLocalDateStr(entryDate) : toLocalDateStr(new Date());
+  const exitDateStr = exitDate ? toLocalDateStr(exitDate) : toLocalDateStr(new Date());
+  const exitSameDayAsEntry = entryDateStr === exitDateStr;
+  const exitMinTime = laterTime(
+    getMinTimeForDate(exitDate ?? new Date()),
+    exitSameDayAsEntry ? addOneMinute(searchData.startTime) : undefined,
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -284,21 +292,21 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
                 {/* Ubicación */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
+                  <label className="text-sm font-semibold flex items-center text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5 mr-2 text-primary" />
                     Ubicación
                   </label>
                   <Input
-                    placeholder="¿Dónde aparcar?"
+                    placeholder="¿Dónde vas a aparcar?"
                     value={searchData.location}
                     onChange={(e) => setSearchData({ ...searchData, location: e.target.value })}
-                    className="h-14 bg-muted/50 border-none rounded-xl text-base px-4"
+                    className="h-14 bg-muted/50 border border-border rounded-xl text-base font-medium hover:bg-foreground/5 placeholder:text-foreground"
                   />
                 </div>
 
                 {/* Entrada */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
+                  <label className="text-sm font-semibold flex items-center text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5 mr-2 text-primary" />
                     Entrada
                   </label>
@@ -311,26 +319,37 @@ export default function Home() {
                           if (date && (!exitDate || exitDate < date)) {
                             setExitDate(date);
                           }
+                          // Clear startTime if it became past after date change
+                          if (searchData.startTime) {
+                            const minT = getMinTimeForDate(date ?? new Date());
+                            if (minT && searchData.startTime < minT) {
+                              setSearchData(p => ({ ...p, startTime: '' }));
+                            }
+                          }
                         }}
                         placeholder="Fecha entrada"
                         minDate={new Date()}
-                        className="h-14 bg-muted/50 border-none rounded-xl text-base"
+                        className="h-14 bg-muted/50 border border-border rounded-xl text-base font-medium text-foreground"
                       />
                     </div>
                     <div className="flex-[3]">
-                      <Select value={searchData.startTime} onValueChange={(val) => setSearchData(p => ({ ...p, startTime: val }))}>
-                        <SelectTrigger className="h-14 bg-muted/50 border-none rounded-xl text-base font-medium">
-                          <SelectValue placeholder="Hora" />
-                        </SelectTrigger>
-                        <SelectContent>{timeOptions.map(t => <SelectItem key={`si-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
-                      </Select>
+                      <TimePicker
+                        value={searchData.startTime}
+                        onChange={(val) => setSearchData(p => ({
+                          ...p,
+                          startTime: val,
+                          endTime: exitSameDayAsEntry && p.endTime && p.endTime <= val ? '' : p.endTime,
+                        }))}
+                        minTime={entryMinTime}
+                        className="h-14 bg-muted/50 rounded-xl text-base font-medium text-foreground"
+                      />
                     </div>
                   </div>
                 </div>
 
                 {/* Salida */}
                 <div className="space-y-1.5 md:space-y-2">
-                  <label className="text-xs md:text-sm font-semibold flex items-center text-muted-foreground">
+                  <label className="text-sm font-semibold flex items-center text-muted-foreground">
                     <Clock className="h-3.5 w-3.5 mr-2 text-primary" />
                     Salida
                   </label>
@@ -338,19 +357,28 @@ export default function Home() {
                     <div className="flex-[5]">
                       <DatePicker
                         date={exitDate}
-                        onChange={setExitDate}
+                        onChange={(date) => {
+                          setExitDate(date);
+                          // Clear endTime if it became past after date change
+                          if (searchData.endTime) {
+                            const minT = getMinTimeForDate(date ?? new Date());
+                            if (minT && searchData.endTime < minT) {
+                              setSearchData(p => ({ ...p, endTime: '' }));
+                            }
+                          }
+                        }}
                         placeholder="Fecha salida"
                         minDate={entryDate || new Date()}
-                        className="h-14 bg-muted/50 border-none rounded-xl text-base"
+                        className="h-14 bg-muted/50 border border-border rounded-xl text-base font-medium text-foreground"
                       />
                     </div>
                     <div className="flex-[3]">
-                      <Select value={searchData.endTime} onValueChange={(val) => setSearchData(p => ({ ...p, endTime: val }))}>
-                        <SelectTrigger className="h-14 bg-muted/50 border-none rounded-xl text-base font-medium">
-                          <SelectValue placeholder="Hora" />
-                        </SelectTrigger>
-                        <SelectContent>{timeOptions.map(t => <SelectItem key={`so-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
-                      </Select>
+                      <TimePicker
+                        value={searchData.endTime}
+                        onChange={(val) => setSearchData(p => ({ ...p, endTime: val }))}
+                        minTime={exitMinTime}
+                        className="h-14 bg-muted/50 rounded-xl text-base font-medium text-foreground"
+                      />
                     </div>
                   </div>
                 </div>

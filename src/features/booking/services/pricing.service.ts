@@ -14,7 +14,7 @@ export const pricingService = {
     endTime: Date,
     rules: PricingRule[]
   ): BookingEstimation {
-    const hours = Math.ceil((endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60));
+    const hours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
 
     // 1. Filtrar reglas activas que apliquen al momento de la reserva
     const dayOfWeek = startTime.getDay();

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   RangeSlider,
@@ -11,16 +11,13 @@ import {
   SheetHeader,
   SheetTitle,
   DatePicker,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
+  TimePicker,
 } from '../../../ui';
 import { useFilters } from '../context/FilterContext';
 import { ParkingFilter } from '../types/parking.types';
 import { useIsMobile } from '../../../shared/hooks/use-mobile';
 import { cn } from '../../../shared/lib/cn';
+import { getMinTimeForDate, laterTime, toLocalDateStr, addOneMinute } from '@/shared/lib/time-utils';
 
 interface FilterDrawerProps {
   isOpen: boolean;
@@ -30,14 +27,6 @@ interface FilterDrawerProps {
 export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
   const isMobile = useIsMobile();
   const { filters, setTypes, setAvailability, setPriceRange, setDateTimeFilters, resetFilters } = useFilters();
-
-  const timeOptions = useMemo(() => {
-    const opts = [];
-    for (let h = 0; h < 24; h++)
-      for (let m = 0; m < 60; m += 15)
-        opts.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
-    return opts;
-  }, []);
 
   // Estado temporal mientras el drawer está abierto
   const [tempFilters, setTempFilters] = useState<ParkingFilter>(filters);
@@ -57,11 +46,18 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
       setTypes(tempFilters.types);
       setAvailability(tempFilters.availability);
       setPriceRange(tempFilters.priceRange);
+      const sMin = getMinTimeForDate(tempFilters.startDate || undefined);
+      const startTime = sMin && tempFilters.startTime < sMin ? '' : tempFilters.startTime;
+      const sameDay = tempFilters.startDate && tempFilters.startDate === tempFilters.endDate;
+      const eMin = laterTime(
+        getMinTimeForDate(tempFilters.endDate || undefined),
+        sameDay ? startTime || undefined : undefined,
+      );
       setDateTimeFilters({
         startDate: tempFilters.startDate,
-        startTime: tempFilters.startTime,
+        startTime,
         endDate: tempFilters.endDate,
-        endTime: tempFilters.endTime,
+        endTime: eMin && tempFilters.endTime < eMin ? '' : tempFilters.endTime,
       });
     }
   }, [isOpen, hasChanged, tempFilters, setTypes, setAvailability, setPriceRange, setDateTimeFilters]);
@@ -96,13 +92,20 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
     setTypes(tempFilters.types);
     setAvailability(tempFilters.availability);
     setPriceRange(tempFilters.priceRange);
+    const sMin = getMinTimeForDate(tempFilters.startDate || undefined);
+    const startTime = sMin && tempFilters.startTime < sMin ? '' : tempFilters.startTime;
+    const sameDay = tempFilters.startDate && tempFilters.startDate === tempFilters.endDate;
+    const eMin = laterTime(
+      getMinTimeForDate(tempFilters.endDate || undefined),
+      sameDay ? startTime || undefined : undefined,
+    );
     setDateTimeFilters({
       startDate: tempFilters.startDate,
-      startTime: tempFilters.startTime,
+      startTime,
       endDate: tempFilters.endDate,
-      endTime: tempFilters.endTime,
+      endTime: eMin && tempFilters.endTime < eMin ? '' : tempFilters.endTime,
     });
-    setHasChanged(false); // Evitar que el useEffect de cierre lo vuelva a aplicar
+    setHasChanged(false);
     onClose();
   };
 
@@ -217,7 +220,7 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
                 <DatePicker
                   date={tempFilters.startDate ? new Date(tempFilters.startDate) : undefined}
                   onChange={(date) => {
-                    const val = date ? date.toISOString().split('T')[0] : '';
+                    const val = date ? toLocalDateStr(date) : '';
                     const updated = { ...tempFilters, startDate: val };
                     // Auto-sync exit date
                     if (date && tempFilters.endDate && new Date(tempFilters.endDate) < date) {
@@ -232,18 +235,17 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
                 />
               </div>
               <div className="flex-[2]">
-                <Select
+                <TimePicker
                   value={tempFilters.startTime}
-                  onValueChange={(val) => {
-                    setTempFilters({ ...tempFilters, startTime: val });
+                  onChange={(val) => {
+                    const sameDay = tempFilters.startDate && tempFilters.startDate === tempFilters.endDate;
+                    const endTime = sameDay && tempFilters.endTime && tempFilters.endTime <= val ? '' : tempFilters.endTime;
+                    setTempFilters({ ...tempFilters, startTime: val, endTime });
                     setHasChanged(true);
                   }}
-                >
-                  <SelectTrigger className="h-11 bg-muted/20 border-muted rounded-lg">
-                    <SelectValue placeholder="Hora" />
-                  </SelectTrigger>
-                  <SelectContent>{timeOptions.map(t => <SelectItem key={`sf-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
-                </Select>
+                  minTime={getMinTimeForDate(tempFilters.startDate || undefined)}
+                  className="h-11 bg-muted/20 border-muted rounded-lg"
+                />
               </div>
             </div>
           </div>
@@ -256,7 +258,10 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
                 <DatePicker
                   date={tempFilters.endDate ? new Date(tempFilters.endDate) : undefined}
                   onChange={(date) => {
-                    setTempFilters({ ...tempFilters, endDate: date ? date.toISOString().split('T')[0] : '' });
+                    const val = date ? toLocalDateStr(date) : '';
+                    const sameDay = val && val === tempFilters.startDate;
+                    const endTime = sameDay && tempFilters.endTime && tempFilters.endTime <= tempFilters.startTime ? '' : tempFilters.endTime;
+                    setTempFilters({ ...tempFilters, endDate: val, endTime });
                     setHasChanged(true);
                   }}
                   minDate={tempFilters.startDate ? new Date(tempFilters.startDate) : new Date()}
@@ -265,18 +270,17 @@ export function FilterDrawer({ isOpen, onClose }: FilterDrawerProps) {
                 />
               </div>
               <div className="flex-[2]">
-                <Select
+                <TimePicker
                   value={tempFilters.endTime}
-                  onValueChange={(val) => {
-                    setTempFilters({ ...tempFilters, endTime: val });
-                    setHasChanged(true);
-                  }}
-                >
-                  <SelectTrigger className="h-11 bg-muted/20 border-muted rounded-lg">
-                    <SelectValue placeholder="Hora" />
-                  </SelectTrigger>
-                  <SelectContent>{timeOptions.map(t => <SelectItem key={`ef-${t}`} value={t}>{t}</SelectItem>)}</SelectContent>
-                </Select>
+                  onChange={(val) => { setTempFilters({ ...tempFilters, endTime: val }); setHasChanged(true); }}
+                  minTime={laterTime(
+                    getMinTimeForDate(tempFilters.endDate || undefined),
+                    tempFilters.startDate && tempFilters.startDate === tempFilters.endDate
+                      ? addOneMinute(tempFilters.startTime)
+                      : undefined,
+                  )}
+                  className="h-11 bg-muted/20 border-muted rounded-lg"
+                />
               </div>
             </div>
           </div>

@@ -64,7 +64,7 @@ export function BookingSummary({ parking, estimation, bookingDates }: BookingSum
           <div className="flex-1">
             <p className="font-medium">Horario</p>
             <p className="text-muted-foreground">
-              {bookingDates.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {bookingDates.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} ({estimation?.hours}h)
+              {bookingDates.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {bookingDates.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} ({(estimation?.hours ?? 0).toFixed(2)}h)
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function BookingSummary({ parking, estimation, bookingDates }: BookingSum
       <div className="space-y-3 text-sm mb-4">
         <div className="flex justify-between">
           <span className="text-muted-foreground">
-            {parking.base_price_per_hour}€ x {estimation?.hours || 0} horas
+            {parking.base_price_per_hour}€ x {(estimation?.hours ?? 0).toFixed(2)} horas
           </span>
           <span>{(parking.base_price_per_hour * (estimation?.hours || 0)).toFixed(2)}€</span>
         </div>

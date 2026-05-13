@@ -1,9 +1,10 @@
 import { logger } from '../../../../shared/lib/logger';
-import { MapPin, Edit, Trash2, Plus, Building2, Car } from 'lucide-react';
+import { MapPin, Edit, Trash2, Plus, Building2, Car, ExternalLink } from 'lucide-react';
 import { Card, Badge, Button, Switch, ConfirmationDialog, EmptyState, GarageCardSkeleton } from '../../../../ui';
 import { parkingService } from '../../../parking/services/parking.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AddSpotToGarageModal } from './AddSpotToGarageModal';
 import { EditGarageModal } from './EditGarageModal';
@@ -17,6 +18,7 @@ interface ManagedGaragesProps {
 
 export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGaragesProps) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [selectedGarageForSpot, setSelectedGarageForSpot] = useState<any>(null);
   const [editingItem, setEditingItem] = useState<{ garage: any; spot?: any } | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
@@ -226,7 +228,13 @@ export function ManagedGarages({ garages, isLoading, onAddGarage }: ManagedGarag
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-0.5 sm:mb-1">
                               <div className="flex items-center gap-1.5 md:gap-2">
-                                <span className="font-bold text-[14px] md:text-base">Plaza {spot.spot_number}</span>
+                                <button
+                                  onClick={() => navigate(`/parking/${spot.id}`)}
+                                  className="font-bold text-[14px] md:text-base hover:text-primary transition-colors cursor-pointer flex items-center gap-1 group/link"
+                                >
+                                  Plaza {spot.spot_number}
+                                  <ExternalLink className="h-3 w-3 opacity-0 group-hover/link:opacity-60 transition-opacity" />
+                                </button>
                                 <SpotFavoritesUsers spotId={spot.id} />
                               </div>
                               <Switch

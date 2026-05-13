@@ -1,16 +1,12 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Clock, Shield, AlertTriangle, Star, CalendarX } from 'lucide-react';
 import { AvailabilitySchedule } from '../../types/parking.types';
 import { validateSchedule } from '../../utils/schedule.utils';
 import {
   Card,
   Button,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
   DatePicker,
+  TimePicker,
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -20,6 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { Parking } from '../../types/parking.types';
 import { useSpotBookings } from '../../../booking/hooks/useSpotBookings';
 import { useIsMobile } from '../../../../shared/hooks/use-mobile';
+import { getMinTimeForDate, laterTime, addOneMinute } from '@/shared/lib/time-utils';
+import { cn } from '@/shared/lib/cn';
 
 interface SearchDates {
   startDate: string;
@@ -58,6 +56,14 @@ function isTimeDisabled(
   return time <= day.open || time > day.close;
 }
 
+function getScheduleHours(dayStr: string, schedule: AvailabilitySchedule | null | undefined): string | null {
+  if (!schedule) return null;
+  const dow = new Date(dayStr).getDay().toString() as keyof AvailabilitySchedule;
+  const day = schedule[dow];
+  if (!day?.enabled) return null;
+  return `${day.open} – ${day.close}`;
+}
+
 export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -89,18 +95,7 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     return getLocalISOString(d);
   });
 
-  const timeOptions = useMemo(() => {
-    const options = [];
-    for (let h = 0; h < 24; h++) {
-      for (let m = 0; m < 60; m += 15) {
-        const hh = h.toString().padStart(2, '0');
-        const mm = m.toString().padStart(2, '0');
-        options.push(`${hh}:${mm}`);
-      }
-    }
-    return options;
-  }, []);
-
+  // schedule-only predicates — past restriction handled by TimePicker minTime prop
   const isEntryTimeDisabled = useCallback(
     (time: string) => isTimeDisabled(time, entryDate.split('T')[0], schedule, 'entry'),
     [entryDate, schedule],
@@ -144,7 +139,7 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     }
 
     // Check overlaps
-    const BUFFER_MS = 30 * 60 * 1000;
+    const BUFFER_MS = 15 * 60 * 1000;
     const safeStart = new Date(start.getTime() - BUFFER_MS);
     const safeEnd = new Date(end.getTime() + BUFFER_MS);
 
@@ -173,6 +168,52 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
 
   const [entryDay, entryTime] = entryDate.split('T');
   const [exitDay, exitTime] = exitDate.split('T');
+
+  // Human-readable explanation of why the current selection is blocked
+  const selectionWarning = (() => {
+    if (entryDayBlocked) return 'El parking no abre el día de entrada seleccionado.';
+    if (exitDayBlocked)  return 'El parking no abre el día de salida seleccionado.';
+    if (isEntryTimeDisabled(entryTime)) {
+      const hrs = getScheduleHours(entryDay, schedule);
+      return hrs
+        ? `Hora de entrada fuera del horario del parking (${hrs}).`
+        : 'Hora de entrada fuera del horario del parking.';
+    }
+    if (isExitTimeDisabled(exitTime)) {
+      const hrs = getScheduleHours(exitDay, schedule);
+      return hrs
+        ? `Hora de salida fuera del horario del parking (${hrs}).`
+        : 'Hora de salida fuera del horario del parking.';
+    }
+    const WARN_BUFFER = 15 * 60 * 1000;
+    const ws = new Date(entryDate).getTime() - WARN_BUFFER;
+    const we = new Date(exitDate).getTime()  + WARN_BUFFER;
+    const hasConflict = bookings.some((b: any) => {
+      const bStart = new Date(b.start_time).getTime();
+      const bEnd   = new Date(b.end_time).getTime();
+      return ws < bEnd && we > bStart;
+    });
+    if (hasConflict) return 'La plaza ya tiene una reserva en ese intervalo (margen de 15 min entre reservas).';
+    return null;
+  })();
+
+  // Disable button when any blocking condition is already detectable without submitting
+  const _start = new Date(entryDate);
+  const _end = new Date(exitDate);
+  const _now = new Date();
+  const _durationMs = _end.getTime() - _start.getTime();
+  const _BUFFER = 15 * 60 * 1000;
+  const _safeStart = new Date(_start.getTime() - _BUFFER);
+  const _safeEnd = new Date(_end.getTime() + _BUFFER);
+  const isBookingDisabled =
+    _start >= _end ||
+    _start < _now ||
+    _durationMs < 2 * 60 * 60 * 1000 ||
+    entryDayBlocked ||
+    exitDayBlocked ||
+    bookings.some((b: any) =>
+      new Date(b.start_time) < _safeEnd && new Date(b.end_time) > _safeStart,
+    );
 
   const BookingForm = (
     <div className="flex flex-col h-full">
@@ -203,14 +244,10 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
         </div>
       )}
 
-      {(entryDayBlocked || exitDayBlocked) && !errorMsg && (
+      {selectionWarning && !errorMsg && (
         <div role="alert" className="mb-4 p-3 rounded-lg flex items-center gap-2 text-sm bg-amber-50 text-amber-700 border border-amber-200">
           <CalendarX className="h-5 w-5 shrink-0" />
-          <span>
-            {entryDayBlocked
-              ? 'La plaza no está disponible el día de entrada seleccionado.'
-              : 'La plaza no está disponible el día de salida seleccionado.'}
-          </span>
+          <span>{selectionWarning}</span>
         </div>
       )}
 
@@ -243,28 +280,24 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
                 />
               </div>
               <div className="flex-[1] min-w-0">
-                <Select
+                <TimePicker
                   value={entryTime}
-                  onValueChange={(val) => {
+                  onChange={(val) => {
                     setEntryDate(`${entryDay}T${val}`);
+                    // Same day: if exit is now at or before new entry, advance exit to entry+2h
+                    if (entryDay === exitDay && exitTime <= val) {
+                      const [h, m] = val.split(':').map(Number);
+                      const advanced = h * 60 + m + 120;
+                      const nh = Math.min(Math.floor(advanced / 60), 23);
+                      const nm = advanced >= 24 * 60 ? 59 : advanced % 60;
+                      setExitDate(`${exitDay}T${String(nh).padStart(2, '0')}:${String(nm).padStart(2, '0')}`);
+                    }
                     setErrorMsg(null);
                   }}
-                >
-                  <SelectTrigger className="w-full h-10 md:h-12">
-                    <SelectValue placeholder="Hora" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeOptions.map(time => (
-                      <SelectItem
-                        key={`entry-${time}`}
-                        value={time}
-                        disabled={isEntryTimeDisabled(time)}
-                      >
-                        {time}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  minTime={getMinTimeForDate(entryDay)}
+                  disabledTimes={isEntryTimeDisabled}
+                  className="w-full h-10 md:h-12"
+                />
               </div>
             </div>
           </div>
@@ -290,28 +323,16 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
                 />
               </div>
               <div className="flex-[1] min-w-0">
-                <Select
+                <TimePicker
                   value={exitTime}
-                  onValueChange={(val) => {
-                    setExitDate(`${exitDay}T${val}`);
-                    setErrorMsg(null);
-                  }}
-                >
-                  <SelectTrigger className="w-full h-10 md:h-12">
-                    <SelectValue placeholder="Hora" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeOptions.map(time => (
-                      <SelectItem
-                        key={`exit-${time}`}
-                        value={time}
-                        disabled={isExitTimeDisabled(time)}
-                      >
-                        {time}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(val) => { setExitDate(`${exitDay}T${val}`); setErrorMsg(null); }}
+                  minTime={laterTime(
+                    getMinTimeForDate(exitDay),
+                    entryDay === exitDay ? addOneMinute(entryTime) : undefined,
+                  )}
+                  disabledTimes={isExitTimeDisabled}
+                  className="w-full h-10 md:h-12"
+                />
               </div>
             </div>
           </div>
@@ -320,7 +341,13 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
 
       <Button
         onClick={handleBooking}
-        className="w-full h-11 md:h-12 bg-accent hover:bg-accent/90 text-white mb-4 shadow-lg shadow-accent/20"
+        disabled={isBookingDisabled}
+        className={cn(
+          'w-full h-11 md:h-12 mb-4 shadow-lg transition-all',
+          isBookingDisabled
+            ? 'bg-muted border border-foreground/20 text-foreground cursor-not-allowed'
+            : 'bg-accent hover:bg-accent/90 text-white shadow-accent/20',
+        )}
       >
         Reservar ahora
       </Button>
@@ -338,20 +365,18 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
           <span className="text-muted-foreground">Tarifa de servicio</span>
           <span className="font-semibold">1.50€</span>
         </div>
-        <div className="border-t border-border pt-3 flex justify-between text-base">
-          <span className="font-semibold">Total estimado</span>
-          <span className="font-bold text-primary">
+        <div className="border-t border-border pt-4 flex items-center justify-between">
+          <span className="text-lg font-bold">Total</span>
+          <span className="text-2xl font-extrabold text-primary">
             {((parking.base_price_per_hour * validDuration) + 1.5).toFixed(2)}€
           </span>
         </div>
       </div>
 
       {!isMobile && (
-        <div className="mt-6 pt-6 border-t border-border">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Shield className="h-5 w-5 text-secondary" />
-            <span>Protección de reserva incluida</span>
-          </div>
+        <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground/70">
+          <Shield className="h-3.5 w-3.5 text-secondary shrink-0" />
+          <span>Protección de reserva incluida</span>
         </div>
       )}
     </div>

@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Clock, Save, Loader2, Calendar } from 'lucide-react';
 import { Button } from '../../../../ui';
 import { Switch } from '../../../../ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../../ui/select';
 import { parkingService } from '../../../parking/services/parking.service';
-import { AvailabilitySchedule, DaySchedule } from '../../../parking/types/parking.types';
+import { AvailabilitySchedule, DaySchedule, DEFAULT_AVAILABILITY_SCHEDULE } from '../../../parking/types/parking.types';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SpotScheduleEditorProps {
   spotId: string;
@@ -25,20 +26,12 @@ const DAY_LABELS: { dow: keyof AvailabilitySchedule; label: string }[] = [
 
 const TIME_OPTIONS: string[] = [];
 for (let h = 0; h < 24; h++) {
-  for (const m of [0, 30]) {
+  for (const m of [0, 15, 30, 45]) {
     TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
   }
 }
 
-const DEFAULT_SCHEDULE: AvailabilitySchedule = {
-  '0': { enabled: false, open: '08:00', close: '20:00' },
-  '1': { enabled: true,  open: '08:00', close: '20:00' },
-  '2': { enabled: true,  open: '08:00', close: '20:00' },
-  '3': { enabled: true,  open: '08:00', close: '20:00' },
-  '4': { enabled: true,  open: '08:00', close: '20:00' },
-  '5': { enabled: true,  open: '08:00', close: '20:00' },
-  '6': { enabled: false, open: '08:00', close: '20:00' },
-};
+const DEFAULT_SCHEDULE = DEFAULT_AVAILABILITY_SCHEDULE;
 
 function buildInitial(schedule: AvailabilitySchedule | null | undefined): AvailabilitySchedule {
   if (!schedule) return DEFAULT_SCHEDULE;
@@ -50,10 +43,16 @@ function buildInitial(schedule: AvailabilitySchedule | null | undefined): Availa
 }
 
 export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotScheduleEditorProps) {
+  const queryClient = useQueryClient();
   const [schedule, setSchedule] = useState<AvailabilitySchedule>(() =>
     buildInitial(initialSchedule),
   );
   const [isSaving, setIsSaving] = useState(false);
+
+  // Re-sync local state when parent provides updated schedule (after cache refetch)
+  useEffect(() => {
+    setSchedule(buildInitial(initialSchedule));
+  }, [spotId, initialSchedule]);
 
   const updateDay = (dow: keyof AvailabilitySchedule, patch: Partial<DaySchedule>) => {
     setSchedule((prev) => ({ ...prev, [dow]: { ...prev[dow], ...patch } }));
@@ -70,6 +69,11 @@ export function SpotScheduleEditor({ spotId, initialSchedule, onSaved }: SpotSch
     setIsSaving(true);
     try {
       await parkingService.updateSpotSchedule(spotId, schedule);
+      // Invalidate both caches so map and owner panel reflect new schedule immediately
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['garages'] }),
+        queryClient.invalidateQueries({ queryKey: ['owner-garages'] }),
+      ]);
       toast.success('Horario guardado correctamente');
       onSaved?.();
     } catch (err: unknown) {

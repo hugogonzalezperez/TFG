@@ -11,6 +11,7 @@ import { ParkingOwnerCard } from './detail/ParkingOwnerCard';
 import { ParkingFeatures } from './detail/ParkingFeatures';
 import { ParkingReviews } from './detail/ParkingReviews';
 import { ParkingBookingCard } from './detail/ParkingBookingCard';
+import { ParkingOwnerPanel } from './detail/ParkingOwnerPanel';
 
 // Hooks
 import { useParkingSpot } from '../hooks/useParkingSpot';
@@ -105,7 +106,11 @@ export function ParkingDetail() {
               >
                 <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => toast.info('La función de compartir estará disponible próximamente')}
+              >
                 <Share2 className="h-5 w-5" />
               </Button>
             </div>
@@ -147,7 +152,11 @@ export function ParkingDetail() {
 
           {/* Booking card — handles desktop sidebar and mobile drawer internally */}
           <div className="lg:col-span-1">
-            <ParkingBookingCard parking={parking} searchDates={searchDates} />
+            {authUser?.user?.id === parking.owner?.id ? (
+              <ParkingOwnerPanel spotId={parking.id} spotName={parking.name} />
+            ) : (
+              <ParkingBookingCard parking={parking} searchDates={searchDates} />
+            )}
           </div>
         </div>
       </div>

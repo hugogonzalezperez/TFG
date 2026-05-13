@@ -21,6 +21,10 @@ export const bookingService = {
     return await bookingDal.fetchSpotBookings(spotId) as any;
   },
 
+  async getSpotBookingsRich(spotId: string) {
+    return await bookingDal.fetchSpotBookingsRich(spotId);
+  },
+
   /**
    * Crea una reserva completa
    */

@@ -67,23 +67,25 @@ export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAv
       </div>
 
       {/* Menu - Horizontal scroll on mobile, vertical stack on desktop */}
-      <nav className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-2 lg:gap-1 pb-2 lg:pb-0 scrollbar-hide -mx-4 px-4 lg:mx-0 lg:px-0">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`flex-shrink-0 flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-colors text-sm lg:text-base ${activeTab === item.id
-                ? 'bg-primary text-white font-medium shadow-sm'
-                : 'bg-muted/50 lg:bg-transparent hover:bg-muted text-foreground'
-                }`}
-            >
-              <Icon className="h-4 w-4 lg:h-5 lg:w-5" />
-              <span className="whitespace-nowrap">{item.label}</span>
-            </button>
-          );
-        })}
+      <nav className="overflow-x-auto lg:overflow-visible scrollbar-hide -mx-4 px-4 lg:mx-0 lg:px-0 pb-2 lg:pb-0">
+        <div className="flex lg:flex-col gap-2 lg:gap-1 w-max lg:w-auto mx-auto">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex-shrink-0 flex items-center gap-2 lg:gap-3 px-4 lg:px-4 py-2.5 lg:py-3 rounded-lg transition-colors text-sm lg:text-base min-h-[44px] ${activeTab === item.id
+                  ? 'bg-primary text-white font-medium shadow-sm'
+                  : 'bg-muted/50 lg:bg-transparent hover:bg-muted text-foreground'
+                  }`}
+              >
+                <Icon className="h-4 w-4 lg:h-5 lg:w-5" />
+                <span className="whitespace-nowrap">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </nav>
 
       <div className="lg:mt-6 lg:pt-6 mt-3 pt-3 border-t border-border flex justify-center">

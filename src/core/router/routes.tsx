@@ -1,5 +1,6 @@
 import { lazy } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { ErrorPage } from '../../pages/errors/ErrorPage';
 import App from '../../App';
 
 const HomePage = lazy(() => import('../../pages/home/HomePage'));
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       // Rutas con Layout Principal (Header compartido)
       {
@@ -39,6 +41,7 @@ export const router = createBrowserRouter([
       },
 
       // Rutas públicas-solo (Login, Signup sin el header principal)
+      { path: 'register', element: <Navigate to="/signup" replace /> },
       { path: 'login', element: <PublicRoute><LoginPage /></PublicRoute> },
       { path: 'signup', element: <PublicRoute><SignUpPage /></PublicRoute> },
       { path: 'auth/callback', element: <AuthCallbackPage /> },

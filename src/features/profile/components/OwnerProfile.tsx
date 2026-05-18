@@ -140,7 +140,7 @@ export function OwnerProfile() {
                   className="gap-2 px-4 md:px-6 py-2 rounded-xl transition-all data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground hover:bg-muted/50 text-sm md:text-base font-semibold shrink-0"
                 >
                   <Building2 className="h-4 w-4 md:h-5 md:w-5" />
-                  Mis Garajes
+                  Garajes
                 </TabsTrigger>
                 {(garages.length > 0 || garagesLoading) && (
                   <>

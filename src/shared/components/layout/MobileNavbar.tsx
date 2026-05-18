@@ -1,12 +1,9 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Map, Calendar, User } from 'lucide-react';
-import { isNative } from '@/mobile';
 
 export function MobileNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  if (!isNative()) return null;
 
   const navItems = [
     { name: 'Inicio', icon: Home, path: '/' },

@@ -19,9 +19,9 @@ interface ProfileSidebarProps {
 
 export function ProfileSidebar({ user, activeTab, setActiveTab, logout, updateAvatar }: ProfileSidebarProps) {
   const menuItems = [
-    { id: 'bookings', label: 'Mis reservas', icon: Calendar },
+    { id: 'bookings', label: 'Reservas', icon: Calendar },
     { id: 'favorites', label: 'Favoritos', icon: Star },
-    { id: 'settings', label: 'Configuración', icon: Settings },
+    { id: 'settings', label: 'Ajustes', icon: Settings },
   ];
 
   return (

@@ -166,7 +166,7 @@ export function Header() {
           <div className="flex items-center md:hidden">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden" style={transparent ? { color: 'white' } : {}}>
+                <Button variant="ghost" size="icon" className="md:hidden min-h-[44px] min-w-[44px]" style={transparent ? { color: 'white' } : {}}>
                   <Menu className="h-6 w-6" />
                 </Button>
               </DialogTrigger>

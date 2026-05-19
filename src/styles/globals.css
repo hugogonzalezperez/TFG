@@ -243,3 +243,12 @@ html {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+/* Leaflet zoom controls — meet 44px touch target (Apple HIG / Material Design) */
+@media (max-width: 767px) {
+  .leaflet-control-zoom a {
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    font-size: 20px !important;
+  }
+}

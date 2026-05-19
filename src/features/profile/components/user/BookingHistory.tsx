@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Clock, Star, History, Trash2, Building2, Lock, Eye } from 'lucide-react';
 import { Card, Badge, Button } from '../../../../ui';
+import { ConfirmationDialog } from '../../../../ui/confirmation-dialog';
 import { useNavigate } from 'react-router-dom';
 import { LocationLink } from '../../../../shared/components/LocationLink';
 import { cn } from '../../../../shared/lib/cn';
@@ -19,6 +20,7 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
   const navigate = useNavigate();
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [smartAccessBooking, setSmartAccessBooking] = useState<any>(null);
   const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'active' || b.status === 'pending');
   const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
@@ -189,7 +191,7 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-9 w-9 md:h-8 md:w-8 shrink-0 text-destructive hover:bg-destructive/10"
+                        className="h-11 w-11 md:h-9 md:w-9 shrink-0 text-destructive hover:bg-destructive/10"
                         onClick={() => handleCancel(booking.id)}
                         disabled={cancellingId === booking.id || booking.status === 'active'}
                       >
@@ -253,8 +255,8 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
                     <Button
                       variant="exit"
                       size="icon"
-                      className="h-9 w-9 sm:h-8 sm:w-8 shrink-0 text-destructive hover:opacity-50"
-                      onClick={() => handleDelete(booking.id)}
+                      className="h-11 w-11 sm:h-9 sm:w-9 shrink-0 text-destructive hover:opacity-50"
+                      onClick={() => setConfirmDeleteId(booking.id)}
                       disabled={deletingId === booking.id}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -280,6 +282,16 @@ export function BookingHistory({ bookings, isLoading, onCancel, onDelete, onRevi
           onClose={() => setSmartAccessBooking(null)}
         />
       )}
+      <ConfirmationDialog
+        isOpen={!!confirmDeleteId}
+        onClose={() => setConfirmDeleteId(null)}
+        onConfirm={() => confirmDeleteId && handleDelete(confirmDeleteId)}
+        title="Eliminar reserva"
+        description="Esta acción eliminará el registro permanentemente. No podrás recuperarlo."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="destructive"
+      />
     </div>
   );
 }

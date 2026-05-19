@@ -116,7 +116,7 @@ export default function LoginPage() {
                 <Label htmlFor="password">Contraseña</Label>
                 <button
                   type="button"
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-primary hover:underline min-h-[44px] px-1 inline-flex items-center"
                   disabled={isSubmitting || loading}
                 >
                   ¿Olvidaste tu contraseña?

@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Input } from './input';
 
+const fmt = (v: number) => (v % 1 === 0 ? String(v) : v.toFixed(1));
+
 interface RangeSliderProps {
   min: number;
   max: number;
@@ -89,7 +91,7 @@ export function RangeSlider({
           <div className="flex items-center gap-2 flex-1">
             <Input
               type="number"
-              value={minValue.toFixed(1)}
+              value={fmt(minValue)}
               onChange={handleMinInputChange}
               min={min}
               max={maxValue}
@@ -104,7 +106,7 @@ export function RangeSlider({
           <div className="flex items-center gap-2 flex-1 justify-end">
             <Input
               type="number"
-              value={maxValue.toFixed(1)}
+              value={fmt(maxValue)}
               onChange={handleMaxInputChange}
               min={minValue}
               max={max}
@@ -166,8 +168,8 @@ export function RangeSlider({
 
         {/* Etiquetas */}
         <div className="flex justify-between text-xs text-muted-foreground pt-2">
-          <span>{min.toFixed(1)}{unit}</span>
-          <span>{max.toFixed(1)}{unit}</span>
+          <span>{fmt(min)}{unit}</span>
+          <span>{fmt(max)}{unit}</span>
         </div>
       </div>
     </div>

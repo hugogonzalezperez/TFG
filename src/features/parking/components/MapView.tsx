@@ -268,29 +268,32 @@ export function MapView() {
       </div>
 
       {/* Mobile Navigation - Apple Maps style floating toggle */}
-      <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-0.5 rounded-full shadow-2xl scale-[1] sm:scale-100">
+      <div
+        className="md:hidden fixed left-1/2 -translate-x-1/2 z-30 flex bg-card/90 backdrop-blur-md border border-border p-1 rounded-full shadow-2xl"
+        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+      >
         <button
           onClick={() => setView('map')}
           className={cn(
-            "flex items-center gap-2 px-6 py-1.5 rounded-full text-sm font-semibold transition-all",
+            "flex items-center gap-2 px-7 rounded-full text-[15px] font-semibold transition-all min-h-[48px]",
             view === 'map'
               ? "bg-primary text-white shadow-lg"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <MapIcon className="h-4 w-4" />
+          <MapIcon className="h-5 w-5" />
           Mapa
         </button>
         <button
           onClick={() => setView('list')}
           className={cn(
-            "flex items-center gap-2 px-6 py-1.5 rounded-full text-sm font-semibold transition-all",
+            "flex items-center gap-2 px-7 rounded-full text-[15px] font-semibold transition-all min-h-[48px]",
             view === 'list'
               ? "bg-primary text-white shadow-lg"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <List className="h-4 w-4" />
+          <List className="h-5 w-5" />
           Lista
         </button>
       </div>

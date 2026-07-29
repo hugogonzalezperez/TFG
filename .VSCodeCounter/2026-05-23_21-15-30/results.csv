@@ -1,0 +1,159 @@
+"filename", "language", "TypeScript", "TypeScript JSX", "MS SQL", "PostCSS", "comment", "blank", "total"
+"/home/dev/TFG/src/App.tsx", "TypeScript JSX", 0, 59, 0, 0, 0, 7, 66
+"/home/dev/TFG/src/core/router/routes.tsx", "TypeScript JSX", 0, 47, 0, 0, 3, 6, 56
+"/home/dev/TFG/src/features/auth/components/AuthCallback.tsx", "TypeScript JSX", 0, 58, 0, 0, 3, 10, 71
+"/home/dev/TFG/src/features/auth/context/AuthContext.tsx", "TypeScript JSX", 0, 207, 0, 0, 71, 43, 321
+"/home/dev/TFG/src/features/auth/index.ts", "TypeScript", 23, 0, 0, 0, 7, 5, 35
+"/home/dev/TFG/src/features/auth/services/auth.service.ts", "TypeScript", 289, 0, 0, 0, 80, 56, 425
+"/home/dev/TFG/src/features/auth/types/auth.types.ts", "TypeScript", 50, 0, 0, 0, 9, 11, 70
+"/home/dev/TFG/src/features/booking/components/BookingDetailsForm.tsx", "TypeScript JSX", 0, 166, 0, 0, 1, 18, 185
+"/home/dev/TFG/src/features/booking/components/BookingProcess.tsx", "TypeScript JSX", 0, 126, 0, 0, 5, 14, 145
+"/home/dev/TFG/src/features/booking/components/BookingStepper.tsx", "TypeScript JSX", 0, 54, 0, 0, 1, 6, 61
+"/home/dev/TFG/src/features/booking/components/BookingSuccess.tsx", "TypeScript JSX", 0, 112, 0, 0, 0, 8, 120
+"/home/dev/TFG/src/features/booking/components/BookingSummary.tsx", "TypeScript JSX", 0, 106, 0, 0, 0, 10, 116
+"/home/dev/TFG/src/features/booking/components/PaymentDetails.tsx", "TypeScript JSX", 0, 82, 0, 0, 0, 10, 92
+"/home/dev/TFG/src/features/booking/components/SmartAccessModal.tsx", "TypeScript JSX", 0, 191, 0, 0, 7, 28, 226
+"/home/dev/TFG/src/features/booking/hooks/useBookingFlow.ts", "TypeScript", 147, 0, 0, 0, 6, 22, 175
+"/home/dev/TFG/src/features/booking/hooks/useSpotBookings.ts", "TypeScript", 36, 0, 0, 0, 0, 4, 40
+"/home/dev/TFG/src/features/booking/index.ts", "TypeScript", 4, 0, 0, 0, 0, 1, 5
+"/home/dev/TFG/src/features/booking/services/booking.dal.ts", "TypeScript", 160, 0, 0, 0, 26, 23, 209
+"/home/dev/TFG/src/features/booking/services/booking.service.ts", "TypeScript", 78, 0, 0, 0, 25, 18, 121
+"/home/dev/TFG/src/features/booking/services/pricing.service.ts", "TypeScript", 32, 0, 0, 0, 12, 10, 54
+"/home/dev/TFG/src/features/booking/services/smartAccess.dal.ts", "TypeScript", 21, 0, 0, 0, 4, 3, 28
+"/home/dev/TFG/src/features/booking/services/smartAccess.service.ts", "TypeScript", 47, 0, 0, 0, 2, 9, 58
+"/home/dev/TFG/src/features/booking/types/booking.types.ts", "TypeScript", 41, 0, 0, 0, 3, 6, 50
+"/home/dev/TFG/src/features/parking/components/FilterDrawer.tsx", "TypeScript JSX", 0, 306, 0, 0, 11, 21, 338
+"/home/dev/TFG/src/features/parking/components/FilterSidebar.tsx", "TypeScript JSX", 0, 225, 0, 0, 8, 12, 245
+"/home/dev/TFG/src/features/parking/components/Filters.tsx", "TypeScript JSX", 0, 28, 0, 0, 0, 4, 32
+"/home/dev/TFG/src/features/parking/components/GarageCard.tsx", "TypeScript JSX", 0, 206, 0, 0, 1, 11, 218
+"/home/dev/TFG/src/features/parking/components/GarageDetailModal.tsx", "TypeScript JSX", 0, 151, 0, 0, 2, 19, 172
+"/home/dev/TFG/src/features/parking/components/MapView.tsx", "TypeScript JSX", 0, 287, 0, 0, 7, 29, 323
+"/home/dev/TFG/src/features/parking/components/MapViewHeader.tsx", "TypeScript JSX", 0, 69, 0, 0, 0, 6, 75
+"/home/dev/TFG/src/features/parking/components/ParkingDetail.tsx", "TypeScript JSX", 0, 142, 0, 0, 6, 18, 166
+"/home/dev/TFG/src/features/parking/components/ParkingMap.tsx", "TypeScript JSX", 0, 170, 0, 0, 5, 20, 195
+"/home/dev/TFG/src/features/parking/components/detail/ParkingBookingCard.tsx", "TypeScript JSX", 0, 379, 0, 0, 9, 37, 425
+"/home/dev/TFG/src/features/parking/components/detail/ParkingFeatures.tsx", "TypeScript JSX", 0, 52, 0, 0, 0, 6, 58
+"/home/dev/TFG/src/features/parking/components/detail/ParkingGallery.tsx", "TypeScript JSX", 0, 70, 0, 0, 0, 10, 80
+"/home/dev/TFG/src/features/parking/components/detail/ParkingHeader.tsx", "TypeScript JSX", 0, 39, 0, 0, 0, 5, 44
+"/home/dev/TFG/src/features/parking/components/detail/ParkingOwnerCard.tsx", "TypeScript JSX", 0, 89, 0, 0, 0, 9, 98
+"/home/dev/TFG/src/features/parking/components/detail/ParkingOwnerPanel.tsx", "TypeScript JSX", 0, 95, 0, 0, 10, 12, 117
+"/home/dev/TFG/src/features/parking/components/detail/ParkingReviews.tsx", "TypeScript JSX", 0, 71, 0, 0, 0, 6, 77
+"/home/dev/TFG/src/features/parking/context/FilterContext.tsx", "TypeScript JSX", 0, 103, 0, 0, 1, 16, 120
+"/home/dev/TFG/src/features/parking/hooks/useGarageReviews.ts", "TypeScript", 13, 0, 0, 0, 0, 2, 15
+"/home/dev/TFG/src/features/parking/hooks/useGarages.ts", "TypeScript", 11, 0, 0, 0, 0, 2, 13
+"/home/dev/TFG/src/features/parking/hooks/useParkingSpot.ts", "TypeScript", 14, 0, 0, 0, 0, 2, 16
+"/home/dev/TFG/src/features/parking/index.ts", "TypeScript", 14, 0, 0, 0, 8, 6, 28
+"/home/dev/TFG/src/features/parking/services/parking.dal.ts", "TypeScript", 251, 0, 0, 0, 35, 46, 332
+"/home/dev/TFG/src/features/parking/services/parking.service.ts", "TypeScript", 253, 0, 0, 0, 42, 33, 328
+"/home/dev/TFG/src/features/parking/types/parking.types.ts", "TypeScript", 86, 0, 0, 0, 3, 7, 96
+"/home/dev/TFG/src/features/parking/utils/mapUtils.ts", "TypeScript", 36, 0, 0, 0, 1, 5, 42
+"/home/dev/TFG/src/features/parking/utils/parkingFilters.ts", "TypeScript", 61, 0, 0, 0, 7, 15, 83
+"/home/dev/TFG/src/features/parking/utils/schedule.utils.ts", "TypeScript", 25, 0, 0, 0, 0, 8, 33
+"/home/dev/TFG/src/features/profile/components/AvatarUploader.tsx", "TypeScript JSX", 0, 77, 0, 0, 4, 14, 95
+"/home/dev/TFG/src/features/profile/components/GarageImageUploader.tsx", "TypeScript JSX", 0, 124, 0, 0, 8, 20, 152
+"/home/dev/TFG/src/features/profile/components/OwnerProfile.tsx", "TypeScript JSX", 0, 217, 0, 0, 8, 22, 247
+"/home/dev/TFG/src/features/profile/components/UserProfile.tsx", "TypeScript JSX", 0, 147, 0, 0, 8, 20, 175
+"/home/dev/TFG/src/features/profile/components/owner/AddSpotForm.tsx", "TypeScript JSX", 0, 289, 0, 0, 5, 26, 320
+"/home/dev/TFG/src/features/profile/components/owner/AddSpotToGarageModal.tsx", "TypeScript JSX", 0, 137, 0, 0, 0, 13, 150
+"/home/dev/TFG/src/features/profile/components/owner/EditGarageModal.tsx", "TypeScript JSX", 0, 341, 0, 0, 2, 24, 367
+"/home/dev/TFG/src/features/profile/components/owner/ManagedGarages.tsx", "TypeScript JSX", 0, 321, 0, 0, 6, 21, 348
+"/home/dev/TFG/src/features/profile/components/owner/OwnerBookingsTab.tsx", "TypeScript JSX", 0, 209, 0, 0, 18, 28, 255
+"/home/dev/TFG/src/features/profile/components/owner/OwnerDashboardTab.tsx", "TypeScript JSX", 0, 48, 0, 0, 4, 7, 59
+"/home/dev/TFG/src/features/profile/components/owner/OwnerReviewsTab.tsx", "TypeScript JSX", 0, 143, 0, 0, 4, 14, 161
+"/home/dev/TFG/src/features/profile/components/owner/OwnerStatsRow.tsx", "TypeScript JSX", 0, 46, 0, 0, 0, 4, 50
+"/home/dev/TFG/src/features/profile/components/owner/SpotFavoritesUsers.tsx", "TypeScript JSX", 0, 13, 0, 0, 1, 4, 18
+"/home/dev/TFG/src/features/profile/components/owner/SpotScheduleEditor.tsx", "TypeScript JSX", 0, 163, 0, 0, 6, 19, 188
+"/home/dev/TFG/src/features/profile/components/owner/TenantActivitySidebar.tsx", "TypeScript JSX", 0, 82, 0, 0, 0, 6, 88
+"/home/dev/TFG/src/features/profile/components/shared/ProfileSkeletonLoaders.tsx", "TypeScript JSX", 0, 82, 0, 0, 2, 7, 91
+"/home/dev/TFG/src/features/profile/components/user/BookingHistory.tsx", "TypeScript JSX", 0, 270, 0, 0, 8, 20, 298
+"/home/dev/TFG/src/features/profile/components/user/FavoritesList.tsx", "TypeScript JSX", 0, 59, 0, 0, 0, 3, 62
+"/home/dev/TFG/src/features/profile/components/user/ProfileAccountSettings.tsx", "TypeScript JSX", 0, 125, 0, 0, 2, 14, 141
+"/home/dev/TFG/src/features/profile/components/user/ProfileSidebar.tsx", "TypeScript JSX", 0, 94, 0, 0, 3, 7, 104
+"/home/dev/TFG/src/features/profile/components/user/ReviewModal.tsx", "TypeScript JSX", 0, 119, 0, 0, 2, 14, 135
+"/home/dev/TFG/src/features/profile/hooks/useFavorites.ts", "TypeScript", 35, 0, 0, 0, 0, 6, 41
+"/home/dev/TFG/src/features/profile/hooks/useProfileData.ts", "TypeScript", 70, 0, 0, 0, 2, 10, 82
+"/home/dev/TFG/src/features/profile/index.ts", "TypeScript", 2, 0, 0, 0, 4, 2, 8
+"/home/dev/TFG/src/features/profile/services/favorites.dal.ts", "TypeScript", 71, 0, 0, 0, 0, 11, 82
+"/home/dev/TFG/src/features/profile/services/favorites.service.ts", "TypeScript", 46, 0, 0, 0, 0, 10, 56
+"/home/dev/TFG/src/features/profile/services/profile.dal.ts", "TypeScript", 94, 0, 0, 0, 22, 18, 134
+"/home/dev/TFG/src/features/profile/services/profile.service.ts", "TypeScript", 80, 0, 0, 0, 23, 21, 124
+"/home/dev/TFG/src/main.tsx", "TypeScript JSX", 0, 10, 0, 0, 1, 2, 13
+"/home/dev/TFG/src/mobile/components/MobileBottomNav.tsx", "TypeScript JSX", 0, 41, 0, 0, 15, 7, 63
+"/home/dev/TFG/src/mobile/haptics.ts", "TypeScript", 19, 0, 0, 0, 48, 5, 72
+"/home/dev/TFG/src/mobile/index.ts", "TypeScript", 6, 0, 0, 0, 21, 7, 34
+"/home/dev/TFG/src/mobile/keyboard.ts", "TypeScript", 22, 0, 0, 0, 44, 8, 74
+"/home/dev/TFG/src/mobile/platform.ts", "TypeScript", 17, 0, 0, 0, 43, 9, 69
+"/home/dev/TFG/src/mobile/splash.ts", "TypeScript", 14, 0, 0, 0, 38, 6, 58
+"/home/dev/TFG/src/mobile/status-bar.ts", "TypeScript", 24, 0, 0, 0, 35, 10, 69
+"/home/dev/TFG/src/mobile/storage.ts", "TypeScript", 20, 0, 0, 0, 49, 6, 75
+"/home/dev/TFG/src/pages/auth/AuthCallbackPage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/pages/auth/LoginPage.tsx", "TypeScript JSX", 0, 180, 0, 0, 11, 21, 212
+"/home/dev/TFG/src/pages/auth/SignUpPage.tsx", "TypeScript JSX", 0, 321, 0, 0, 9, 37, 367
+"/home/dev/TFG/src/pages/booking/BookingPage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/pages/errors/ErrorPage.tsx", "TypeScript JSX", 0, 82, 0, 0, 10, 8, 100
+"/home/dev/TFG/src/pages/home/HomePage.tsx", "TypeScript JSX", 0, 760, 0, 0, 36, 61, 857
+"/home/dev/TFG/src/pages/index.ts", "TypeScript", 9, 0, 0, 0, 5, 5, 19
+"/home/dev/TFG/src/pages/parking/MapViewPage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/pages/parking/ParkingDetailPage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/pages/profile/OwnerProfilePage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/pages/profile/UserProfilePage.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 2, 6
+"/home/dev/TFG/src/shared/components/ErrorBoundary.tsx", "TypeScript JSX", 0, 44, 0, 0, 0, 7, 51
+"/home/dev/TFG/src/shared/components/LocationLink.tsx", "TypeScript JSX", 0, 36, 0, 0, 0, 4, 40
+"/home/dev/TFG/src/shared/components/auth/ProtectedRoute.tsx", "TypeScript JSX", 0, 21, 0, 0, 9, 7, 37
+"/home/dev/TFG/src/shared/components/auth/PublicRoute.tsx", "TypeScript JSX", 0, 16, 0, 0, 4, 6, 26
+"/home/dev/TFG/src/shared/components/calendar/BookingTimeline.tsx", "TypeScript JSX", 0, 260, 0, 0, 16, 34, 310
+"/home/dev/TFG/src/shared/components/layout/Header.tsx", "TypeScript JSX", 0, 228, 0, 0, 4, 14, 246
+"/home/dev/TFG/src/shared/components/layout/MainLayout.tsx", "TypeScript JSX", 0, 17, 0, 0, 0, 3, 20
+"/home/dev/TFG/src/shared/components/layout/MobileNavbar.tsx", "TypeScript JSX", 0, 32, 0, 0, 0, 4, 36
+"/home/dev/TFG/src/shared/components/loaders/AnimatedLoader.tsx", "TypeScript JSX", 0, 185, 0, 0, 11, 10, 206
+"/home/dev/TFG/src/shared/components/loaders/AuthSkeleton.tsx", "TypeScript JSX", 0, 30, 0, 0, 5, 4, 39
+"/home/dev/TFG/src/shared/components/loaders/FullScreenLoader.tsx", "TypeScript JSX", 0, 16, 0, 0, 3, 3, 22
+"/home/dev/TFG/src/shared/components/loaders/HomeSkeleton.tsx", "TypeScript JSX", 0, 88, 0, 0, 7, 9, 104
+"/home/dev/TFG/src/shared/components/loaders/index.ts", "TypeScript", 4, 0, 0, 0, 3, 2, 9
+"/home/dev/TFG/src/shared/components/map/LocationPicker.tsx", "TypeScript JSX", 0, 99, 0, 0, 1, 12, 112
+"/home/dev/TFG/src/shared/hooks/use-mobile.tsx", "TypeScript JSX", 0, 15, 0, 0, 0, 5, 20
+"/home/dev/TFG/src/shared/lib/cn.ts", "TypeScript", 5, 0, 0, 0, 0, 2, 7
+"/home/dev/TFG/src/shared/lib/index.ts", "TypeScript", 3, 0, 0, 0, 5, 3, 11
+"/home/dev/TFG/src/shared/lib/logger.ts", "TypeScript", 6, 0, 0, 0, 0, 2, 8
+"/home/dev/TFG/src/shared/lib/sql/add_vehicle_info_to_bookings.sql", "MS SQL", 0, 0, 5, 0, 2, 2, 9
+"/home/dev/TFG/src/shared/lib/sql/auto_owner_trigger.sql", "MS SQL", 0, 0, 20, 0, 14, 7, 41
+"/home/dev/TFG/src/shared/lib/sql/fix_booking_overlap_final.sql", "MS SQL", 0, 0, 43, 0, 11, 7, 61
+"/home/dev/TFG/src/shared/lib/sql/fix_garages_rls.sql", "MS SQL", 0, 0, 27, 0, 10, 6, 43
+"/home/dev/TFG/src/shared/lib/sql/garage_counters.sql", "MS SQL", 0, 0, 16, 0, 2, 2, 20
+"/home/dev/TFG/src/shared/lib/sql/price_history_policy.sql", "MS SQL", 0, 0, 20, 0, 2, 2, 24
+"/home/dev/TFG/src/shared/lib/sql/user_visibility_policy.sql", "MS SQL", 0, 0, 30, 0, 7, 5, 42
+"/home/dev/TFG/src/shared/lib/supabase.ts", "TypeScript", 37, 0, 0, 0, 18, 10, 65
+"/home/dev/TFG/src/shared/lib/time-utils.ts", "TypeScript", 46, 0, 0, 0, 13, 9, 68
+"/home/dev/TFG/src/shared/services/geocoding.service.ts", "TypeScript", 70, 0, 0, 0, 0, 9, 79
+"/home/dev/TFG/src/shared/types/database.types.ts", "TypeScript", 216, 0, 0, 0, 15, 35, 266
+"/home/dev/TFG/src/styles/globals.css", "PostCSS", 0, 0, 0, 217, 10, 28, 255
+"/home/dev/TFG/src/types/database.types.ts", "TypeScript", 696, 0, 0, 0, 0, 8, 704
+"/home/dev/TFG/src/ui/RangeSlider.tsx", "TypeScript JSX", 0, 144, 0, 0, 13, 20, 177
+"/home/dev/TFG/src/ui/address-search.tsx", "TypeScript JSX", 0, 97, 0, 0, 2, 14, 113
+"/home/dev/TFG/src/ui/avatar.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 7, 54
+"/home/dev/TFG/src/ui/badge.tsx", "TypeScript JSX", 0, 44, 0, 0, 1, 8, 53
+"/home/dev/TFG/src/ui/booking-card-skeleton.tsx", "TypeScript JSX", 0, 59, 0, 0, 6, 7, 72
+"/home/dev/TFG/src/ui/button-variants.ts", "TypeScript", 33, 0, 0, 0, 0, 3, 36
+"/home/dev/TFG/src/ui/button.tsx", "TypeScript JSX", 0, 22, 0, 0, 0, 5, 27
+"/home/dev/TFG/src/ui/calendar.tsx", "TypeScript JSX", 0, 60, 0, 0, 0, 4, 64
+"/home/dev/TFG/src/ui/card.tsx", "TypeScript JSX", 0, 83, 0, 0, 0, 10, 93
+"/home/dev/TFG/src/ui/checkbox.tsx", "TypeScript JSX", 0, 28, 0, 0, 0, 5, 33
+"/home/dev/TFG/src/ui/confirmation-dialog.tsx", "TypeScript JSX", 0, 65, 0, 0, 0, 3, 68
+"/home/dev/TFG/src/ui/date-picker.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 3, 50
+"/home/dev/TFG/src/ui/dialog.tsx", "TypeScript JSX", 0, 109, 0, 0, 0, 14, 123
+"/home/dev/TFG/src/ui/drawer.tsx", "TypeScript JSX", 0, 104, 0, 0, 0, 13, 117
+"/home/dev/TFG/src/ui/empty-state.tsx", "TypeScript JSX", 0, 43, 0, 0, 0, 3, 46
+"/home/dev/TFG/src/ui/errorMessage.tsx", "TypeScript JSX", 0, 25, 0, 0, 0, 3, 28
+"/home/dev/TFG/src/ui/garage-card-skeleton.tsx", "TypeScript JSX", 0, 47, 0, 0, 5, 7, 59
+"/home/dev/TFG/src/ui/index.ts", "TypeScript", 27, 0, 0, 0, 0, 2, 29
+"/home/dev/TFG/src/ui/input.tsx", "TypeScript JSX", 0, 21, 0, 0, 0, 4, 25
+"/home/dev/TFG/src/ui/label.tsx", "TypeScript JSX", 0, 20, 0, 0, 0, 5, 25
+"/home/dev/TFG/src/ui/popover.tsx", "TypeScript JSX", 0, 24, 0, 0, 0, 5, 29
+"/home/dev/TFG/src/ui/select.tsx", "TypeScript JSX", 0, 145, 0, 0, 0, 13, 158
+"/home/dev/TFG/src/ui/sheet.tsx", "TypeScript JSX", 0, 124, 0, 0, 0, 15, 139
+"/home/dev/TFG/src/ui/skeleton.tsx", "TypeScript JSX", 0, 10, 0, 0, 0, 3, 13
+"/home/dev/TFG/src/ui/switch.tsx", "TypeScript JSX", 0, 27, 0, 0, 0, 5, 32
+"/home/dev/TFG/src/ui/tabs.tsx", "TypeScript JSX", 0, 59, 0, 0, 0, 8, 67
+"/home/dev/TFG/src/ui/textarea.tsx", "TypeScript JSX", 0, 18, 0, 0, 0, 4, 22
+"/home/dev/TFG/src/ui/time-picker.tsx", "TypeScript JSX", 0, 204, 0, 0, 12, 26, 242
+"Total", "-", 3364, 10977, 161, 217, 1139, 1764, 17622

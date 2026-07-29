@@ -1,214 +1,161 @@
-\chapter{Estudio previo}
-\label{ch:estudio-previo}
+\chapter{Estudio de tecnologías y decisiones de diseño}
+\label{ch:estudio-tecnologias}
 
-Este capítulo describe las tecnologías que componen Parky y justifica cada elección frente a las alternativas que se consideraron. Para cada herramienta se explica qué función cumple dentro del sistema, por qué se prefirió sobre otras opciones concretas y qué compromisos implica esa decisión.
+Este capítulo describe las tecnologías que componen Parky y justifica cada elección frente a las alternativas consideradas. Para cada herramienta se explica qué función cumple en el sistema, por qué se prefirió sobre las alternativas consideradas y qué compromisos implica la elección.
 
 % ============================================================
 \section{Lenguajes de programación y frameworks}
 \label{sec:lenguajes}
 
-La arquitectura separa con claridad dos ámbitos: el \textit{frontend}, ejecutado en el navegador o en el dispositivo Android o iOS, y el \textit{backend}, delegado íntegramente a servicios externos. Esta separación permitió centrar el desarrollo en la lógica de negocio y la experiencia de usuario sin gestionar servidores propios.
+La arquitectura separa con claridad dos ámbitos: el \textit{frontend}, ejecutado en el navegador o en el dispositivo Android, y el \textit{backend}, delegado íntegramente a servicios externos gestionados. Esta separación permitió concentrar el desarrollo en la lógica de negocio y la experiencia de usuario sin gestionar servidores propios.
 
 % ------------------------------------------------------------
 \subsection{Frontend}
 \label{subsec:frontend}
 
-Para el desarrollo del \textit{frontend}, la plataforma se vertebra a través de diversas tecnologías organizadas en capas funcionales:
+El frontend de Parky se organiza en tres capas funcionales: el lenguaje y el sistema de tipos, el framework de renderizado con su cadena de herramientas, y la capa de gestión de datos, formularios y estilos.
 
-\begin{itemize}
-    \item \textbf{Base estructural (\textit{HTML5}):} Toda aplicación web, independientemente del framework que use, acaba siendo un documento HTML5\footnote{\textbf{HyperText Markup Language 5:} Estándar del W3C que define la estructura semántica de los documentos web. Publicado en 2014, incorpora etiquetas semánticas, soporte nativo para audio/vídeo y APIs de geolocalización, entre otras.} que interpreta el navegador. En Parky, el HTML lo genera React en tiempo de ejecución a través de JSX\footnote{\textbf{JavaScript XML:} Extensión de sintaxis que permite escribir marcado similar a HTML directamente en código JavaScript. El compilador (SWC en este caso) lo transforma a llamadas \texttt{React.createElement()} antes de ejecutarse.}, por lo que el archivo estático \texttt{index.html} que sirve Vercel es mínimo; todo el contenido lo inyecta JavaScript tras la carga inicial. Las hojas de estilo que afectan a la estructura visual se generan a partir de las clases de Tailwind CSS y se inyectan también en tiempo de compilación.
+\paragraph{Lenguaje y tipado.}
+Todo el código fuente está escrito en \textit{TypeScript 5}~\cite{typescript2024} porque su compilador actúa como primera línea de defensa: detecta incompatibilidades de tipo, propiedades inexistentes y posibles valores nulos antes de que el código llegue al navegador. Esta garantía es especialmente valiosa en Parky, donde los errores de tipo tienen consecuencias directas sobre la integridad del negocio. Por ejemplo, una validación incorrecta en el intervalo de reserva puede crear solapamientos, y un error en el desglose de precio base, comisión e IGIC puede generar cargos incorrectos en Stripe. Los componentes de React se expresan en \textit{JSX}\footnote{\textbf{JSX} (\textit{JavaScript XML}): Extensión de sintaxis que permite escribir marcado similar a HTML dentro del código JavaScript.}, y \textit{SWC}\footnote{\textbf{SWC} (\textit{Speedy Web Compiler}): Transpilador escrito en Rust que reemplaza a Babel. Es entre 20 y 70 veces más rápido en compilaciones en frío.} se encarga de transformar ese código a JavaScript puro antes de enviarlo al navegador.
 
-    \item \textbf{Código fuente y tipado (\textit{TypeScript 5}):} El código fuente está escrito en TypeScript 5~\cite{typescript2024}\footnote{\textbf{Typescript:} Superconjunto tipado de JavaScript, desarrollado por Microsoft, que añade anotaciones de tipo verificadas en compilación. La versión 5 introdujo decoradores como estándar ECMAScript y mejoras sustanciales en el rendimiento del compilador.}. Con \texttt{strict: true} en \texttt{tsconfig.json}, el compilador detecta incompatibilidades de tipo, propiedades inexistentes y posibles valores nulos antes de que el código llegue al navegador. En un proyecto con formularios complejos, flujos de pago y geolocalización, esta verificación estática elimina categorías enteras de errores que en JavaScript puro solo aparecerían en producción. El compilador configurado es SWC\footnote{\textbf{Speedy Web Compiler:} Transpilador escrito en Rust que reemplaza a Babel en la transformación de TypeScript y JSX. Es entre 20 y 70 veces más rápido que Babel en compilaciones en frío, según los benchmarks publicados por su autor.} integrado en Vite.
+\paragraph{Framework y renderizado.}
+La interfaz se construye con \textit{React 18.3.1}~\cite{react2024}. El argumento determinante para elegir esta versión fue el \textit{modo concurrente}: características como \texttt{useTransition} y \texttt{startTransition} permiten marcar como no urgentes las actualizaciones costosas en componentes React —por ejemplo, refrescar el listado de plazas disponibles al mover el mapa— de modo que el motor puede aplazar esa actualización para atender primero los gestos táctiles del usuario, evitando que los paneles de filtros o resultados bloqueen la interacción durante cargas intensivas.
 
-    \item \textbf{Framework web y reactividad (\textit{React 18}):} La interfaz se construye con React 18.3.1~\cite{react2024}. El modelo de React es \textit{declarativo} y \textit{reactivo}: el desarrollador describe cómo debe verse la interfaz en función de un estado, y React calcula las diferencias con respecto al estado anterior para actualizar solo los nodos afectados del DOM virtual\footnote{\textbf{Document Object Model virtual:} Representación en memoria del árbol de componentes que React mantiene para calcular el conjunto mínimo de cambios necesarios en el DOM real del navegador, evitando repintados innecesarios.}. La versión 18 introduce el modo concurrente\footnote{\textbf{Modo concurrente:} Mecanismo de planificación de renders que permite a React interrumpir un renderizado costoso para atender una interacción del usuario, reanudándolo después. Evita que operaciones como cargar el mapa con cientos de marcadores bloqueen los gestos táctiles.}. Se utilizan exclusivamente componentes funcionales con \textit{hooks}\footnote{\textbf{Hooks:} Funciones de React que permiten añadir estado, efectos secundarios y lógica reutilizable a componentes funcionales, sin recurrir a clases.}
+El empaquetador es Vite 6.4.1~\cite{vitejs2024}, que acelera el ciclo de desarrollo al evitar recompilar toda la aplicación ante cada cambio, y optimiza el código para  producción eliminando automáticamente las partes no utilizadas. El enrutado usa \textit{React Router DOM 7}~\cite{reactrouter2024}, configurado con \textit{lazy loading} para cargar el código de cada pantalla únicamente cuando el usuario la visita, lo que reduce el tiempo de carga inicial de la aplicación.
 
-    \item \textbf{Empaquetado y enrutado (\textit{Vite y React Router}):} El empaquetador es Vite 6.4.1~\cite{vitejs2024}. Durante el desarrollo sirve los módulos directamente como ES Modules nativos, lo que elimina el paso de reempaquetado explícito ante cada cambio y le permite un arranque milisegundo frente al histórico Webpack. Para producción genera un bundle con \textit{tree shaking}\footnote{\textbf{Tree shaking:} Proceso de eliminación del código que no se referencia en ninguna ruta de importación, reduciendo el tamaño del bundle final.} automático. El enrutado usa React Router DOM 7~\cite{reactrouter2024} con \textit{lazy loading}\footnote{\textbf{Lazy Loading:} Técnica de carga diferida que divide el bundle en fragmentos independientes (\textit{chunks}) y descarga el código de cada pantalla únicamente cuando el usuario la visita por primera vez.}
-
-    \item \textbf{Gestión de estado y formularios (\textit{TanStack y Hook Form}):} La obtención y sincronización de datos del servidor usa TanStack Query v5~\cite{tanstack_query2024}, que gestiona la caché, los reintentos automáticos y la revalidación en segundo plano. Los formularios (alta de plaza, inicio de sesión) se gestionan con React Hook Form 7, que opera fuera del ciclo de estado de React y evita los costosos re-renders.
-
-    \item \textbf{Estilos y componentes (\textit{Tailwind CSS}):} El sistema de estilos usa Tailwind CSS 4.1.3~\cite{tailwindcss2024} con la filosofía \textit{utility-first}\footnote{\textbf{Utility first:} Los estilos se componen en el marcado mediante clases de utilidad atómicas (padding, color, tipografía) en lugar de escribir hojas CSS por componente.}. Los componentes de interfaz se construyen sobre \textit{Radix UI}, combinada con \textit{shadcn/ui} para facilitar su personalización.
-\end{itemize}
-
-Antes de determinar el stack defintivo, la \autoref{tab:frameworks-comparativa} recoge los factores técnicos que se sopesaron para elegir la arquitectura frontal sobre sus alternativas competidoras directas del mercado:
+El factor que descartó las alternativas fue la integración con \textit{Capacitor}, el adaptador que empaqueta la aplicación web como APK nativo de Android. Angular quedó descartado por su curva de aprendizaje y menor afinidad con Capacitor; Vue y Svelte ofrecen mejoras de rendimiento notables pero su ecosistema para integraciones híbridas móviles es mucho más reducido. La \autoref{tab:frameworks-comparativa} resume los criterios decisivos:
 
 \begin{table}[htbp]
-\centering
-\caption{Comparativa de frameworks JavaScript de frontend para el desarrollo de Parky.}
-\label{tab:frameworks-comparativa}
-\begin{tabularx}{\textwidth}{lXXXX}
-\toprule
-\textbf{Característica} & \textbf{React 18} & \textbf{Vue 3} & \textbf{Angular 17} & \textbf{Svelte 4} \\
-\midrule
-Paradigma          & Componentes func. + Hooks & Composition API / Options API & MVC + decoradores & Compilado a JS nativo \\
-Modo concurrente   & Sí (v18)  & No      & No       & No \\
-App nativa         & React Native & No   & No       & Experimental \\
-TypeScript         & Integrado & Integrado & Nativo (obligatorio) & Integrado \\
-Ecosistema         & Muy amplio & Amplio & Amplio  & Limitado \\
-Mantenedor         & Meta      & Evan You / comunidad & Google & Vercel / Rich Harris \\
-\bottomrule
-\end{tabularx}
+  \centering
+  \caption{Comparativa de frameworks JavaScript de frontend para el desarrollo de Parky.}
+  \label{tab:frameworks-comparativa}
+  \begin{tabularx}{\textwidth}{lXXXX}
+    \toprule
+    \textbf{Criterio}        & \textbf{React 18} & \textbf{Vue 3} & \textbf{Angular 17} & \textbf{Svelte 4} \\
+    \midrule
+    Modo concurrente         & Sí (v18)          & No             & No                  & No                \\
+    App nativa (Capacitor)   & Completa          & Limitada       & Limitada            & Experimental      \\
+    Ecosistema híbrido móvil & Muy amplio        & Reducido       & Reducido            & Muy reducido      \\
+    \bottomrule
+  \end{tabularx}
 \end{table}
 
-Más allá de los números de la tabla, el factor decisivo fue \textbf{Capacitor}: el adaptador que permite empaquetar la aplicación web como APK nativo de Android. Está sumamente documentado e integrado para React (ya que pertenece a la suite de Ionic). Angular quedó descartado por su poca compatibilidad con Capacitor en comparación con React y por su larga curva de aprendizaje. Vue y Svelte recogen mejoras de rendimiento considerables, pero su ecosistema de utilidades transversales (incluyendo un análogo solvente a TanStack) es menor de cara a integraciones híbridas móviles.
+\paragraph{Estado, formularios y estilos.}
+La sincronización de datos con el servidor se gestiona con \textit{TanStack Query v5}~\cite{tanstack_query2024}\footnote{\textbf{TanStack Query}: biblioteca de gestión de estado asíncrono que abstrae la caché, el ciclo de vida y la sincronización de datos remotos en aplicaciones React.}, que mantiene la interfaz actualizada automáticamente sin que el desarrollador gestione manualmente cuándo y cómo refrescar los datos. Esto es especialmente relevante en Parky, donde la disponibilidad de una plaza puede cambiar en cualquier momento por una reserva concurrente.
 
-La \autoref{fig:frontend_logos} compila de manera visual la tecnología definitiva que conforma el ecosistema \textit{Frontend} actual de la plataforma:
+Los formularios (alta de plaza, inicio de sesión, selección de intervalo de reserva) se gestionan con \textit{React Hook Form 7}\footnote{\textbf{React Hook Form}: biblioteca de gestión de formularios que registra los campos mediante refs en lugar de estado de React, minimizando los re-renders durante la edición.}. A diferencia del enfoque estándar de React, los campos no provocan un re-render de la interfaz en cada pulsación de teclado, lo que importa especialmente en formularios con validaciones cruzadas como el selector de intervalo horario de una reserva.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.15\textwidth]{images/assets/HTML_logo.png} \hspace{1cm}
-    \includegraphics[width=0.15\textwidth]{images/assets/Typescript_logo.png} \hspace{1cm}
-    \includegraphics[width=0.15\textwidth]{images/assets/React_logo.png} \hspace{1cm}
-    \includegraphics[width=0.15\textwidth]{images/assets/Tailwind_logo.png}
-    \caption{Tecnologías que componen la infraestructura principal \textit{Frontend}: HTML5, TypeScript, React y Tailwind CSS.}
-    \label{fig:frontend_logos}
-\end{figure}
+El sistema de estilos usa \textit{Tailwind CSS 4.1.3}~\cite{tailwindcss2024} \footnote{\textbf{Tailwind CSS}: framework de estilos utility-first que compone el diseño visual mediante clases atómicas aplicadas directamente en el marcado, en lugar de hojas CSS por componente.}. Los componentes de interfaz se construyen sobre Radix UI\footnote{\textbf{Radix UI}: biblioteca de componentes primitivos para React que garantiza accesibilidad por defecto sin imponer estilos propios.}, que garantiza un comportamiento accesible por defecto (gestión de foco, navegación por teclado, atributos ARIA, etc.) de modo que Tailwind controla completamente la apariencia visual sin fricciones.
 
 % ------------------------------------------------------------
 \subsection{APIs externas de cartografía y geocodificación}
 \label{subsec:apis-cartografia}
 
-Al tratarse de una aplicación de gestión de aparcamiento, la localización geográfica es una funcionalidad de primer nivel: el usuario busca plazas en un radio de distancia, las visualiza en un mapa interactivo y accede a la dirección exacta. Esto requiere dos capacidades distintas: renderizar mapas y convertir direcciones de texto en coordenadas geográficas.
+En Parky la localización geográfica no es un complemento sino el núcleo de la experiencia: el arrendatario busca plazas dentro del área visible del mapa, las visualiza como marcadores geoposicionados y accede a la dirección exacta del garaje. Esto exige dos capacidades independientes: renderizar mapas interactivos y convertir direcciones de texto en coordenadas geográficas.
 
-\paragraph{Leaflet y OpenStreetMap.}
-La visualización cartográfica usa \textbf{Leaflet 1.9.4}~\cite{leafletjs2024} con el adaptador \textbf{React-Leaflet 4.2.1}, sirviendo las teselas de \textbf{OpenStreetMap}~\cite{openstreetmap2024}. Se descartó la API de \textbf{Google Maps}\footnote{\textbf{Google Maps Platform:} Aplica cargos a partir de 28.000 cargas de mapa al mes (\$200 de crédito gratuito mensual). Para un prototipo en validación con crecimiento impredecible de usuarios, este modelo introduce un riesgo financiero difícil de controlar.} por su modelo de facturación por volumen. Leaflet es \textit{open source} (licencia BSD-2), sin costes por carga de mapa, y su rendimiento en dispositivos Android de gama media es suficiente para los casos de uso de Parky.
+\paragraph{Leaflet.}
+La visualización cartográfica usa \textit{Leaflet 1.9.4}~\cite{leafletjs2024} con el adaptador React-Leaflet 4.2.1. La alternativa natural era la API de \textit{Google Maps}, descartada por su modelo de facturación por volumen. Leaflet es \textit{open source} (bajo licencia BSD-2), sin coste por carga de mapa, y su rendimiento en dispositivos Android de gama media es suficiente para los casos de uso de Parky.
 
 \paragraph{OpenCage Geocoding API.}
-La conversión entre direcciones de texto y coordenadas geográficas (y a la inversa) usa \textbf{OpenCage Geocoding API}~\cite{opencage2024}. Este servicio agrega datos de OpenStreetMap, Geonames y otras fuentes abiertas, con soporte para direcciones canarias. El plan gratuito incluye 2.500 peticiones diarias, suficiente para el volumen esperado durante la fase de prototipado.
+La conversión entre direcciones de texto y coordenadas geográficas usa \textit{OpenCage Geocoding API}~\cite{opencage2024}. Este servicio agrega datos de OpenStreetMap, Geonames y otras fuentes abiertas con soporte para direcciones canarias, lo que es fundamental para la aplicación. El plan gratuito incluye 2.500 peticiones diarias, suficiente para el volumen esperado durante la fase de prototipado.
 
 % ------------------------------------------------------------
 \subsection{Backend}
 \label{subsec:backend}
 
-Para la infraestructura de lógica y servicios de apoyo, se evaluó la posibilidad de desarrollar un servidor a medida (\textit{Custom Backend}) mediante Node.js o Python frente al uso de plataformas \textit{Backend-as-a-Service} (BaaS)\footnote{\textbf{BaaS (Backend-as-a-Service):} Modelo de computación en la nube donde un proveedor externo aloja y gestiona la infraestructura central del servidor (como almacenamiento, autenticación y bases de datos), permitiendo al desarrollador consumirla a través de APIs documentadas.}. Finalmente se optó por \textbf{Supabase}~\cite{supabase2024} por los siguientes motivos:
+Se evaluó desarrollar un servidor a medida con \textit{Node.js} o \textit{Python} frente al uso de plataformas \textit{BaaS}\footnote{\textbf{BaaS (Backend-as-a-Service):} Modelo donde un proveedor externo aloja la infraestructura central del servidor —almacenamiento, autenticación, base de datos— y el desarrollador la consume a través de APIs documentadas.}, pero se optó por \textit{Supabase}~\cite{supabase2024} por tres razones.
 
-\begin{itemize}
-    \item \textbf{Gestión de Autenticación (\textit{Auth}):} Delega la responsabilidad de la seguridad de las sesiones, el cifrado de contraseñas y los flujos OAuth (Google/Facebook) de forma nativa. Esto elimina la necesidad de implementar y auditar manualmente el sistema de gestión de identidades.
-    \item \textbf{Almacenamiento de archivos (\textit{Storage}):} Proporciona un sistema de gestión de objetos para las imágenes de los garajes y perfiles, con políticas de acceso integradas que permiten que solo el propietario pueda modificar sus recursos.
-    \item \textbf{Integración de Pagos P2P (\textit{Stripe Connect}):} Aunque reside en la lógica de negocio, la arquitectura se apoya en Supabase para orquestar el flujo hacia Stripe Connect. Este modelo permite que la plataforma actúe como intermediaria, reteniendo comisiones y calculando automáticamente el IGIC canario (7\%) sin que los fondos pasen por una cuenta bancaria central de la aplicación, simplificando la fiscalidad.
-\end{itemize}
+Supabase cuenta con una capa de autenticación que gestiona el cifrado de contraseñas, los flujos OAuth (Google) de forma nativa y las sesiones mediante \textit{JWT}\footnote{\textbf{JWT} (\textit{JSON Web Token}): estándar RFC 7519 que define un formato compacto para transmitir información entre partes como objeto JSON firmado criptográficamente.}, eliminando la necesidad de implementar y auditar un sistema de identidades propio. También cuenta con un almacenamiento de objetos que gestiona las imágenes de garajes y perfiles con políticas de acceso integradas que impiden que un usuario modifique recursos ajenos. Por último y más importante, para los pagos, la plataforma cuenta con integración con \textit{Stripe Connect}\footnote{\textbf{Stripe Connect}: arquitectura de pagos de Stripe para \textit{marketplaces} que separa y liquida automáticamente los fondos entre las partes.} por medio de Edge Functions, que calculan la comisión de la plataforma, el \textit{IGIC} y transfieren el saldo neto directamente a la cuenta bancaria del propietario del garaje sin que los fondos pasen por una cuenta bancaria central, lo que simplifica la fiscalidad.
 
-La elección de una solución BaaS frente a un desarrollo propio se justifica por la necesidad de agilidad y la reducción de la superficie de ataque, permitiendo que un equipo de una sola persona pueda gestionar una infraestructura robusta.
+Un desarrollo backend propio habría requerido implementar estos tres sistemas desde cero, con la carga de mantenimiento y la superficie de ataque que eso implica en un equipo de una sola persona.
 
+% ------------------------------------------------------------
 \subsection{Base de datos}
 \label{subsec:bbdd}
 
-El corazón de Parky es su motor de persistencia. Se realizó un estudio comparativo entre el modelo relacional (SQL) y el modelo documental (NoSQL), como se muestra a continuación:
+Se compararon el modelo relacional y el modelo documental para la capa de persistencia. El dominio de Parky es inherentemente relacional: una reserva vincula a un usuario con una plaza, que pertenece a un garaje, durante un intervalo de tiempo con un pago asociado. \textit{MongoDB}~\cite{mongodb2024} exigiría replicar esa cadena en múltiples documentos, con el riesgo de inconsistencia ante una operación fallida a mitad de ejecución. Es por eso que se eligió \textit{PostgreSQL}~\cite{postgresql2024} porque resuelve esa inconsistencia con integridad referencial mediante \textit{foreign keys}\footnote{\textbf{Foreign key} (clave foránea): columna que referencia la clave primaria de otra tabla, garantizando que no puedan existir reservas de plazas inexistentes o registros huérfanos.} y \textit{transacciones ACID}\footnote{\textbf{ACID}: propiedades de Atomicidad, Consistencia, Aislamiento y Durabilidad que garantizan que las operaciones de base de datos se ejecutan completamente o no se ejecutan en absoluto.}.
 
-\begin{itemize}
-    \item \textbf{Modelo Relacional (\textit{PostgreSQL}~\cite{postgresql2024}):} Elegido finalmente por su capacidad para manejar transacciones complejas. El dominio de las reservas de aparcamiento es inherentemente relacional: una reserva vincula a un usuario con una plaza, que pertenece a un garaje. Las restricciones de integridad (\textit{foreign keys})\footnote{\textbf{Foreign Keys (Claves Foráneas):} Columnas ubicadas en una tabla relacional que establecen un vínculo lógico o una dependencia directa hacia la clave primaria de otra tabla, impidiendo, por ejemplo, que se logre crear la reserva de una plaza que realmente no existe.} aseguran que no existan reservas huérfanas o duplicadas.
-    \item \textbf{Modelo Documental (\textit{MongoDB}~\cite{mongodb2024}):} Descartado debido a que la gestión de la consistencia en reservas concurrentes obligaría a realizar actualizaciones manuales en múltiples documentos, aumentando el riesgo de inconsistencia de datos si una operación falla a mitad del proceso.
-\end{itemize}
-
-Dentro de PostgreSQL (específicamente en su \textbf{versión mayor 15}), se han implementado las siguientes características avanzadas:
-\begin{itemize}
-    \item \textbf{Seguridad a nivel de fila (\textit{RLS}):} Mediante políticas de base de datos, se garantiza que un usuario solo pueda leer sus propias reservas, evitando que errores en el código de la aplicación puedan exponer datos de terceros.
-    \item \textbf{Integridad mediante Triggers (PL/pgSQL):} Se han programado disparadores que verifican, antes de guardar cualquier reserva, que no exista un solapamiento horario en la misma plaza, garantizando la consistencia incluso si se reciben peticiones simultáneas.
-\end{itemize}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.2\textwidth]{images/assets/PostgreSQL_logo.png} \hspace{1cm}
-    \includegraphics[width=0.2\textwidth]{images/assets/Supabase_logo.png} 
-    \caption{Representación del stack de persistencia y lógica: PostgreSQL y Supabase.}
-    \label{fig:backend_logos}
-\end{figure}
+Dentro de \textit{PostgreSQL 15} se usan dos características avanzadas: las \textit{políticas RLS} que garantizan que cada usuario solo pueda leer sus propias reservas y los \textit{triggers PL/pgSQL} que comprueban, antes de confirmar cualquier reserva, que no exista solapamiento horario en la misma plaza, manteniendo la consistencia incluso ante peticiones simultáneas.
 
 % ============================================================
 \section{Entorno de desarrollo}
 \label{sec:entorno}
 
-\subsection{Editor de código}
-\label{subsec:editor}
+\paragraph{Editor de código.}
+El entorno de desarrollo es \textit{Visual Studio Code}~\cite{vscode2026}. Frente a IDEs\footnote{\textbf{IDE} (\textit{Integrated Development Environment}): entorno que agrupa editor, compilador y depurador en una única aplicación.} basados en IntelliJ, su consumo de memoria es sensiblemente menor, lo que resulta determinante en el desarrollo híbrido con Capacitor, donde el emulador de Android debe estar abierto en paralelo. Además, integra de forma nativa el servidor de TypeScript, por lo que el análisis de tipos en el editor es idéntico al de la compilación real.
 
-El entorno de desarrollo principal es \textbf{Visual Studio Code} (VS Code). Para proyectos basados en TypeScript y React, VS Code tiene una ventaja clara sobre alternativas como IntelliJ IDEA: integra el servidor de TypeScript que también usa el compilador, por lo que el análisis de tipos en el editor es idéntico al de la compilación real. El coste en memoria es considerablemente menor que el de IDEs\footnote{\textbf{IDE (Integrated Development Environment):} Entorno de desarrollo integrado que agrupa, en una única aplicación, el redactor de código de un lenguaje junto a un compilador subyacente, automatizador y depurador.} basados en la plataforma IntelliJ, lo que importa cuando se trabaja con el emulador de Android abierto en paralelo.
+\paragraph{Control de versiones.}
+El control de versiones usa \textit{Git}~\cite{git2024} con \textit{GitHub}~\cite{github2024} como repositorio remoto. Esta combinación no solo documenta el historial de cambios por fases de desarrollo, sino que actúa como punto de integración con el pipeline de despliegue continuo de Vercel: cada commit en la rama principal desencadena automáticamente un nuevo despliegue en producción.
 
-\subsection{Control de versiones}
-\label{subsec:git}
+\paragraph{Diseño de interfaces.}
+El diseño visual previo a la implementación se realizó con \textit{Figma}~\cite{figma2024}, que permitió validar la disposición de pantallas, la paleta de colores y las distancias entre elementos antes de traducirlos a clases de Tailwind CSS. Trabajar con un prototipo de alta fidelidad redujo el número de decisiones de diseño durante el desarrollo, concentrando ese esfuerzo en una fase anterior donde el coste de cambio es menor. La figura~\ref{fig:figma-vs-produccion-home} muestra la evolución entre el prototipo inicial y la pantalla principal en producción.
 
-El control de versiones usa \textbf{Git}~\cite{git2024} con \textbf{GitHub}~\cite{github2024} como repositorio remoto. El historial de ramas documenta las fases de desarrollo y facilita la trazabilidad de decisiones técnicas. De cara a un despliegue futuro, GitHub sirve como punto de integración automática con pipelines de Vercel.
-
-\subsection{Diseño de interfaces}
-\label{subsec:figma}
-
-Para la concepción visual pre-programación se empleó \textbf{Figma}~\cite{figma2024}. Esta valiosa herramienta de diseño UI/UX\footnote{\textbf{UI/UX (User Interface / User Experience):} Disciplinas enfocadas, respectivamente, en el esqueleto visual de la aplicación y en el flujo narrativo para otorgar confort y un fácil aprendizaje al propio usuario final.} permitió maquetar pantallas, asimilar paletas de colores y afianzar las distancias entre elementos para su posterior réplica ágil a través de las métricas de \textit{Tailwind CSS}.
-
-\subsection{Herramientas de calidad}
-\label{subsec:calidad}
-
-El análisis estático de código recae sobre \textbf{ESLint 9}~\cite{eslint2024} nutrido del plugin \texttt{react-hooks}. Además de ser sumamente estricto al arrojar advertencias ante errores tipográficos en variables libres e inconsistencias severas en el formato (código sucio), su verdadero cometido consiste en asegurar la corrección estructural de un archivo localizando dependencias cíclicas y previniendo los re-renderizados infinitos habituales del \textit{DOM}.
-
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/assets/FIGMA_HOME}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/assets/PARKY_HOME}
+  \end{minipage}
+  \caption{Comparativa entre el prototipo en Figma (izquierda) y la pantalla principal de Parky en producción (derecha).}
+  \label{fig:figma-vs-produccion-home}
+\end{figure}
 
 % ============================================================
 \section{Plataformas de despliegue}
 \label{sec:despliegue}
 
-\subsection{Web: Vercel}
-\label{subsec:vercel}
+\paragraph{Web: Vercel.}
+La versión web se despliega en \textit{Vercel}~\cite{vercel2024}, elegido por su integración nativa con GitHub ya que cada commit en la rama principal desencadena automáticamente una nueva compilación y distribución en su CDN global, sin configuración adicional. Gestiona además los certificados TLS de forma automática. El dominio público de la página se registró en One.com~\cite{onecom2024} y se enlazó a Vercel mediante registros DNS.
 
-La versión web está desplegada de forma automatizada en \textbf{Vercel}~\cite{vercel2024}, una plataforma \textit{serverless} optimizada para el hospedaje ininterrumpido de aplicaciones SPA. Supone un salto diametral de agilidad frente a alquilar un servidor VPS\footnote{\textbf{VPS (Virtual Private Server):} Máquina virtual dedicada alquilada, donde el propio programador es responsable de instalar por su cuenta el sistema operativo o el servidor web subyacente para poder mostrar su plataforma de manera pública.}. 
-
-De manera imperativa, Vercel automatiza la distribución algorítmica de los empaquetamientos en una CDN Global\footnote{\textbf{CDN (Content Delivery Network):} Red de servidores distribuidos masivamente por el planeta que aloja réplicas y distribuye físicamente el núcleo al nodo geográfico más cercano pertinente al usuario cliente, abaratando la latencia.}\footnote{\textbf{Certificado SSL/TLS:} Protocolo universal de autenticación para comprobar la identidad e integridad de un nodo y cifrar simétricamente las llamadas de URL generadas por el mismo, siendo de uso perentorio comercialmente.} y autogestiona la renovación de las firmas SSL.
-
-Finalmente, para dotar al TFG de identidad empresarial y escapar de los nombres públicos generados sintéticamente, el proyecto de Vercel fue configurado externamente sobre una compra de dominio proporcionada por el registrador \textbf{One.com}~\cite{onecom2024}. Mediante un mapeo estricto a través de registros DNS\footnote{\textbf{DNS (Domain Name System):} Traductores imperceptibles de nomenclatura usados mundialmente que canalizan un nombre de empresa legible para humanos como una dirección IP identificable para el clúster interno de conmutadores interconectados en Internet.}, se instruyó a Vercel a asociar de manera simétrica dicho dominio con la SPA expuesta, garantizando una URL limpia e identitaria lista para los clientes finales.
-
-\subsection{Android: Capacitor}
-\label{subsec:capacitor}
-
-La aplicación Android se genera con \textbf{Capacitor 8.1.0}~\cite{capacitor2024}, que encapsula la aplicación web dentro de una \textit{WebView} nativa mediante el patrón \textit{Bridge}\footnote{Patrón de comunicación que traduce llamadas desde el código JavaScript de la WebView a la API nativa de Android (Java/Kotlin), permitiendo acceder a funcionalidades del dispositivo como la cámara, el almacenamiento local o la barra de estado.}. A diferencia de React Native, que requiere reescribir los componentes de interfaz en primitivas nativas, Capacitor reutiliza las vistas TypeScript/HTML sin modificaciones. El APK final se compila desde Android Studio.
-
+\paragraph{Android: Capacitor.}
+La aplicación Android se genera con \textit{Capacitor 8.1.0}~\cite{capacitor2024}, que encapsula la aplicación web dentro de una WebView nativa. A diferencia de React Native, que requiere reescribir los componentes en primitivas nativas, Capacitor reutiliza las vistas TypeScript/HTML sin modificaciones, lo que permite mantener una única base de código para web y Android. El APK final se compila desde Android Studio sin modificar ningún componente de React.
 
 % ============================================================
 \section{Análisis de alternativas y decisiones de diseño}
 \label{sec:dificultades}
 
-Cada decisión tecnológica tiene un coste. Esta sección recoge los casos en los que la elección no fue obvia y los factores que inclinaron la balanza.
+La tabla~\ref{tab:baas-comparativa} recoge la comparativa de plataformas BaaS que determinó la elección de Supabase como infraestructura central del proyecto.
 
 \begin{table}[htbp]
-\centering
-\caption{Comparativa de plataformas BaaS frente a las necesidades de Parky.}
-\label{tab:baas-comparativa}
-\begin{tabularx}{\textwidth}{lXXX}
-\toprule
-\textbf{Característica} & \textbf{Supabase}~\cite{supabase2024} & \textbf{Firebase}~\cite{firebase2024} & \textbf{AWS Amplify}~\cite{awsamplify2024} \\
-\midrule
-Motor de base de datos  & PostgreSQL (relacional) & Firestore (documental) & DynamoDB (documental) \\
-Consultas relacionales  & SQL nativo, JOINs & Limitadas, sin JOINs & Limitadas \\
-Row Level Security      & Nativo en PostgreSQL & No disponible & No disponible \\
-Triggers y funciones    & PL/pgSQL nativo & Cloud Functions (externo) & Lambda (externo) \\
-Modelo de datos         & Normalizado, tipado & Flexible, sin esquema & Flexible, sin esquema \\
-Límite tier gratuito    & 500 MB / 2 proyectos & 1 GB (Spark Plan) & Generoso pero complejo \\
-\bottomrule
-\end{tabularx}
+  \centering
+  \caption{Comparativa de plataformas BaaS frente a las necesidades de Parky.}
+  \label{tab:baas-comparativa}
+  \begin{tabularx}{\textwidth}{lXXX}
+    \toprule
+    \textbf{Característica} & \textbf{Supabase}~\cite{supabase2024}
+                            & \textbf{Firebase}~\cite{firebase2024}
+                            & \textbf{AWS Amplify}~\cite{awsamplify2024} \\
+    \midrule
+    Motor de base de datos  & PostgreSQL (relacional)
+                            & Firestore (documental)
+                            & DynamoDB / Aurora Serverless               \\
+    Consultas relacionales  & SQL nativo con JOINs
+                            & Limitadas, sin JOINs
+                            & Posibles con Aurora Serverless             \\
+    Row Level Security      & Nativo en PostgreSQL
+                            & No disponible
+                            & No disponible                              \\
+    Autenticación           & Nativo (email, OAuth, MFA)
+                            & Authentication integrado
+                            & Amazon Cognito                             \\
+    Triggers y funciones    & PL/pgSQL + Edge Functions (Deno)
+                            & Cloud Functions (externo)
+                            & Lambda (externo)                           \\
+    Modelo de datos         & Normalizado, tipado
+                            & Flexible, sin esquema
+                            & Mixto (NoSQL o relacional)                 \\
+    Límite tier gratuito    & 500 MB / 2 proyectos
+                            & 1 GB (Spark Plan)
+                            & 12 meses AWS Free Tier                     \\
+    \bottomrule
+  \end{tabularx}
 \end{table}
 
-Firebase y AWS Amplify tienen ecosistemas maduros y escalan bien en bases de datos documentales. El problema es que el dominio de Parky no encaja en ese modelo: una reserva vincula a un usuario con una plaza, en un garaje, durante un intervalo de tiempo, con un pago asociado. Esa cadena de relaciones se expresa en cuatro tablas con \textit{JOINs}; en Firestore exigiría replicar datos en múltiples documentos y aceptar que una actualización parcial deje el sistema en estado inconsistente si el dispositivo pierde conexión a mitad del proceso.
+Tanto Firebase como AWS Amplify están pensados para modelos de datos documentales y escalan bien en ese contexto, pero el dominio de Parky no encaja ahí. La cadena reserva\,---\,usuario\,---\,plaza\,---\,garaje\,---\,intervalo\,---\,pago se expresa de forma natural en tablas relacionadas mediante JOINs; trasladarla a Firestore obligaría a replicar datos en varios documentos, lo que introduce riesgo de inconsistencia ante cualquier escritura parcial fallida. AWS Amplify ofrece Aurora Serverless como salida relacional, pero su configuración es considerablemente más compleja y carece de RLS nativo, lo que habría obligado a gestionar el aislamiento de datos entre roles desde la capa de aplicación en lugar de resolverlo directamente en el esquema de base de datos.
 
-El coste real de usar Supabase es el límite del plan gratuito: 500 MB de base de datos y pausas automáticas tras 7 días de inactividad. Para un prototipo universitario eso es suficiente, pero una versión comercial necesitaría el plan Pro (\$25/mes). Ese coste está recogido en el plan de viabilidad del capítulo~\ref{ch:conclusiones}.
-
-\begin{table}[htbp]
-\centering
-\caption{Resumen del stack tecnológico de Parky con versiones de producción.}
-\label{tab:stack-resumen}
-\begin{tabularx}{\textwidth}{llXl}
-\toprule
-\textbf{Capa}          & \textbf{Tecnología}      & \textbf{Función}                          & \textbf{Versión} \\
-\midrule
-Lenguaje base          & TypeScript               & Tipado estático sobre JavaScript          & 5.9.3  \\
-Estructura web         & HTML5 + JSX              & Marcado semántico generado por React      & ---    \\
-Framework UI           & React                    & Componentes reactivos declarativos        & 18.3.1 \\
-Empaquetador           & Vite + SWC               & Compilación y bundling optimizados        & 6.4.1  \\
-Enrutado               & React Router DOM         & Navegación SPA con lazy loading           & 7.12.0 \\
-Estado servidor        & TanStack Query           & Caché y sincronización de datos           & 5.90.20 \\
-Formularios            & React Hook Form          & Formularios de alto rendimiento           & 7.71.0 \\
-Estilos                & Tailwind CSS             & Utilidades CSS utility-first              & 4.1.18  \\
-Componentes UI         & Radix UI + shadcn/ui     & Primitivas accesibles sin estilos opacos  & ---    \\
-Mapas                  & Leaflet + React-Leaflet  & Visualización cartográfica OpenStreetMap  & 1.9.4 / 4.2.1 \\
-Geocodificación        & OpenCage Geocoding API   & Conversión dirección \textrightarrow\ coordenadas & --- \\
-BaaS                   & Supabase                 & Auth, base de datos, almacenamiento       & 2.90.1 \\
-Base de datos          & PostgreSQL               & Motor relacional con RLS y PL/pgSQL       & 15     \\
-Pagos                  & Stripe Connect           & Marketplace P2P con separación IGIC       & ---    \\
-App nativa             & Capacitor                & Empaquetado APK para Android              & 8.1.0  \\
-Despliegue web         & Vercel                   & CDN con CI/CD automático desde GitHub     & ---    \\
-\bottomrule
-\end{tabularx}
-\end{table}
+El principal compromiso de Supabase es su plan gratuito: 500~MB de almacenamiento y pausa automática del proyecto tras 7 días de inactividad. Para un prototipo universitario ambos límites son asumibles, pero una versión comercial requeriría migrar al plan Pro (\$25/mes).

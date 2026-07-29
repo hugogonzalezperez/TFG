@@ -1,0 +1,326 @@
+\chapter{Metodología y análisis de requisitos}
+\label{ch:metodologia}
+
+Este capítulo establece el marco metodológico del proyecto y formaliza los actores del sistema, los requisitos funcionales y no funcionales, los casos de uso y el diseño de la base de datos.
+
+% ============================================================
+\section{Metodología de desarrollo}
+\label{sec:metodologia}
+
+% --- Párrafo 1: Justificación de Scrum ---
+El modelo en cascada fue descartado desde el inicio. Un proyecto de esta naturaleza presenta requisitos que solo se concretan durante la implementación: la integración de Leaflet con datos georreferenciados en Supabase, el comportamiento del motor de precios dinámicos o el diseño del módulo SmartAccess son funcionalidades cuya especificación completa no es posible antes de haber construido las capas que las sustentan. Se adoptó \textbf{Scrum adaptado}~\cite{scrum2020} con sprints de dos semanas, cada uno centrado en un módulo funcional de alto nivel. La ventaja determinante frente a cascada es la capacidad de reordenar el \textit{product backlog} al inicio de cada ciclo: el módulo SmartAccess, por ejemplo, no formaba parte del análisis inicial sino que emergió durante la revisión del cuarto sprint, cuando quedó claro que el acceso físico a la plaza era un diferenciador funcional del sistema. En un esquema en cascada ese cambio hubiera obligado a retroceder a la fase de requisitos; en Scrum bastó con añadir las historias de usuario al backlog y priorizarlas en el siguiente ciclo.
+
+% --- Párrafo 2: Estructura del sprint ---
+Al tratarse de un proyecto unipersonal, los tres roles canónicos de Scrum —\textit{Product Owner}, \textit{Scrum Master} y equipo de desarrollo— convergieron en una única persona. Cada sprint siguió la misma estructura: una sesión de planificación de aproximadamente dos horas al inicio del ciclo para seleccionar y descomponer las historias de usuario prioritarias; el período de desarrollo; y una revisión y retrospectiva al cierre. Sin equipo con quien contrastar, la retrospectiva se orientó a identificar deuda técnica acumulada y vulnerabilidades detectadas durante el sprint. El tablero Kanban se gestionó en GitHub Projects con cuatro columnas: \textit{Backlog}, \textit{En progreso}, \textit{Revisión} y \textit{Hecho}. Cada \textit{issue} representaba una historia de usuario o tarea técnica vinculada al sprint activo mediante \textit{milestones}.
+
+% --- Tabla de sprints ---
+La Tabla~\ref{tab:sprints} recoge los nueve sprints del proyecto con sus fechas aproximadas, módulo principal y resultado entregable verificable en el historial de \textit{commits}.
+
+\begin{table}[htbp]
+\centering
+\caption{Sprints de desarrollo de Parky (enero–mayo de 2026).}
+\label{tab:sprints}
+\begin{tabularx}{\textwidth}{clXX}
+\toprule
+\textbf{Sprint} & \textbf{Período} & \textbf{Módulo principal} & \textbf{Resultado entregable} \\
+\midrule
+\rowcolor{gray!5}
+1 & 6–19 ene & Infraestructura base & Scaffolding React/Vite, autenticación Supabase, rutas protegidas y modo oscuro. \\
+2 & 20 ene–2 feb & Modelo de datos y perfil & Esquema de base de datos, RLS básico, edición de perfil e imágenes en Storage. \\
+\rowcolor{gray!5}
+3 & 3–16 feb & Plazas y mapa & Integración Leaflet, CRUD de garajes y plazas, React Query como capa de caché. \\
+4 & 17 feb–2 mar & Reservas, SmartAccess y pagos & Motor de precios, panel de propietario, módulo SmartAccess con log de accesos y esquema de pagos diseñado. \\
+\rowcolor{gray!5}
+5 & 3–16 mar & Despliegue multiplataforma & Despliegue en Vercel, compilación Android con Capacitor y publicación de APK nativo. \\
+6 & 17 mar–26 abr & Memoria del TFG & Redacción de los capítulos 1 a 4 de la memoria; los \textit{commits} de código quedan suspendidos. \\
+\rowcolor{gray!5}
+7 & 27 abr–10 may & Seguridad y calidad & Auditoría integral de RLS, borrado lógico en \texttt{bookings}, HSTS/CSP en Vercel, migración de \texttt{console.*} a logger. \\
+8 & 10–14 may & Disponibilidad y flujo de reserva & Horarios recurrentes en plazas, trigger de solapamiento en BD, buffer de 15 minutos y flujo de reserva completo. \\
+\rowcolor{gray!5}
+9 & 15–19 may & Pulido UX y optimización & \textit{Code splitting} (reducción del 95\,\% del \textit{bundle}), barra de navegación inferior, \textit{touch targets} móvil y modo oscuro estable. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% --- Párrafo 3: Gestión del backlog ---
+La priorización del \textit{product backlog} siguió el criterio \textbf{MoSCoW} adaptado a un proyecto académico: \textit{Must have} (autenticación, mapa, reservas, despliegue), \textit{Should have} (SmartAccess, disponibilidad recurrente, notificaciones en base de datos) y \textit{Could have} (integración completa con pasarela de pago, precios dinámicos por tramo horario, abonos recurrentes). Las funcionalidades clasificadas como \textit{Could have} que no alcanzaron el MVP quedan recogidas en el \textit{roadmap} del capítulo de conclusiones~(§\,\ref{ch:conclusiones}). Cada sprint se abrió con una sesión de reordenación del backlog en la que se revisaron los \textit{issues} en estado \textit{Backlog} a la luz de lo aprendido en el ciclo anterior; esta práctica fue la que permitió incorporar SmartAccess en el sprint~4 sin alterar los módulos ya cerrados.
+
+% --- Párrafo 4: Deuda técnica en proyecto unipersonal ---
+La ausencia de \textit{daily standups} desplaza la detección de deuda técnica a la retrospectiva de cada sprint. Dos casos ilustran este patrón en el proyecto. El primero: el paquete \texttt{@types/react} estaba fijado en la versión \texttt{\textasciicircum19.x} mientras el \textit{runtime} de React era la versión 18; la discrepancia provocaba falsos errores de tipado que no bloqueaban la compilación pero enmascaraban incompatibilidades reales. La inconsistencia se detectó en la revisión del sprint~7 y se corrigió antes del despliegue definitivo. El segundo: el borrado físico de reservas con \texttt{DELETE} era la implementación original del sprint~4; la retrospectiva del sprint~7 identificó que eliminar registros de \texttt{bookings} destruía el historial financiero de los arrendadores, por lo que se migró a borrado lógico mediante la columna \texttt{deleted\_at} sin modificar la lógica de negocio existente.
+
+% --- Referencia al Gantt ---
+La planificación temporal completa del proyecto —desde el 6 de enero de 2026 hasta la fecha de entrega— se recoge en el diagrama de Gantt de la Figura~\ref{fig:gantt} en el capítulo de viabilidad económica~(§\,\ref{ch:viabilidad}).
+
+% ============================================================
+\section{Actores del sistema}
+\label{sec:actores}
+
+Parky define cuatro actores. La separación entre arrendador y arrendatario no es solo conceptual: cada rol queda restringido a un subconjunto de datos distinto impuesto por las políticas RLS de la base de datos.
+
+\begin{table}[htbp]
+\centering
+\caption{Actores del sistema Parky.}
+\label{tab:actores-principales}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Actor} & \textbf{Responsabilidades y alcance} \\
+\midrule
+\rowcolor{gray!5}
+Arrendador    & Propietario de garajes. Publica plazas con precio, fotos y geolocalización. Acepta o rechaza reservas entrantes. Recibe pagos a través de Stripe Connect. \\
+\\
+Arrendatario  & Conductor que alquila plazas. Busca en el mapa, reserva, paga con Stripe y valora la plaza al finalizar. \\
+\\
+\rowcolor{gray!5}
+Administrador & Opera desde el \textit{dashboard} de Supabase con privilegios de servicio. Suspende cuentas, corrige datos y ejecuta consultas de mantenimiento. Sin interfaz en el cliente web. \\
+\\
+Sistema       & Componente automatizado. Procesa transacciones (Stripe), geocodifica direcciones (OpenCage), gestiona sesiones (OAuth) y emite notificaciones almacenadas en base de datos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Requisitos funcionales}
+\label{sec:requisitos_funcionales}
+
+Los dieciséis requisitos funcionales se agrupan por módulo en la Tabla~\ref{tab:rf}:
+
+\begin{table}[htbp]
+\centering
+\caption{Requisitos funcionales de Parky.}
+\label{tab:rf}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{ID} & \textbf{Actor} & \textbf{Descripción} \\
+\midrule
+\rowcolor{gray!5}
+RF-01 & Arr. / Arrend. / Admin. & Registro e inicio de sesión mediante email/contraseña y OAuth~(Google). \\
+RF-02 & Arrendador / Arrendatario & Tras el primer acceso, el usuario selecciona su rol; el campo queda fijo en \texttt{profiles}. \\
+\rowcolor{gray!5}
+RF-03 & Arrendador   & Dar de alta un garaje con nombre, dirección y fotos, y gestionar sus plazas individuales (crear, editar, desactivar) fijando precio por hora y disponibilidad. \\
+RF-04 & Arrendatario & Visualizar plazas disponibles en el mapa dentro del área visible y filtrarlas por precio y horario. \\
+\rowcolor{gray!5}
+RF-05 & Arrendatario & Solicitar reserva sobre una plaza con fecha y hora de inicio y fin. \\
+RF-06 & Sistema      & Rechazar reservas que solapen con otra confirmada o en curso en la misma plaza. \\
+\rowcolor{gray!5}
+RF-07 & Arrendador   & Las reservas entrantes permanecen en estado \texttt{pendiente} hasta su confirmación o rechazo manual. \\
+RF-08 & Sistema      & Procesar el cobro con Stripe: retener comisión e IGIC y transferir el saldo neto al arrendador. \\
+\rowcolor{gray!5}
+RF-09 & Sistema      & Reembolsar íntegramente al arrendatario si la reserva se cancela antes del inicio. \\
+RF-10 & Arrendatario & Valorar una plaza de 1 a~5 únicamente si la reserva está en estado \texttt{completada}. \\
+\rowcolor{gray!5}
+RF-11 & Sistema      & Notificar al arrendador cuando llegue una nueva solicitud de reserva. \\
+RF-12 & Sistema      & Notificar al arrendatario cuando el arrendador confirme o rechace su reserva. \\
+\rowcolor{gray!5}
+RF-13 & Arrendador / Arrendatario & Editar nombre, fotografía de perfil y datos de contacto propios. \\
+RF-14 & Arrendador / Arrendatario & Consultar el historial de reservas propias con estado, fecha e importe. \\
+\rowcolor{gray!5}
+RF-15 & Sistema      & Generar un código QR único para cada reserva confirmada, válido únicamente durante la ventana temporal activa (SmartAccess). \\
+RF-16 & Arrendador   & Completar el alta en Stripe Connect para habilitar la recepción de pagos directamente en su cuenta bancaria. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Requisitos no funcionales}
+\label{sec:requisitos_no_funcionales}
+
+\begin{table}[htbp]
+\centering
+\caption{Requisitos no funcionales de Parky.}
+\label{tab:rnf}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Categoría} & \textbf{Criterio} \\
+\midrule
+\rowcolor{gray!5}
+Rendimiento    & LCP inferior a 3~s bajo conectividad 4G de latencia media. \\
+Seguridad      & Todas las tablas tienen RLS activo. Cada petición al backend se valida con JWT. Ninguna clave secreta se expone en el cliente. \\
+\rowcolor{gray!5}
+Usabilidad     & Nivel AA de WCAG~2.1 en ratios de contraste. Diseño \textit{mobile-first} con punto de ruptura desde 375~px. \\
+Portabilidad   & La base de código React compila como APK para Android mediante Capacitor sin modificar componentes. \\
+\rowcolor{gray!5}
+Disponibilidad & Vercel y Supabase garantizan un \textit{uptime} del 99,5~\% en sus SLA. \\
+Mantenibilidad & TypeScript con \texttt{strict:\,true}. No se admite \texttt{any} sin comentario que justifique la excepción. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Modelo de casos de uso}
+\label{sec:casos_de_uso}
+
+% ------------------------------------------------------------
+\subsection{Diagrama de casos de uso}
+\label{subsec:diagrama-cu}
+
+\begin{figure}[htbp]
+    \centering
+    % TODO: Exportar diagrama UML desde Draw.io → images/assets/casos_de_uso.png
+    \includegraphics[width=0.85\textwidth]{images/assets/Typescript_logo.png}
+    \caption{Diagrama de casos de uso general del sistema Parky.}
+    \label{fig:casos_de_uso_uml}
+\end{figure}
+
+Las tablas siguientes detallan los cuatro casos de uso de mayor peso funcional.
+
+% ------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{CU-01: Autenticarse y seleccionar rol.}
+\label{tab:cu-01}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre    & CU-01: Autenticarse y seleccionar rol \\ \hline
+Actor          & Todos \\ \hline
+Precondición   & Sin sesión activa. \\ \hline
+Postcondición  & JWT activo y rol almacenado en \texttt{profiles}. \\ \hline
+Flujo principal &
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] El usuario accede a la pantalla de autenticación.
+\item[2.] Se autentica con email/contraseña o Google OAuth.
+\item[3.] Si es el primer acceso, selecciona rol (arrendador o arrendatario).
+\item[4.] El rol se persiste en \texttt{profiles}.
+\item[5.] El sistema redirige al \textit{dashboard} correspondiente.
+\end{itemize} \\ \hline
+Flujo alternativo & Si el proveedor OAuth devuelve error, se ofrece reintento o autenticación con email/contraseña. \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{CU-02: Publicar plaza de garaje.}
+\label{tab:cu-02}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre    & CU-02: Publicar plaza de garaje \\ \hline
+Actor          & Arrendador \\ \hline
+Precondición   & Sesión activa con rol \texttt{arrendador}. \\ \hline
+Postcondición  & Plaza registrada y visible en el mapa. \\ \hline
+Flujo principal &
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] El arrendador accede al formulario de alta de plaza.
+\item[2.] Introduce descripción, precio por hora y fotos.
+\item[3.] Confirma la posición geográfica sobre el mapa interactivo.
+\item[4.] El cliente ejecuta una inserción en la API REST de Supabase.
+\item[5.] El sistema confirma el alta y actualiza el mapa.
+\end{itemize} \\ \hline
+Flujo alternativo & Si la subida de imágenes al \textit{bucket} de Supabase Storage falla, el registro no se persiste y se notifica al usuario. \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{CU-03: Buscar y filtrar plazas en el mapa.}
+\label{tab:cu-03}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre    & CU-03: Buscar y filtrar plazas \\ \hline
+Actor          & Arrendatario \\ \hline
+Precondición   & Sesión activa y permisos de geolocalización concedidos. \\ \hline
+Postcondición  & Mapa con marcadores de plazas activas en el área visible. \\ \hline
+Flujo principal &
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] La aplicación obtiene la posición GPS del dispositivo.
+\item[2.] Se consultan plazas en estado \texttt{activo} dentro del bounding box visible.
+\item[3.] El usuario filtra por precio máximo o rango horario.
+\item[4.] Al pulsar un marcador se muestra la ficha con precio y disponibilidad.
+\end{itemize} \\ \hline
+Flujo alternativo & Sin GPS disponible, el usuario introduce una dirección que OpenCage Geocoding convierte en coordenadas. \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{CU-04: Realizar reserva y pago.}
+\label{tab:cu-04}
+\begin{tabularx}{\textwidth}{|>{\columncolor{gray!15}\bfseries}l|X|}
+\hline
+ID y Nombre    & CU-04: Realizar reserva y pago \\ \hline
+Actor          & Arrendatario \\ \hline
+Precondición   & Sesión activa y plaza seleccionada. \\ \hline
+Postcondición  & Reserva en estado \texttt{pendiente}; intervalo horario bloqueado. \\ \hline
+Flujo principal &
+\begin{itemize}[leftmargin=3mm, itemsep=0mm, topsep=1mm]
+\item[1.] El arrendatario selecciona fecha, hora de inicio y hora de fin.
+\item[2.] El trigger PL/pgSQL verifica que no exista solapamiento en la misma plaza.
+\item[3.] Se inicializa un \textit{Payment Intent} en Stripe con el importe calculado.
+\item[4.] El usuario introduce los datos de tarjeta en el formulario de Stripe.
+\item[5.] Stripe confirma el cargo y la reserva avanza a estado \texttt{pendiente}.
+\item[6.] Ambas partes reciben notificación del cambio de estado.
+\end{itemize} \\ \hline
+Flujo alternativo & Si la tarjeta es rechazada o el pago expira, la reserva no se persiste y la plaza permanece disponible. \\ \hline
+\end{tabularx}
+\end{table}
+
+% ============================================================
+\section{Diseño de la base de datos}
+\label{sec:diseno-bd}
+
+La base de datos se ejecuta sobre PostgreSQL~15 en Supabase. El esquema normaliza cada entidad de negocio en tablas independientes vinculadas por claves foráneas. La tabla \texttt{bookings} usa borrado lógico mediante \texttt{deleted\_at} para conservar el historial de transacciones sin eliminar registros.
+
+% ------------------------------------------------------------
+\subsection{Esquema entidad-relación}
+\label{subsec:er-model}
+
+\begin{figure}[htbp]
+    \centering
+    % TODO: Exportar diagrama ER desde Draw.io → images/assets/er_diagram.png
+    \includegraphics[width=0.85\textwidth]{images/assets/Typescript_logo.png}
+    \caption{Diagrama entidad-relación del esquema de base de datos de Parky.}
+    \label{fig:er-diagram}
+\end{figure}
+
+% ------------------------------------------------------------
+\subsection{Tablas principales}
+\label{subsec:tablas}
+
+\begin{table}[htbp]
+\centering
+\caption{Tablas principales del esquema de Parky.}
+\label{tab:tablas-bd}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Tabla} & \textbf{Columnas clave} & \textbf{Función} \\
+\midrule
+\rowcolor{gray!5}
+\texttt{profiles}      & \texttt{user\_id}, \texttt{role}, \texttt{full\_name}                                                                               & Extiende \texttt{auth.users} con rol y datos de perfil. \\
+\texttt{garages}       & \texttt{id}, \texttt{owner\_id}, \texttt{lat}, \texttt{lng}                                                                         & Garaje físico con propietario y coordenadas. \\
+\rowcolor{gray!5}
+\texttt{spots}         & \texttt{id}, \texttt{garage\_id}, \texttt{price\_per\_hour}, \texttt{status}                                                        & Plaza vinculada al garaje contenedor. \\
+\texttt{bookings}      & \texttt{id}, \texttt{spot\_id}, \texttt{tenant\_id}, \texttt{start\_time}, \texttt{end\_time}, \texttt{status}, \texttt{deleted\_at} & Reserva con ciclo de vida completo y borrado lógico. \\
+\rowcolor{gray!5}
+\texttt{payments}      & \texttt{id}, \texttt{booking\_id}, \texttt{amount}, \texttt{platform\_fee}, \texttt{igic\_amount}                                   & Transacción Stripe con desglose de comisión e IGIC. \\
+\texttt{reviews}       & \texttt{id}, \texttt{booking\_id}, \texttt{rating}, \texttt{comment}                                                                & Valoración de 1 a~5 vinculada a una reserva completada. \\
+\rowcolor{gray!5}
+\texttt{notifications} & \texttt{id}, \texttt{user\_id}, \texttt{booking\_id}, \texttt{type}, \texttt{read\_at}                                              & Notificación en base de datos con marca de lectura. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\subsection{Políticas RLS}
+\label{subsec:rls}
+
+\begin{table}[htbp]
+\centering
+\caption{Políticas de seguridad a nivel de fila (RLS) del esquema de Parky.}
+\label{tab:rls-policies}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Tabla} & \textbf{Operación} & \textbf{Condición de acceso} \\
+\midrule
+\rowcolor{gray!5}
+\texttt{profiles}  & SELECT, UPDATE & \texttt{auth.uid() = user\_id} \\
+\texttt{bookings}  & SELECT         & Arrendador: la plaza pertenece al usuario autenticado. Arrendatario: \texttt{tenant\_id = auth.uid()}. \\
+\rowcolor{gray!5}
+\texttt{bookings}  & INSERT         & \texttt{tenant\_id = auth.uid()} con rol \texttt{arrendatario}. \\
+\texttt{reviews}   & INSERT         & El \texttt{booking\_id} referenciado pertenece al usuario autenticado y está en estado \texttt{completada}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\subsection{Trigger de integridad de reservas}
+\label{subsec:triggers}
+
+El trigger \texttt{check\_booking\_overlap} se ejecuta \texttt{BEFORE INSERT OR UPDATE} sobre \texttt{bookings}. Dentro de la misma transacción, comprueba que el intervalo \texttt{[start\_time,\;end\_time]} de la nueva reserva no se solape con ninguna reserva en estado \texttt{confirmada} o \texttt{en\_curso} en la misma plaza. Si hay solapamiento, el trigger eleva una excepción que aborta la operación. Esta verificación en la capa de datos es inmune a condiciones de carrera entre peticiones concurrentes, a diferencia de una validación equivalente en la capa de aplicación.

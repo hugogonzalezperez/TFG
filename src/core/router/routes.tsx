@@ -2,8 +2,13 @@ import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ErrorPage } from '../../pages/errors/ErrorPage';
 import App from '../../App';
+import { isNative } from '@/mobile';
 
-const HomePage = lazy(() => import('../../pages/home/HomePage'));
+// Load platform-specific home: NativeHomePage on Android, HomePage on web.
+// True code-splitting — the unused bundle is never downloaded.
+const HomePage = isNative()
+  ? lazy(() => import('../../pages/home/NativeHomePage'))
+  : lazy(() => import('../../pages/home/HomePage'));
 const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
 const SignUpPage = lazy(() => import('../../pages/auth/SignUpPage'));
 const MapViewPage = lazy(() => import('../../pages/parking/MapViewPage').then(m => ({ default: m.MapViewPage })));

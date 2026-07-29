@@ -1,135 +1,318 @@
 \chapter{Estudio de viabilidad económica}
 \label{ch:viabilidad_economica}
 
-En esta sección, se llevará a cabo un análisis detallado de la viabilidad económica asociada con la implementación del sistema Parky. Este estudio se ha diseñado bajo la premisa de la ejecución del proyecto en un entorno empresarial profesional real, haciendo uso de recursos humanos cualificados en el sector tecnológico y proyectado al mercado del año 2026. El objetivo es corroborar que, más allá de la solidez técnica, el proyecto es escalable, sostenible y rentable económicamente a medio plazo, elaborando asimismo un esquema integral de comercialización, mantenimiento y proyecciones de retorno.
+Este capítulo analiza la viabilidad económica de Parky en un escenario de despliegue profesional real y que haría falta para convertir el prototipo actual en un producto comercializable. Se detallan las brechas entre el prototipo y una versión lista para el mercado, el plan de desarrollo con su coste asociado, y la estimación del retorno de la inversión a medio plazo.
 
-\section{Desarrollo del proyecto}
+% ============================================================
+\section{Del prototipo al producto comercial}
+\label{sec:prototipo_a_comercial}
+
+El prototipo que este TFG documenta es totalmente funcional de extremo a extremo ya que un usuario puede registrarse, publicar una plaza, hacer una reserva, pagar con el motor de precios activo y abrir el acceso al garaje mediante SmartAccess pero lo que no cubre es todo lo que un producto final necesita antes de que alguien ponga dinero real en él.
+
+La diferencia más importante es el procesamiento de pagos. El prototipo implementa la arquitectura de \textit{Stripe Connect} (datos de la transacción, desglose de comisión e IGIC, modelo de pagos en base de datos) pero no ejecuta llamadas reales a la API. El porqué de esto no es un descuido, sino que \textit{Stripe Connect} exige que la cuenta del propietario del \textit{marketplace} esté verificada como empresa y que cada vendedor complete un proceso de \textit{onboarding} con documentación de identidad que, en Canarias, implica acreditación fiscal ante la AEAT y alta en el Registro Mercantil, condiciones fuera del alcance de un proyecto académico. Para la versión comercial, esta integración es el primer requisito no técnico que bloquea el lanzamiento, y que se debe implementar para generar ingresos.
+
+El segundo bloque pendiente es la presencia en tiendas de aplicaciones. El APK de Android funciona y se ha validado en dispositivos reales, pero publicarlo en Google Play exige superar una revisión de contenido y tener una cuenta de desarrollador activa. La versión iOS no existe porque Capacitor requiere un Mac con licencia de desarrollo para compilarla, y la revisión de App Store añade tiempos de respuesta de varios días además de una cuenta de desarrollador con un desembolso obligatorio de \textbf{100 euros}. Para el lanzamiento oficial, donde el uso móvil es predominante, ambas plataformas son obligatorias.
+
+También quedan obligaciones legales. Al intermediar entre propietarios y conductores, la plataforma asume responsabilidad civil ante conflictos como daños en la plaza o disputas de facturación. Una versión comercial necesita condiciones generales de uso redactadas por un jurista, política de privacidad conforme a la ley vigente y un mecanismo de resolución de disputas. Finalmente, operar con usuarios reales exige monitorización más allá de las métricas básicas de Vercel y Supabase: alertas sobre errores en tiempo real, análisis de rendimiento por endpoint y un canal de soporte accesible.
+
+Un coste que la versión comercial debe cuantificar, es el del equipamiento de acceso físico por plaza. Según lo descrito en la sección~\ref{subsec:modelo_acceso_fisico}, la instalación de un módulo relé o un punto de acceso WiFi supone entre 30 y 70~€ por plaza. Con las 990~plazas proyectadas para el mes~20, el coste agregado de hardware se situaría entre 30.000 y 70.000~€. Dependiendo de si ese desembolso lo asume el propietario o la plataforma, se traduce respectivamente en una barrera de captación en el lado de la oferta que el modelo de ROI no recoge, o en una partida de CAPEX adicional no incluida en la Tabla~\ref{tab:inversion_total}. Para un despliegue piloto concentrado en comunidades con múltiples plazas, el coste por plaza es amortizable y puede negociarse con los administradores de fincas como condición del alta en la plataforma.
+
+% ============================================================
+\section{Funcionalidades de la versión avanzada}
+\label{sec:funcionalidades_adicionales}
+
+Más allá de completar los requisitos del lanzamiento, una versión avanzada incorporaría funcionalidades que ampliarían significativamente el atractivo de la plataforma.
+
+\paragraph{Detección pasiva de estacionamiento.} Capacitor puede monitorizar en segundo plano la conexión Bluetooth con el manos libres del vehículo. Al apagar el motor, el dispositivo registra la geolocalización y confirma la ocupación de la plaza sin intervención del usuario; al arrancar, la marca automáticamente como libre, maximizando el tiempo de uso disponible.
+
+\paragraph{Pases temporales y abonos recurrentes.} Con \textit{Stripe Billing} se añadirían dos modalidades: un \textit{EventPass} que agrupa plazas cercanas a recintos como el Estadio Heliodoro Rodríguez López a tarifa fija durante eventos, y un \textit{SeasonPass} para conductores habituales con trayectos repetidos, como el personal de la Universidad de La Laguna. Ambos amplían el espectro de clientes y fidelizan usuarios recurrentes.
+
+\paragraph{Validación automática ante la ZBE.} Al confirmar una reserva dentro de la ZBE de Santa Cruz de Tenerife, un \textit{webhook} de Supabase consulta la plataforma municipal y recibe un JWT firmado que exime al conductor de sanción administrativa, de forma completamente transparente para el usuario.
+
+\paragraph{Tarificación de recarga para vehículos eléctricos.} Para plazas con cargador doméstico, el motor de precios incorpora el coste eléctrico del PVPC\footnote{\textbf{PVPC} (\textit{Precio Voluntario para el Pequeño Consumidor}): Tarifa regulada de electricidad en España cuyo precio varía por hora según el mercado mayorista.} en tiempo real. Stripe Connect separa el coste energético del aparcamiento al liquidar el servicio, incentivando la oferta de plazas con punto de recarga.
+
+\paragraph{Precios dinámicos por demanda contextual.} El motor actual usa multiplicadores estáticos por día y tramo horario. Esta extensión añadiría tres señales: eventos próximos detectados vía APIs de agenda cultural y deportiva, ocupación histórica por franja horaria en la zona, y días de inactividad de la plaza, haciendo el sistema adaptativo a las condiciones reales del mercado.
+
+\paragraph{Programa de reputación y verificación de usuarios.} Un sistema de puntuación bidireccional (inspirado en Airbnb y Uber) donde propietarios y conductores se califican mutuamente tras cada transacción. Los usuarios con reputación sostenida por encima de 4,5 puntos acceden a tarifas reducidas en un 5\,\% y a plazas exclusivas. La verificación mediante documento de identidad y datos bancarios genera un distintivo de \textit{usuario verificado} que reduce fraudes y aumenta la confianza, especialmente en plazas de zonas premium.
+
+\paragraph{Suscripciones y cancelación flexible.} Los usuarios pueden configurar reservas recurrentes en franjas fijas con descuentos escalonados: 5\,\% por cinco reservas mensuales confirmadas, 10\,\% por diez. Una política de cancelación sin penalización con al menos 24 horas de antelación completa el modelo, generando ingresos predecibles sin comprometer la fluidez de la plataforma.
+
+\paragraph{Área de búsqueda personalizada en el mapa.} En lugar de un radio fijo, el usuario podría dibujar un polígono personalizado sobre el mapa para definir su zona de interés, tal como ya hacen plataformas como Idealista. La búsqueda se ajusta dinámicamente a esa área, ofreciendo una experiencia más flexible y adaptada a las necesidades reales de cada conductor.
+
+% ============================================================
+\section{Planificación y coste de la versión comercial}
 \label{sec:desarrollo_proyecto}
 
-Para garantizar un proceso de creación eficiente y cumplir con los más altos estándares de calidad propios de una plataforma P2P\footnote{\textit{Peer-to-Peer}: Red entre pares que permite el intercambio de información y servicios directos entre usuarios, sin intermediación bancaria o administrativa central en transacciones puras.} transaccional, el ciclo de vida del proyecto se ha dividido en seis fases bien definidas. La adopción de un modelo iterativo e incremental ha permitido paralelizar tareas críticas, acortando los tiempos generales del proyecto.
+La planificación sigue un ciclo de vida en cinco fases, con pruebas en paralelo al desarrollo a partir del quinto mes. El equipo se contrata mediante subcontratación a una consultora de software, de modo que la tarifa horaria consolida ya los costes de seguridad social, equipamiento y margen de intermediación. La figura~\ref{fig:gantt} muestra el diagrama y la figura~\ref{fig:costo_gantt} el coste del proyecto exportado desde ProjectLibre.
 
-\begin{itemize}
-    \item \textbf{Análisis (27 días):} Fase crítica centrada en la definición exhaustiva de requisitos funcionales, validación de la lógica de negocio del modelo de aparcamiento y análisis normativo en torno a las ZBE\footnote{Zonas de Bajas Emisiones (ZBE): Áreas urbanas específicas con restricciones de acceso vehiculares para mejorar la calidad del aire.}. Es indispensable afianzar estos conceptos para evitar sobrecostes en etapas posteriores.
-    \item \textbf{Diseño (24 días):} Establecimiento de la arquitectura del software. En esta etapa se decide el ecosistema tecnológico (React, TypeScript, Supabase, Capacitor), la estructuración de la base de datos PostgreSQL en cumplimiento estricto con las políticas de RLS\footnote{\textit{Row Level Security} (RLS): Políticas de base de datos que restringen qué filas de una tabla pueden ser leídas o manipuladas por un usuario determinado.} y el diseño de interfaces UI/UX\footnote{\textit{User Interface / User Experience} (UI/UX): Diseño centrado en la interacción del usuario y la percepción visual de la plataforma.} para las plataformas web y móvil.
-    \item \textbf{Desarrollo e implementación (135 días):} Constituye la actividad central del cronograma. Durante estos meses, se ejecuta la codificación del \textit{frontend}, la construcción de la base de datos y la orquestación del \textit{backend}, destacando la integración de la pasarela de pagos descentralizada con Stripe Connect y la geolocalización mediante Leaflet.
-    \item \textbf{Pruebas (130 días):} Dada la sensibilidad en el procesamiento de transacciones financieras, esta fase, ejecutada en paralelo al desarrollo, resulta innegociable. Engloba pruebas unitarias, de integración y simulaciones de vulnerabilidad, garantizando que el reparto de comisiones y el cálculo de la tarifa tributaria operan sin fallos.
-    \item \textbf{Despliegue (10 días):} Fase de paso técnico a producción. Se configuran los servidores en la nube (Vercel para la vista de cliente y Render/Supabase como proveedor de servicios de \textit{backend}), y se lleva a cabo la publicación oficial de la versión móvil en las respectivas plataformas, asegurando un lanzamiento íntegro.
-    \item \textbf{Mantenimiento (Continuo):} Práctica recurrente tras el lanzamiento destinada a monitorizar el tráfico, aplicar parches de seguridad, optimizar el SEO\footnote{\textit{Search Engine Optimization} (SEO): Prácticas para mejorar el posicionamiento de una plataforma en los resultados de motores de búsqueda orgánicos.} y mantener la escalabilidad progresiva del software al ritmo de aumento en la base de usuarios.
-\end{itemize}
+\paragraph{Análisis (35 días).} Recogida de requisitos, modelado de la lógica de reservas y tarifas, revisión de la normativa ZBE y validación del tratamiento fiscal del IGIC. Participan el Jefe de Proyecto, el Analista y el Arquitecto de Software.
 
-\begin{table}[H]
+\paragraph{Diseño (30 días).} Definición de la arquitectura: esquema PostgreSQL con RLS, selección del ecosistema tecnológico y elaboración de prototipos de interfaz para web y Android.
+
+\paragraph{Desarrollo (142 días).} Cuatro frentes en paralelo: \textit{backend} con Supabase y Edge Functions (80 días), \textit{frontend} web en React~18 (85 días, camino crítico), aplicación Android con Capacitor (61 días) y módulo SmartAccess (35 días). La integración completa de Stripe Connect se ejecuta dentro del bloque de \textit{backend}.
+
+\paragraph{Pruebas (91 días).} Fase paralela desde el quinto mes: pruebas unitarias, de integración, de rendimiento bajo carga concurrente, de usabilidad con usuarios reales y de aceptación previas al despliegue.
+
+\paragraph{Despliegue (12 días).} Configuración de entornos de producción en Vercel y Supabase, publicación en Google Play y App Store, y auditoría de seguridad previa al lanzamiento.
+
+\begin{figure}[H]
     \centering
-    \renewcommand{\arraystretch}{1.3} % Espaciado vertical
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
-        \hline
-        \textbf{Fase / Mes} & \textbf{Mes 1} & \textbf{Mes 2} & \textbf{Mes 3} & \textbf{Mes 4} & \textbf{Mes 5} & \textbf{Mes 6} & \textbf{Mes 7} & \textbf{Mes 8} & \textbf{Mes 9} \\ \hline
-        Análisis (27 d.) & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & \\ \hline
-        Diseño (24 d.) & & \cellcolor{orange!30} & \cellcolor{orange!30} & & & & & & \\ \hline
-        Desarrollo (135 d.) & & & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \cellcolor{green!30} & \\ \hline
-        Pruebas (130 d.) & & & & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} & \cellcolor{purple!30} \\ \hline
-        Despliegue (10 d.) & & & & & & & & & \cellcolor{red!30} \\ \hline
-        Mantenimiento & & & & & & & & & \cellcolor{gray!30} \\ \hline
-    \end{tabular}%
-    }
-    \caption{Diagrama de Gantt del desarrollo de Parky representado como tabla}
-    \label{tab:gantt_1}
-\end{table}
+    \includegraphics[width=0.8\textwidth]{images/assets/GANTT/Costo_PARKY.png}
+    \vspace{2pt}
+    \caption{Coste del proyecto Parky exportado desde ProjectLibre~(enero 2026 -- marzo 2027)}
+    \label{fig:costo_gantt}
+\end{figure}
 
-\subsection{Coste y duración del proyecto}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/assets/GANTT/GANTT}
+    \vspace{2pt}
+    \caption{Diagrama de Gantt del proyecto Parky exportado desde ProjectLibre~(enero 2026 -- marzo 2027)}
+    \label{fig:gantt}
+\end{figure}
+
+\subsection{Equipo y coste del proyecto}
 \label{subsec:coste_duracion}
 
-Para hacer frente a una arquitectura de complejidad media-alta, es indispensable conformar un equipo tecnológico multidisciplinar bajo la modalidad de subcontratación de una agencia o consultora de software. Esto exime al propietario de gestionar nóminas directas, asumiéndose una tarifa por hora técnica que ya incluye los seguros sociales, los equipos de trabajo (licencias de software y hardware como ordenadores, y dispositivos nativos iOS y Android de testeo) y el margen de intermediación.
-
-El equipo humano presupuestado cuenta, como mínimo, con los siguientes roles: Jefe de Proyecto, Analista de Software, Arquitecto de Software, Desarrollador Frontend y Backend (perfiles tanto Junior como Senior), Diseñador UI/UX y QA\footnote{\textit{Quality Assurance} (QA): Profesional o procedimiento destinado a validar proactivamente la integridad y calidad del desarrollo del software antes de su liberación al cliente.}.
-
-Evaluando las tareas desglosadas se ha estimado un plazo total de ejecución de 191 días hábiles de trabajo en jornada completa. Tomando como base la estructura contractual de consultoría para perfiles en España a valores del mercado IT de 2026, el coste de ejecución total ronda los \textbf{230.400 euros}.
+El equipo mínimo necesario cubre diez perfiles técnicos. Al subcontratar a una consultora, la tarifa horaria absorbe los costes de seguridad social, licencias de software internas y equipamiento de la agencia. El proyecto requiere además hardware específico para validar la experiencia nativa en dispositivos móviles.
 
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.2}
     \begin{tabular}{lccc}
         \toprule
-        \textbf{Perfil Técnico} & \textbf{Horas Est.} & \textbf{Tarifa (€/h)} & \textbf{Coste Total (€)} \\
+        \textbf{Perfil técnico}    & \textbf{Horas est.} & \textbf{Tarifa (€/h)} & \textbf{Coste (€)}  \\
         \midrule
-        Jefe de Proyecto & 300 & 65 & 19.500 \\
-        Analista de Software & 400 & 55 & 22.000 \\
-        Arquitecto de Software & 300 & 70 & 21.000 \\
-        Desarrollador Backend (Senior) & 800 & 60 & 48.000 \\
-        Desarrollador Frontend (Senior) & 800 & 60 & 48.000 \\
-        Desarrollador Full-Stack (Junior) & 1.200 & 35 & 42.000 \\
-        Diseñador UI/UX & 300 & 45 & 13.500 \\
-        QA (Aseguramiento de Calidad) & 410 & 40 & 16.400 \\
+        Jefe de Proyecto           & 300,00              & 45                    & 13.500,00           \\ Analista de Software          & 224,00              & 40                    & 8.960,00            \\ Arquitecto de Software        & 478,00              & 40                    & 19.120,00           \\ Diseñador UI/UX               & 444,00              & 32                    & 14.208,00           \\ Desarrollador Frontend Senior & 1.106,00            & 35                    & 38.710,00           \\ Desarrollador Frontend        & 1.032,00            & 30                    & 30.960,00           \\ Desarrollador Móvil Senior    & 758,00              & 35                    & 26.530,00           \\ Desarrollador Backend Senior  & 1.242,00            & 35                    & 43.470,00           \\ Desarrollador Backend         & 790,00              & 30                    & 23.700,00           \\ Tester / QA                   & 644,00              & 28                    & 18.032,00           \\
         \midrule
-        \textbf{Coste Total de Ejecución} & \textbf{4.510} & \textbf{-} & \textbf{230.400} \\
+        \textbf{Subtotal personal} & \textbf{7.018,00}   & ---                   & \textbf{237.190,00} \\
         \bottomrule
     \end{tabular}
-    \caption{Presupuesto y tarifas por perfil técnico para el desarrollo}
+    \caption{Presupuesto por perfil técnico.}
     \label{tab:presupuesto_equipo}
 \end{table}
-
-Para mitigar contingencias y cubrir el gasto publicitario y operativo del lanzamiento hasta que la curva de ingresos genere beneficios constantes, se concluye como altamente recomendada una inyección de capital o \textbf{inversión inicial no inferior a los 300.000 euros}.
-
-
-\section{Funcionalidades adicionales}
-\label{sec:funcionalidades_adicionales}
-
-Parky nace con una propuesta de valor completamente funcional en su vertiente MVP\footnote{\textit{Minimum Viable Product} (MVP): Versión incial funcional de un producto que dispone de las características esenciales para satisfacer una necesidad de mercado y testear la viabilidad con clientes reales.}. Sin embargo, bajo un esquema de profesionalización profunda, la aplicación incorporaría funcionalidades tecnológicas de máximo nivel para lograr una ventaja competitiva radical respecto a posibles alternativas, orientando la plataforma a los paradigmas de las \textit{Smart Cities}. Entre ellas se destacan:
-
-\begin{itemize}
-    \item \textbf{Motor de Inteligencia Artificial para Precios Dinámicos:} Algoritmo predictivo que, analizando la densidad de tráfico, eventos masivos cercanos y los precios medios del entorno en tiempo real, sugiere al propietario de la plaza la tarifa óptima.
-    \item \textbf{Apertura Remota mediante conectividad IoT\footnote{\textit{Internet of Things} (IoT) o Internet de las cosas: Interconexión digital de objetos físicos cotidianos con redes de telecomunicaciones, permitiendo control remoto.}:} Integración con módulos de hardware embebidos (conexión \textit{Bluetooth Low Energy}/NFC). Un usuario arrendatario, durante el periodo estricto de su reserva, podría accionar remotamente la apertura del garaje físico desde la aplicación móvil sin necesidad de un intercambio físico de llaves.
-    \item \textbf{Filtraje automatizado de Zonas de Bajas Emisiones (ZBE):} Dado el progresivo endurecimiento de las normativas de circulación, la plataforma cruzará las matrículas de los vehículos con las bases medioambientales y solo proveerá acceso a aquellas plazas de aparcamiento a las que el vehículo del usuario esté legalmente autorizado a acceder, protegiéndole frente a sanciones administrativas.
-    \item \textbf{Validación Biométrica de Identidades:} En un sector P2P (entre particulares), garantizar la confianza mutua es el servicio más vital. Mediante servicios KYC\footnote{\textit{Know Your Customer} (KYC): Procedimiento legal y tecnológico adoptado por las empresas para verificar de forma inequívoca la identidad de sus clientes.}, los usuarios verificarán su identidad uniendo el Reconocimiento Facial (FaceID) y la digitalización de su Documento Nacional de Identidad.
-    \item \textbf{Sistema de Fidelización Eco-Parky:} Promoción de un sistema de incentivos y gamificación. El propietario obtendrá descuentos sobre la comisión del servicio si permite la recarga de vehículos eléctricos en su plaza, y los arrendatarios obtendrán puntos canjeables si poseen un vehículo con distintivo "Cero" o "Eco".
-\end{itemize}
-
-
-\section{Modelo de comercialización}
-\label{sec:modelo_comercializacion}
-
-A diferencia de la venta de software tradicional, Parky basa su estrategia de monetización en la transacción de servicios \textit{peer-to-peer} (P2P), complementándose con suscripciones empresariales y planes de fidelización. Este modelo se diseña en dos vertientes: el canon por operación y la suscripción recurrente. 
-
-\begin{itemize}
-    \item \textbf{Comisión por Transacción (Modelo Core):} Al erigirse como el puente tecnológico y de confianza entre el arrendador del garaje y el usuario conductor, la aplicación percibe ingresos como intermediario, reteniendo automáticamente un porcentaje fijo (aproximadamente entre un 10\,\% y un 15\,\%) sobre cada proceso de reserva cerrado de forma exitosa.
-    \item \textbf{Subscripción Propietario "Premium":} Enfocado hacia aquellos usuarios que administran una cantidad notable de plazas de aparcamiento o pequeñas agencias de inversión inmobiliaria, se les habilitará una suscripción recurrente. Esta les dotaría de paneles de control financieros detallados (tasas de ocupación e ingresos automatizados), opciones masivas (\textit{bulk}) de modificación de tarifas y un soporte preferente las 24 horas del día.
-\end{itemize}
-
-El sostén operativo de este modelo exige asumir gastos fijos imprescindibles. Entre los más destacados se ubican las pasarelas de pago que aplicarán un modesto cargo por cada transacción completada; los servidores de almacenamiento dinámico y base de datos relacional para sostener la demanda; la red de alojamiento API\footnote{\textit{Application Programming Interface} (API): Conjunto de rutinas y protocolos que permite la comunicación programática entre distintos sistemas de \textit{software}.}; y, de forma obligatoria, las licencias anuales o pagos únicos para distribuir la aplicación móvil a través de la App Store de Apple y la Google Play Store de Google, respectivamente.
-
-
-\section{Estimación del Retorno de la Inversión (ROI)}
-\label{sec:estimacion_roi}
-
-Determinar el Retorno de la Inversión o ROI\footnote{\textit{Return on Investment} (ROI): Métrica financiera utilizada para evaluar la rentabilidad o ganancia obtenida en comparación con la inversión inicial requerida, hallando el \textit{Break-Even} (punto de equilibrio).} implica confrontar los elevados costes de la inversión inicial, el paulatino aumento de los costes de escalabilidad (mantenimiento en la nube) y la inyección progresiva de ingresos fruto del auge en el número de reservas procesadas. Para el estudio, se asume un crecimiento conservador en la tracción de usuarios.
-
-\textbf{Embudos de Adquisición y Gastos Iniciales:} \\
-Basándonos en la captación de usuarios mediante plataformas publicitarias y SEO, se destinará una cantidad mensual de publicidad activa (agregadores y redes sociales) en los primeros seis meses hasta llegar a un estado de inercia o conocimiento mediático en las Islas Canarias. Del 100\,\% de los usuarios captados orgánicamente, se predice que solo entre el 2\,\% y 3\,\% pasará por el embudo de conversión hasta concretar transacciones pagadas semanalmente. 
-
-Por otro lado, los gastos operativos fijos crecen suavemente. Aquí deben costearse las transferencias a infraestructuras web y móvil para tolerar la latencia simultánea, y los gastos mensuales referidos a herramientas colaborativas y seguridad de base de datos.
 
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{cccc}
+    \begin{tabular}{lcc}
         \toprule
-        \textbf{Mes Comercial} & \textbf{Gastos Acumulados (€)} & \textbf{Ingresos Acumulados (€)} & \textbf{Balance (€)} \\
+        \textbf{Concepto}                 & \textbf{Uds.} & \textbf{Coste (€)}  \\
         \midrule
-        Mes 1 & 305.000 & 2.000 & -303.000 \\
-        Mes 4 & 312.000 & 25.000 & -287.000 \\
-        Mes 8 & 318.000 & 85.000 & -233.000 \\
-        Mes 12 & 325.000 & 180.000 & -145.000 \\
-        Mes 15 & 330.000 & 290.000 & -40.000 \\
-        \textbf{Mes 16 (Punto de equilibrio)} & \textbf{331.000} & \textbf{335.000} & \textbf{+4.000} \\
-        Mes 18 & 335.000 & 440.000 & +105.000 \\
-        Mes 24 & 345.000 & 850.000 & +505.000 \\
+        Portátil de desarrollo            & 4             & 4.800,00            \\ Smartphone iOS (pruebas nativas)     & 2             & 1.800,00            \\ Smartphone Android (pruebas nativas) & 2             & 1.200,00            \\ Licencias IDE (JetBrains)            & 1             & 320,00              \\ Dominio web y registro DNS           & 1             & 15,00               \\
+        \midrule
+        Subtotal material                 &               & 8.135,00            \\ Subtotal personal                    &               & 237.190,00          \\
+        \midrule
+        \textbf{Coste total del proyecto} &               & \textbf{245.325,00} \\
         \bottomrule
     \end{tabular}
-    \caption{Evolución proyectada de gastos frente a ingresos y punto de equilibrio}
-    \label{tab:grafica_roi}
+    \caption{Recursos materiales y coste total del proyecto.}
+    \label{tab:recursos_material}
 \end{table}
 
-\textbf{Punto de Retorno:} \\
-Siguiendo las curvas de proyección estimadas bajo un escenario de aceptación de mercado estándar (ni excesivamente pesimista ni inflado por el optimismo), la brecha entre los gastos acumulados y los ingresos devengados en materia de comisiones de aparcamiento o bonos de fidelización irá acortándose sistemáticamente a medida que la aplicación logre un posicionamiento firme e invite al uso diario. 
+El coste de desarrollo calculado asciende a \textbf{245.325,00\,€}. Sobre esta cifra se añade un colchón estructurado para absorber imprevistos técnicos, cubrir los gastos operativos durante el período de rodaje y financiar la campaña publicitaria de lanzamiento en Tenerife. La contingencia técnica se fija en el \textbf{10\,\%} del coste de desarrollo (24.533,00\,€), porcentaje habitual en proyectos de software con integraciones externas como \textit{Stripe Connect} o las revisiones de \textit{App Store}. Los gastos legales y de  \textit{compliance} comentados anteriormente en la sección \ref*{sec:prototipo_a_comercial} se estiman en 4.500,00\,€. Los primeros seis meses de operativa se presupuestan por adelantado: campaña de lanzamiento en Canarias mediante \textit{Meta\,Ads} y \textit{TikTok\,Ads} (1.200,00\,€\,/\,mes\,$\times$\,6 = 7.200,00\,€), infraestructura \textit{cloud} en tier de producción (200,00\,€\,/\,mes\,$\times$\,6 = 1.200,00\,€) y gestoría y contabilidad (200,00\,€\,/\,mes\,$\times$\,6 = 1.200,00\,€). Una reserva de imprevistos operativos de aproximadamente 3.000,00\,€ completa el colchón. La \textbf{inversión total recomendada asciende a 287.000,00\,€}, recogida en la tabla~\ref{tab:inversion_total}. Los seis meses de gastos operativos incluidos en la inversión inicial quedan reflejados mes a mes en la tabla~\ref{tab:roi} para mostrar el flujo de caja real del período de rodaje.
 
-Por lo que respecta a la simulación efectuada, de mantenerse con constancia el porcentaje de comisiones transaccionales, se estima que el punto de equilibrio que absorberá el umbral de los 300.000 euros iniciales se materializará aproximadamente en el \textbf{decimosexto mes comercial} de funcionamiento de la empresa, momento a partir del cual el sistema arrojaría un saldo de retribución neta favorable para la directiva interesada en la inversión.
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Concepto}                         & \textbf{Justificación}                   & \textbf{Importe (€)} \\
+        \midrule
+        Subtotal personal (10 perfiles, 310 días) & ProjectLibre                             & 237.190,00           \\ Hardware y licencias                      & Portátiles, iOS, Android, IDE, dominio    & 8.135,00             \\
+        \midrule
+        \textbf{Subtotal desarrollo}              &                                          & \textbf{245.325,00}  \\
+        \midrule
+        Contingencia técnica (10\,\%)             & Stripe, App Store, bugs post-lanzamiento & 24.533,00            \\ Legal y \textit{compliance}               & RGPD, condiciones de uso, AEAT Canarias   & 4.500,00             \\ Campaña de lanzamiento (6 meses)          & Meta Ads + TikTok Ads       & 7.200,00             \\ Infraestructura \textit{cloud} (6 meses)  & Supabase Pro + Vercel Pro + Sentry        & 1.200,00             \\ Gestoría y contabilidad (6 meses)         & Declaraciones IGIC + contabilidad mensual & 1.200,00             \\ Reserva de imprevistos operativos         & Colchón de caja para ajustes de producto  & 3.042,00             \\
+        \midrule
+        \textbf{Inversión total recomendada}      &                                          & \textbf{287.000,00}  \\
+        \bottomrule
+    \end{tabular}
+    \caption{Desglose de la inversión inicial recomendada para Parky.}
+    \label{tab:inversion_total}
+\end{table}
+
+% ============================================================
+\section{Modelo de comercialización}
+\label{sec:modelo_comercializacion}
+
+Parky opera como un \textit{marketplace} bilateral en el que la plataforma intermediaria pone en contacto a propietarios de plazas de garaje con conductores, sin poseer el inventario físico. La estrategia de monetización se articula en tres vías independientes: una comisión transaccional por cada reserva completada, una suscripción mensual para propietarios con carteras de varias plazas, y micropagos de visibilidad premium en el mapa.
+
+% ------------------------------------------------------------------
+\subsection{Comisión transaccional asimétrica}
+\label{subsec:comision_transaccional}
+% ------------------------------------------------------------------
+
+Cada reserva completada genera un ingreso para la plataforma mediante una estructura de comisión asimétrica. El precio base lo fija el propietario de la plaza ayudado de referencias de la app siendo el referente de mercado en Santa Cruz de Tenerife los parkings públicos del centro (1,50\,€/h en el Intercambiador, tarifa plana de 9,95--10,95\,€/día en Plaza de España~\cite{ayto_sct_parkings}), por lo que una plaza privada a \textbf{0,90\,€/h} ofrece un ahorro del 40\,\% y resulta competitiva. La reserva tipo más frecuente se entiende que sería la jornada laboral de ocho horas y esto supone un precio base de \textbf{7,20\,€}.
+
+El conductor abona sobre ese importe una \textbf{comisión de servicio del 15\,\%} más una tasa fija de gestión de 0,50\,€, lo que eleva el precio final desembolsado a \textbf{8,78\,€}. Por su parte, el propietario cede una \textbf{comisión del 8\,\%} sobre el precio base, notablemente inferior al 30\,\% que aplica JustPark en el mercado anglosajón~\cite{justpark_commission}, lo que facilita la captación en un mercado local sin competencia directa previa. Tras descontar el cargo de \textit{Stripe Connect} para cuentas europeas (1,5\,\% más 0,25\,€ fijos, conforme a la tarifa publicada por Stripe para pagos en euros), el \textbf{ingreso neto por transacción para la plataforma se sitúa en 1,77\,€}.\footnote{Cálculo exacto: ingresos brutos de plataforma $(1{,}58 + 0{,}58) = 2{,}16$\,€ menos cargo Stripe $(1{,}5\%\times 8{,}78 + 0{,}25) = 0{,}38$\,€, resultado $1{,}78$\,€; se usa $1{,}77$\,€ aplicando la política de redondeo a dos decimales sobre todos los cálculos intermedios.}
+
+% ------------------------------------------------------------------
+\subsection{Parky Pro: suscripción para arrendadores con cartera}
+\label{subsec:parky_pro}
+% ------------------------------------------------------------------
+
+Los propietarios con más de dos plazas o los administradores de fincas pueden contratar una suscripción mensual vía \textit{Stripe Billing} que elimina la comisión del arrendador a cambio de una cuota fija recurrente y hay dos niveles:
+
+\paragraph{Basic Pro (14,99\,€/mes).}
+Acceso a un panel de analítica básica con datos de ocupación, ingresos históricos y rendimiento por plaza; actualización masiva de tarifas para hasta cinco plazas; prioridad en el canal de soporte.
+
+\paragraph{Advanced Pro (29,99\,€/mes).}
+Exención completa de la comisión de arrendador, gestión de hasta 25 plazas, integración con el calendario de eventos de Tenerife (partidos en el Estadio Heliodoro Rodríguez López, congresos en la Universidad de La Laguna, carnaval de Santa Cruz) y soporte para la declaración trimestral del IGIC.
+
+Dado que los administradores de fincas contactados durante la fase de captación de inventario son el \textit{target} natural de este plan, se estima un suscriptor Pro por cada diez plazas activas en la plataforma. Asumiendo un reparto del 60\,\% de suscriptores en Basic Pro y un 40\,\% en Advanced Pro, el precio medio ponderado se sitúa en
+\textbf{20,99\,€ por suscriptor al mes}.
+Ambos niveles generan ingresos predecibles para la plataforma incluso en períodos de baja demanda transaccional.
+
+% ------------------------------------------------------------------
+\subsection{Visibilidad premium}
+\label{subsec:visibilidad_premium}
+% ------------------------------------------------------------------
+
+Los propietarios pueden adquirir mejoras de posicionamiento mediante un pago único \textit{in-app}:
+
+\begin{itemize}
+    \item \textbf{Destacado de Zona (1,99\,€ / 3 días):} eleva
+          algorítmicamente la plaza en los listados de búsqueda cercanos y diferencia el marcador en el mapa de \textit{Leaflet} mediante un color exclusivo.
+    \item \textbf{Posicionamiento Urgente (4,99\,€ / 7 días):}
+          muestra la plaza con prioridad a los conductores que se aproximan a la zona durante eventos de alta demanda, como partidos en el Estadio Heliodoro o congresos en la Universidad de La Laguna.
+\end{itemize}
+
+Asumiendo un 60\,\% de compras en Destacado de Zona y un 40\,\% en Posicionamiento Urgente, el precio medio ponderado por destacado es de \textbf{3,19\,€}. Se estima que el 10\,\% de las plazas activas contrata al menos un destacado al mes, lo que proporciona ingresos directos sin incrementar la comisión base ni penalizar a los propietarios no suscritos.
+
+% ============================================================
+\section{Estimación del retorno de la inversión}
+\label{sec:estimacion_roi}
+
+El \textit{retorno de la inversión (ROI)} confronta los gastos acumulados (los cuales parten de la inversión inicial de 287.000,00\,€ y crecen con los operativos mensuales) con los ingresos generados por las tres vías de monetización descritas en la sección anterior \ref{sec:modelo_comercializacion}.
+
+% ------------------------------------------------------------------
+\subsection{Hipótesis de partida}
+\label{subsec:hipotesis_roi}
+
+El modelo proyecta la evolución de Parky a partir de cuatro hipótesis cuantificables y ancladas al contexto del área metropolitana de Tenerife y la tabla ~\ref{tab:hipotesis_roi} recoge los parámetros clave del modelo de proyección financiera de Parky. Estas \textbf{hipótesis} se basan en datos de mercado, referencias de plataformas similares y las características específicas del entorno local.
+
+\paragraph{Inventario inicial.} La campaña de captación pre-lanzamiento, dirigida a administradores de fincas y presidentes de comunidades de propietarios, permitiría alcanzar \textbf{100 plazas activas en el primer mes comercial}. Con 3-4 comunidades grandes captadas (cada una con entre 20 y 35 plazas) y algunos propietarios individuales se cubre este objetivo. El crecimiento posterior es orgánico: cada propietario satisfecho refiere de media a 0,5 nuevos propietarios al mes; esta hipótesis se calibra como estimación conservadora, coherente con el dinamismo de crecimiento observado en plataformas de economía colaborativa~\cite{grandviewresearch2022}, sin que existan datos locales directamente comparables para este mercado. La curva alcanza las \textbf{990 plazas en el mes~20} y continúa creciendo de forma moderada (1.020 en el mes~22, 1.050 en el mes~24) a medida que el referido orgánico mantiene un ritmo bajo pero sostenido más allá del horizonte de proyección.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/assets/parky_plazas_reservas.png}
+    \caption{Evolución del inventario de plazas activas y la demanda por plaza
+        a lo largo de los veinticuatro meses proyectados.}
+    \label{fig:plazas_reservas}
+\end{figure}
+
+\paragraph{Demanda por plaza.} La plataforma arranca con \textbf{3 reservas por plaza al mes} (equivalente a alquilar aproximadamente un día de cada diez la plaza) y puede escalar progresivamente hasta estabilizarse en \textbf{15 reservas por plaza al mes a partir del mes 8}, cifra conservadora si se compara con los parkings de rotación del centro de Santa Cruz de Tenerife, que operan con tasas de ocupación superiores al 60\,\% en jornada laboral~\cite{ayto_sct_parkings}. La hipótesis asume que una plaza privada se alquila aproximadamente la mitad de los días laborables del mes durante una jornada de trabajo media, por lo que la demanda potencial, con precios un 40\,\% inferiores a los parkings comerciales, es suficiente para sostener ese ritmo.
+
+\paragraph{Ingreso por plaza con reservas estables.} Con 15 reservas mensuales, las tres vías de monetización generan un ingreso medio de \textbf{28,97\,€ por plaza al mes}: 26,55\,€ por comisiones netas de transacción, 2,10\,€ por la parte proporcional de Parky Pro y 0,32\,€ por visibilidad premium (todo esto es meramente estimado y puede variar). Los importes de la tabla se presentan redondeados a la unidad más próxima; los cálculos intermedios se realizan con cuatro decimales, por lo que pueden existir diferencias inferiores a un euro respecto a la aplicación directa de los porcentajes sobre las cifras redondeadas.
+
+\paragraph{Gastos operativos.} Los costes post-lanzamiento se fijan en \textbf{1.830,00\,€/mes} durante los seis primeros meses (infraestructura, marketing intensivo, gestoría y soporte) y se reducen a \textbf{1.130,00\,€/mes} a partir del séptimo mes, cuando la campaña de lanzamiento en Meta\,Ads y TikTok\,Ads (que representaba la mayor parte del gasto variable de los primeros seis meses) finaliza. A partir del mes~7, la adquisición pasa a apoyarse en referencias entre propietarios y en posicionamiento orgánico, cuyo coste marginal es sustancialmente inferior al de la publicidad pagada. La infraestructura \textit{cloud} y el soporte escalan de forma sublineal con el número de usuarios a este nivel de tráfico, por lo que no generan un incremento significativo del gasto al crecer la base de plazas. Los 1.830,00\,€/mes de la etapa de captación se desglosan en campaña publicitaria activa en redes (700,00\,€/mes; los 3.000,00\,€ restantes del presupuesto de campaña recogido en la Tabla~\ref{tab:inversion_total} corresponden a producción creativa y configuración inicial, ambas costes únicos del mes~1), infraestructura \textit{cloud} en tier de producción  como son Supabase Pro, Vercel Pro y Sentry (380,00\,€/mes, con la diferencia respecto al importe estimado cubierta por la reserva de imprevistos), gestoría y contabilidad (200,00\,€/mes) y soporte técnico y atención al usuario (550,00\,€/mes). Al término del mes~6, el cese del gasto publicitario activo elimina los 700,00\,€/mes correspondientes, reduciendo el operativo estable a $380 + 200 + 550 = 1.130{,}00$\,€/mes, sin que el resto de partidas varíe.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parámetro}            & \textbf{Valor inicial} & \textbf{Valor estable}    \\
+        \midrule
+        Plazas activas                & 100 (mes 1)            & $\approx$990 (mes 20)     \\
+        Reservas por plaza y mes      & 3 (mes 1)              & 15 (desde mes 8)          \\
+        Ingreso medio por plaza y mes & ---                    & 28,97\,€ (desde mes 8)    \\
+        Gastos operativos mensuales   & 1.830,00\,€            & 1.130,00\,€ (desde mes 7) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Parámetros clave del modelo de proyección financiera de Parky.}
+    \label{tab:hipotesis_roi}
+\end{table}
+
+% ------------------------------------------------------------------
+\subsection{Proyección y punto de equilibrio}
+\label{subsec:punto_equilibrio}
+
+La tabla~\ref{tab:roi} recoge la evolución mensual de ingresos y gastos desde el primer mes comercial hasta el mes veinticuatro. Dado que los ingresos de Parky dependen directamente del volumen de reservas completadas, los primeros meses registran flujo de caja negativo mientras la base de conductores recurrentes crece hasta sostener una demanda estable por plaza.
+
+El modelo alcanza el \textbf{equilibrio operativo en el mes~3}, cuando los ingresos mensuales superan por primera vez los gastos del período. Sin embargo, la recuperación íntegra de la inversión inicial de 287.000,00\,€ no se produce hasta el \textbf{mes~19}, cuando el balance acumulado se vuelve positivo por primera vez con un saldo de \textbf{14.951,00\,€}. Este hito coincide con la consolidación de la base de suscriptores Parky Pro y con la demanda estabilizada en 15~reservas por plaza y mes. Al cierre del mes~24 el balance acumulado favorable asciende a \textbf{157.038,00\,€}, confirmando la viabilidad del modelo a medio plazo bajo un escenario de crecimiento moderado y sin expansión fuera de Tenerife. Esto equivale a un ROI del \textbf{54,7\,\%} sobre la inversión inicial en un horizonte de dos años, calculado como $\text{ROI} = \text{beneficio neto acumulado} / \text{inversión inicial} = 157.038 / 287.000$.
+
+La figura~\ref{fig:balance_acumulado} ilustra la evolución del balance a lo largo de los veinticuatro meses.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.15}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{crrrrrrr}
+            \toprule
+            \textbf{Mes}            &
+            \textbf{Plazas}         &
+            \textbf{Res./plaza}     &
+            \textbf{Ing. mes (€)}   &
+            \textbf{Gastos mes (€)} &
+            \textbf{Flujo neto (€)} &
+            \textbf{Ing. acum. (€)} &
+            \textbf{Balance (€)}                                                                                                                                         \\
+            \midrule
+            1                       & 100          & 3           & 773             & 1.830          & $-$1.057         & 773              & $-$288.057                   \\
+            2                       & 175          & 4           & 1.662           & 1.830          & $-$168           & 2.435            & $-$288.225                   \\
+            \rowcolor{gray!15}
+            \textbf{3}              & \textbf{250} & \textbf{6}  & \textbf{3.260}  & \textbf{1.830} & \textbf{+1.430}  & \textbf{5.694}   & $\mathbf{-}$\textbf{286.796} \\
+            4                       & 325          & 8           & 5.388           & 1.830          & +3.558           & 11.082           & $-$283.238                   \\
+            5                       & 390          & 10          & 7.846           & 1.830          & +6.016           & 18.928           & $-$277.222                   \\
+            6                       & 450          & 12          & 10.646          & 1.830          & +8.816           & 29.574           & $-$268.406                   \\
+            7                       & 510          & 14          & 13.871          & 1.130          & +12.741          & 43.445           & $-$255.665                   \\
+            8                       & 570          & 15          & 16.512          & 1.130          & +15.382          & 59.957           & $-$240.283                   \\
+            10                      & 680          & 15          & 19.698          & 1.130          & +18.568          & 97.760           & $-$204.740                   \\
+            12                      & 800          & 15          & 23.174          & 1.130          & +22.044          & 142.371          & $-$162.389                   \\
+            14                      & 870          & 15          & 25.202          & 1.130          & +24.072          & 191.762          & $-$115.258                   \\
+            16                      & 920          & 15          & 26.651          & 1.130          & +25.521          & 244.338          & $-$64.942                    \\
+            18                      & 960          & 15          & 27.809          & 1.130          & +26.679          & 299.378          & $-$12.162                    \\
+            \rowcolor{green!10}
+            \textbf{19}             & \textbf{975} & \textbf{15} & \textbf{28.244} & \textbf{1.130} & \textbf{+27.114} & \textbf{327.621} & $\mathbf{+14.951}$           \\
+            20                      & 990          & 15          & 28.678          & 1.130          & +27.548          & 356.300          & $+$42.500                    \\
+            22                      & 1.020        & 15          & 29.547          & 1.130          & +28.417          & 414.960          & $+$98.900                    \\
+            24                      & 1.050        & 15          & 30.416          & 1.130          & +29.286          & 475.358          & $+$157.038                   \\
+            \bottomrule
+        \end{tabular}}
+    \caption{Evolución proyectada de ingresos y gastos acumulados. La fila sombreada en gris (mes~3) es el primer mes con flujo neto positivo; la fila en verde (mes~19) marca la recuperación íntegra de la inversión inicial de 287.000,00\,€.}
+    \label{tab:roi}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/assets/parky_ingresos_desglose.png}
+    \caption{Desglose mensual de ingresos por vía de monetización. La línea
+        discontinua roja representa los gastos operativos mensuales.}
+    \label{fig:ingresos_desglose}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \hspace{-1.5cm}
+    \includegraphics[width=1\textwidth]{images/assets/parky_balance.png}
+    \vspace{2pt}
+    \caption{Evolución del balance acumulado a lo largo de los veinticuatro meses.}
+    \label{fig:balance_acumulado}
+\end{figure}
+% ============================================================
+\subsection{Análisis de sensibilidad}
+\label{subsec:sensibilidad_roi}
+% ============================================================
+
+El escenario base del modelo principal alcanza el equilibrio en el mes~19 partiendo de 100 plazas iniciales y creciendo hasta las 990 plazas con la rampa descrita en la sección~\ref{subsec:hipotesis_roi}. Para evaluar la sensibilidad del modelo a las dos hipótesis más inciertas ( el inventario y la demanda por plaza) sin depender de esa curva de captación, la tabla~\ref{tab:sensibilidad} presenta cuatro escenarios en \textbf{régimen estacionario}: cada escenario asume que la cartera de plazas y la demanda por plaza se alcanzan desde el primer mes. El \textit{payback} resultante es por tanto inferior al del modelo principal (mes~19) y representa el tiempo mínimo de recuperación una vez alcanzada la operación plena, no el tiempo real desde el lanzamiento. Las variables unitarias son las mismas en todos los escenarios (1,77\,€ neto por reserva y 2,42\,€ mensuales por suscripción y visibilidad por plaza) y los costes operativos estabilizados de 1.130,00\,€/mes.
+
+\begin{table}[H]
+    \centering
+    \caption{Análisis de sensibilidad del ROI bajo cuatro escenarios de operación.}
+    \label{tab:sensibilidad}
+    \small
+    \begin{tabular}{lcccc}
+        \hline
+        \textbf{Escenario}   & \textbf{Plazas} & \textbf{Res./plaza/mes} & \textbf{Ingresos/mes} & \textbf{Payback} \\
+        \hline
+        Conservador          & 500             & 8                       & 8.290,00\,€           & 40,1 meses       \\
+        Base (demanda menor) & 990             & 10                      & 19.919,00\,€          & 15,3 meses       \\
+        Base actual          & 990             & 15                      & 28.680,00\,€          & 10,4 meses       \\
+        Expansión insular    & 1.500           & 15                      & 43.455,00\,€          & 6,8 meses        \\
+        \hline
+    \end{tabular}
+\end{table}
+
+El escenario conservador asume que la captación se limita al área central de Santa Cruz y que la frecuencia de uso por plaza no supera la mitad de la hipótesis base. Aun así, el payback no supera los cuatro años y el modelo resulta viable. El escenario de expansión insular incorpora plazas en Las Palmas de Gran Canaria y otras capitales del archipiélago, donde la infraestructura técnica es directamente aplicable sin modificaciones. En todos los casos la variable más sensible es la cartera de plazas activas, ya que duplicar el número de plazas con la misma frecuencia de uso impacta más en el payback que duplicar la frecuencia manteniendo la misma cartera.

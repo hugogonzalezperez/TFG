@@ -386,15 +386,18 @@ export function ParkingBookingCard({ parking, searchDates }: ParkingBookingCardP
     return (
       <>
         {/* Sticky Mobile CTA */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-card/80 backdrop-blur-lg border-t border-border flex items-center justify-between z-40 gap-4 transition-transform shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]">
+        <div
+          className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-lg border-t border-border flex items-center justify-between z-40 gap-4 transition-transform shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.08)]"
+          style={{ padding: '1rem', paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+        >
           <div className="flex flex-col">
             <div className="flex items-baseline gap-1">
-              <span className="text-xl font-bold text-primary">{parking.base_price_per_hour}€</span>
-              <span className="text-xs text-muted-foreground">/ h</span>
+              <span className="text-2xl font-bold text-primary">{parking.base_price_per_hour}€</span>
+              <span className="text-sm text-muted-foreground">/ h</span>
             </div>
           </div>
           <Button
-            className="flex-1 h-11 bg-accent hover:bg-accent/90 text-white rounded-xl font-bold shadow-lg shadow-accent/20"
+            className="flex-1 h-14 text-[16px] bg-accent hover:bg-accent/90 text-white rounded-xl font-bold shadow-lg shadow-accent/20"
             onClick={() => setIsDrawerOpen(true)}
           >
             Reservar

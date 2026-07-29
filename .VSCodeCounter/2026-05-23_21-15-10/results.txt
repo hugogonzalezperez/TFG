@@ -1,0 +1,350 @@
+Date : 2026-05-23 21:15:10
+Directory : /home/dev/TFG
+Total : 211 files,  19758 codes, 1296 comments, 2566 blanks, all 23620 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |        101 |     10,977 |        423 |      1,192 |     12,592 |
+| TypeScript         |         50 |      3,451 |        658 |        518 |      4,627 |
+| log                |          1 |      2,120 |          0 |        174 |      2,294 |
+| LaTeX              |         13 |      1,150 |         82 |        274 |      1,506 |
+| Markdown           |          5 |        598 |          0 |        223 |        821 |
+| XML                |         13 |        397 |          6 |         16 |        419 |
+| BibTeX             |          1 |        272 |          0 |         33 |        305 |
+| PostCSS            |          1 |        217 |         10 |         28 |        255 |
+| MS SQL             |          7 |        161 |         48 |         31 |        240 |
+| JSON               |          2 |        138 |          0 |          2 |        140 |
+| Groovy             |          6 |        122 |          7 |         28 |        157 |
+| Batch              |          1 |         41 |         32 |         22 |         95 |
+| JSON with Comments |          1 |         33 |          3 |          0 |         36 |
+| JavaScript         |          3 |         32 |          1 |          1 |         34 |
+| Java               |          3 |         27 |         11 |         14 |         52 |
+| HTML               |          1 |         13 |          0 |          3 |         16 |
+| Properties         |          2 |          9 |         15 |          7 |         31 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                               | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                  |        211 |     19,758 |      1,296 |      2,566 |     23,620 |
+| . (Files)                                                                                          |         10 |        417 |          4 |         38 |        459 |
+| Docs                                                                                               |         20 |      4,109 |         85 |        678 |      4,872 |
+| Docs (Files)                                                                                       |         19 |      4,005 |         81 |        673 |      4,759 |
+| Docs/settings                                                                                      |          1 |        104 |          4 |          5 |        113 |
+| android                                                                                            |         22 |        495 |         68 |         84 |        647 |
+| android (Files)                                                                                    |          6 |         99 |         51 |         44 |        194 |
+| android/app                                                                                        |         15 |        389 |         17 |         39 |        445 |
+| android/app (Files)                                                                                |          2 |         66 |          3 |         12 |         81 |
+| android/app/src                                                                                    |         13 |        323 |         14 |         27 |        364 |
+| android/app/src/androidTest                                                                        |          1 |         15 |          6 |          6 |         27 |
+| android/app/src/androidTest/java                                                                   |          1 |         15 |          6 |          6 |         27 |
+| android/app/src/androidTest/java/com                                                               |          1 |         15 |          6 |          6 |         27 |
+| android/app/src/androidTest/java/com/getcapacitor                                                  |          1 |         15 |          6 |          6 |         27 |
+| android/app/src/androidTest/java/com/getcapacitor/myapp                                            |          1 |         15 |          6 |          6 |         27 |
+| android/app/src/main                                                                               |         11 |        299 |          3 |         16 |        318 |
+| android/app/src/main (Files)                                                                       |          1 |         31 |          1 |          4 |         36 |
+| android/app/src/main/java                                                                          |          1 |          3 |          0 |          3 |          6 |
+| android/app/src/main/java/com                                                                      |          1 |          3 |          0 |          3 |          6 |
+| android/app/src/main/java/com/parky                                                                |          1 |          3 |          0 |          3 |          6 |
+| android/app/src/main/java/com/parky/app                                                            |          1 |          3 |          0 |          3 |          6 |
+| android/app/src/main/res                                                                           |          9 |        265 |          2 |          9 |        276 |
+| android/app/src/main/res/drawable                                                                  |          1 |        170 |          0 |          1 |        171 |
+| android/app/src/main/res/drawable-v24                                                              |          1 |         34 |          0 |          1 |         35 |
+| android/app/src/main/res/layout                                                                    |          1 |         11 |          0 |          2 |         13 |
+| android/app/src/main/res/mipmap-anydpi-v26                                                         |          2 |         18 |          0 |          0 |         18 |
+| android/app/src/main/res/values                                                                    |          3 |         27 |          2 |          5 |         34 |
+| android/app/src/main/res/xml                                                                       |          1 |          5 |          0 |          0 |          5 |
+| android/app/src/test                                                                               |          1 |          9 |          5 |          5 |         19 |
+| android/app/src/test/java                                                                          |          1 |          9 |          5 |          5 |         19 |
+| android/app/src/test/java/com                                                                      |          1 |          9 |          5 |          5 |         19 |
+| android/app/src/test/java/com/getcapacitor                                                         |          1 |          9 |          5 |          5 |         19 |
+| android/app/src/test/java/com/getcapacitor/myapp                                                   |          1 |          9 |          5 |          5 |         19 |
+| android/gradle                                                                                     |          1 |          7 |          0 |          1 |          8 |
+| android/gradle/wrapper                                                                             |          1 |          7 |          0 |          1 |          8 |
+| public                                                                                             |          2 |         18 |          0 |          2 |         20 |
+| src                                                                                                |        157 |     14,719 |      1,139 |      1,764 |     17,622 |
+| src (Files)                                                                                        |          2 |         69 |          1 |          9 |         79 |
+| src/core                                                                                           |          1 |         47 |          3 |          6 |         56 |
+| src/core/router                                                                                    |          1 |         47 |          3 |          6 |         56 |
+| src/features                                                                                       |         76 |      8,780 |        560 |      1,067 |     10,407 |
+| src/features/auth                                                                                  |          5 |        627 |        170 |        125 |        922 |
+| src/features/auth (Files)                                                                          |          1 |         23 |          7 |          5 |         35 |
+| src/features/auth/components                                                                       |          1 |         58 |          3 |         10 |         71 |
+| src/features/auth/context                                                                          |          1 |        207 |         71 |         43 |        321 |
+| src/features/auth/services                                                                         |          1 |        289 |         80 |         56 |        425 |
+| src/features/auth/types                                                                            |          1 |         50 |          9 |         11 |         70 |
+| src/features/booking                                                                               |         16 |      1,403 |         92 |        190 |      1,685 |
+| src/features/booking (Files)                                                                       |          1 |          4 |          0 |          1 |          5 |
+| src/features/booking/components                                                                    |          7 |        837 |         14 |         94 |        945 |
+| src/features/booking/hooks                                                                         |          2 |        183 |          6 |         26 |        215 |
+| src/features/booking/services                                                                      |          5 |        338 |         69 |         63 |        470 |
+| src/features/booking/types                                                                         |          1 |         41 |          3 |          6 |         50 |
+| src/features/parking                                                                               |         27 |      3,246 |        156 |        367 |      3,769 |
+| src/features/parking (Files)                                                                       |          1 |         14 |          8 |          6 |         28 |
+| src/features/parking/components                                                                    |         16 |      2,379 |         59 |        225 |      2,663 |
+| src/features/parking/components (Files)                                                            |          9 |      1,584 |         40 |        140 |      1,764 |
+| src/features/parking/components/detail                                                             |          7 |        795 |         19 |         85 |        899 |
+| src/features/parking/context                                                                       |          1 |        103 |          1 |         16 |        120 |
+| src/features/parking/hooks                                                                         |          3 |         38 |          0 |          6 |         44 |
+| src/features/parking/services                                                                      |          2 |        504 |         77 |         79 |        660 |
+| src/features/parking/types                                                                         |          1 |         86 |          3 |          7 |         96 |
+| src/features/parking/utils                                                                         |          3 |        122 |          8 |         28 |        158 |
+| src/features/profile                                                                               |         28 |      3,504 |        142 |        385 |      4,031 |
+| src/features/profile (Files)                                                                       |          1 |          2 |          4 |          2 |          8 |
+| src/features/profile/components                                                                    |         21 |      3,106 |         91 |        307 |      3,504 |
+| src/features/profile/components (Files)                                                            |          4 |        565 |         28 |         76 |        669 |
+| src/features/profile/components/owner                                                              |         11 |      1,792 |         46 |        166 |      2,004 |
+| src/features/profile/components/shared                                                             |          1 |         82 |          2 |          7 |         91 |
+| src/features/profile/components/user                                                               |          5 |        667 |         15 |         58 |        740 |
+| src/features/profile/hooks                                                                         |          2 |        105 |          2 |         16 |        123 |
+| src/features/profile/services                                                                      |          4 |        291 |         45 |         60 |        396 |
+| src/mobile                                                                                         |          8 |        163 |        293 |         58 |        514 |
+| src/mobile (Files)                                                                                 |          7 |        122 |        278 |         51 |        451 |
+| src/mobile/components                                                                              |          1 |         41 |         15 |          7 |         63 |
+| src/pages                                                                                          |         11 |      1,376 |         71 |        144 |      1,591 |
+| src/pages (Files)                                                                                  |          1 |          9 |          5 |          5 |         19 |
+| src/pages/auth                                                                                     |          3 |        505 |         20 |         60 |        585 |
+| src/pages/booking                                                                                  |          1 |          4 |          0 |          2 |          6 |
+| src/pages/errors                                                                                   |          1 |         82 |         10 |          8 |        100 |
+| src/pages/home                                                                                     |          1 |        760 |         36 |         61 |        857 |
+| src/pages/parking                                                                                  |          2 |          8 |          0 |          4 |         12 |
+| src/pages/profile                                                                                  |          2 |          8 |          0 |          4 |         12 |
+| src/shared                                                                                         |         29 |      1,635 |        162 |        225 |      2,022 |
+| src/shared/components                                                                              |         14 |      1,076 |         63 |        119 |      1,258 |
+| src/shared/components (Files)                                                                      |          2 |         80 |          0 |         11 |         91 |
+| src/shared/components/auth                                                                         |          2 |         37 |         13 |         13 |         63 |
+| src/shared/components/calendar                                                                     |          1 |        260 |         16 |         34 |        310 |
+| src/shared/components/layout                                                                       |          3 |        277 |          4 |         21 |        302 |
+| src/shared/components/loaders                                                                      |          5 |        323 |         29 |         28 |        380 |
+| src/shared/components/map                                                                          |          1 |         99 |          1 |         12 |        112 |
+| src/shared/hooks                                                                                   |          1 |         15 |          0 |          5 |         20 |
+| src/shared/lib                                                                                     |         12 |        258 |         84 |         57 |        399 |
+| src/shared/lib (Files)                                                                             |          5 |         97 |         36 |         26 |        159 |
+| src/shared/lib/sql                                                                                 |          7 |        161 |         48 |         31 |        240 |
+| src/shared/services                                                                                |          1 |         70 |          0 |          9 |         79 |
+| src/shared/types                                                                                   |          1 |        216 |         15 |         35 |        266 |
+| src/styles                                                                                         |          1 |        217 |         10 |         28 |        255 |
+| src/types                                                                                          |          1 |        696 |          0 |          8 |        704 |
+| src/ui                                                                                             |         28 |      1,736 |         39 |        219 |      1,994 |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                           | language           | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| /home/dev/TFG/.eslintrc.cjs                                                                        | JavaScript         |         20 |          0 |          1 |         21 |
+| /home/dev/TFG/Docs/01-introducción.tex                                                             | LaTeX              |        211 |          1 |         59 |        271 |
+| /home/dev/TFG/Docs/02-capítulo2.tex                                                                | LaTeX              |        154 |          7 |         54 |        215 |
+| /home/dev/TFG/Docs/03-capítulo3.tex                                                                | LaTeX              |        171 |          6 |         28 |        205 |
+| /home/dev/TFG/Docs/04-capítulo4.tex                                                                | LaTeX              |        107 |          0 |         28 |        135 |
+| /home/dev/TFG/Docs/05-conclusiones.tex                                                             | LaTeX              |          3 |          0 |          1 |          4 |
+| /home/dev/TFG/Docs/05-implementacion.tex                                                           | LaTeX              |          2 |          1 |          2 |          5 |
+| /home/dev/TFG/Docs/06-conclusions.tex                                                              | LaTeX              |          3 |          0 |          1 |          4 |
+| /home/dev/TFG/Docs/06-pruebas.tex                                                                  | LaTeX              |          2 |          1 |          2 |          5 |
+| /home/dev/TFG/Docs/07-presupuesto.tex                                                              | LaTeX              |         50 |          0 |          6 |         56 |
+| /home/dev/TFG/Docs/0A-apéndice1.tex                                                                | LaTeX              |         74 |          0 |         16 |         90 |
+| /home/dev/TFG/Docs/0B-apéndice2.tex                                                                | LaTeX              |          6 |          0 |          2 |          8 |
+| /home/dev/TFG/Docs/DATOS_MERCADO.md                                                                | Markdown           |        133 |          0 |         49 |        182 |
+| /home/dev/TFG/Docs/PLAN_REDACCION.md                                                               | Markdown           |        300 |          0 |         95 |        395 |
+| /home/dev/TFG/Docs/README.md                                                                       | Markdown           |         45 |          0 |         44 |         89 |
+| /home/dev/TFG/Docs/TO_FIX.md                                                                       | Markdown           |          6 |          0 |          8 |         14 |
+| /home/dev/TFG/Docs/memtfg.log                                                                      | log                |      2,120 |          0 |        174 |      2,294 |
+| /home/dev/TFG/Docs/memtfg.run.xml                                                                  | XML                |         83 |          3 |          1 |         87 |
+| /home/dev/TFG/Docs/memtfg.tex                                                                      | LaTeX              |        263 |         62 |         70 |        395 |
+| /home/dev/TFG/Docs/referencias.bib                                                                 | BibTeX             |        272 |          0 |         33 |        305 |
+| /home/dev/TFG/Docs/settings/listings.tex                                                           | LaTeX              |        104 |          4 |          5 |        113 |
+| /home/dev/TFG/README.md                                                                            | Markdown           |        114 |          0 |         27 |        141 |
+| /home/dev/TFG/android/app/build.gradle                                                             | Groovy             |         47 |          2 |          6 |         55 |
+| /home/dev/TFG/android/app/capacitor.build.gradle                                                   | Groovy             |         19 |          1 |          6 |         26 |
+| /home/dev/TFG/android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java | Java               |         15 |          6 |          6 |         27 |
+| /home/dev/TFG/android/app/src/main/AndroidManifest.xml                                             | XML                |         31 |          1 |          4 |         36 |
+| /home/dev/TFG/android/app/src/main/java/com/parky/app/MainActivity.java                            | Java               |          3 |          0 |          3 |          6 |
+| /home/dev/TFG/android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml                     | XML                |         34 |          0 |          1 |         35 |
+| /home/dev/TFG/android/app/src/main/res/drawable/ic_launcher_background.xml                         | XML                |        170 |          0 |          1 |        171 |
+| /home/dev/TFG/android/app/src/main/res/layout/activity_main.xml                                    | XML                |         11 |          0 |          2 |         13 |
+| /home/dev/TFG/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml                           | XML                |          9 |          0 |          0 |          9 |
+| /home/dev/TFG/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml                     | XML                |          9 |          0 |          0 |          9 |
+| /home/dev/TFG/android/app/src/main/res/values/ic_launcher_background.xml                           | XML                |          4 |          0 |          0 |          4 |
+| /home/dev/TFG/android/app/src/main/res/values/strings.xml                                          | XML                |          7 |          0 |          1 |          8 |
+| /home/dev/TFG/android/app/src/main/res/values/styles.xml                                           | XML                |         16 |          2 |          4 |         22 |
+| /home/dev/TFG/android/app/src/main/res/xml/file_paths.xml                                          | XML                |          5 |          0 |          0 |          5 |
+| /home/dev/TFG/android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java                | Java               |          9 |          5 |          5 |         19 |
+| /home/dev/TFG/android/build.gradle                                                                 | Groovy             |         20 |          3 |          7 |         30 |
+| /home/dev/TFG/android/capacitor.settings.gradle                                                    | Groovy             |         16 |          1 |          8 |         25 |
+| /home/dev/TFG/android/gradle.properties                                                            | Properties         |          2 |         15 |          6 |         23 |
+| /home/dev/TFG/android/gradle/wrapper/gradle-wrapper.properties                                     | Properties         |          7 |          0 |          1 |          8 |
+| /home/dev/TFG/android/gradlew.bat                                                                  | Batch              |         41 |         32 |         22 |         95 |
+| /home/dev/TFG/android/settings.gradle                                                              | Groovy             |          4 |          0 |          1 |          5 |
+| /home/dev/TFG/android/variables.gradle                                                             | Groovy             |         16 |          0 |          0 |         16 |
+| /home/dev/TFG/capacitor.config.ts                                                                  | TypeScript         |         16 |          0 |          3 |         19 |
+| /home/dev/TFG/index.html                                                                           | HTML               |         13 |          0 |          3 |         16 |
+| /home/dev/TFG/package.json                                                                         | JSON               |         99 |          0 |          1 |        100 |
+| /home/dev/TFG/postcss.config.js                                                                    | JavaScript         |          5 |          0 |          0 |          5 |
+| /home/dev/TFG/public/car.svg                                                                       | XML                |          9 |          0 |          1 |         10 |
+| /home/dev/TFG/public/favicon.svg                                                                   | XML                |          9 |          0 |          1 |         10 |
+| /home/dev/TFG/src/App.tsx                                                                          | TypeScript JSX     |         59 |          0 |          7 |         66 |
+| /home/dev/TFG/src/core/router/routes.tsx                                                           | TypeScript JSX     |         47 |          3 |          6 |         56 |
+| /home/dev/TFG/src/features/auth/components/AuthCallback.tsx                                        | TypeScript JSX     |         58 |          3 |         10 |         71 |
+| /home/dev/TFG/src/features/auth/context/AuthContext.tsx                                            | TypeScript JSX     |        207 |         71 |         43 |        321 |
+| /home/dev/TFG/src/features/auth/index.ts                                                           | TypeScript         |         23 |          7 |          5 |         35 |
+| /home/dev/TFG/src/features/auth/services/auth.service.ts                                           | TypeScript         |        289 |         80 |         56 |        425 |
+| /home/dev/TFG/src/features/auth/types/auth.types.ts                                                | TypeScript         |         50 |          9 |         11 |         70 |
+| /home/dev/TFG/src/features/booking/components/BookingDetailsForm.tsx                               | TypeScript JSX     |        166 |          1 |         18 |        185 |
+| /home/dev/TFG/src/features/booking/components/BookingProcess.tsx                                   | TypeScript JSX     |        126 |          5 |         14 |        145 |
+| /home/dev/TFG/src/features/booking/components/BookingStepper.tsx                                   | TypeScript JSX     |         54 |          1 |          6 |         61 |
+| /home/dev/TFG/src/features/booking/components/BookingSuccess.tsx                                   | TypeScript JSX     |        112 |          0 |          8 |        120 |
+| /home/dev/TFG/src/features/booking/components/BookingSummary.tsx                                   | TypeScript JSX     |        106 |          0 |         10 |        116 |
+| /home/dev/TFG/src/features/booking/components/PaymentDetails.tsx                                   | TypeScript JSX     |         82 |          0 |         10 |         92 |
+| /home/dev/TFG/src/features/booking/components/SmartAccessModal.tsx                                 | TypeScript JSX     |        191 |          7 |         28 |        226 |
+| /home/dev/TFG/src/features/booking/hooks/useBookingFlow.ts                                         | TypeScript         |        147 |          6 |         22 |        175 |
+| /home/dev/TFG/src/features/booking/hooks/useSpotBookings.ts                                        | TypeScript         |         36 |          0 |          4 |         40 |
+| /home/dev/TFG/src/features/booking/index.ts                                                        | TypeScript         |          4 |          0 |          1 |          5 |
+| /home/dev/TFG/src/features/booking/services/booking.dal.ts                                         | TypeScript         |        160 |         26 |         23 |        209 |
+| /home/dev/TFG/src/features/booking/services/booking.service.ts                                     | TypeScript         |         78 |         25 |         18 |        121 |
+| /home/dev/TFG/src/features/booking/services/pricing.service.ts                                     | TypeScript         |         32 |         12 |         10 |         54 |
+| /home/dev/TFG/src/features/booking/services/smartAccess.dal.ts                                     | TypeScript         |         21 |          4 |          3 |         28 |
+| /home/dev/TFG/src/features/booking/services/smartAccess.service.ts                                 | TypeScript         |         47 |          2 |          9 |         58 |
+| /home/dev/TFG/src/features/booking/types/booking.types.ts                                          | TypeScript         |         41 |          3 |          6 |         50 |
+| /home/dev/TFG/src/features/parking/components/FilterDrawer.tsx                                     | TypeScript JSX     |        306 |         11 |         21 |        338 |
+| /home/dev/TFG/src/features/parking/components/FilterSidebar.tsx                                    | TypeScript JSX     |        225 |          8 |         12 |        245 |
+| /home/dev/TFG/src/features/parking/components/Filters.tsx                                          | TypeScript JSX     |         28 |          0 |          4 |         32 |
+| /home/dev/TFG/src/features/parking/components/GarageCard.tsx                                       | TypeScript JSX     |        206 |          1 |         11 |        218 |
+| /home/dev/TFG/src/features/parking/components/GarageDetailModal.tsx                                | TypeScript JSX     |        151 |          2 |         19 |        172 |
+| /home/dev/TFG/src/features/parking/components/MapView.tsx                                          | TypeScript JSX     |        287 |          7 |         29 |        323 |
+| /home/dev/TFG/src/features/parking/components/MapViewHeader.tsx                                    | TypeScript JSX     |         69 |          0 |          6 |         75 |
+| /home/dev/TFG/src/features/parking/components/ParkingDetail.tsx                                    | TypeScript JSX     |        142 |          6 |         18 |        166 |
+| /home/dev/TFG/src/features/parking/components/ParkingMap.tsx                                       | TypeScript JSX     |        170 |          5 |         20 |        195 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingBookingCard.tsx                        | TypeScript JSX     |        379 |          9 |         37 |        425 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingFeatures.tsx                           | TypeScript JSX     |         52 |          0 |          6 |         58 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingGallery.tsx                            | TypeScript JSX     |         70 |          0 |         10 |         80 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingHeader.tsx                             | TypeScript JSX     |         39 |          0 |          5 |         44 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingOwnerCard.tsx                          | TypeScript JSX     |         89 |          0 |          9 |         98 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingOwnerPanel.tsx                         | TypeScript JSX     |         95 |         10 |         12 |        117 |
+| /home/dev/TFG/src/features/parking/components/detail/ParkingReviews.tsx                            | TypeScript JSX     |         71 |          0 |          6 |         77 |
+| /home/dev/TFG/src/features/parking/context/FilterContext.tsx                                       | TypeScript JSX     |        103 |          1 |         16 |        120 |
+| /home/dev/TFG/src/features/parking/hooks/useGarageReviews.ts                                       | TypeScript         |         13 |          0 |          2 |         15 |
+| /home/dev/TFG/src/features/parking/hooks/useGarages.ts                                             | TypeScript         |         11 |          0 |          2 |         13 |
+| /home/dev/TFG/src/features/parking/hooks/useParkingSpot.ts                                         | TypeScript         |         14 |          0 |          2 |         16 |
+| /home/dev/TFG/src/features/parking/index.ts                                                        | TypeScript         |         14 |          8 |          6 |         28 |
+| /home/dev/TFG/src/features/parking/services/parking.dal.ts                                         | TypeScript         |        251 |         35 |         46 |        332 |
+| /home/dev/TFG/src/features/parking/services/parking.service.ts                                     | TypeScript         |        253 |         42 |         33 |        328 |
+| /home/dev/TFG/src/features/parking/types/parking.types.ts                                          | TypeScript         |         86 |          3 |          7 |         96 |
+| /home/dev/TFG/src/features/parking/utils/mapUtils.ts                                               | TypeScript         |         36 |          1 |          5 |         42 |
+| /home/dev/TFG/src/features/parking/utils/parkingFilters.ts                                         | TypeScript         |         61 |          7 |         15 |         83 |
+| /home/dev/TFG/src/features/parking/utils/schedule.utils.ts                                         | TypeScript         |         25 |          0 |          8 |         33 |
+| /home/dev/TFG/src/features/profile/components/AvatarUploader.tsx                                   | TypeScript JSX     |         77 |          4 |         14 |         95 |
+| /home/dev/TFG/src/features/profile/components/GarageImageUploader.tsx                              | TypeScript JSX     |        124 |          8 |         20 |        152 |
+| /home/dev/TFG/src/features/profile/components/OwnerProfile.tsx                                     | TypeScript JSX     |        217 |          8 |         22 |        247 |
+| /home/dev/TFG/src/features/profile/components/UserProfile.tsx                                      | TypeScript JSX     |        147 |          8 |         20 |        175 |
+| /home/dev/TFG/src/features/profile/components/owner/AddSpotForm.tsx                                | TypeScript JSX     |        289 |          5 |         26 |        320 |
+| /home/dev/TFG/src/features/profile/components/owner/AddSpotToGarageModal.tsx                       | TypeScript JSX     |        137 |          0 |         13 |        150 |
+| /home/dev/TFG/src/features/profile/components/owner/EditGarageModal.tsx                            | TypeScript JSX     |        341 |          2 |         24 |        367 |
+| /home/dev/TFG/src/features/profile/components/owner/ManagedGarages.tsx                             | TypeScript JSX     |        321 |          6 |         21 |        348 |
+| /home/dev/TFG/src/features/profile/components/owner/OwnerBookingsTab.tsx                           | TypeScript JSX     |        209 |         18 |         28 |        255 |
+| /home/dev/TFG/src/features/profile/components/owner/OwnerDashboardTab.tsx                          | TypeScript JSX     |         48 |          4 |          7 |         59 |
+| /home/dev/TFG/src/features/profile/components/owner/OwnerReviewsTab.tsx                            | TypeScript JSX     |        143 |          4 |         14 |        161 |
+| /home/dev/TFG/src/features/profile/components/owner/OwnerStatsRow.tsx                              | TypeScript JSX     |         46 |          0 |          4 |         50 |
+| /home/dev/TFG/src/features/profile/components/owner/SpotFavoritesUsers.tsx                         | TypeScript JSX     |         13 |          1 |          4 |         18 |
+| /home/dev/TFG/src/features/profile/components/owner/SpotScheduleEditor.tsx                         | TypeScript JSX     |        163 |          6 |         19 |        188 |
+| /home/dev/TFG/src/features/profile/components/owner/TenantActivitySidebar.tsx                      | TypeScript JSX     |         82 |          0 |          6 |         88 |
+| /home/dev/TFG/src/features/profile/components/shared/ProfileSkeletonLoaders.tsx                    | TypeScript JSX     |         82 |          2 |          7 |         91 |
+| /home/dev/TFG/src/features/profile/components/user/BookingHistory.tsx                              | TypeScript JSX     |        270 |          8 |         20 |        298 |
+| /home/dev/TFG/src/features/profile/components/user/FavoritesList.tsx                               | TypeScript JSX     |         59 |          0 |          3 |         62 |
+| /home/dev/TFG/src/features/profile/components/user/ProfileAccountSettings.tsx                      | TypeScript JSX     |        125 |          2 |         14 |        141 |
+| /home/dev/TFG/src/features/profile/components/user/ProfileSidebar.tsx                              | TypeScript JSX     |         94 |          3 |          7 |        104 |
+| /home/dev/TFG/src/features/profile/components/user/ReviewModal.tsx                                 | TypeScript JSX     |        119 |          2 |         14 |        135 |
+| /home/dev/TFG/src/features/profile/hooks/useFavorites.ts                                           | TypeScript         |         35 |          0 |          6 |         41 |
+| /home/dev/TFG/src/features/profile/hooks/useProfileData.ts                                         | TypeScript         |         70 |          2 |         10 |         82 |
+| /home/dev/TFG/src/features/profile/index.ts                                                        | TypeScript         |          2 |          4 |          2 |          8 |
+| /home/dev/TFG/src/features/profile/services/favorites.dal.ts                                       | TypeScript         |         71 |          0 |         11 |         82 |
+| /home/dev/TFG/src/features/profile/services/favorites.service.ts                                   | TypeScript         |         46 |          0 |         10 |         56 |
+| /home/dev/TFG/src/features/profile/services/profile.dal.ts                                         | TypeScript         |         94 |         22 |         18 |        134 |
+| /home/dev/TFG/src/features/profile/services/profile.service.ts                                     | TypeScript         |         80 |         23 |         21 |        124 |
+| /home/dev/TFG/src/main.tsx                                                                         | TypeScript JSX     |         10 |          1 |          2 |         13 |
+| /home/dev/TFG/src/mobile/components/MobileBottomNav.tsx                                            | TypeScript JSX     |         41 |         15 |          7 |         63 |
+| /home/dev/TFG/src/mobile/haptics.ts                                                                | TypeScript         |         19 |         48 |          5 |         72 |
+| /home/dev/TFG/src/mobile/index.ts                                                                  | TypeScript         |          6 |         21 |          7 |         34 |
+| /home/dev/TFG/src/mobile/keyboard.ts                                                               | TypeScript         |         22 |         44 |          8 |         74 |
+| /home/dev/TFG/src/mobile/platform.ts                                                               | TypeScript         |         17 |         43 |          9 |         69 |
+| /home/dev/TFG/src/mobile/splash.ts                                                                 | TypeScript         |         14 |         38 |          6 |         58 |
+| /home/dev/TFG/src/mobile/status-bar.ts                                                             | TypeScript         |         24 |         35 |         10 |         69 |
+| /home/dev/TFG/src/mobile/storage.ts                                                                | TypeScript         |         20 |         49 |          6 |         75 |
+| /home/dev/TFG/src/pages/auth/AuthCallbackPage.tsx                                                  | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/pages/auth/LoginPage.tsx                                                         | TypeScript JSX     |        180 |         11 |         21 |        212 |
+| /home/dev/TFG/src/pages/auth/SignUpPage.tsx                                                        | TypeScript JSX     |        321 |          9 |         37 |        367 |
+| /home/dev/TFG/src/pages/booking/BookingPage.tsx                                                    | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/pages/errors/ErrorPage.tsx                                                       | TypeScript JSX     |         82 |         10 |          8 |        100 |
+| /home/dev/TFG/src/pages/home/HomePage.tsx                                                          | TypeScript JSX     |        760 |         36 |         61 |        857 |
+| /home/dev/TFG/src/pages/index.ts                                                                   | TypeScript         |          9 |          5 |          5 |         19 |
+| /home/dev/TFG/src/pages/parking/MapViewPage.tsx                                                    | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/pages/parking/ParkingDetailPage.tsx                                              | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/pages/profile/OwnerProfilePage.tsx                                               | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/pages/profile/UserProfilePage.tsx                                                | TypeScript JSX     |          4 |          0 |          2 |          6 |
+| /home/dev/TFG/src/shared/components/ErrorBoundary.tsx                                              | TypeScript JSX     |         44 |          0 |          7 |         51 |
+| /home/dev/TFG/src/shared/components/LocationLink.tsx                                               | TypeScript JSX     |         36 |          0 |          4 |         40 |
+| /home/dev/TFG/src/shared/components/auth/ProtectedRoute.tsx                                        | TypeScript JSX     |         21 |          9 |          7 |         37 |
+| /home/dev/TFG/src/shared/components/auth/PublicRoute.tsx                                           | TypeScript JSX     |         16 |          4 |          6 |         26 |
+| /home/dev/TFG/src/shared/components/calendar/BookingTimeline.tsx                                   | TypeScript JSX     |        260 |         16 |         34 |        310 |
+| /home/dev/TFG/src/shared/components/layout/Header.tsx                                              | TypeScript JSX     |        228 |          4 |         14 |        246 |
+| /home/dev/TFG/src/shared/components/layout/MainLayout.tsx                                          | TypeScript JSX     |         17 |          0 |          3 |         20 |
+| /home/dev/TFG/src/shared/components/layout/MobileNavbar.tsx                                        | TypeScript JSX     |         32 |          0 |          4 |         36 |
+| /home/dev/TFG/src/shared/components/loaders/AnimatedLoader.tsx                                     | TypeScript JSX     |        185 |         11 |         10 |        206 |
+| /home/dev/TFG/src/shared/components/loaders/AuthSkeleton.tsx                                       | TypeScript JSX     |         30 |          5 |          4 |         39 |
+| /home/dev/TFG/src/shared/components/loaders/FullScreenLoader.tsx                                   | TypeScript JSX     |         16 |          3 |          3 |         22 |
+| /home/dev/TFG/src/shared/components/loaders/HomeSkeleton.tsx                                       | TypeScript JSX     |         88 |          7 |          9 |        104 |
+| /home/dev/TFG/src/shared/components/loaders/index.ts                                               | TypeScript         |          4 |          3 |          2 |          9 |
+| /home/dev/TFG/src/shared/components/map/LocationPicker.tsx                                         | TypeScript JSX     |         99 |          1 |         12 |        112 |
+| /home/dev/TFG/src/shared/hooks/use-mobile.tsx                                                      | TypeScript JSX     |         15 |          0 |          5 |         20 |
+| /home/dev/TFG/src/shared/lib/cn.ts                                                                 | TypeScript         |          5 |          0 |          2 |          7 |
+| /home/dev/TFG/src/shared/lib/index.ts                                                              | TypeScript         |          3 |          5 |          3 |         11 |
+| /home/dev/TFG/src/shared/lib/logger.ts                                                             | TypeScript         |          6 |          0 |          2 |          8 |
+| /home/dev/TFG/src/shared/lib/sql/add_vehicle_info_to_bookings.sql                                  | MS SQL             |          5 |          2 |          2 |          9 |
+| /home/dev/TFG/src/shared/lib/sql/auto_owner_trigger.sql                                            | MS SQL             |         20 |         14 |          7 |         41 |
+| /home/dev/TFG/src/shared/lib/sql/fix_booking_overlap_final.sql                                     | MS SQL             |         43 |         11 |          7 |         61 |
+| /home/dev/TFG/src/shared/lib/sql/fix_garages_rls.sql                                               | MS SQL             |         27 |         10 |          6 |         43 |
+| /home/dev/TFG/src/shared/lib/sql/garage_counters.sql                                               | MS SQL             |         16 |          2 |          2 |         20 |
+| /home/dev/TFG/src/shared/lib/sql/price_history_policy.sql                                          | MS SQL             |         20 |          2 |          2 |         24 |
+| /home/dev/TFG/src/shared/lib/sql/user_visibility_policy.sql                                        | MS SQL             |         30 |          7 |          5 |         42 |
+| /home/dev/TFG/src/shared/lib/supabase.ts                                                           | TypeScript         |         37 |         18 |         10 |         65 |
+| /home/dev/TFG/src/shared/lib/time-utils.ts                                                         | TypeScript         |         46 |         13 |          9 |         68 |
+| /home/dev/TFG/src/shared/services/geocoding.service.ts                                             | TypeScript         |         70 |          0 |          9 |         79 |
+| /home/dev/TFG/src/shared/types/database.types.ts                                                   | TypeScript         |        216 |         15 |         35 |        266 |
+| /home/dev/TFG/src/styles/globals.css                                                               | PostCSS            |        217 |         10 |         28 |        255 |
+| /home/dev/TFG/src/types/database.types.ts                                                          | TypeScript         |        696 |          0 |          8 |        704 |
+| /home/dev/TFG/src/ui/RangeSlider.tsx                                                               | TypeScript JSX     |        144 |         13 |         20 |        177 |
+| /home/dev/TFG/src/ui/address-search.tsx                                                            | TypeScript JSX     |         97 |          2 |         14 |        113 |
+| /home/dev/TFG/src/ui/avatar.tsx                                                                    | TypeScript JSX     |         47 |          0 |          7 |         54 |
+| /home/dev/TFG/src/ui/badge.tsx                                                                     | TypeScript JSX     |         44 |          1 |          8 |         53 |
+| /home/dev/TFG/src/ui/booking-card-skeleton.tsx                                                     | TypeScript JSX     |         59 |          6 |          7 |         72 |
+| /home/dev/TFG/src/ui/button-variants.ts                                                            | TypeScript         |         33 |          0 |          3 |         36 |
+| /home/dev/TFG/src/ui/button.tsx                                                                    | TypeScript JSX     |         22 |          0 |          5 |         27 |
+| /home/dev/TFG/src/ui/calendar.tsx                                                                  | TypeScript JSX     |         60 |          0 |          4 |         64 |
+| /home/dev/TFG/src/ui/card.tsx                                                                      | TypeScript JSX     |         83 |          0 |         10 |         93 |
+| /home/dev/TFG/src/ui/checkbox.tsx                                                                  | TypeScript JSX     |         28 |          0 |          5 |         33 |
+| /home/dev/TFG/src/ui/confirmation-dialog.tsx                                                       | TypeScript JSX     |         65 |          0 |          3 |         68 |
+| /home/dev/TFG/src/ui/date-picker.tsx                                                               | TypeScript JSX     |         47 |          0 |          3 |         50 |
+| /home/dev/TFG/src/ui/dialog.tsx                                                                    | TypeScript JSX     |        109 |          0 |         14 |        123 |
+| /home/dev/TFG/src/ui/drawer.tsx                                                                    | TypeScript JSX     |        104 |          0 |         13 |        117 |
+| /home/dev/TFG/src/ui/empty-state.tsx                                                               | TypeScript JSX     |         43 |          0 |          3 |         46 |
+| /home/dev/TFG/src/ui/errorMessage.tsx                                                              | TypeScript JSX     |         25 |          0 |          3 |         28 |
+| /home/dev/TFG/src/ui/garage-card-skeleton.tsx                                                      | TypeScript JSX     |         47 |          5 |          7 |         59 |
+| /home/dev/TFG/src/ui/index.ts                                                                      | TypeScript         |         27 |          0 |          2 |         29 |
+| /home/dev/TFG/src/ui/input.tsx                                                                     | TypeScript JSX     |         21 |          0 |          4 |         25 |
+| /home/dev/TFG/src/ui/label.tsx                                                                     | TypeScript JSX     |         20 |          0 |          5 |         25 |
+| /home/dev/TFG/src/ui/popover.tsx                                                                   | TypeScript JSX     |         24 |          0 |          5 |         29 |
+| /home/dev/TFG/src/ui/select.tsx                                                                    | TypeScript JSX     |        145 |          0 |         13 |        158 |
+| /home/dev/TFG/src/ui/sheet.tsx                                                                     | TypeScript JSX     |        124 |          0 |         15 |        139 |
+| /home/dev/TFG/src/ui/skeleton.tsx                                                                  | TypeScript JSX     |         10 |          0 |          3 |         13 |
+| /home/dev/TFG/src/ui/switch.tsx                                                                    | TypeScript JSX     |         27 |          0 |          5 |         32 |
+| /home/dev/TFG/src/ui/tabs.tsx                                                                      | TypeScript JSX     |         59 |          0 |          8 |         67 |
+| /home/dev/TFG/src/ui/textarea.tsx                                                                  | TypeScript JSX     |         18 |          0 |          4 |         22 |
+| /home/dev/TFG/src/ui/time-picker.tsx                                                               | TypeScript JSX     |        204 |         12 |         26 |        242 |
+| /home/dev/TFG/tailwind.config.js                                                                   | JavaScript         |          7 |          1 |          0 |          8 |
+| /home/dev/TFG/tsconfig.json                                                                        | JSON with Comments |         33 |          3 |          0 |         36 |
+| /home/dev/TFG/vercel.json                                                                          | JSON               |         39 |          0 |          1 |         40 |
+| /home/dev/TFG/vite.config.ts                                                                       | TypeScript         |         71 |          0 |          2 |         73 |
+| Total                                                                                              |                    |     19,758 |      1,296 |      2,566 |     23,620 |
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

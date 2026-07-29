@@ -1,0 +1,121 @@
+\chapter{Implementación}
+\label{ch:implementacion}
+
+Este capítulo describe las decisiones de implementación más relevantes de Parky, organizadas por módulo funcional. El foco recae en los puntos donde la arquitectura impone restricciones no triviales: el aislamiento de datos entre roles, la consistencia de las reservas concurrentes y la separación contable exigida por el modelo P2P.
+
+% ============================================================
+\section{Arquitectura por capas}
+\label{sec:arquitectura_capas}
+
+El código fuente se organiza en módulos autónomos bajo \texttt{src/features/}, cada uno con cuatro subcapas bien diferenciadas.
+
+\paragraph{DAL (\textit{Data Access Layer}).}
+Cada módulo expone un objeto \texttt{*.dal.ts} que concentra todas las llamadas al cliente de Supabase. Las consultas nunca usan \texttt{select('*')}: cada llamada lista explícitamente las columnas necesarias, lo que evita exponer campos sensibles si en el futuro se añaden columnas a la tabla. El cliente se crea una única vez en \texttt{src/shared/lib/supabase.ts} con las variables de entorno \texttt{VITE\_SUPABASE\_URL} y \texttt{VITE\_SUPABASE\_ANON\_KEY}, que nunca se incluyen en el repositorio.
+
+\paragraph{Servicio de negocio.}
+El archivo \texttt{*.service.ts} orquesta la lógica que cruza más de una entidad. Por ejemplo, \texttt{bookingService.createBooking()} primero obtiene las reglas de precio activas para la plaza, calcula el importe final con \texttt{pricingService} y solo entonces llama al DAL para persistir la reserva. Si cualquiera de esos pasos falla, la transacción no llega a la base de datos.
+
+\paragraph{Hooks de React.}
+Los archivos \texttt{*.hooks.ts} envuelven los servicios con TanStack Query, añadiendo caché automática, estados de carga y revalidación optimista. El componente solo ve \texttt{\{ data, isLoading, error \}} y nunca llama al DAL directamente.
+
+\paragraph{Componentes.}
+Los componentes React son exclusivamente de presentación. Reciben datos y callbacks como \textit{props}; toda la lógica de negocio vive en la capa de servicio, y toda la gestión de estado servidor vive en los hooks.
+
+% ============================================================
+\section{Módulo de autenticación}
+\label{sec:impl_auth}
+
+Supabase Auth gestiona las sesiones mediante JWT\footnote{\textbf{JWT} (\textit{JSON Web Token}): token firmado que codifica la identidad del usuario y sus claims; Supabase lo valida en cada petición antes de aplicar las políticas RLS.} con refresco automático. El registro acepta email/contraseña y OAuth con Google; en ambos casos, un trigger de PostgreSQL crea automáticamente una fila en la tabla \texttt{profiles} al insertar en \texttt{auth.users}.
+
+\paragraph{Selección de rol.}
+En el primer inicio de sesión, el cliente detecta que el campo \texttt{profiles.role} es \texttt{null} y redirige al usuario a la pantalla de onboarding, donde elige entre Arrendador y Arrendatario. El rol queda fijo en \texttt{profiles}: ninguna política RLS permite actualizarlo desde el cliente una vez establecido.
+
+\paragraph{Control de acceso en rutas.}
+\texttt{AuthContext} expone los booleanos \texttt{isOwner} e \texttt{isAuthenticated}. El enrutador de React Router DOM protege cada ruta con un componente \texttt{ProtectedRoute} que redirige a \texttt{/login} si el usuario no está autenticado o a \texttt{/home} si intenta acceder a una sección de un rol distinto al suyo.
+
+\paragraph{Debounce en \texttt{onAuthStateChange}.}
+El listener de sesión incorpora un \textit{debounce} de 300 ms implementado con \texttt{useRef} para evitar múltiples refrescados de estado ante eventos rápidos de Supabase, un problema frecuente en entornos con OAuth que redirigen desde una URL externa.
+
+% ============================================================
+\section{Módulo de plazas y mapa}
+\label{sec:impl_parking}
+
+\paragraph{Modelo de datos: garaje y plaza.}
+El inventario se estructura en dos niveles: \texttt{garages} (dirección, propietario, fotos) y \texttt{parking\_spots} (precio por hora, disponibilidad, fotos propias). Una plaza siempre pertenece a un garaje; el mapa muestra marcadores en la coordenada del garaje. Separar las entidades permite que un mismo propietario gestione un garaje con varias plazas sin duplicar la dirección.
+
+\paragraph{Mapa interactivo.}
+El mapa se implementa con Leaflet y React-Leaflet sobre teselas de OpenStreetMap. Al mover o hacer zoom, el componente \texttt{MapView} recalcula el \textit{bounding box} visible y lanza una nueva consulta que filtra garajes dentro de esas coordenadas. El resultado se limita a garajes con al menos una plaza activa; los inactivos nunca llegan al cliente.
+
+\paragraph{Geocodificación.}
+Al crear o editar un garaje, el arrendador escribe la dirección en texto libre. La Edge Function \texttt{geocode} consulta la API de OpenCage, devuelve las coordenadas y las persiste en \texttt{garages.latitude} y \texttt{garages.longitude}. El servidor valida que las coordenadas correspondan a Tenerife antes de guardarlas, rechazando intentos de registrar plazas fuera del ámbito del servicio.
+
+\paragraph{Filtros de búsqueda.}
+El contexto \texttt{FilterContext} mantiene el estado de los filtros (precio máximo, rango horario, tipo de plaza) y los pasa a la consulta del DAL. Los filtros se aplican en el servidor mediante cláusulas \texttt{.lte()} y \texttt{.gte()} de la API de Supabase, no en el cliente, para minimizar la transferencia de datos.
+
+% ============================================================
+\section{Módulo de reservas}
+\label{sec:impl_reservas}
+
+\paragraph{Motor de precios.}
+\texttt{pricingService.calculateEstimation()} recibe el precio base por hora, el intervalo y la lista de reglas activas para la plaza. Filtra las reglas por día de la semana y tramo horario, selecciona el multiplicador máximo aplicable y calcula el importe total. El mismo cálculo se ejecuta en la Edge Function \texttt{calculate-price} (Deno), que actúa como fuente autoritativa del precio: el cliente muestra la estimación al usuario, pero el precio que se persiste en la reserva lo devuelve siempre el servidor.
+
+\paragraph{Buffer entre reservas.}
+La consulta de disponibilidad (\texttt{check\_parking\_spot\_availability}) aplica un margen de 15 minutos antes y después de cada reserva existente. Este buffer evita situaciones en las que dos vehículos se crucen en el acceso al garaje al solaparse los períodos de entrada y salida.
+
+\paragraph{Prevención de solapamientos.}
+El trigger \texttt{prevent\_booking\_overlap} se ejecuta \texttt{BEFORE INSERT OR UPDATE} sobre la tabla \texttt{bookings}:
+
+\begin{lstlisting}[language=SQL, caption={Trigger de solapamiento en \texttt{bookings}.}, label=lst:overlap]
+CREATE TRIGGER prevent_booking_overlap
+  BEFORE INSERT OR UPDATE ON public.bookings
+  FOR EACH ROW
+  EXECUTE FUNCTION public.check_booking_overlap();
+\end{lstlisting}
+
+La función verifica que no exista ninguna reserva activa o confirmada cuyo intervalo solape con el nuevo, teniendo en cuenta el soft delete (\texttt{deleted\_at IS NULL}). Al ejecutarse dentro de la transacción de inserción, es imposible crear dos reservas solapadas aunque dos clientes las soliciten simultáneamente.
+
+\paragraph{Máquina de estados.}
+El trigger \texttt{enforce\_booking\_status\_machine} protege las transiciones del campo \texttt{status}. Solo admite los pasos \texttt{pending} $\to$ \texttt{confirmed}, \texttt{confirmed} $\to$ \texttt{active} y \texttt{active} $\to$ \texttt{completed}, y permite \texttt{cancelled} desde cualquier estado no terminal. Un intento de reactivar una reserva cancelada o completada provoca una excepción de PostgreSQL que el cliente captura y muestra al usuario. La Edge Function \texttt{complete-past-bookings} se ejecuta periódicamente para avanzar automáticamente las reservas cuyo \texttt{end\_time} ya ha pasado.
+
+\paragraph{Soft delete.}
+Las reservas nunca se borran físicamente. Un campo \texttt{deleted\_at} marca las canceladas; todas las consultas aplican \texttt{.is('deleted\_at', null)} para excluirlas. Esto preserva el historial completo de transacciones, necesario para auditoría fiscal y para el historial de reservas del usuario.
+
+% ============================================================
+\section{Módulo de pagos}
+\label{sec:impl_pagos}
+
+\paragraph{Stripe Connect.}
+El arrendador completa el alta en Stripe Connect antes de poder recibir pagos. El flujo OAuth de Stripe vincula su cuenta bancaria al identificador de la plataforma (\texttt{stripe\_account\_id} en \texttt{profiles}). Al confirmar una reserva, la plataforma crea un \textit{PaymentIntent} con transferencia automática: Stripe retiene la comisión configurada y transfiere el saldo neto directamente a la cuenta del propietario, sin que el dinero pase por una cuenta intermedia de la plataforma.
+
+\paragraph{IGIC en Canarias.}
+Las Edge Functions de Supabase calculan el IGIC del 7\,\% sobre las comisiones de servicio antes de crear el \textit{PaymentIntent}. El tipo impositivo canario difiere del IVA peninsular (21\,\%); mantenerlo en el servidor evita que un cliente manipule el importe declarado. El desglose (precio base + comisión + IGIC) se almacena en columnas separadas de la tabla \texttt{bookings} para facilitar las declaraciones trimestrales.
+
+\paragraph{Reembolsos.}
+Si el arrendatario cancela antes del inicio de la reserva o si el pago no puede completarse, la Edge Function invierte el \textit{PaymentIntent} y emite el reembolso íntegro. Las restricciones \texttt{check\_booking\_price\_positive} y \texttt{check\_booking\_time\_order} de la base de datos garantizan que nunca se persista una reserva con precio negativo o con intervalo temporal incoherente.
+
+% ============================================================
+\section{Módulo SmartAccess}
+\label{sec:impl_smartaccess}
+
+SmartAccess permite al arrendatario abrir y cerrar el garaje desde la aplicación durante la ventana temporal de su reserva. La función \texttt{assertBookingActive()} valida tres condiciones antes de registrar cualquier evento de acceso:
+
+\begin{enumerate}
+  \item El usuario autenticado es el titular (\texttt{renter\_id = auth.uid()}).
+  \item El estado de la reserva es \texttt{active}.
+  \item El instante actual está dentro del intervalo \texttt{[start\_time, end\_time]}.
+\end{enumerate}
+
+Si alguna condición falla, la función lanza una excepción genérica («Reserva no encontrada») que no revela si la reserva existe pero pertenece a otro usuario, previniendo enumeración de recursos ajenos. Cada intento de acceso, exitoso o fallido, queda registrado en la tabla \texttt{smart\_access\_logs} con marca de tiempo y tipo de evento (\texttt{open}/\texttt{close}).
+
+% ============================================================
+\section{Despliegue multiplataforma}
+\label{sec:impl_despliegue}
+
+\paragraph{Web.}
+Vite compila la aplicación en modo producción generando un árbol de artefactos estáticos optimizados. Vercel recoge el repositorio de GitHub, ejecuta \texttt{npm run build} en cada \textit{push} a \texttt{main} y distribuye el resultado en su CDN global. El archivo \texttt{vercel.json} redirige todas las rutas al \texttt{index.html} para que React Router DOM gestione la navegación sin recargas de página.
+
+\paragraph{Android.}
+Capacitor encapsula la aplicación web dentro de una \textit{WebView} nativa de Android. El módulo \texttt{src/mobile/platform.ts} detecta en tiempo de ejecución si la aplicación corre en un dispositivo nativo o en un navegador, y activa o desactiva los plugins de Capacitor (haptics, barra de estado, almacenamiento nativo) de forma condicional. El APK se genera desde Android Studio sin modificar ningún componente de React.
+
+\paragraph{Variables de entorno.}
+Tanto en Vercel como en el archivo \texttt{.env.local} de desarrollo, las únicas variables expuestas al cliente son \texttt{VITE\_SUPABASE\_URL} y \texttt{VITE\_SUPABASE\_ANON\_KEY}, que son claves públicas por diseño. Las claves privadas (\texttt{SERVICE\_ROLE\_KEY}, credenciales de Stripe) nunca salen del entorno de las Edge Functions de Supabase.

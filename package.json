@@ -78,6 +78,7 @@
             "eslint-plugin-react-hooks": "^4.6.0",
             "eslint-plugin-react-refresh": "^0.4.5",
             "tailwindcss": "^4.1.3",
+            "typescript": "^6.0.3",
             "vite": "^6.4.1"
       },
       "scripts": {
@@ -85,15 +86,18 @@
             "build": "vite build",
             "preview": "vite preview",
             "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-            "cap:sync": "vite build && npx cap sync",
-            "cap:android": "npx cap open android",
-            "cap:live": "npx cap run android --livereload --external",
+            "cap:sync": "vite build && npx cap sync android && bash scripts/cap-sync-windows.sh",
+            "cap:open": "npm run cap:sync && studio",
+            "cap:live:setup": "CAP_LIVE=1 npx cap sync android",
+            "cap:live": "npm run cap:live:setup && vite --host 0.0.0.0",
+            "cap:adb": "adb devices",
+            "cap:native-mode": "/mnt/c/Users/hugoe/AppData/Local/Android/Sdk/platform-tools/adb.exe shell settings put secure navigation_mode 2 && /mnt/c/Users/hugoe/AppData/Local/Android/Sdk/platform-tools/adb.exe shell settings put global policy_control immersive.status=*",
             "docs:build": "cd Docs && latexmk -pdf memtfg.tex",
             "docs:watch": "cd Docs && latexmk -pvc -pdf memtfg.tex",
             "docs:clean": "cd Docs && latexmk -c",
-      "test:e2e": "playwright test",
-      "test:e2e:ui": "playwright test --ui",
-      "test:e2e:headed": "playwright test --headed",
-      "test:e2e:report": "playwright show-report e2e-report"
+            "test:e2e": "playwright test",
+            "test:e2e:ui": "playwright test --ui",
+            "test:e2e:headed": "playwright test --headed",
+            "test:e2e:report": "playwright show-report e2e-report"
       }
 }

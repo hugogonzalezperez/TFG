@@ -243,6 +243,45 @@ html {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+/* ── Native / Android overrides ─────────────────────────────────────────
+   These selectors require the body class injected by App.tsx on native builds.
+   They NEVER apply on web desktop.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* Disable pull-to-refresh and bounce — feels like a real app */
+.is-native {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  /* Disable long-press selection — native apps don't show it */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Re-enable selection for form inputs */
+.is-native input,
+.is-native textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Remove blue tap flash on Android WebView */
+.is-native * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbars on native — native lists don't show scrollbars */
+.is-native ::-webkit-scrollbar {
+  display: none;
+}
+.is-native * {
+  scrollbar-width: none;
+}
+
+/* Android-specific: subpixel font rendering improves sharpness on OLED */
+.is-android body {
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
 /* Leaflet zoom controls — meet 44px touch target (Apple HIG / Material Design) */
 @media (max-width: 767px) {
   .leaflet-control-zoom a {

@@ -165,6 +165,7 @@
 \renewcommand*{\chapterformat}{%
     \mbox{\chapappifchapterprefix{\nobreakspace}\thechapter
     \IfUsePrefixLine{}{\enskip}}}
+\renewcommand{\chapterheadstartvskip}{\vspace*{0pt}}
 \renewcommand{\chapterheadmidvskip}{\vskip 0pt}
 
 % Formato de los títulos en figuras y tablas
@@ -183,7 +184,7 @@
   }%
 }
 
-\begin{document}   
+\begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Portada y metadatos
@@ -201,25 +202,25 @@
 {
     \setlength{\parindent}{0mm}
     \setlength{\parskip}{0mm}
-    
+
     \vspace*{1.20cm}
     \includegraphics[width=9.81cm]{images/logos/escuela-ingenieria-tecnologia-original}
     \vspace*{\stretch{0.9}}
-    
+
     {\centering
-    \fontsize{32pt}{32pt}\selectfont Trabajo de Fin de Grado\\[10pt]
-    \fontsize{20pt}{20pt}\selectfont Grado en Ingeniería Informática\par}
+        \fontsize{32pt}{32pt}\selectfont Trabajo de Fin de Grado\\[10pt]
+        \fontsize{20pt}{20pt}\selectfont Grado en Ingeniería Informática\par}
     \HRule\vspace*{-2mm}
     \begin{flushright}
         {\fontsize{32pt}{32pt}\selectfont Parky - Marketplace colaborativo de aparcamiento Peer-to-Peer\par
-        \vspace*{3mm}
-        \fontsize{18pt}{18pt}\selectfont \textit{Peer-to-Peer Collaborative Parking Marketplace}\par
-        \vspace*{11mm}
-        \fontsize{16pt}{16pt}\selectfont Hugo González Pérez
+            \vspace*{3mm}
+            \fontsize{18pt}{18pt}\selectfont \textit{Peer-to-Peer Collaborative Parking Marketplace}\par
+            \vspace*{11mm}
+            \fontsize{16pt}{16pt}\selectfont Hugo González Pérez
         }\vspace*{12mm}
     \end{flushright}
     \HRule
-    
+
     \vspace*{\stretch{1}}
     \begin{center}
         \fontsize{18pt}{18pt}\selectfont La Laguna, \today
@@ -234,27 +235,27 @@
 \thispagestyle{empty}
 
 {
-\setlength\parindent{0pt}
+    \setlength\parindent{0pt}
     D. \textbf{Francisco Javier Rodríguez González}, con N.I.F. 43.618.712-V profesor Asociado de Universidad adscrito al Departamento de Ingeniería Informática y de Sistemas de la Universidad de La Laguna, como tutor
-    
+
     \bigskip
     D. \textbf{Alejandro Pérez Nava}, con N.I.F. 43.821.179-S profesor Asociado de Universidad adscrito al Departamento de Ingeniería Informática y de Sistemas de la Universidad de La Laguna, como cotutor
-    
+
     \bigskip
     \bigskip
     \textbf{C E R T I F I C A (N)}
 
     \bigskip
     Que la presente memoria titulada:
-    
+
     \bigskip
     \begin{quote}
-    \textit{``Parky - Marketplace colaborativo de aparcamiento Peer-to-Peer''}
+        \textit{``Parky - Marketplace colaborativo de aparcamiento Peer-to-Peer''}
     \end{quote}
-    
+
     \bigskip
     \noindent ha sido realizada bajo su dirección por D. \textbf{Hugo González Pérez}, con N.I.F 78.824.986-F.
-    
+
     \bigskip
     Y para que así conste, en cumplimiento de la legislación vigente y a los efectos
     oportunos, firman la presente en La Laguna a \today
@@ -270,9 +271,9 @@
     \setlength{\parindent}{0mm}
     {\huge Agradecimientos}
     \vspace{15mm}
-    
+
     \begin{large}
-        \begin{minipage}{1\textwidth} 
+        \begin{minipage}{1\textwidth}
             A mi familia, especialmente a mis padres, por su apoyo incondicional y por creer siempre en mí, dándome la fuerza necesaria para superar cada etapa de mi formación académica. Sin su sacrificio y cariño, nada de esto habría sido posible. A mis amigos y compañeros, por los momentos compartidos, las largas jornadas de estudio y por hacer que este camino fuera mucho más ameno. Por último, a la Universidad de La Laguna por brindarme el entorno y las herramientas necesarias para formarme como profesional.
         \end{minipage}
     \end{large}
@@ -295,31 +296,17 @@
 % Resumen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-En la última década, el incremento del número de vehículos y, sobre todo, del turismo en muchas ciudades canarias ha supuesto una mayor dificultad tanto para el tránsito como para encontrar aparcamiento, sobre todo en las zonas urbanas y en las zonas turísticas. Esto trae problemas tales como la congestión del tráfico, tiempo perdido para los conductores y uso ineficiente del espacio disponible. Al mismo tiempo, numerosas plazas de aparcamiento privadas permanecen vacías durante largos periodos de tiempo.
+    En la última década, el incremento del número de vehículos y, sobre todo, del turismo en muchas ciudades canarias ha supuesto una mayor dificultad tanto para el tránsito como para encontrar aparcamiento, sobre todo en las zonas urbanas y en las zonas turísticas. Esto trae problemas tales como la congestión del tráfico, tiempo perdido para los conductores y uso ineficiente del espacio disponible. Al mismo tiempo, numerosas plazas de aparcamiento privadas permanecen vacías durante largos periodos de tiempo.
 
-En este sentido, las plataformas digitales que se sustentan en la economía colaborativa se han transformado en una herramienta útil para conectar personas que tienen un recurso que ofrecer con aquellas que lo necesitan (p. ej., Airbnb, BlaBlaCar, Wallapop).
+    En este sentido, las plataformas digitales que se sustentan en la economía colaborativa se han transformado en una herramienta útil para conectar personas que tienen un recurso que ofrecer con aquellas que lo necesitan (p. ej., Airbnb, BlaBlaCar, Wallapop).
 
-Por ello, en el presente Trabajo de Fin de Grado se propone el desarrollo de un prototipo de aplicación Full Stack para el alquiler de plazas de aparcamiento privadas. La plataforma operará como un marketplace que conectará a propietarios de plazas (casas particulares o comunidades) con conductores que requieran estacionar su vehículo, facilitando la gestión de reservas y la disponibilidad de los aparcamientos.
+    Por ello, en el presente Trabajo de Fin de Grado se propone el desarrollo de un prototipo de aplicación Full Stack para el alquiler de plazas de aparcamiento privadas. La plataforma operará como un marketplace que conectará a propietarios de plazas (casas particulares o comunidades) con conductores que requieran estacionar su vehículo, facilitando la gestión de reservas y la disponibilidad de los aparcamientos.
 
-Desde el aspecto técnico, el sistema se ha desarrollado con React~18 y
-Vite como plataforma \textit{frontend}, TypeScript con modo estricto y
-Tailwind CSS para el diseño de interfaz. El \textit{backend} se sustenta
-en Supabase, un servicio gestionado que proporciona base de datos
-PostgreSQL, autenticación con OAuth social y almacenamiento de ficheros.
-La seguridad de los datos se garantiza mediante políticas de
-\textit{Row Level Security} (RLS) y \textit{triggers} PL/pgSQL que
-aseguran la integridad de las reservas a nivel de base de datos. La
-visualización cartográfica se implementa con Leaflet. El sistema incluye
-un motor de precios dinámicos configurable, un módulo de acceso físico
-digital (\textit{SmartAccess}) vinculado al estado de cada reserva, y una
-arquitectura de pagos P2P mediante Stripe Connect que contempla la
-gestión del IGIC canario. La aplicación se despliega simultáneamente como
-\textit{Single Page Application} en Vercel y como aplicación Android
-nativa mediante Capacitor.
+    Desde el aspecto técnico, el sistema se ha desarrollado con React~18 como \textit{framework} \textit{frontend}, TypeScript en modo estricto y Tailwind CSS para el diseño de interfaz, empleando Vite como herramienta de compilación y Supabase como backend gestionado, que proporciona base de datos PostgreSQL, autenticación con OAuth social y almacenamiento de ficheros. La seguridad de los datos se garantiza mediante políticas de \textit{Row Level Security} (RLS) y \textit{triggers} PL/pgSQL que aseguran la integridad de las reservas a nivel de base de datos. La búsqueda y localización de plazas se implementan mediante Leaflet y el servicio de geocodificación OpenCage. El sistema incluye un módulo de acceso físico digital (\textit{SmartAccess}) vinculado al estado de cada reserva, y una arquitectura de pagos P2P mediante Stripe Connect que contempla la gestión del IGIC canario. La aplicación se despliega simultáneamente como \textit{Single Page Application} en Vercel y como aplicación Android nativa mediante Capacitor.
 
-\begin{keywords}[Palabras clave]
-Marketplace, P2P, aparcamiento, React, Vite, Supabase, Stripe Connect, Capacitor, economía colaborativa, reservas, Row Level Security.
-\end{keywords}
+    \begin{keywords}[Palabras clave]
+        Marketplace colaborativo, P2P, aparcamiento urbano, React, TypeScript, Supabase, PostgreSQL, Stripe Connect, Capacitor, Row Level Security.
+    \end{keywords}
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -327,35 +314,23 @@ Marketplace, P2P, aparcamiento, React, Vite, Supabase, Stripe Connect, Capacitor
 \thispagestyle{empty}
 
 \begin{abstract}[Abstract]
-In the last decade, the increase in the number of vehicles and, above all, tourism in many Canary Islands cities has led to greater difficulty both for traffic circulation and for finding parking, especially in urban areas and tourist zones. This situation brings problems such as traffic congestion, time lost by drivers, and inefficient use of the available space. At the same time, many private parking spaces remain empty for long periods of time.
+    Over the past decade, the increase in the number of vehicles and, above all, in tourism in many Canary Islands cities has made traffic and finding parking more difficult, especially in urban and tourist areas. This leads to problems such as traffic congestion, wasted time for drivers, and inefficient use of available space. At the same time, numerous private parking spaces remain empty for long periods of time.
 
-In this sense, digital platforms that are based on the sharing economy have become a useful tool to connect people who have a resource to offer with those who need it (e.g., Airbnb, BlaBlaCar, Wallapop).
+    In this regard, digital platforms based on the sharing economy have become a useful tool for connecting people who have a resource to offer with those who need it (e.g., Airbnb, BlaBlaCar, Wallapop).
 
-For this reason, in the present Final Degree Project the development of a Full Stack prototype application for the rental of private parking spaces is proposed. The platform will operate as a marketplace that will connect parking space owners (private homes or residential communities) with drivers who need to park their vehicles, facilitating the management of reservations and the availability of parking spaces.
+    Therefore, this Final Degree Project proposes the development of a full-stack application prototype for the rental of private parking spaces. The platform will operate as a marketplace connecting parking space owners (private homes or communities) with drivers who need to park their vehicles, facilitating the management of reservations and the availability of parking spaces.
 
-From a technical perspective, the system was built with React~18 and
-Vite as the frontend platform, TypeScript in strict mode, and Tailwind
-CSS for interface design. The backend relies on Supabase, a managed
-service providing PostgreSQL, social OAuth authentication, and file
-storage. Data security is enforced through Row Level Security (RLS)
-policies and PL/pgSQL triggers that guarantee booking integrity at the
-database level. Map visualisation is handled by Leaflet. The system
-includes a configurable dynamic pricing engine, a digital physical
-access module (\textit{SmartAccess}) linked to booking status, and a
-P2P payment architecture via Stripe Connect that handles the Canary
-Islands IGIC tax. The application is deployed simultaneously as a
-Single Page Application on Vercel and as a native Android application
-via Capacitor.
+    From a technical standpoint, the system has been developed using React~18 as the frontend framework, TypeScript in strict mode, and Tailwind CSS for interface design, employing Vite as the build tool, which provides a PostgreSQL database, social OAuth authentication, and file storage. Data security is ensured through \textit{Row Level Security} (RLS) policies and PL/pgSQL \textit{triggers} that guarantee the integrity of reservations at the database level. Searching for and locating parking spaces is implemented using Leaflet and the OpenCage geocoding service. The system includes a digital physical access module (\textit{SmartAccess}) linked to the status of each reservation, and a P2P payment architecture using Stripe Connect that handles the Canary Islands IGIC tax. The application is deployed simultaneously as a \textit{Single Page Application} on Vercel and as a native Android app using Capacitor.
 
-\begin{keywords}
-Marketplace, P2P, parking, React, Vite, Supabase, Stripe Connect, Capacitor, sharing economy, reservations, Row Level Security.
-\end{keywords}
+    \begin{keywords}
+        Collaborative marketplace, P2P, urban parking, React, TypeScript, Supabase, PostgreSQL, Stripe Connect, Capacitor, Row Level Security.
+    \end{keywords}
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagestyle{plain}
 \cleardoublepage
-\setcounter{page}{1} 
+\setcounter{page}{1}
 
 \tableofcontents
 \listoffigures
@@ -372,15 +347,14 @@ Marketplace, P2P, parking, React, Vite, Supabase, Stripe Connect, Capacitor, sha
 \input{03-capítulo3}
 \input{04-capítulo4}
 \input{05-implementacion}
-\input{06-pruebas}
-\input{05-conclusiones}
-\input{06-conclusions}
-\input{07-presupuesto}
+%\input{06-pruebas}
+\input{06-conclusiones}
+\input{07-conclusions}
+\input{08-presupuesto}
 
-\appendix
-
-\input{0A-apéndice1}
-\input{0B-apéndice2}
+%\appendix
+%\input{0A-apéndice1}
+%\input{0B-apéndice2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliografía

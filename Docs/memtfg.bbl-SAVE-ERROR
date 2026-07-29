@@ -19,100 +19,86 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
-    \entry{justpark2023}{online}{}
+    \entry{elpais2025trafico35}{online}{}
       \name{author}{1}{}{%
-        {{hash=ce908e07fd6d97912bd6e2cfd82475bc}{%
-           family={{JustPark Parking Ltd.}},
-           familyi={J\bibinitperiod}}}%
+        {{hash=6c8b30ef77d6ec698122740dd1d92096}{%
+           family={{El País Motor}},
+           familyi={E\bibinitperiod}}}%
       }
-      \list{organization}{1}{%
-        {JustPark Parking Ltd.}%
-      }
-      \strng{namehash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \strng{fullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \strng{bibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \strng{authorbibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \strng{authornamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \strng{authorfullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \strng{namehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{fullhash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{bibnamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authorbibnamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authornamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authorfullhash}{6c8b30ef77d6ec698122740dd1d92096}
+      \field{extraname}{1}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{About JustPark}
-      \field{urlday}{20}
-      \field{urlmonth}{11}
-      \field{urlyear}{2024}
-      \field{year}{2023}
-      \field{urldateera}{ce}
+      \field{title}{Un 35\% del tráfico lo generan conductores que buscan aparcamiento}
+      \field{year}{2025}
       \verb{urlraw}
-      \verb https://www.justpark.com/about/
+      \verb https://motor.elpais.com/actualidad/un-35-del-trafico-lo-generan-conductores-que-buscan-aparcamiento/
       \endverb
       \verb{url}
-      \verb https://www.justpark.com/about/
+      \verb https://motor.elpais.com/actualidad/un-35-del-trafico-lo-generan-conductores-que-buscan-aparcamiento/
       \endverb
     \endentry
-    \entry{spothero2023}{online}{}
+    \entry{tomtom2026}{online}{}
       \name{author}{1}{}{%
-        {{hash=6e8aefee1118fd76be884f09073a63b5}{%
-           family={{SpotHero Inc.}},
-           familyi={S\bibinitperiod}}}%
+        {{hash=707e8f09260192a8637894faf8903d03}{%
+           family={{TomTom}},
+           familyi={T\bibinitperiod}}}%
       }
       \list{organization}{1}{%
-        {SpotHero Inc.}%
+        {TomTom}%
       }
-      \strng{namehash}{6e8aefee1118fd76be884f09073a63b5}
-      \strng{fullhash}{6e8aefee1118fd76be884f09073a63b5}
-      \strng{bibnamehash}{6e8aefee1118fd76be884f09073a63b5}
-      \strng{authorbibnamehash}{6e8aefee1118fd76be884f09073a63b5}
-      \strng{authornamehash}{6e8aefee1118fd76be884f09073a63b5}
-      \strng{authorfullhash}{6e8aefee1118fd76be884f09073a63b5}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \strng{namehash}{707e8f09260192a8637894faf8903d03}
+      \strng{fullhash}{707e8f09260192a8637894faf8903d03}
+      \strng{bibnamehash}{707e8f09260192a8637894faf8903d03}
+      \strng{authorbibnamehash}{707e8f09260192a8637894faf8903d03}
+      \strng{authornamehash}{707e8f09260192a8637894faf8903d03}
+      \strng{authorfullhash}{707e8f09260192a8637894faf8903d03}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{SpotHero: Park Smarter}
-      \field{urlday}{20}
-      \field{urlmonth}{11}
-      \field{urlyear}{2024}
-      \field{year}{2023}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://spothero.com/about
-      \endverb
-      \verb{url}
-      \verb https://spothero.com/about
-      \endverb
-    \endentry
-    \entry{dgt2026}{online}{}
-      \name{author}{1}{}{%
-        {{hash=53eff05403813827997e6bec6db95adc}{%
-           family={{20minutos.es}},
-           familyi={2\bibinitperiod}}}%
-      }
-      \list{organization}{1}{%
-        {20minutos.es}%
-      }
-      \strng{namehash}{53eff05403813827997e6bec6db95adc}
-      \strng{fullhash}{53eff05403813827997e6bec6db95adc}
-      \strng{bibnamehash}{53eff05403813827997e6bec6db95adc}
-      \strng{authorbibnamehash}{53eff05403813827997e6bec6db95adc}
-      \strng{authornamehash}{53eff05403813827997e6bec6db95adc}
-      \strng{authorfullhash}{53eff05403813827997e6bec6db95adc}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{La DGT confirma que nunca ha habido más vehículos matriculados en España}
-      \field{urlday}{14}
-      \field{urlmonth}{4}
-      \field{urlyear}{2026}
+      \field{title}{TomTom Traffic Index 2025: Santa Cruz de Tenerife}
       \field{year}{2026}
-      \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://www.20minutos.es/motor/actualidad/dgt-confirma-nunca-ha-habido-mas-vehiculos-matriculados-espana_6954697_0.html
+      \verb https://www.tomtom.com/traffic-index/city/santa-cruz-de-tenerife
       \endverb
       \verb{url}
-      \verb https://www.20minutos.es/motor/actualidad/dgt-confirma-nunca-ha-habido-mas-vehiculos-matriculados-espana_6954697_0.html
+      \verb https://www.tomtom.com/traffic-index/city/santa-cruz-de-tenerife
+      \endverb
+    \endentry
+    \entry{grandviewresearch2022}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3ac6348a7537d4e74e40d122bdb8ea8f}{%
+           family={{Grand View Research}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Grand View Research}%
+      }
+      \strng{namehash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \strng{fullhash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \strng{bibnamehash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \strng{authorbibnamehash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \strng{authornamehash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \strng{authorfullhash}{3ac6348a7537d4e74e40d122bdb8ea8f}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Shared Mobility Market Size, Share \& Trends Analysis Report}
+      \field{year}{2022}
+      \verb{urlraw}
+      \verb https://www.grandviewresearch.com/industry-analysis/shared-mobility-market
+      \endverb
+      \verb{url}
+      \verb https://www.grandviewresearch.com/industry-analysis/shared-mobility-market
       \endverb
     \endentry
     \entry{inrix2022}{online}{}
@@ -130,16 +116,12 @@
       \strng{authorbibnamehash}{72d5cdf31180d8042e26c0151fe55d70}
       \strng{authornamehash}{72d5cdf31180d8042e26c0151fe55d70}
       \strng{authorfullhash}{72d5cdf31180d8042e26c0151fe55d70}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{INRIX 2022 Global Traffic Scorecard}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2022}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://inrix.com/scorecard/
       \endverb
@@ -147,36 +129,544 @@
       \verb https://inrix.com/scorecard/
       \endverb
     \endentry
-    \entry{istac2023}{online}{}
+    \entry{easypark2024}{online}{}
       \name{author}{1}{}{%
-        {{hash=e41c166257d985f34456243a26a3c591}{%
-           family={{Instituto Canario de Estadística}},
+        {{hash=e9be2a1d855c889a7ca803cb07447009}{%
+           family={{EasyPark Group}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {EasyPark Group}%
+      }
+      \strng{namehash}{e9be2a1d855c889a7ca803cb07447009}
+      \strng{fullhash}{e9be2a1d855c889a7ca803cb07447009}
+      \strng{bibnamehash}{e9be2a1d855c889a7ca803cb07447009}
+      \strng{authorbibnamehash}{e9be2a1d855c889a7ca803cb07447009}
+      \strng{authornamehash}{e9be2a1d855c889a7ca803cb07447009}
+      \strng{authorfullhash}{e9be2a1d855c889a7ca803cb07447009}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{EasyPark -- Ciudades y operadores}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.easypark.com/es-es/ciudades-y-operadores
+      \endverb
+      \verb{url}
+      \verb https://www.easypark.com/es-es/ciudades-y-operadores
+      \endverb
+    \endentry
+    \entry{lavanguardia2024easypark}{online}{}
+      \name{author}{1}{}{%
+        {{hash=a5bff230d1c9e1a231c85ce502b033d6}{%
+           family={Valls},
+           familyi={V\bibinitperiod},
+           given={Fernando\bibnamedelima H.},
+           giveni={F\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \strng{fullhash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \strng{bibnamehash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \strng{authorbibnamehash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \strng{authornamehash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \strng{authorfullhash}{a5bff230d1c9e1a231c85ce502b033d6}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{4}
+      \field{journaltitle}{La Vanguardia}
+      \field{month}{12}
+      \field{title}{EasyPark, la app que guía tu aparcamiento}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://www.lavanguardia.com/dinero/20241204/10158435/easypark-aparcar-estacionamiento-calle-app.html
+      \endverb
+      \verb{url}
+      \verb https://www.lavanguardia.com/dinero/20241204/10158435/easypark-aparcar-estacionamiento-calle-app.html
+      \endverb
+    \endentry
+    \entry{empark2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=2a037ae337ea19a2bcedc05e1da90cfe}{%
+           family={{Empark Group}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Empark Group}%
+      }
+      \strng{namehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{fullhash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{bibnamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authorbibnamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authornamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authorfullhash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{About Us -- Empark}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.empark.com/es/about-us/
+      \endverb
+      \verb{url}
+      \verb https://www.empark.com/es/about-us/
+      \endverb
+    \endentry
+    \entry{telpark2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=2a037ae337ea19a2bcedc05e1da90cfe}{%
+           family={{Empark Group}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Empark Group}%
+      }
+      \strng{namehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{fullhash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{bibnamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authorbibnamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authornamehash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \strng{authorfullhash}{2a037ae337ea19a2bcedc05e1da90cfe}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Telpark -- Ciudades con cobertura}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.telpark.com/es/ciudades/
+      \endverb
+      \verb{url}
+      \verb https://www.telpark.com/es/ciudades/
+      \endverb
+    \endentry
+    \entry{parclick2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=9b247e3cd66ef9ca5313731fd9913c0a}{%
+           family={{Parclick}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Parclick}%
+      }
+      \strng{namehash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \strng{fullhash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \strng{bibnamehash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \strng{authorbibnamehash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \strng{authornamehash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \strng{authorfullhash}{9b247e3cd66ef9ca5313731fd9913c0a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Parkings Centro Ciudad, Aeropuerto, Estación y Playa}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://parclick.es/
+      \endverb
+      \verb{url}
+      \verb https://parclick.es/
+      \endverb
+    \endentry
+    \entry{elparking2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=18296db86f1587724275baa8bbe5f8d2}{%
+           family={{Grupo Mutua Madrileña}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Grupo Mutua Madrileña}%
+      }
+      \strng{namehash}{18296db86f1587724275baa8bbe5f8d2}
+      \strng{fullhash}{18296db86f1587724275baa8bbe5f8d2}
+      \strng{bibnamehash}{18296db86f1587724275baa8bbe5f8d2}
+      \strng{authorbibnamehash}{18296db86f1587724275baa8bbe5f8d2}
+      \strng{authornamehash}{18296db86f1587724275baa8bbe5f8d2}
+      \strng{authorfullhash}{18296db86f1587724275baa8bbe5f8d2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ElParking -- Parking App}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.mutua.es/descuentos/coche/otros/detalle/parking-app/
+      \endverb
+      \verb{url}
+      \verb https://www.mutua.es/descuentos/coche/otros/detalle/parking-app/
+      \endverb
+    \endentry
+    \entry{justpark2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=ce908e07fd6d97912bd6e2cfd82475bc}{%
+           family={{JustPark Parking Ltd.}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {JustPark Parking Ltd.}%
+      }
+      \strng{namehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{fullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{bibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorbibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authornamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorfullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{About JustPark}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.justpark.com/about/
+      \endverb
+      \verb{url}
+      \verb https://www.justpark.com/about/
+      \endverb
+    \endentry
+    \entry{justpark2026parkhub}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b2ab933ea36b006dd1615905bd694096}{%
+           family={{JustPark}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {JustPark}%
+      }
+      \strng{namehash}{b2ab933ea36b006dd1615905bd694096}
+      \strng{fullhash}{b2ab933ea36b006dd1615905bd694096}
+      \strng{bibnamehash}{b2ab933ea36b006dd1615905bd694096}
+      \strng{authorbibnamehash}{b2ab933ea36b006dd1615905bd694096}
+      \strng{authornamehash}{b2ab933ea36b006dd1615905bd694096}
+      \strng{authorfullhash}{b2ab933ea36b006dd1615905bd694096}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ParkHub Rebrands as JustPark}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.justpark.com/business/blog/parkhub-rebrands-as-justpark
+      \endverb
+      \verb{url}
+      \verb https://www.justpark.com/business/blog/parkhub-rebrands-as-justpark
+      \endverb
+    \endentry
+    \entry{justpark2026earnings}{online}{}
+      \name{author}{1}{}{%
+        {{hash=ce908e07fd6d97912bd6e2cfd82475bc}{%
+           family={{JustPark Parking Ltd.}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {JustPark Parking Ltd.}%
+      }
+      \strng{namehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{fullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{bibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorbibnamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authornamehash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \strng{authorfullhash}{ce908e07fd6d97912bd6e2cfd82475bc}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{How Much Can You Really Earn Renting Out Your Driveway?}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.justpark.com/resource-centre/how-much-can-you-really-earn-renting-out-your-driveway
+      \endverb
+      \verb{url}
+      \verb https://www.justpark.com/resource-centre/how-much-can-you-really-earn-renting-out-your-driveway
+      \endverb
+    \endentry
+    \entry{spothero2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6e8aefee1118fd76be884f09073a63b5}{%
+           family={{SpotHero Inc.}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {SpotHero Inc.}%
+      }
+      \strng{namehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{fullhash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{bibnamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authorbibnamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authornamehash}{6e8aefee1118fd76be884f09073a63b5}
+      \strng{authorfullhash}{6e8aefee1118fd76be884f09073a63b5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{SpotHero: Park Smarter}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://spothero.com/about
+      \endverb
+      \verb{url}
+      \verb https://spothero.com/about
+      \endverb
+    \endentry
+    \entry{uber2026spothero}{online}{}
+      \name{author}{1}{}{%
+        {{hash=96c92d1ca220c8f275b5dcbc7d8e5f53}{%
+           family={{Uber Technologies, Inc.}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Uber Technologies, Inc.}%
+      }
+      \strng{namehash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \strng{fullhash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \strng{bibnamehash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \strng{authorbibnamehash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \strng{authornamehash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \strng{authorfullhash}{96c92d1ca220c8f275b5dcbc7d8e5f53}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Uber to Acquire Parking App SpotHero}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://investor.uber.com/news-events/news/press-release-details/2026/Uber-to-Acquire-Parking-App-SpotHero/default.aspx
+      \endverb
+      \verb{url}
+      \verb https://investor.uber.com/news-events/news/press-release-details/2026/Uber-to-Acquire-Parking-App-SpotHero/default.aspx
+      \endverb
+    \endentry
+    \entry{reservpark2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=874493a61dc7e1fd190d5936dbd6cda0}{%
+           family={{ReservPark Team}},
+           familyi={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {ReservPark}%
+      }
+      \strng{namehash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \strng{fullhash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \strng{bibnamehash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \strng{authorbibnamehash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \strng{authornamehash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \strng{authorfullhash}{874493a61dc7e1fd190d5936dbd6cda0}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ReservPark -- Nunca más pierdas 30 minutos buscando aparcamiento}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://reservpark.com/
+      \endverb
+      \verb{url}
+      \verb https://reservpark.com/
+      \endverb
+    \endentry
+    \entry{socialpark2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=f444142fc7b4c430747603bd4cb5771e}{%
+           family={Aparicio\bibnamedelima León},
+           familyi={A\bibinitperiod\bibinitdelim L\bibinitperiod},
+           given={Javier},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{f444142fc7b4c430747603bd4cb5771e}
+      \strng{fullhash}{f444142fc7b4c430747603bd4cb5771e}
+      \strng{bibnamehash}{f444142fc7b4c430747603bd4cb5771e}
+      \strng{authorbibnamehash}{f444142fc7b4c430747603bd4cb5771e}
+      \strng{authornamehash}{f444142fc7b4c430747603bd4cb5771e}
+      \strng{authorfullhash}{f444142fc7b4c430747603bd4cb5771e}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{SocialPark -- Compra y vende plazas de aparcamiento en tiempo real}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://socialpark.es/
+      \endverb
+      \verb{url}
+      \verb https://socialpark.es/
+      \endverb
+    \endentry
+    \entry{elpais2025parquemovil}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6c8b30ef77d6ec698122740dd1d92096}{%
+           family={{El País Motor}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{fullhash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{bibnamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authorbibnamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authornamehash}{6c8b30ef77d6ec698122740dd1d92096}
+      \strng{authorfullhash}{6c8b30ef77d6ec698122740dd1d92096}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{El parque móvil crece sin parar desde hace casi cuatro años: cuántos coches hay en España}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://motor.elpais.com/actualidad/el-parque-movil-crece-sin-parar-desde-hace-casi-cuatro-anos-cuantos-coches-hay-en-espana/
+      \endverb
+      \verb{url}
+      \verb https://motor.elpais.com/actualidad/el-parque-movil-crece-sin-parar-desde-hace-casi-cuatro-anos-cuantos-coches-hay-en-espana/
+      \endverb
+    \endentry
+    \entry{dgt2025series}{online}{}
+      \list{organization}{1}{%
+        {Dirección General de Tráfico}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Parque de vehículos. Series históricas}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.dgt.es/menusecundario/dgt-en-cifras/dgt-en-cifras-resultados/dgt-en-cifras-detalle/Parque-de-vehiculos-Series-historicas-2025/
+      \endverb
+      \verb{url}
+      \verb https://www.dgt.es/menusecundario/dgt-en-cifras/dgt-en-cifras-resultados/dgt-en-cifras-detalle/Parque-de-vehiculos-Series-historicas-2025/
+      \endverb
+    \endentry
+    \entry{parkiduo2025madrid}{online}{}
+      \name{author}{1}{}{%
+        {{hash=34ae9953387c4bb2d07c38229595edb1}{%
+           family={{Parkiduo}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{34ae9953387c4bb2d07c38229595edb1}
+      \strng{fullhash}{34ae9953387c4bb2d07c38229595edb1}
+      \strng{bibnamehash}{34ae9953387c4bb2d07c38229595edb1}
+      \strng{authorbibnamehash}{34ae9953387c4bb2d07c38229595edb1}
+      \strng{authornamehash}{34ae9953387c4bb2d07c38229595edb1}
+      \strng{authorfullhash}{34ae9953387c4bb2d07c38229595edb1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Ciudades con más atascos en España: cuánto tiempo y dinero pierdes buscando aparcamiento}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://parkiduo.com/2025/04/ciudades-mas-atascos-espana-cuanto-tiempo-dinero-pierdes-buscando-aparcamiento/
+      \endverb
+      \verb{url}
+      \verb https://parkiduo.com/2025/04/ciudades-mas-atascos-espana-cuanto-tiempo-dinero-pierdes-buscando-aparcamiento/
+      \endverb
+    \endentry
+    \entry{diariodeavisos2026tarifas}{online}{}
+      \name{author}{1}{}{%
+        {{hash=a5ddd7376a45134dc8838bfaf2e90c33}{%
+           family={{Diario de Avisos}},
+           familyi={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \strng{fullhash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \strng{bibnamehash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \strng{authorbibnamehash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \strng{authornamehash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \strng{authorfullhash}{a5ddd7376a45134dc8838bfaf2e90c33}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Esto es lo que te costará aparcar en Santa Cruz de Tenerife en 2026}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://diariodeavisos.elespanol.com/2025/01/esto-es-lo-que-te-costara-aparcar-en-santa-cruz-de-tenerife-en-2026/
+      \endverb
+      \verb{url}
+      \verb https://diariodeavisos.elespanol.com/2025/01/esto-es-lo-que-te-costara-aparcar-en-santa-cruz-de-tenerife-en-2026/
+      \endverb
+    \endentry
+    \entry{cope2026parking}{online}{}
+      \name{author}{1}{}{%
+        {{hash=bd7e6ac2dee4e2295d3d002792708b69}{%
+           family={{COPE Tráfico}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \strng{fullhash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \strng{bibnamehash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \strng{authorbibnamehash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \strng{authornamehash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \strng{authorfullhash}{bd7e6ac2dee4e2295d3d002792708b69}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{El parking de coches más caro de España: llega a costar cinco euros la hora en Barcelona y en torno a 30 si lo dejas 24 horas}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.cope.es/trafico/audios/parking-coches-caro-espana-llega-costar-cinco-euros-hora-barcelona-torno-30-dejamos-24-horas-20260412_3343633.html
+      \endverb
+      \verb{url}
+      \verb https://www.cope.es/trafico/audios/parking-coches-caro-espana-llega-costar-cinco-euros-hora-barcelona-torno-30-dejamos-24-horas-20260412_3343633.html
+      \endverb
+    \endentry
+    \entry{istac2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=397b6d47933a4876f87d87d4e72f9813}{%
+           family={{Instituto Canario de Estadística (ISTAC)}},
            familyi={I\bibinitperiod}}}%
       }
       \list{organization}{1}{%
         {Gobierno de Canarias}%
       }
-      \strng{namehash}{e41c166257d985f34456243a26a3c591}
-      \strng{fullhash}{e41c166257d985f34456243a26a3c591}
-      \strng{bibnamehash}{e41c166257d985f34456243a26a3c591}
-      \strng{authorbibnamehash}{e41c166257d985f34456243a26a3c591}
-      \strng{authornamehash}{e41c166257d985f34456243a26a3c591}
-      \strng{authorfullhash}{e41c166257d985f34456243a26a3c591}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \strng{namehash}{397b6d47933a4876f87d87d4e72f9813}
+      \strng{fullhash}{397b6d47933a4876f87d87d4e72f9813}
+      \strng{bibnamehash}{397b6d47933a4876f87d87d4e72f9813}
+      \strng{authorbibnamehash}{397b6d47933a4876f87d87d4e72f9813}
+      \strng{authornamehash}{397b6d47933a4876f87d87d4e72f9813}
+      \strng{authorfullhash}{397b6d47933a4876f87d87d4e72f9813}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Estadística del Parque de Vehículos de Canarias 2023}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
-      \field{year}{2023}
-      \field{urldateera}{ce}
+      \field{title}{Estadística de Parque de Vehículos. Series anuales. Islas o municipios de Canarias. 1961--2024}
+      \field{year}{2025}
       \verb{urlraw}
-      \verb https://www.gobiernodecanarias.org/istac/
+      \verb https://www.gobiernodecanarias.org/istac/galerias/documentos/E70044A/estadistica-parque-vehiculos-series-mensuales-municipios.html
       \endverb
       \verb{url}
-      \verb https://www.gobiernodecanarias.org/istac/
+      \verb https://www.gobiernodecanarias.org/istac/galerias/documentos/E70044A/estadistica-parque-vehiculos-series-mensuales-municipios.html
+      \endverb
+    \endentry
+    \entry{eldia2025motoriz}{online}{}
+      \name{author}{1}{}{%
+        {{hash=91270483d0a7695619aa4d6cb317922b}{%
+           family={{El Día}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{91270483d0a7695619aa4d6cb317922b}
+      \strng{fullhash}{91270483d0a7695619aa4d6cb317922b}
+      \strng{bibnamehash}{91270483d0a7695619aa4d6cb317922b}
+      \strng{authorbibnamehash}{91270483d0a7695619aa4d6cb317922b}
+      \strng{authornamehash}{91270483d0a7695619aa4d6cb317922b}
+      \strng{authorfullhash}{91270483d0a7695619aa4d6cb317922b}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{El 35\% de los tinerfenos llega a pie}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.eldia.es/tenerife/2025/08/16/35-tinerfenos-llega-pie-15-120664577.html
+      \endverb
+      \verb{url}
+      \verb https://www.eldia.es/tenerife/2025/08/16/35-tinerfenos-llega-pie-15-120664577.html
       \endverb
     \endentry
     \entry{ley72021}{misc}{}
@@ -191,23 +681,76 @@
       \strng{authorbibnamehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
       \strng{authornamehash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
       \strng{authorfullhash}{ffcaa79a49ffccd02ea8bab3b4f0e047}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Boletín Oficial del Estado}
       \field{number}{121}
       \field{title}{Ley 7/2021, de 20 de mayo, de cambio climático y transición energética}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2021}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://www.boe.es/eli/es/l/2021/05/20/7
       \endverb
       \verb{url}
       \verb https://www.boe.es/eli/es/l/2021/05/20/7
+      \endverb
+    \endentry
+    \entry{ayto2026zbe}{online}{}
+      \name{author}{1}{}{%
+        {{hash=194b7a2fc9c926b8c6f8bba8078371d6}{%
+           family={{Ayuntamiento de Santa Cruz de Tenerife}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Ayuntamiento de Santa Cruz de Tenerife}%
+      }
+      \strng{namehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{fullhash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{bibnamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authorbibnamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authornamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authorfullhash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \field{extraname}{1}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Zona de Bajas Emisiones (ZBE) de Santa Cruz de Tenerife}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.santacruzdetenerife.es/web/servicios-municipales/movilidad-y-accesibilidad-universal/zonas-de-bajas-emisiones
+      \endverb
+      \verb{url}
+      \verb https://www.santacruzdetenerife.es/web/servicios-municipales/movilidad-y-accesibilidad-universal/zonas-de-bajas-emisiones
+      \endverb
+    \endentry
+    \entry{idealista2026garajes}{online}{}
+      \name{author}{1}{}{%
+        {{hash=bc143fa6747d34d82a82073aaf7a42d2}{%
+           family={{idealista}},
+           familyi={i\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {idealista}%
+      }
+      \strng{namehash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \strng{fullhash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \strng{bibnamehash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \strng{authorbibnamehash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \strng{authornamehash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \strng{authorfullhash}{bc143fa6747d34d82a82073aaf7a42d2}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Alquiler garajes en Santa Cruz de Tenerife}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://www.idealista.com/alquiler-garajes/santa-cruz-de-tenerife-santa-cruz-de-tenerife/
+      \endverb
+      \verb{url}
+      \verb https://www.idealista.com/alquiler-garajes/santa-cruz-de-tenerife-santa-cruz-de-tenerife/
       \endverb
     \endentry
     \entry{typescript2024}{online}{}
@@ -225,16 +768,12 @@
       \strng{authorbibnamehash}{b9a8b868588ad4bc6b36c29936e26423}
       \strng{authornamehash}{b9a8b868588ad4bc6b36c29936e26423}
       \strng{authorfullhash}{b9a8b868588ad4bc6b36c29936e26423}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{TypeScript: JavaScript with syntax for types}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://www.typescriptlang.org
       \endverb
@@ -257,16 +796,12 @@
       \strng{authorbibnamehash}{350a86b0327152e3a50596538f38a5db}
       \strng{authornamehash}{350a86b0327152e3a50596538f38a5db}
       \strng{authorfullhash}{350a86b0327152e3a50596538f38a5db}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{React -- The library for web and native user interfaces}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://react.dev
       \endverb
@@ -294,16 +829,12 @@
       \strng{authorbibnamehash}{36ce3903e54aec753443ad8d5d33d331}
       \strng{authornamehash}{36ce3903e54aec753443ad8d5d33d331}
       \strng{authorfullhash}{36ce3903e54aec753443ad8d5d33d331}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Vite -- Next Generation Frontend Tooling}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://vitejs.dev
       \endverb
@@ -326,16 +857,12 @@
       \strng{authorbibnamehash}{58694698dd312a1623ad711ecc0d38bb}
       \strng{authornamehash}{58694698dd312a1623ad711ecc0d38bb}
       \strng{authorfullhash}{58694698dd312a1623ad711ecc0d38bb}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{React Router -- Declarative routing for React}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://reactrouter.com
       \endverb
@@ -358,16 +885,12 @@
       \strng{authorbibnamehash}{9dd55379b93ec80f16ff6253eb004a35}
       \strng{authornamehash}{9dd55379b93ec80f16ff6253eb004a35}
       \strng{authorfullhash}{9dd55379b93ec80f16ff6253eb004a35}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{TanStack Query -- Powerful asynchronous state management for TypeScript/JavaScript}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://tanstack.com/query
       \endverb
@@ -395,16 +918,12 @@
       \strng{authorbibnamehash}{7fb0243b687f6d117243b4970b7fc5ef}
       \strng{authornamehash}{7fb0243b687f6d117243b4970b7fc5ef}
       \strng{authorfullhash}{7fb0243b687f6d117243b4970b7fc5ef}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Tailwind CSS -- A utility-first CSS framework}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://tailwindcss.com
       \endverb
@@ -426,53 +945,17 @@
       \strng{authorbibnamehash}{5394be402511a06b16521a9b58b8acbf}
       \strng{authornamehash}{5394be402511a06b16521a9b58b8acbf}
       \strng{authorfullhash}{5394be402511a06b16521a9b58b8acbf}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Leaflet -- an open-source JavaScript library for mobile-friendly interactive maps}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://leafletjs.com
       \endverb
       \verb{url}
       \verb https://leafletjs.com
-      \endverb
-    \endentry
-    \entry{openstreetmap2024}{online}{}
-      \name{author}{1}{}{%
-        {{hash=813861b5e679b1cea6e8539acb78a079}{%
-           family={{OpenStreetMap Foundation}},
-           familyi={O\bibinitperiod}}}%
-      }
-      \list{organization}{1}{%
-        {OpenStreetMap Foundation}%
-      }
-      \strng{namehash}{813861b5e679b1cea6e8539acb78a079}
-      \strng{fullhash}{813861b5e679b1cea6e8539acb78a079}
-      \strng{bibnamehash}{813861b5e679b1cea6e8539acb78a079}
-      \strng{authorbibnamehash}{813861b5e679b1cea6e8539acb78a079}
-      \strng{authornamehash}{813861b5e679b1cea6e8539acb78a079}
-      \strng{authorfullhash}{813861b5e679b1cea6e8539acb78a079}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{OpenStreetMap}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
-      \field{year}{2024}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.openstreetmap.org
-      \endverb
-      \verb{url}
-      \verb https://www.openstreetmap.org
       \endverb
     \endentry
     \entry{opencage2024}{online}{}
@@ -490,16 +973,12 @@
       \strng{authorbibnamehash}{6a44da09c6b8d9c881e414a3f534d8cb}
       \strng{authornamehash}{6a44da09c6b8d9c881e414a3f534d8cb}
       \strng{authorfullhash}{6a44da09c6b8d9c881e414a3f534d8cb}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{OpenCage Geocoding API}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://opencagedata.com
       \endverb
@@ -522,16 +1001,12 @@
       \strng{authorbibnamehash}{f36245a6095b9ca9596d1cd4ae764144}
       \strng{authornamehash}{f36245a6095b9ca9596d1cd4ae764144}
       \strng{authorfullhash}{f36245a6095b9ca9596d1cd4ae764144}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Supabase -- The Open Source Firebase Alternative}
-      \field{urlday}{10}
-      \field{urlmonth}{10}
-      \field{urlyear}{2024}
       \field{year}{2024}
-      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://supabase.com
       \endverb
@@ -539,36 +1014,423 @@
       \verb https://supabase.com
       \endverb
     \endentry
-    \entry{examplearticle}{article}{}
+    \entry{mongodb2024}{online}{}
       \name{author}{1}{}{%
-        {{hash=055f6811649a97bc3a36ff4b2581f441}{%
-           family={Smith},
-           familyi={S\bibinitperiod},
-           given={Jane},
-           giveni={J\bibinitperiod}}}%
+        {{hash=ad43b4c617def33deb8f50973cbf20d1}{%
+           family={{MongoDB, Inc.}},
+           familyi={M\bibinitperiod}}}%
       }
-      \strng{namehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{fullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{bibnamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authorbibnamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authornamehash}{055f6811649a97bc3a36ff4b2581f441}
-      \strng{authorfullhash}{055f6811649a97bc3a36ff4b2581f441}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \list{organization}{1}{%
+        {MongoDB, Inc.}%
+      }
+      \strng{namehash}{ad43b4c617def33deb8f50973cbf20d1}
+      \strng{fullhash}{ad43b4c617def33deb8f50973cbf20d1}
+      \strng{bibnamehash}{ad43b4c617def33deb8f50973cbf20d1}
+      \strng{authorbibnamehash}{ad43b4c617def33deb8f50973cbf20d1}
+      \strng{authornamehash}{ad43b4c617def33deb8f50973cbf20d1}
+      \strng{authorfullhash}{ad43b4c617def33deb8f50973cbf20d1}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{Revista Ejemplo}
-      \field{number}{3}
-      \field{title}{Título del Artículo}
-      \field{volume}{15}
-      \field{year}{2021}
-      \field{pages}{123\bibrangedash 145}
-      \range{pages}{23}
-      \verb{doi}
-      \verb 10.1234/rev-ejemplo.2021.015
+      \field{title}{MongoDB: The Developer Data Platform}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.mongodb.com/
+      \endverb
+      \verb{url}
+      \verb https://www.mongodb.com/
+      \endverb
+    \endentry
+    \entry{postgresql2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=917cf2b2062aec0c604dbecc106084cd}{%
+           family={{The PostgreSQL Global Development Group}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {The PostgreSQL Global Development Group}%
+      }
+      \strng{namehash}{917cf2b2062aec0c604dbecc106084cd}
+      \strng{fullhash}{917cf2b2062aec0c604dbecc106084cd}
+      \strng{bibnamehash}{917cf2b2062aec0c604dbecc106084cd}
+      \strng{authorbibnamehash}{917cf2b2062aec0c604dbecc106084cd}
+      \strng{authornamehash}{917cf2b2062aec0c604dbecc106084cd}
+      \strng{authorfullhash}{917cf2b2062aec0c604dbecc106084cd}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{PostgreSQL: The World's Most Advanced Open Source Relational Database}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.postgresql.org/
+      \endverb
+      \verb{url}
+      \verb https://www.postgresql.org/
+      \endverb
+    \endentry
+    \entry{vscode2026}{online}{}
+      \name{author}{1}{}{%
+        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
+           family={{Microsoft}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Visual Studio Code}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://code.visualstudio.com/
+      \endverb
+      \verb{url}
+      \verb https://code.visualstudio.com/
+      \endverb
+    \endentry
+    \entry{git2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=336d2eb17dd063dccbbe6a669a498f8a}{%
+           family={{Software Freedom Conservancy}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Software Freedom Conservancy}%
+      }
+      \strng{namehash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \strng{fullhash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \strng{bibnamehash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \strng{authorbibnamehash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \strng{authornamehash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \strng{authorfullhash}{336d2eb17dd063dccbbe6a669a498f8a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Git}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://git-scm.com/
+      \endverb
+      \verb{url}
+      \verb https://git-scm.com/
+      \endverb
+    \endentry
+    \entry{github2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=9b127eb47f59d27ace73783046da8889}{%
+           family={{GitHub, Inc.}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {GitHub, Inc.}%
+      }
+      \strng{namehash}{9b127eb47f59d27ace73783046da8889}
+      \strng{fullhash}{9b127eb47f59d27ace73783046da8889}
+      \strng{bibnamehash}{9b127eb47f59d27ace73783046da8889}
+      \strng{authorbibnamehash}{9b127eb47f59d27ace73783046da8889}
+      \strng{authornamehash}{9b127eb47f59d27ace73783046da8889}
+      \strng{authorfullhash}{9b127eb47f59d27ace73783046da8889}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{GitHub: Let's build from here}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/
+      \endverb
+      \verb{url}
+      \verb https://github.com/
+      \endverb
+    \endentry
+    \entry{figma2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=f8a42c0ddbbfddd84f5d3945bad7f8e9}{%
+           family={{Figma, Inc.}},
+           familyi={F\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Figma, Inc.}%
+      }
+      \strng{namehash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \strng{fullhash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \strng{bibnamehash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \strng{authorbibnamehash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \strng{authornamehash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \strng{authorfullhash}{f8a42c0ddbbfddd84f5d3945bad7f8e9}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Figma: The collaborative interface design tool}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.figma.com/
+      \endverb
+      \verb{url}
+      \verb https://www.figma.com/
+      \endverb
+    \endentry
+    \entry{vercel2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b611823488786b851b24fb05d8ab927d}{%
+           family={{Vercel, Inc.}},
+           familyi={V\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Vercel, Inc.}%
+      }
+      \strng{namehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{fullhash}{b611823488786b851b24fb05d8ab927d}
+      \strng{bibnamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authorbibnamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authornamehash}{b611823488786b851b24fb05d8ab927d}
+      \strng{authorfullhash}{b611823488786b851b24fb05d8ab927d}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Vercel -- Build and deploy the best web experiences with the frontend cloud}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://vercel.com
+      \endverb
+      \verb{url}
+      \verb https://vercel.com
+      \endverb
+    \endentry
+    \entry{onecom2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=65bcec362a65178e6bc21e25d152f681}{%
+           family={{One.com}},
+           familyi={O\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {One.com}%
+      }
+      \strng{namehash}{65bcec362a65178e6bc21e25d152f681}
+      \strng{fullhash}{65bcec362a65178e6bc21e25d152f681}
+      \strng{bibnamehash}{65bcec362a65178e6bc21e25d152f681}
+      \strng{authorbibnamehash}{65bcec362a65178e6bc21e25d152f681}
+      \strng{authornamehash}{65bcec362a65178e6bc21e25d152f681}
+      \strng{authorfullhash}{65bcec362a65178e6bc21e25d152f681}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{One.com: Alojamiento web y dominios}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.one.com/
+      \endverb
+      \verb{url}
+      \verb https://www.one.com/
+      \endverb
+    \endentry
+    \entry{capacitor2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=0b2ad34f958fd517d7fa35bf515dd625}{%
+           family={{Ionic, Inc.}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Ionic, Inc.}%
+      }
+      \strng{namehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{fullhash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{bibnamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authorbibnamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authornamehash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \strng{authorfullhash}{0b2ad34f958fd517d7fa35bf515dd625}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Capacitor -- Cross-platform native runtime for web apps}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://capacitorjs.com
+      \endverb
+      \verb{url}
+      \verb https://capacitorjs.com
+      \endverb
+    \endentry
+    \entry{firebase2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=7b568e72d25af32b0cec03e49cbf3f70}{%
+           family={{Google LLC}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Google LLC}%
+      }
+      \strng{namehash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \strng{fullhash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \strng{bibnamehash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \strng{authorbibnamehash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \strng{authornamehash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \strng{authorfullhash}{7b568e72d25af32b0cec03e49cbf3f70}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Firebase}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://firebase.google.com/
+      \endverb
+      \verb{url}
+      \verb https://firebase.google.com/
+      \endverb
+    \endentry
+    \entry{awsamplify2024}{online}{}
+      \name{author}{1}{}{%
+        {{hash=9145c8d27e8df3d15e63d3e2d5c53088}{%
+           family={{Amazon Web Services, Inc.}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Amazon Web Services, Inc.}%
+      }
+      \strng{namehash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \strng{fullhash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \strng{bibnamehash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \strng{authorbibnamehash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \strng{authornamehash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \strng{authorfullhash}{9145c8d27e8df3d15e63d3e2d5c53088}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{AWS Amplify}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://aws.amazon.com/amplify/
+      \endverb
+      \verb{url}
+      \verb https://aws.amazon.com/amplify/
+      \endverb
+    \endentry
+    \entry{scrum2020}{online}{}
+      \name{author}{2}{}{%
+        {{hash=ee6f08fcba839e09471a0bc69152b6a5}{%
+           family={Schwaber},
+           familyi={S\bibinitperiod},
+           given={Ken},
+           giveni={K\bibinitperiod}}}%
+        {{hash=6e3f26f6f816a26c6ab36bc7a899bcde}{%
+           family={Sutherland},
+           familyi={S\bibinitperiod},
+           given={Jeff},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{303ea1dc92fd8c772eac56316b2074ef}
+      \strng{fullhash}{303ea1dc92fd8c772eac56316b2074ef}
+      \strng{bibnamehash}{303ea1dc92fd8c772eac56316b2074ef}
+      \strng{authorbibnamehash}{303ea1dc92fd8c772eac56316b2074ef}
+      \strng{authornamehash}{303ea1dc92fd8c772eac56316b2074ef}
+      \strng{authorfullhash}{303ea1dc92fd8c772eac56316b2074ef}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Scrum Guide: The Definitive Guide to Scrum: The Rules of the Game}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://scrumguides.org/scrum-guide.html
+      \endverb
+      \verb{url}
+      \verb https://scrumguides.org/scrum-guide.html
+      \endverb
+    \endentry
+    \entry{projectlibre2026parky}{online}{}
+      \name{author}{1}{}{%
+        {{hash=bdc526bb569d62ad403905c43ad5028f}{%
+           family={González\bibnamedelima Pérez},
+           familyi={G\bibinitperiod\bibinitdelim P\bibinitperiod},
+           given={Hugo},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{bdc526bb569d62ad403905c43ad5028f}
+      \strng{fullhash}{bdc526bb569d62ad403905c43ad5028f}
+      \strng{bibnamehash}{bdc526bb569d62ad403905c43ad5028f}
+      \strng{authorbibnamehash}{bdc526bb569d62ad403905c43ad5028f}
+      \strng{authornamehash}{bdc526bb569d62ad403905c43ad5028f}
+      \strng{authorfullhash}{bdc526bb569d62ad403905c43ad5028f}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Planificación del proyecto Parky -- archivo ProjectLibre}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://drive.google.com/file/d/1jXVvxEMKsu9cdxQGEImq2oRphjUpw-du/view?usp=sharing
+      \endverb
+      \verb{url}
+      \verb https://drive.google.com/file/d/1jXVvxEMKsu9cdxQGEImq2oRphjUpw-du/view?usp=sharing
+      \endverb
+    \endentry
+    \entry{ayto_sct_parkings}{online}{}
+      \name{author}{1}{}{%
+        {{hash=194b7a2fc9c926b8c6f8bba8078371d6}{%
+           family={{Ayuntamiento de Santa Cruz de Tenerife}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{fullhash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{bibnamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authorbibnamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authornamehash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \strng{authorfullhash}{194b7a2fc9c926b8c6f8bba8078371d6}
+      \field{extraname}{2}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Varios ‘parking’ de Santa Cruz aplicarán tarifas especiales durante Plenilunio}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.santacruzdetenerife.es/web/noticias-y-agenda/noticias/detalle-noticia/varios-parking-de-santa-cruz-aplicaran-tarifas-especiales-durante-plenilunio
+      \endverb
+      \verb{url}
+      \verb https://www.santacruzdetenerife.es/web/noticias-y-agenda/noticias/detalle-noticia/varios-parking-de-santa-cruz-aplicaran-tarifas-especiales-durante-plenilunio
+      \endverb
+    \endentry
+    \entry{justpark_commission}{online}{}
+      \name{author}{1}{}{%
+        {{hash=5d0c78d398824197dfb669c3cf91f421}{%
+           family={itm2},
+           familyi={i\bibinitperiod}}}%
+      }
+      \strng{namehash}{5d0c78d398824197dfb669c3cf91f421}
+      \strng{fullhash}{5d0c78d398824197dfb669c3cf91f421}
+      \strng{bibnamehash}{5d0c78d398824197dfb669c3cf91f421}
+      \strng{authorbibnamehash}{5d0c78d398824197dfb669c3cf91f421}
+      \strng{authornamehash}{5d0c78d398824197dfb669c3cf91f421}
+      \strng{authorfullhash}{5d0c78d398824197dfb669c3cf91f421}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Justpark now charging a fee for withdrawing earnings}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://forums.moneysavingexpert.com/discussion/6569775/justpark-now-charging-a-fee-for-withdrawing-earnings
+      \endverb
+      \verb{url}
+      \verb https://forums.moneysavingexpert.com/discussion/6569775/justpark-now-charging-a-fee-for-withdrawing-earnings
       \endverb
     \endentry
   \enddatalist
+  \missing{stripe_pricing}
 \endrefsection
 \endinput
 

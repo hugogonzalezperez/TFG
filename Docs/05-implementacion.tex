@@ -1,4 +1,119 @@
 \chapter{Implementación}
 \label{ch:implementacion}
 
-% Pendiente de redacción — Fase E
+Este capítulo describe las decisiones de implementación más relevantes de Parky, organizadas por módulo funcional.
+
+% ============================================================
+\section{Arquitectura por capas}
+\label{sec:arquitectura_capas}
+% ============================================================
+
+El código fuente de Parky se organiza en módulos autónomos bajo \texttt{src/features/}, cada uno articulado en cuatro capas con responsabilidades bien diferenciadas. La capa de acceso a datos concentra todas las consultas a la base de datos y siempre especifica explícitamente las columnas necesarias, lo que evita que un cambio de esquema exponga campos sensibles de forma accidental. Por otro lado, la capa de servicio orquesta la lógica de negocio que cruza más de una entidad. Los hooks de React envuelven los servicios con gestión de caché y estados de carga, y los componentes son exclusivamente de presentación, sin acceso directo a la base de datos.
+
+% ============================================================
+\section{Módulo de autenticación}
+\label{sec:impl_auth}
+% ============================================================
+
+La autenticación se apoya en Supabase Auth, que emite tokens de sesión con refresco automático y admite tanto el registro con correo y contraseña como la entrada mediante Google, de forma que en ambos casos el sistema crea automáticamente el perfil del usuario en la base de datos sin necesidad de ninguna llamada adicional desde el cliente.
+
+El momento de mayor relevancia desde el punto de vista del diseño es el primer inicio de sesión, cuando la aplicación detecta que el usuario todavía no tiene un rol asignado y al principio del diseño lo redirigía a la pantalla de selección para que elija entre Arrendador y Arrendatario, sin embargo, ahora cada vez que entra tiene el rol automático de Arrendatario y solo se cambia si crea un garaje. Una vez establecido, el rol queda fijo y las políticas de seguridad de la base de datos impiden que un usuario lo modifique desde el cliente, lo que garantiza que ningún arrendatario pueda acceder a las funciones de gestión de plazas ni viceversa. La protección de rutas se gestiona mediante un componente dedicado que comprueba en tiempo de ejecución si el usuario autenticado tiene permiso para acceder a la sección solicitada, redirigiendo al inicio de la aplicación en caso contrario.
+
+% ============================================================
+\section{Módulo de plazas y mapa}
+\label{sec:impl_parking}
+% ============================================================
+
+El inventario de aparcamiento se estructura en dos niveles jerárquicos, de modo que cada garaje agrupa la dirección, el propietario y las fotos generales del acceso, mientras que cada plaza individual registra su precio por hora, su disponibilidad horaria y sus propias imágenes. Separar ambas entidades permite que un mismo propietario gestione varias plazas bajo un único garaje sin duplicar la información de ubicación, y hace que el mapa muestre un solo marcador por garaje incluso cuando dispone de varias plazas, lo que mejora la legibilidad cuando la densidad de puntos es alta.
+
+El mapa se construye sobre Leaflet y recalcula los garajes visibles cada vez que el usuario mueve la vista o cambia el nivel de zoom, consultando únicamente los que tienen al menos una plaza activa dentro del área visible en ese momento. Los filtros disponibles, que permiten acotar por precio máximo, rango horario y tipo de plaza, se aplican en el servidor para minimizar la cantidad de datos transferidos, de forma que al cliente solo llegan los garajes que cumplen los criterios seleccionados.
+
+Para convertir las direcciones escritas por los arrendadores en coordenadas geográficas, la aplicación utiliza la API de OpenCage a través de una función de servidor, que además verifica que las coordenadas obtenidas correspondan al territorio de Tenerife antes de persistirlas, con el propósito de impedir el registro de plazas fuera del ámbito del servicio. Esto significa que si existe una calle con el mismo nombre en otro lugar, no se registrarán plazas en esa ubicación sino que lo haga en Tenerife.
+
+% ============================================================
+\section{Módulo de reservas}
+\label{sec:impl_reservas}
+% ============================================================
+
+El ciclo de una reserva comienza con el cálculo del precio estimado, que la aplicación muestra al usuario antes de confirmar la operación. El precio final, sin embargo, siempre lo determina el servidor a partir de las reglas de tarificación activas para esa plaza, que pueden incluir multiplicadores según el día de la semana o el tramo horario, de modo que el importe que se persiste en la base de datos no puede ser manipulado desde el cliente.
+
+La integridad temporal del inventario se protege en dos niveles. La consulta de disponibilidad aplica un margen de \textbf{quince minutos antes y después de cada reserva existente}, de forma que dos vehículos nunca se crucen en el acceso al garaje al coincidir el final de una reserva con el inicio de la siguiente. El segundo nivel, y el técnicamente más relevante, es que el sistema rechaza los solapamientos dentro de la propia transacción de base de datos mediante un trigger de PostgreSQL, de modo que si dos usuarios intentan reservar la misma plaza al mismo tiempo solo una de las dos solicitudes tiene éxito, independientemente del número de peticiones simultáneas, algo que no sería posible garantizar si la comprobación se realizase en la capa de aplicación. La serialización se consigue mediante un bloqueo explícito (\texttt{SELECT \ldots FOR UPDATE}) sobre la fila de la plaza antes de la comprobación de solapamiento, lo que impide que dos transacciones concurrentes pasen el chequeo simultáneamente bajo el nivel de aislamiento \texttt{READ COMMITTED} que PostgreSQL usa por defecto.
+
+El ciclo de vida de cada reserva sigue una transición de estados que solo admite transiciones válidas, pasando de pendiente a confirmada, de confirmada a activa y de activa a completada, mientras que la cancelación es posible desde cualquier estado no terminal. Las reservas nunca se eliminan físicamente de la base de datos sino que se marcan mediante una fecha de cancelación, lo que preserva el historial completo de transacciones y facilita las declaraciones fiscales trimestrales en caso de tener el plan acorde para realizar esto como se ve en la sección~\ref{subsec:parky_pro}.
+
+% ============================================================
+\section{Módulo de pagos}
+\label{sec:impl_pagos}
+% ============================================================
+
+El modelo de pagos se construye hipotéticamente sobre Stripe Connect, lo que significa que cada arrendador vincularía su cuenta bancaria a la plataforma antes de poder recibir ingresos. Cuando un arrendatario confirma una reserva, la plataforma crea una operación de pago en la que Stripe retiene automáticamente la comisión correspondiente y transfiere el saldo neto directamente a la cuenta del arrendador, sin que el dinero pase en ningún momento por una cuenta intermedia de la plataforma.
+
+El aspecto más delicado del módulo es el tratamiento del IGIC. Este cálculo se realiza en el servidor, nunca en el cliente, tanto para evitar que un usuario manipule el importe fiscal declarado como para centralizar la lógica tributaria en un único punto que sea fácil de auditar. El desglose del precio, con el importe base, la comisión y el IGIC como valores independientes, se almacena en columnas separadas de la tabla de reservas para facilitar los informes trimestrales. Si el arrendatario cancela antes del inicio de la reserva o el pago no llega a completarse, la operación se invierte íntegramente y se emite el reembolso completo sin retención.
+
+% ============================================================
+\section{Módulo SmartAccess}
+\label{sec:impl_smartaccess}
+% ============================================================
+
+SmartAccess es el módulo de control de acceso que integra las capas de autenticación, reservas y base de datos, y es el que permite al arrendatario abrir y cerrar el garaje desde la aplicación durante la ventana temporal de su reserva. Antes de registrar cualquier evento de acceso, el sistema verifica simultáneamente que el usuario autenticado es el titular de la reserva, que el estado de esta es \textit{activo} y que el instante en el que se solicita el acceso cae dentro del intervalo reservado. Si alguna de las tres condiciones no se cumple, el servidor responde con un error genérico que no revela si la reserva existe pero pertenece a otro usuario, lo que impide que un atacante pueda identificar reservas ajenas simplemente observando las respuestas de la API (esto fue una de las pruebas hechas como atacante para verificar la fiabilidad de la implementación). Cada intento de apertura o cierre, con independencia de si tiene éxito, queda registrado con marca de tiempo y tipo de evento en la tabla \texttt{access\_log}.
+
+\subsection{Modelo de acceso físico}
+\label{subsec:modelo_acceso_fisico}
+
+La capa de software de SmartAccess aunque esté completa y actualmente genera un token de un solo uso vinculado al estado \texttt{activo} de la reserva, lo invalida al terminar el intervalo y registra cada intento en \texttt{access\_log}, no tiene resuelto la pieza del medio, es decir, lo qué hay físicamente en la puerta del garaje que recibe esa señal y acciona el mecanismo de apertura.
+
+En la práctica, los garajes residenciales del área metropolitana de Tenerife emplean principalmente portones con motor eléctrico y, en menor medida, puertas peatonales con cerradura electroimantada. Los dos admiten automatización con hardware disponible en el mercado, aunque con grados de complejidad distintos.
+
+La integración más directa pasa por un módulo relé conectado a la central del portón. Un microcontrolador ESP32 o una Raspberry Pi Zero escucha un endpoint de la API y cierra el circuito del relé al recibir un token válido, lo que equivale a pulsar el botón del mando de apertura. El coste de hardware ronda los 30--50~€ por plaza y la instalación no requiere modificar el motor existente. Esta es la opción más viable para un piloto inicial donde haya bastantes plazas dentro de un mismo parking.
+
+La alternativa inalámbrica recurre a Bluetooth Low Energy (BLE) como funcionan la mayoría de los dispositivos modernos de cerraduras inteligentes. La aplicación abre directamente una conexión con un módulo en la puerta sin pasar por internet, lo que elimina la dependencia de conectividad en el garaje. El inconveniente es el rango, ya que en garajes subterráneos con señal débil la conexión puede ser inestable a más de diez metros del módulo.
+
+Existe una tercera opción que evita el hardware personalizado, que consiste en integrarse con sistemas de cerradura inteligente ya instalados previamente en comunidades de
+propietarios. Si el edificio ya tiene control de acceso centralizado para el portal, la integración con Parky se reduce a una llamada a la API del fabricante.
+
+Desde la perspectiva del conductor, el flujo es idéntico en los tres casos. Pulsa «Abrir» durante su reserva activa, el servidor valida el token y envía la señal al actuador. La diferencia está en el actuador, no en la aplicación.
+
+El código QR generado por RF-15 actúa como mecanismo de acceso complementario orientado a instalaciones con lector integrado en la barrera, equipamiento presente en aparcamientos comerciales o comunitarios modernos. En garajes residenciales sin ese hardware, el flujo de apertura se realiza exclusivamente mediante el botón en la aplicación, que envía la señal al actuador a través del servidor y el QR queda disponible como respaldo visual para el escenario de acceso delegado o para futuras integraciones con hardware comercial.
+
+\subsection{Gestión de incidencias y casos límite}
+\label{subsec:incidencias_smartaccess}
+
+Cualquier sistema de acceso automatizado tiene que dar respuesta a los escenarios en los que algo no sale según lo previsto. Los más probables en Parky son cinco.
+
+\paragraph{El coche sigue dentro al finalizar la reserva.} Cuando el intervalo de una reserva termina, la puerta no se cierra de forma automática aunque el conductor siga dentro, puesto que cerrar una barrera con un vehículo en el paso sería un riesgo físico inadmisible. Lo que ocurre es que el token expira, la reserva transiciona a \texttt{completada} y el sistema envía una notificación al conductor indicando que su tiempo ha terminado. El propietario puede abrir la puerta desde su panel para recuperar el acceso. Una extensión lógica para la versión comercial sería aplicar un recargo por minuto adicional desde la hora de finalización, siguiendo el modelo habitual en parkings de rotación.
+
+\paragraph{Sin conexión a internet en el garaje.} Los garajes subterráneos suelen tener cobertura débil, de modo que si el servidor no puede comunicarse con el actuador, la apertura falla. Una primera solución pasa por resolver la apertura por BLE directamente desde el dispositivo del conductor, sin depender del servidor en ese momento. Una segunda alternativa, más sencilla de desplegar, consiste en instalar un punto de acceso WiFi en el garaje por un coste de 20--40~€. Para un piloto inicial, la opción más pragmática es exigir conectividad al garaje como requisito previo al registro en Parky; el modo offline por BLE quedaría como mejora para versiones posteriores y después de ser estudiado sus problemas y costes.
+
+\paragraph{Móvil sin batería o QR inaccesible.} Si el conductor llega al garaje con el móvil apagado, no hay acceso automático posible. La salida práctica sería proporcionar un código de respaldo de 7 dígitos enviado por SMS al confirmar la reserva. Este código funcionaría sin conexión en el momento del acceso, actuando como segundo factor offline.
+
+\paragraph{Protección ante replay de tokens.} Cada token se invalida en el servidor en cuanto se consume, sin esperar a que expire por tiempo. Para volver a entrar dentro del mismo intervalo, la aplicación solicita un token nuevo. Esto impide que un atacante capture el QR de otro conductor y lo use más tarde, dado que el token ya estará invalidado. El campo \texttt{nonce} en \texttt{access\_log} registra el identificador único de cada intento, lo que permite detectar reutilizaciones incluso si proceden de redes distintas.
+
+\paragraph{Reserva cancelada mientras el conductor está dentro.} Si el propietario intentara cancelar una reserva con el conductor ya en el garaje, el token activo no se invalida de forma inmediata, ya que forzar esa invalidación podría dejar el vehículo atrapado sin salida. Por eso el control de estados de las reservas no permite cancelar reservas en estado \texttt{activo} desde el panel del propietario. El propietario puede registrar una incidencia, pero la reserva completa su ciclo normal antes de que se puedan tomar otras acciones.
+
+% ============================================================
+\section{Despliegue multiplataforma}
+\label{sec:impl_despliegue}
+% ============================================================
+
+\paragraph{Web.}
+Vite compila la aplicación en modo producción generando un árbol de artefactos estáticos optimizados. Vercel recoge el repositorio de GitHub, ejecuta \texttt{npm run build} en cada \textit{push} a \texttt{main} y distribuye el resultado en su CDN global. El archivo \texttt{vercel.json} redirige todas las rutas al \texttt{index.html} para que React Router DOM gestione la navegación sin recargas de página.
+
+\paragraph{Android.}
+Capacitor encapsula la aplicación web dentro de una \textit{WebView} nativa de Android. El módulo \texttt{src/mobile/platform.ts} detecta en tiempo de ejecución si la aplicación corre en un dispositivo nativo o en un navegador, y activa o desactiva los plugins de Capacitor (haptics, barra de estado, almacenamiento nativo) de forma condicional. El APK se genera desde Android Studio sin modificar ningún componente de React.
+
+% ============================================================
+\section{Pruebas realizadas}
+\label{sec:pruebas}
+% ============================================================
+
+Las pruebas del prototipo se organizaron en torno a los tres problemas de riesgo más relevantes del sistema: la integridad temporal del inventario de plazas, la seguridad del control de acceso y la corrección del modelo de pagos.
+
+\paragraph{Solapamiento concurrente de reservas.} Para verificar que el trigger de PostgreSQL descrito en la sección~\ref{sec:impl_reservas} funciona bajo carga simultánea, se lanzaron dos peticiones de reserva para la misma plaza y el mismo intervalo de forma concurrente desde dos sesiones de navegador independientes. En todos los casos exactamente una de las dos peticiones tuvo éxito y la otra recibió el mensaje de error estructurado devuelto por el trigger, confirmando que la protección opera a nivel de transacción y no depende de la velocidad de red ni del orden de llegada al servidor de aplicación.
+
+\paragraph{Transición inválida de estado.} El control de estados de las reservas se validó intentando forzar transiciones no previstas directamente contra la API como pasar de \texttt{pendiente} a \texttt{completada} sin pasar por \texttt{activa}, o cancelar una reserva ya en estado \texttt{completada}. El servidor rechazó todas las peticiones con el código de error correspondiente, sin producir estados inconsistentes en la base de datos.
+
+\paragraph{Manipulación del tenant\_id.} Las políticas RLS del módulo de reservas garantizan que un usuario autenticado no puede leer ni modificar reservas ajenas. Se verificó enviando peticiones modificadas en las que el campo \texttt{tenant\_id} contenía el identificador de otro usuario registrado. En todos los casos la política devolvió un resultado vacío o un error de autorización sin revelar si el recurso existía.
+
+\paragraph{Seguridad de SmartAccess.} Como se describe en la sección~\ref{sec:impl_smartaccess}, se probó el endpoint de apertura de puerta con tokens pertenecientes a reservas de otro usuario y con tokens de reservas caducadas. El servidor devolvió un error genérico en ambos casos sin indicar si la reserva consultada existía, impidiendo que un atacante pudiera enumerar reservas ajenas observando las respuestas de la API.
+
+\paragraph{Manipulación del precio desde el cliente.} El motor de precios recalcula el importe final siempre en el servidor a partir de las reglas activas para cada plaza. Se verificó modificando el valor de precio enviado en el cuerpo de la petición de reserva. El sistema ignoró el valor del cliente y persistió el precio calculado en el servidor, de forma que la reserva se registró con el importe correcto independientemente del valor enviado.

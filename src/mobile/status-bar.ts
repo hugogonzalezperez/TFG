@@ -24,13 +24,11 @@ import { isNative, isAndroid } from './platform';
  */
 export const setDarkStatusBar = async (): Promise<void> => {
   if (!isNative()) return;
-
-  // Style.Dark = Iconos blancos (para fondo oscuro de la app)
-  await StatusBar.setStyle({ style: Style.Dark });
-
+  // Interior pages: overlay=false so status bar sits above content normally
+  await StatusBar.setOverlaysWebView({ overlay: false });
+  await StatusBar.setStyle({ style: Style.Dark }); // dark icons for light header
   if (isAndroid()) {
-    // En Android podemos controlar el color de fondo directamente
-    await StatusBar.setBackgroundColor({ color: '#09090B' });
+    await StatusBar.setBackgroundColor({ color: '#ffffff' }); // matches card header bg
   }
 };
 
@@ -47,6 +45,18 @@ export const setLightStatusBar = async (): Promise<void> => {
   if (isAndroid()) {
     await StatusBar.setBackgroundColor({ color: '#FFFFFF' });
   }
+};
+
+/**
+ * Barra de estado oscura (iconos blancos) con fondo que se integra con el hero.
+ * Usar cuando el contenido detrás del status bar es oscuro (hero, mapas oscuros).
+ */
+export const setHeroStatusBar = async (): Promise<void> => {
+  if (!isNative()) return;
+  // Overlay=true: WebView extends behind status bar → hero fills edge-to-edge
+  // env(safe-area-inset-top) returns real status-bar height for padding
+  await StatusBar.setOverlaysWebView({ overlay: true });
+  await StatusBar.setStyle({ style: Style.Light }); // white icons on dark hero
 };
 
 /**

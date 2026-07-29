@@ -262,24 +262,24 @@ export default function Home() {
         </div>
 
         {/* Content — pt accounts for header (h-16 = 4rem) + extra breathing room */}
-        <div className={`relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 ${isNative() ? 'py-6' : 'pt-28 pb-16 md:pt-32 md:pb-20'}`}>
+        <div className={`relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto ${isNative() ? 'px-4 pt-[calc(env(safe-area-inset-top)+5rem)] pb-6' : 'px-4 sm:px-6 pt-28 pb-16 md:pt-32 md:pb-20'}`}>
 
           {/* Headline */}
           <h1
-            className="text-center text-white mb-5 text-[clamp(2.4rem,6vw,4.5rem)] font-black leading-[1.05] tracking-[-0.04em] max-w-[820px]"
+            className={`text-center text-white font-black leading-[1.05] tracking-[-0.04em] max-w-[820px] ${isNative() ? 'text-[1.9rem] mb-3' : 'text-[clamp(2.4rem,6vw,4.5rem)] mb-5'}`}
           >
             Encuentra{' '}
             <span className="text-accent">aparcamiento</span>
             <br />
             en cualquier lugar de{' '}
-            <span className="text-blue-500">
+            <span className="text-blue-400">
               Tenerife
             </span>
             .
           </h1>
 
           <p
-            className="text-center mb-10 text-[clamp(1rem,2vw,1.25rem)] text-white/75 max-w-[540px] leading-[1.65]"
+            className={`text-center text-white/80 max-w-[540px] leading-[1.65] ${isNative() ? 'text-[0.9rem] mb-5' : 'text-[clamp(1rem,2vw,1.25rem)] mb-10'}`}
           >
             Reserva plazas privadas hasta un{' '}
             <strong className="text-white">60% más baratas</strong>{' '}

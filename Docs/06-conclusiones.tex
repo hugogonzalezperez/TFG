@@ -1,0 +1,15 @@
+\chapter{Conclusiones y líneas futuras}
+\label{ch:conclusiones}
+
+El objetivo de este trabajo era demostrar que el problema de aparcamiento en el área metropolitana de Tenerife tiene solución técnica y económicamente viable, y los siete objetivos específicos definidos en la sección\ref*{sec:objetivos} quedan cubiertos por el prototipo. El resultado es un sistema que funciona de extremo a extremo, en el que un usuario puede registrarse, publicar una plaza, realizar una reserva, pagar y abrir el garaje sin salir de la aplicación.
+
+La decisión técnica que más marcó el desarrollo fue delegar en PostgreSQL lo que habitualmente se gestiona en la capa de aplicación. Resolver los solapamientos de reservas con un trigger en la base de datos eliminó toda una clase de condiciones de carrera que habrían sido muy difíciles de reproducir y depurar, y lo que no estaba previsto en el diseño inicial es que esa misma filosofía, la de empujar la lógica al nivel más bajo posible, también simplificase el módulo de pagos, ya que calcular el IGIC en una Edge Function y no en el cliente hizo que la arquitectura fuera más segura casi sin coste adicional. Si volviera a empezar, habría diseñado desde el principio la máquina de estados de reservas como un trigger y no como validación en el servicio, en lugar de añadirlo en el sprint~8 como corrección.
+
+El análisis de ROI del capítulo\ref*{ch:viabilidad_economica} demuestra que el modelo es viable bajo hipótesis conservadoras, tomando como referencia 990 plazas activas en el mes 20, 15 reservas por plaza al mes y gastos operativos de 1.130\,€ al mes una vez superada la fase de captación, lo que permite recuperar los 287.000\,€ de inversión en el mes~19 con un ROI del 54,7\,\% a los dos años. El riesgo principal no es técnico ni financiero sino de tracción inicial, dado que el modelo requiere masa crítica de oferta antes de que la demanda se active.
+
+% ============================================================
+\section{Líneas de trabajo futuro}
+\label{sec:lineas_futuras}
+% ============================================================
+
+Las funcionalidades con mayor impacto sobre la propuesta de valor están descritas en el capítulo~\ref{sec:funcionalidades_adicionales}, y la integración real de Stripe Connect junto con la publicación en Google Play y App Store son los dos requisitos no técnicos que bloquean el paso al producto comercial. La línea de crecimiento con mayor potencial es la expansión al resto del archipiélago, dado que el producto no necesita reconstruirse porque la infraestructura técnica, el modelo de negocio y el régimen fiscal del IGIC son idénticos en Las Palmas de Gran Canaria, Arrecife o Santa Cruz de La Palma, lo que hace directamente transferible la experiencia acumulada en el área metropolitana de Tenerife.

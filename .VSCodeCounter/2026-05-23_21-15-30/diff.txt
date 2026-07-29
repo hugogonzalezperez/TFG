@@ -1,0 +1,127 @@
+Date : 2026-05-23 21:15:30
+Directory : /home/dev/TFG/src
+Total : 54 files,  -5039 codes, -157 comments, -802 blanks, all -5998 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| Properties         |          2 |         -9 |        -15 |         -7 |        -31 |
+| HTML               |          1 |        -13 |          0 |         -3 |        -16 |
+| Java               |          3 |        -27 |        -11 |        -14 |        -52 |
+| JavaScript         |          3 |        -32 |         -1 |         -1 |        -34 |
+| JSON with Comments |          1 |        -33 |         -3 |          0 |        -36 |
+| Batch              |          1 |        -41 |        -32 |        -22 |        -95 |
+| TypeScript         |          2 |        -87 |          0 |         -5 |        -92 |
+| Groovy             |          6 |       -122 |         -7 |        -28 |       -157 |
+| JSON               |          2 |       -138 |          0 |         -2 |       -140 |
+| BibTeX             |          1 |       -272 |          0 |        -33 |       -305 |
+| XML                |         13 |       -397 |         -6 |        -16 |       -419 |
+| Markdown           |          5 |       -598 |          0 |       -223 |       -821 |
+| LaTeX              |         13 |     -1,150 |        -82 |       -274 |     -1,506 |
+| log                |          1 |     -2,120 |          0 |       -174 |     -2,294 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                               | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                  |         54 |     -5,039 |       -157 |       -802 |     -5,998 |
+| ..                                                                                                 |         54 |     -5,039 |       -157 |       -802 |     -5,998 |
+| .. (Files)                                                                                         |         10 |       -417 |         -4 |        -38 |       -459 |
+| ../Docs                                                                                            |         20 |     -4,109 |        -85 |       -678 |     -4,872 |
+| ../Docs (Files)                                                                                    |         19 |     -4,005 |        -81 |       -673 |     -4,759 |
+| ../Docs/settings                                                                                   |          1 |       -104 |         -4 |         -5 |       -113 |
+| ../android                                                                                         |         22 |       -495 |        -68 |        -84 |       -647 |
+| ../android (Files)                                                                                 |          6 |        -99 |        -51 |        -44 |       -194 |
+| ../android/app                                                                                     |         15 |       -389 |        -17 |        -39 |       -445 |
+| ../android/app (Files)                                                                             |          2 |        -66 |         -3 |        -12 |        -81 |
+| ../android/app/src                                                                                 |         13 |       -323 |        -14 |        -27 |       -364 |
+| ../android/app/src/androidTest                                                                     |          1 |        -15 |         -6 |         -6 |        -27 |
+| ../android/app/src/androidTest/java                                                                |          1 |        -15 |         -6 |         -6 |        -27 |
+| ../android/app/src/androidTest/java/com                                                            |          1 |        -15 |         -6 |         -6 |        -27 |
+| ../android/app/src/androidTest/java/com/getcapacitor                                               |          1 |        -15 |         -6 |         -6 |        -27 |
+| ../android/app/src/androidTest/java/com/getcapacitor/myapp                                         |          1 |        -15 |         -6 |         -6 |        -27 |
+| ../android/app/src/main                                                                            |         11 |       -299 |         -3 |        -16 |       -318 |
+| ../android/app/src/main (Files)                                                                    |          1 |        -31 |         -1 |         -4 |        -36 |
+| ../android/app/src/main/java                                                                       |          1 |         -3 |          0 |         -3 |         -6 |
+| ../android/app/src/main/java/com                                                                   |          1 |         -3 |          0 |         -3 |         -6 |
+| ../android/app/src/main/java/com/parky                                                             |          1 |         -3 |          0 |         -3 |         -6 |
+| ../android/app/src/main/java/com/parky/app                                                         |          1 |         -3 |          0 |         -3 |         -6 |
+| ../android/app/src/main/res                                                                        |          9 |       -265 |         -2 |         -9 |       -276 |
+| ../android/app/src/main/res/drawable                                                               |          1 |       -170 |          0 |         -1 |       -171 |
+| ../android/app/src/main/res/drawable-v24                                                           |          1 |        -34 |          0 |         -1 |        -35 |
+| ../android/app/src/main/res/layout                                                                 |          1 |        -11 |          0 |         -2 |        -13 |
+| ../android/app/src/main/res/mipmap-anydpi-v26                                                      |          2 |        -18 |          0 |          0 |        -18 |
+| ../android/app/src/main/res/values                                                                 |          3 |        -27 |         -2 |         -5 |        -34 |
+| ../android/app/src/main/res/xml                                                                    |          1 |         -5 |          0 |          0 |         -5 |
+| ../android/app/src/test                                                                            |          1 |         -9 |         -5 |         -5 |        -19 |
+| ../android/app/src/test/java                                                                       |          1 |         -9 |         -5 |         -5 |        -19 |
+| ../android/app/src/test/java/com                                                                   |          1 |         -9 |         -5 |         -5 |        -19 |
+| ../android/app/src/test/java/com/getcapacitor                                                      |          1 |         -9 |         -5 |         -5 |        -19 |
+| ../android/app/src/test/java/com/getcapacitor/myapp                                                |          1 |         -9 |         -5 |         -5 |        -19 |
+| ../android/gradle                                                                                  |          1 |         -7 |          0 |         -1 |         -8 |
+| ../android/gradle/wrapper                                                                          |          1 |         -7 |          0 |         -1 |         -8 |
+| ../public                                                                                          |          2 |        -18 |          0 |         -2 |        -20 |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                           | language           | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| /home/dev/TFG/.eslintrc.cjs                                                                        | JavaScript         |        -20 |          0 |         -1 |        -21 |
+| /home/dev/TFG/Docs/01-introducción.tex                                                             | LaTeX              |       -211 |         -1 |        -59 |       -271 |
+| /home/dev/TFG/Docs/02-capítulo2.tex                                                                | LaTeX              |       -154 |         -7 |        -54 |       -215 |
+| /home/dev/TFG/Docs/03-capítulo3.tex                                                                | LaTeX              |       -171 |         -6 |        -28 |       -205 |
+| /home/dev/TFG/Docs/04-capítulo4.tex                                                                | LaTeX              |       -107 |          0 |        -28 |       -135 |
+| /home/dev/TFG/Docs/05-conclusiones.tex                                                             | LaTeX              |         -3 |          0 |         -1 |         -4 |
+| /home/dev/TFG/Docs/05-implementacion.tex                                                           | LaTeX              |         -2 |         -1 |         -2 |         -5 |
+| /home/dev/TFG/Docs/06-conclusions.tex                                                              | LaTeX              |         -3 |          0 |         -1 |         -4 |
+| /home/dev/TFG/Docs/06-pruebas.tex                                                                  | LaTeX              |         -2 |         -1 |         -2 |         -5 |
+| /home/dev/TFG/Docs/07-presupuesto.tex                                                              | LaTeX              |        -50 |          0 |         -6 |        -56 |
+| /home/dev/TFG/Docs/0A-apéndice1.tex                                                                | LaTeX              |        -74 |          0 |        -16 |        -90 |
+| /home/dev/TFG/Docs/0B-apéndice2.tex                                                                | LaTeX              |         -6 |          0 |         -2 |         -8 |
+| /home/dev/TFG/Docs/DATOS_MERCADO.md                                                                | Markdown           |       -133 |          0 |        -49 |       -182 |
+| /home/dev/TFG/Docs/PLAN_REDACCION.md                                                               | Markdown           |       -300 |          0 |        -95 |       -395 |
+| /home/dev/TFG/Docs/README.md                                                                       | Markdown           |        -45 |          0 |        -44 |        -89 |
+| /home/dev/TFG/Docs/TO_FIX.md                                                                       | Markdown           |         -6 |          0 |         -8 |        -14 |
+| /home/dev/TFG/Docs/memtfg.log                                                                      | log                |     -2,120 |          0 |       -174 |     -2,294 |
+| /home/dev/TFG/Docs/memtfg.run.xml                                                                  | XML                |        -83 |         -3 |         -1 |        -87 |
+| /home/dev/TFG/Docs/memtfg.tex                                                                      | LaTeX              |       -263 |        -62 |        -70 |       -395 |
+| /home/dev/TFG/Docs/referencias.bib                                                                 | BibTeX             |       -272 |          0 |        -33 |       -305 |
+| /home/dev/TFG/Docs/settings/listings.tex                                                           | LaTeX              |       -104 |         -4 |         -5 |       -113 |
+| /home/dev/TFG/README.md                                                                            | Markdown           |       -114 |          0 |        -27 |       -141 |
+| /home/dev/TFG/android/app/build.gradle                                                             | Groovy             |        -47 |         -2 |         -6 |        -55 |
+| /home/dev/TFG/android/app/capacitor.build.gradle                                                   | Groovy             |        -19 |         -1 |         -6 |        -26 |
+| /home/dev/TFG/android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java | Java               |        -15 |         -6 |         -6 |        -27 |
+| /home/dev/TFG/android/app/src/main/AndroidManifest.xml                                             | XML                |        -31 |         -1 |         -4 |        -36 |
+| /home/dev/TFG/android/app/src/main/java/com/parky/app/MainActivity.java                            | Java               |         -3 |          0 |         -3 |         -6 |
+| /home/dev/TFG/android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml                     | XML                |        -34 |          0 |         -1 |        -35 |
+| /home/dev/TFG/android/app/src/main/res/drawable/ic_launcher_background.xml                         | XML                |       -170 |          0 |         -1 |       -171 |
+| /home/dev/TFG/android/app/src/main/res/layout/activity_main.xml                                    | XML                |        -11 |          0 |         -2 |        -13 |
+| /home/dev/TFG/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml                           | XML                |         -9 |          0 |          0 |         -9 |
+| /home/dev/TFG/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml                     | XML                |         -9 |          0 |          0 |         -9 |
+| /home/dev/TFG/android/app/src/main/res/values/ic_launcher_background.xml                           | XML                |         -4 |          0 |          0 |         -4 |
+| /home/dev/TFG/android/app/src/main/res/values/strings.xml                                          | XML                |         -7 |          0 |         -1 |         -8 |
+| /home/dev/TFG/android/app/src/main/res/values/styles.xml                                           | XML                |        -16 |         -2 |         -4 |        -22 |
+| /home/dev/TFG/android/app/src/main/res/xml/file_paths.xml                                          | XML                |         -5 |          0 |          0 |         -5 |
+| /home/dev/TFG/android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java                | Java               |         -9 |         -5 |         -5 |        -19 |
+| /home/dev/TFG/android/build.gradle                                                                 | Groovy             |        -20 |         -3 |         -7 |        -30 |
+| /home/dev/TFG/android/capacitor.settings.gradle                                                    | Groovy             |        -16 |         -1 |         -8 |        -25 |
+| /home/dev/TFG/android/gradle.properties                                                            | Properties         |         -2 |        -15 |         -6 |        -23 |
+| /home/dev/TFG/android/gradle/wrapper/gradle-wrapper.properties                                     | Properties         |         -7 |          0 |         -1 |         -8 |
+| /home/dev/TFG/android/gradlew.bat                                                                  | Batch              |        -41 |        -32 |        -22 |        -95 |
+| /home/dev/TFG/android/settings.gradle                                                              | Groovy             |         -4 |          0 |         -1 |         -5 |
+| /home/dev/TFG/android/variables.gradle                                                             | Groovy             |        -16 |          0 |          0 |        -16 |
+| /home/dev/TFG/capacitor.config.ts                                                                  | TypeScript         |        -16 |          0 |         -3 |        -19 |
+| /home/dev/TFG/index.html                                                                           | HTML               |        -13 |          0 |         -3 |        -16 |
+| /home/dev/TFG/package.json                                                                         | JSON               |        -99 |          0 |         -1 |       -100 |
+| /home/dev/TFG/postcss.config.js                                                                    | JavaScript         |         -5 |          0 |          0 |         -5 |
+| /home/dev/TFG/public/car.svg                                                                       | XML                |         -9 |          0 |         -1 |        -10 |
+| /home/dev/TFG/public/favicon.svg                                                                   | XML                |         -9 |          0 |         -1 |        -10 |
+| /home/dev/TFG/tailwind.config.js                                                                   | JavaScript         |         -7 |         -1 |          0 |         -8 |
+| /home/dev/TFG/tsconfig.json                                                                        | JSON with Comments |        -33 |         -3 |          0 |        -36 |
+| /home/dev/TFG/vercel.json                                                                          | JSON               |        -39 |          0 |         -1 |        -40 |
+| /home/dev/TFG/vite.config.ts                                                                       | TypeScript         |        -71 |          0 |         -2 |        -73 |
+| Total                                                                                              |                    |     -5,039 |       -157 |       -802 |     -5,998 |
++----------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

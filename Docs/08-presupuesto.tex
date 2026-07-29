@@ -1,0 +1,72 @@
+\chapter{Presupuesto}
+\label{ch:presupuesto}
+
+Este capítulo documenta el coste real del desarrollo de este trabajo, diferenciado del estudio de viabilidad del capítulo~\ref{ch:viabilidad_economica}, que modela el escenario comercial con un equipo profesional. Aquí se contabiliza únicamente el esfuerzo invertido por el autor en las distintas fases del proyecto, junto con los equipos utilizados y los servicios necesarios para el despliegue.
+
+% ============================================================
+\section{Recursos humanos}
+\label{sec:presupuesto_rrhh}
+% ============================================================
+
+El proyecto fue desarrollado íntegramente por un único desarrollador, por lo que el coste de personal se calcula aplicando una tarifa hora uniforme de 18\,€/h, correspondiente al coste aproximado de un programador recién graduado en el mercado canario. La tabla~\ref{tbl:horas_trabajo} desglosa las horas dedicadas a cada fase del ciclo de desarrollo, incluyendo la redacción de la memoria, que en un trabajo académico supone una fracción significativa del tiempo total.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Desglose de horas y coste por fase.}
+    \label{tbl:horas_trabajo}
+    \begin{tabularx}{0.92\textwidth}{Xcc}
+        \toprule
+        \textbf{Fase}                                                  & \textbf{Horas} & \textbf{Coste (€)} \\
+        \midrule
+        Estudio del dominio y análisis de requisitos                   & 30             & 540,00             \\
+        Diseño del sistema (arquitectura, BD, UX/UI)                   & 55             & 990,00             \\
+        Implementación del backend (BD, RLS, triggers, Edge Functions) & 80             & 1.440,00           \\
+        Implementación del frontend (React, mapa, flujos de usuario)   & 90             & 1.620,00           \\
+        Integración (Stripe Connect, SmartAccess, APK Android)         & 60             & 1.080,00           \\
+        Pruebas y depuración                                           & 45             & 810,00             \\
+        Redacción de la memoria                                        & 70             & 1.260,00           \\
+        \midrule
+        \textbf{Total}                                                 & \textbf{440}   & \textbf{7.740,00}  \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+La fase con mayor carga de trabajo es la redacción de la memoria, equiparable en horas a la implementación del frontend, dado que documentar con precisión las decisiones de arquitectura y el modelo económico requiere un esfuerzo comparable al de su diseño. La implementación del backend concentra la lógica más sensible del proyecto, incluyendo los triggers de solapamiento y las políticas RLS, lo que explica su peso específico a pesar de representar menos líneas de código que el frontend.
+
+% ============================================================
+\section{Equipos y material}
+\label{sec:presupuesto_hardware}
+% ============================================================
+
+Los únicos activos materiales necesarios para el desarrollo fueron el sobremesa de trabajo y un dispositivo Android para validar el APK generado por Capacitor. Dado que ambos equipos tienen una vida útil que supera con creces la duración del proyecto, no se contabiliza su coste en este presupuesto.
+
+% ============================================================
+\section{Herramientas de software}
+\label{sec:presupuesto_software}
+% ============================================================
+
+Todas las herramientas utilizadas durante el desarrollo están disponibles en sus niveles gratuitos o son software libre, por lo que no generan coste directo imputable al proyecto. Visual Studio Code, Git y Android Studio son de descarga libre. Supabase ofrece un plan gratuito con capacidad suficiente para el volumen de un prototipo. Vercel publica la aplicación web sin coste en su plan hobby. Figma permite el diseño de interfaces sin suscripción para proyectos individuales y el plan Free de GitHub cubre tanto el repositorio privado como el historial de versiones completo. El único servicio con coste potencial en producción es el dominio costando 15 euros anuales y Stripe, cuya tarifa del 1,5\,\% sobre el volumen procesado se aplica únicamente a transacciones reales y, por tanto, no tiene impacto durante la fase de desarrollo con modo sandbox.
+
+% ============================================================
+\section{Coste total}
+\label{sec:presupuesto_total}
+% ============================================================
+
+\begin{table}[!ht]
+    \centering
+    \caption{Resumen del coste total del proyecto.}
+    \label{tbl:presupuesto_total}
+    \begin{tabularx}{0.65\textwidth}{Xr}
+        \toprule
+        \textbf{Concepto}               & \textbf{Coste (€)} \\
+        \midrule
+        Recursos humanos                & 7.740,00           \\
+        Equipos y material (amortizado) & 0,00               \\
+        Software y servicios            & 15,00              \\
+        \midrule
+        \textbf{Total}                  & \textbf{7.755,00}  \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El coste total del desarrollo del prototipo asciende a 7.755\,€, de los cuales el 97,2\,\% corresponde al tiempo de trabajo del autor. Esta proporción es coherente con la naturaleza del proyecto, cuya complejidad recae en la configuración de la plataforma y en las decisiones de arquitectura más que en la adquisición de infraestructura, y la elección de herramientas con planes gratuitos permitió mantener el coste de servicios en cero durante todo el ciclo de desarrollo. Este valor contrasta con el presupuesto de 287.000\,€ proyectado en el capítulo~\ref{ch:viabilidad_economica} para llevar el mismo producto a escala comercial, diferencia que refleja el paso de un único desarrollador en contexto académico a un equipo multidisciplinar con ciclo de vida profesional completo.
